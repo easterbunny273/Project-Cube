@@ -2,4 +2,6 @@
 
 include_directories(../include/tinyxml)
 
-add_executable("Project Cube" Main.cpp)
+set(SOURCES Main.cpp Settings.cpp Settings.h)
+
+add_executable("Project Cube" ${SOURCES})
