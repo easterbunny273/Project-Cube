@@ -15,4 +15,6 @@ int main()
     int a = 3;
 
     Logger::error() << "this class can handle different types of variables. e.g: A=" << a << Logger::endl;
+
+    Settings::instance();
 }
