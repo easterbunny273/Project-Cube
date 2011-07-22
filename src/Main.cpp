@@ -1,6 +1,9 @@
 #include "Settings.h"
 #include "Logger.h"
 
+#include <iostream>
+
+using namespace std;
 
 int main()
 {
@@ -16,5 +19,12 @@ int main()
 
     Logger::error() << "this class can handle different types of variables. e.g: A=" << a << Logger::endl;
 
-    Settings::instance();
+    /*Settings::instance()->GetGroup("graphics")->GetGroup("screen")->SetValue("width", 800);
+    Settings::instance()->GetGroup("graphics")->GetGroup("screen")->SetValue("height", 600);
+    Settings::instance()->GetGroup("audio")->SetValue("volume", 0.8f);*/
+   // Settings::instance()->Clear();
+
+    // for demonstration, read settings.xml and then write the settings to settings2.xml
+    Settings::instance()->RestoreSettingsFromXMLFile("settings.xml");
+    Settings::instance()->StoreSettingsAsXMLFile("settings2.xml");
 }

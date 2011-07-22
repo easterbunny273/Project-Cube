@@ -1,2 +1,4 @@
 #ignore merge related files
 *.orig
+settings2.xml
+log.txt

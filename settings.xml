@@ -1,0 +1,13 @@
+<settings>
+    <group name="#">
+        <group name="audio">
+            <value name="volume" type="float">0.8</value>
+        </group>
+        <group name="graphics">
+            <group name="screen">
+                <value name="height" type="int">600</value>
+                <value name="width" type="int">800</value>
+            </group>
+        </group>
+    </group>
+</settings>
