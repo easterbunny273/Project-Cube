@@ -49,22 +49,29 @@
 
 /**
  * This Logger class provides a simple interface to log messages with different importance (debug/info/warning/error/fatal)
- * and write them to the console and/or a log file.
+ * and write them to the console and a log file (in the working dir).
  * The interface was designed to behave like the standard c++ output interface, "cout", and is implemented as a singelton class.
  *
  * Usage examples:
- *   first set loglevels:   Logger::setLogLevelForConsole(Logger::ERROR);
- *			    Logger::setLogLevelForFile(Logger::DEBUG);
+ *   first set loglevels:   Logger::SetLogLevelForConsole(Logger::ERROR);
+ *			    Logger::SetLogLevelForFile(Logger::DEBUG);
  *
  *  then write to different targets just like to cout:
  *	Logger::error() << "This is an error message" << Logger::endl;
  *	Logger::debug() << "This is a debug message" << Logger::endl;
  *
+ * -------------
  *
+ * The class is nested and uses templates, that's why definitions and internals which should
+ * actually be in a cpp-file are located in the header-file, and that's why some things may look strange.
+ *
+ * It's better to only use the class instead of trying to understand the internal parts of it :-)
  */
+
 class Logger
 {
 public:
+    /// The enum which defines the used log level
     enum LogLevel
     {
 	DEBUG=0,
@@ -74,12 +81,15 @@ public:
 	NOTHING ///< if no output is wanted, set the loglevel to NOTHING
     };
 
+    /// a nested class, only needed to define a special type, thus the class is empty
     class TItlNestedEndl
     {
     };
 
+    /// the special type to define a end-of-line
     static TItlNestedEndl endl;
 
+    /// the nested class for the log targets
     class TItlLogTarget
     {
     private:
@@ -88,6 +98,7 @@ public:
     public:
 	TItlLogTarget(LogLevel level) : m_level(level) {};
 
+        /// the operator << which accepts only Logger::endl
 	TItlLogTarget& operator<<(TItlNestedEndl p)
 	{
 	    if (Logger::instance()->loglevel_console <= m_level)
@@ -112,6 +123,8 @@ public:
 	    return *this;
 	}
 
+        /// the operator << which accepts all other types which are accepted by the standard c++-streams
+        /// the compiler will generate an own method for each type which is used as a parameter
 	template <typename T> TItlLogTarget& operator<<(T a)
 	{
 	    if (Logger::instance()->loglevel_console <= m_level)
@@ -131,6 +144,7 @@ public:
     };
 
 
+    // the log targets
     static TItlLogTarget DebugTarget;
     static TItlLogTarget InfoTarget;
     static TItlLogTarget ErrorTarget;
@@ -200,10 +214,10 @@ public:
 
 
     /// function to set log level for file (messages with a lower level are ignored)
-    static void setLogLevelForFile(LogLevel loglevel);
+    static void SetLogLevelForFile(LogLevel loglevel);
 
     /// function to set log level for console (messages with a lower level are ignored)
-    static void setLogLevelForConsole(LogLevel loglevel);
+    static void SetLogLevelForConsole(LogLevel loglevel);
 
 
 

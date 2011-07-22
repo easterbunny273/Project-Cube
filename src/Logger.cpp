@@ -32,12 +32,12 @@ Logger::~Logger()
     this->logfile.close();
 }
 
-void Logger::setLogLevelForConsole(LogLevel loglevel)
+void Logger::SetLogLevelForConsole(LogLevel loglevel)
 {
     instance()->loglevel_console = loglevel;
 }
 
-void Logger::setLogLevelForFile(LogLevel loglevel)
+void Logger::SetLogLevelForFile(LogLevel loglevel)
 {
     instance()->loglevel_file = loglevel;
 }
