@@ -1,3 +1,0 @@
-DEBUG: debug message test
-ERROR: error message test
-ERROR: this class can handle different types of variables. e.g: A=3
