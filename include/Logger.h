@@ -18,32 +18,32 @@
 #include <assert.h>
 
 #ifdef TRACE
-#warning TRACE was defined as precompiler variable by a used library. To prevent incompatibilities with the class Logger, TRACE was undefined!
+#pragma message("TRACE was defined as precompiler variable by a used library. To prevent incompatibilities with the class Logger, TRACE was undefined!")
 #undef TRACE
 #endif
 
 #ifdef DEBUG
-#warning DEBUG was defined as precompiler variable by a used library. To prevent incompatibilities with the class Logger, DEBUG was undefined!
+#pragma message("DEBUG was defined as precompiler variable by a used library. To prevent incompatibilities with the class Logger, DEBUG was undefined!")
 #undef DEBUG
 #endif
 
 #ifdef WARN
-#warning WARN was defined as precompiler variable by a used library. To prevent incompatibilities with the class Logger, WARN was undefined!
+#pragma message("WARN was defined as precompiler variable by a used library. To prevent incompatibilities with the class Logger, WARN was undefined!")
 #undef WARN
 #endif
 
 #ifdef ERROR
-#warning ERROR was defined as precompiler variable by a used library. To prevent incompatibilities with the class Logger, ERROR was undefined!
+#pragma message("ERROR was defined as precompiler variable by a used library. To prevent incompatibilities with the class Logger, ERROR was undefined!")
 #undef ERROR
 #endif
 
 #ifdef FATAL
-#warning FATAL was defined as precompiler variable by a used library. To prevent incompatibilities with the class Logger, FATAL was undefined!
+#pragma message("FATAL was defined as precompiler variable by a used library. To prevent incompatibilities with the class Logger, FATAL was undefined!")
 #undef FATAL
 #endif
 
 #ifdef NOTHING
-#warning NOTHING was defined as precompiler variable by a used library. To prevent incompatibilities with the class Logger, NOTHING was undefined!
+#pragma message("NOTHING was defined as precompiler variable by a used library. To prevent incompatibilities with the class Logger, NOTHING was undefined!")
 #undef NOTHING
 #endif
 
