@@ -17,6 +17,8 @@ Logger::TItlLogTarget Logger::ErrorTarget(Logger::ERROR);
 Logger::TItlLogTarget Logger::FatalTarget(Logger::FATAL);
 Logger::TItlNestedEndl Logger::endl;
 
+Logger::TItlNestedEndl Logger::endl;
+
 Logger *Logger::instance()
 {
     static Logger singelton_instance;
