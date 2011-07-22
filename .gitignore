@@ -1,2 +1,2 @@
-#ignore included libraries
-include
+#ignore merge related files
+*.orig

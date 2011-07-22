@@ -1,9 +1,21 @@
 #CMakeLists.txt for src-Folder
 
-include_directories(../include/tinyxml/)
+#define libraries which should be linked additionally
+link_libraries(glfw GLEW IL)
 
-set(SOURCES Main.cpp Settings.cpp Settings.h)
+#add include directories
+include_directories(../include/)
 
-add_executable("Project Cube" ${SOURCES})
+#add definitions (for gcc)
+add_definitions(-ggdb -std=c++0x)
 
-target_link_libraries("Project Cube" tinyxml)
+#define headers
+file(GLOB HEADERS "../include/*.h")
+
+#define sources
+file(GLOB SOURCES "../src/*.cpp")
+
+add_executable(project-cube ${SOURCES} ${HEADERS})
+
+target_link_libraries(project-cube tinyxml)
+
