@@ -2,3 +2,18 @@
 *.orig
 settings2.xml
 log.txt
+
+Project Cube.vcxproj.BACKUP.*
+Project Cube.vcxproj.LOCAL.*
+Project Cube.vcxproj.BASE.*
+Project Cube.vcxproj.REMOTE.*
+
+#Visual Studio related files:
+*.sdf
+*.suo
+*.user
+*.opensdf
+visual studio files/ipch
+visual studio files/Release
+visual studio files/Debug
+visual studio files/log.txt
