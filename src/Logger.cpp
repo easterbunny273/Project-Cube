@@ -15,6 +15,7 @@ Logger::TItlLogTarget Logger::DebugTarget(Logger::DEBUG);
 Logger::TItlLogTarget Logger::InfoTarget(Logger::INFO);
 Logger::TItlLogTarget Logger::ErrorTarget(Logger::ERROR);
 Logger::TItlLogTarget Logger::FatalTarget(Logger::FATAL);
+Logger::TItlNestedEndl Logger::endl;
 
 Logger *Logger::instance()
 {

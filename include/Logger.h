@@ -89,6 +89,7 @@ public:
     /// the special type to define a end-of-line
     static TItlNestedEndl endl;
 
+
     /// the nested class for the log targets
     class TItlLogTarget
     {

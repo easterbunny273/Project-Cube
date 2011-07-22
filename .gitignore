@@ -1,2 +1,15 @@
 #ignore merge related files
 *.orig
+Project Cube.vcxproj.BACKUP.*
+Project Cube.vcxproj.LOCAL.*
+Project Cube.vcxproj.BASE.*
+Project Cube.vcxproj.REMOTE.*
+
+#Visual Studio related files:
+*.sdf
+*.suo
+*.user
+*.opensdf
+visual studio files/ipch
+visual studio files/Release
+visual studio files/Debug
