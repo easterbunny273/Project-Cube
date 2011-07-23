@@ -38,7 +38,7 @@
    <value key="ProjectExplorer.Target.ActiveDeployConfiguration" type="int">0</value>
    <value key="ProjectExplorer.Target.ActiveRunConfiguration" type="int">1</value>
    <valuemap key="ProjectExplorer.Target.BuildConfiguration.0" type="QVariantMap">
-    <value key="CMakeProjectManager.CMakeBuildConfiguration.BuildDirectory" type="QString">/home/easterbunny/project_cube/qtcreator-build</value>
+    <value key="CMakeProjectManager.CMakeBuildConfiguration.BuildDirectory" type="QString">/home/easterbunny/Projekte/Project-Cube/qtcreator-build</value>
     <value key="CMakeProjectManager.CMakeBuildConfiguration.ToolChain" type="QString">ProjectExplorer.ToolChain.Gcc:/usr/bin/g++.x86-linux-generic-elf-64bit.</value>
     <value key="ProjectExplorer.BuildCOnfiguration.ToolChain" type="QString">ProjectExplorer.ToolChain.Gcc:/usr/bin/g++.x86-linux-generic-elf-64bit.</value>
     <valuemap key="ProjectExplorer.BuildConfiguration.BuildStepList.0" type="QVariantMap">
@@ -50,7 +50,16 @@
       <value key="ProjectExplorer.ProjectConfiguration.DisplayName" type="QString"></value>
       <value key="ProjectExplorer.ProjectConfiguration.Id" type="QString">CMakeProjectManager.MakeStep</value>
      </valuemap>
-     <value key="ProjectExplorer.BuildStepList.StepsCount" type="int">1</value>
+     <valuemap key="ProjectExplorer.BuildStepList.Step.1" type="QVariantMap">
+      <value key="ProjectExplorer.ProcessStep.Arguments" type="QString">Doxyfile</value>
+      <value key="ProjectExplorer.ProcessStep.Command" type="QString">doxygen</value>
+      <value key="ProjectExplorer.ProcessStep.Enabled" type="bool">true</value>
+      <value key="ProjectExplorer.ProcessStep.WorkingDirectory" type="QString">/home/easterbunny/Projekte/Project-Cube/</value>
+      <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString">Custom Process Step</value>
+      <value key="ProjectExplorer.ProjectConfiguration.DisplayName" type="QString"></value>
+      <value key="ProjectExplorer.ProjectConfiguration.Id" type="QString">ProjectExplorer.ProcessStep</value>
+     </valuemap>
+     <value key="ProjectExplorer.BuildStepList.StepsCount" type="int">2</value>
      <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString">Build</value>
      <value key="ProjectExplorer.ProjectConfiguration.DisplayName" type="QString"></value>
      <value key="ProjectExplorer.ProjectConfiguration.Id" type="QString">ProjectExplorer.BuildSteps.Build</value>
@@ -156,7 +165,7 @@
     <value key="CMakeProjectManager.CMakeRunConfiguration.Arguments" type="QString"></value>
     <value key="CMakeProjectManager.CMakeRunConfiguration.UseTerminal" type="bool">false</value>
     <valuelist key="CMakeProjectManager.CMakeRunConfiguration.UserEnvironmentChanges" type="QVariantList"/>
-    <value key="CMakeProjectManager.CMakeRunConfiguration.UserWorkingDirectory" type="QString">/home/easterbunny/project_cube/Project-Cube</value>
+    <value key="CMakeProjectManager.CMakeRunConfiguration.UserWorkingDirectory" type="QString">/home/easterbunny/Projekte/Project-Cube</value>
     <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString">project-cube</value>
     <value key="ProjectExplorer.ProjectConfiguration.DisplayName" type="QString"></value>
     <value key="ProjectExplorer.ProjectConfiguration.Id" type="QString">CMakeProjectManager.CMakeRunConfiguration.</value>

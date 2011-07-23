@@ -5,8 +5,6 @@
 #include <iostream>
 #include <fstream>
 
-#define TIXML_USE_STL
-
 #include "tinyxml.h"
 #include "tinystr.h"
 
