@@ -29,7 +29,19 @@ int main()
     Settings::instance()->RestoreSettingsFromXMLFile("settings.xml");
 
     Graphics test;
-    test.Initialize();
+
+    test.StartUp();
+
+    for (int i=0; i < 100000000; i++)
+    {
+        // burn cpu time
+
+        int *a = new int[10000];
+
+        delete [] a;
+    }
+
+    test.ShutDown();
 
     Settings::instance()->StoreSettingsAsXMLFile("settings2.xml");
 }

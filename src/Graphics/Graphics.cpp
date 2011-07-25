@@ -16,7 +16,7 @@ Graphics::~Graphics()
         assert(!"Graphics() subsystem should be destroyed but there are still registered IInputEventListeners!");
 }
 
-bool Graphics::Initialize()
+bool Graphics::StartUp()
 {
     bool bOk = true;
 
