@@ -29,3 +29,4 @@ qtcreator-build/
 
 #external libs
 external/glm
+external/lua*
