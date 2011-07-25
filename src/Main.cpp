@@ -25,6 +25,6 @@ int main()
    // Settings::instance()->Clear();
 
     // for demonstration, read settings.xml and then write the settings to settings2.xml
-    Settings::instance()->RestoreSettingsFromXMLFile("settings.xml");
-    Settings::instance()->StoreSettingsAsXMLFile("settings2.xml");
+    Settings::instance()->RestoreSettingsFromXMLFile("config/settings.xml");
+    Settings::instance()->StoreSettingsAsXMLFile("config/settings2.xml");
 }
