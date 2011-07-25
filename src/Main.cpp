@@ -1,6 +1,7 @@
 #include "Settings.h"
 #include "Logger.h"
 #include "lua.hpp"
+#include "ICube.h"
 
 #include <iostream>
 

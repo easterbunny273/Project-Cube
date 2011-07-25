@@ -1,7 +1,7 @@
 #CMakeLists.txt for src-Folder
 
 #define libraries which should be linked additionally
-link_libraries(glfw GLEW IL)
+link_libraries(glfw GLEW IL lua)
 
 #add include directories
 include_directories(../include/)
