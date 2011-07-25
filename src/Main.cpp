@@ -1,5 +1,6 @@
 #include "Settings.h"
 #include "Logger.h"
+#include "lua.hpp"
 
 #include <iostream>
 
@@ -27,4 +28,18 @@ int main()
     // for demonstration, read settings.xml and then write the settings to settings2.xml
     Settings::instance()->RestoreSettingsFromXMLFile("config/settings.xml");
     Settings::instance()->StoreSettingsAsXMLFile("config/settings2.xml");
+
+
+	//code to demonstrate some LUA functionality
+	lua_State * luastate = lua_open();
+	luaL_openlibs(luastate);
+
+	int s = luaL_loadfile(luastate, "lua/test.lua");
+
+	if(s==0)
+	{
+		s = lua_pcall(luastate, 0, LUA_MULTRET, 0);
+	}
+
+	lua_close(luastate);
 }
