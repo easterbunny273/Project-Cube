@@ -1,6 +1,8 @@
 #include "Settings.h"
 #include "Logger.h"
 #include "Graphics/Graphics.h"
+#include "lua.hpp"
+#include "ICube.h"
 
 #include <iostream>
 
@@ -26,7 +28,7 @@ int main()
    // Settings::instance()->Clear();
 
     // for demonstration, read settings.xml and then write the settings to settings2.xml
-    Settings::instance()->RestoreSettingsFromXMLFile("settings.xml");
+    Settings::instance()->RestoreSettingsFromXMLFile("config/settings.xml");
 
     Graphics test;
 
@@ -35,6 +37,7 @@ int main()
     for (int i=0; i < 100000000; i++)
     {
         // burn cpu time
+
 
         int *a = new int[10000];
 

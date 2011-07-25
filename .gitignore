@@ -1,12 +1,15 @@
 #ignore merge related files
 *.orig
-settings2.xml
-log.txt
-
 Project Cube.vcxproj.BACKUP.*
 Project Cube.vcxproj.LOCAL.*
 Project Cube.vcxproj.BASE.*
 Project Cube.vcxproj.REMOTE.*
+
+#test files
+settings2.xml
+
+#logger files
+log.txt
 
 #Visual Studio related files:
 *.sdf
@@ -17,5 +20,13 @@ visual studio files/ipch
 visual studio files/Release
 visual studio files/Debug
 visual studio files/log.txt
+
+#doxygen
 doc/html/
+
+#qtcreator
 qtcreator-build/
+
+#external libs
+external/glm
+external/lua*

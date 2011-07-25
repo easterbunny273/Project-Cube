@@ -255,6 +255,8 @@ bool Settings::WriteToXMLString(std::string &rsString)
 
     // get string from stream
     rsString = ssStream.str();
+
+	return true;
 }
 
 bool Settings::ReadFromXMLString(std::string sString)
@@ -635,6 +637,8 @@ bool Settings::RestoreSettingsFromXMLFile(std::string sFilename)
     // print error message if loading was not successfull
     if (!bOk)
         Logger::error() << "Loading settings from file \"" << sFilename << "\" failed" << Logger::endl;
+
+	return bOk;
 }
 
 Settings::TSettingsGroup * Settings::ItlGetMainGroup()
