@@ -18,6 +18,15 @@ bool Grid::AddDoor(glm::vec2 doorPosition)
 	return true;
 }
 
+bool Grid::AddDoor(int iDoorX, int iDoorY)
+{
+	//TODO: check if new door position is valid
+
+	m_vDoorPositions.push_back(glm::vec2(iDoorX, iDoorY));
+	return true;
+}
+
+
 void Grid::ClearGrid()
 {
 	m_vDoorPositions.clear();

@@ -27,6 +27,7 @@ public:
 	/*! name Public methods */
 	//@{
 		bool AddDoor(glm::vec2 doorPosition);
+		bool AddDoor(int iDoorX, int iDoorY);
 
 		void ClearGrid();
 
