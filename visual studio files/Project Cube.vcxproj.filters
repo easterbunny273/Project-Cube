@@ -101,10 +101,10 @@
     <ClInclude Include="..\include\Gamelogic\IObject.h">
       <Filter>Header Files\gamelogic</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\gamelogic\Cube.h">
+    <ClInclude Include="..\include\Gamelogic\Cube.h">
       <Filter>Header Files\gamelogic</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Gamelogic\Grid.h">
+    <ClInclude Include="..\include\Gamelogic\Grid.h">
       <Filter>Header Files\gamelogic</Filter>
     </ClInclude>
   </ItemGroup>

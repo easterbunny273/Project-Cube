@@ -100,7 +100,9 @@
     <ClInclude Include="..\external\tinyxml\tinystr.h" />
     <ClInclude Include="..\external\tinyxml\tinyxml.h" />
     <ClInclude Include="..\include\Error.h" />
+    <ClInclude Include="..\include\Gamelogic\Cube.h" />
     <ClInclude Include="..\include\Gamelogic\GameLogic.h" />
+    <ClInclude Include="..\include\Gamelogic\Grid.h" />
     <ClInclude Include="..\include\Gamelogic\ICube.h" />
     <ClInclude Include="..\include\Gamelogic\IGameState.h" />
     <ClInclude Include="..\include\Gamelogic\IObject.h" />
@@ -111,8 +113,6 @@
     <ClInclude Include="..\include\IXMLSerializeable.h" />
     <ClInclude Include="..\include\Logger.h" />
     <ClInclude Include="..\include\Settings.h" />
-    <ClInclude Include="..\src\gamelogic\Cube.h" />
-    <ClInclude Include="..\src\Gamelogic\Grid.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
