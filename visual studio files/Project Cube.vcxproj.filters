@@ -89,16 +89,16 @@
     <ClInclude Include="..\include\Graphics\Graphics.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\GameLogic.h">
+    <ClInclude Include="..\include\Gamelogic\GameLogic.h">
       <Filter>Header Files\gamelogic</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\ICube.h">
+    <ClInclude Include="..\include\Gamelogic\ICube.h">
       <Filter>Header Files\gamelogic</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\IGameState.h">
+    <ClInclude Include="..\include\Gamelogic\IGameState.h">
       <Filter>Header Files\gamelogic</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\IObject.h">
+    <ClInclude Include="..\include\Gamelogic\IObject.h">
       <Filter>Header Files\gamelogic</Filter>
     </ClInclude>
   </ItemGroup>
