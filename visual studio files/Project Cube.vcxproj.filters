@@ -57,6 +57,9 @@
     <ClCompile Include="..\src\Graphics\Graphics.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Gamelogic\Grid.cpp">
+      <Filter>Source Files\gamelogic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Logger.h">

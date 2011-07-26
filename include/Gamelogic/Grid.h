@@ -26,13 +26,13 @@ public:
 
 	/*! name Public methods */
 	//@{
-		void AddDoor(glm::vec2 doorPosition);
+		bool AddDoor(glm::vec2 doorPosition);
 
 		void ClearGrid();
 
 		std::vector<glm::vec2> GetDoorPositions();
 
-		void RotateGrid(const int iFactor);
+		bool RotateGrid(const int iFactor);
 	//@}
 
 
@@ -44,6 +44,6 @@ private:
 		/// of at least 1 square (example: (1,1) (3,1) is right; (1,1) (2,1) is wrong)
 		std::vector<glm::vec2> m_vDoorPositions;
 	//@}
-}
+};
 
 #endif
