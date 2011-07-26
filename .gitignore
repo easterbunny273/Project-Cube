@@ -20,6 +20,7 @@ visual studio files/ipch
 visual studio files/Release
 visual studio files/Debug
 visual studio files/log.txt
+visual studio files/bin
 
 #doxygen
 doc/html/
@@ -30,3 +31,5 @@ qtcreator-build/
 #external libs
 external/glm
 external/lua*
+external/glew
+external/glfw
