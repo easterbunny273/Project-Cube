@@ -25,6 +25,12 @@
     <Filter Include="Source Files\graphics">
       <UniqueIdentifier>{78aec6a3-cf07-4886-8812-64f45a19d6e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\gamelogic">
+      <UniqueIdentifier>{71264ffb-a70d-4fb6-a534-8ea423f5a302}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\gamelogic">
+      <UniqueIdentifier>{05d7301e-ee18-416c-89a9-1a320bee33d2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Logger.cpp">
@@ -65,25 +71,13 @@
     <ClInclude Include="..\external\tinyxml\tinyxml.h">
       <Filter>Header Files\tinyxml</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\IGameState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\IInputEventListener.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\IObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\IXMLSerializeable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\Error.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\GameLogic.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\ICube.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\Graphics\common_gl.h">
@@ -94,6 +88,18 @@
     </ClInclude>
     <ClInclude Include="..\include\Graphics\Graphics.h">
       <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\GameLogic.h">
+      <Filter>Header Files\gamelogic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ICube.h">
+      <Filter>Header Files\gamelogic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\IGameState.h">
+      <Filter>Header Files\gamelogic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\IObject.h">
+      <Filter>Header Files\gamelogic</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
