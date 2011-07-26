@@ -12,17 +12,41 @@ Grid::~Grid()
 
 bool Grid::AddDoor(glm::vec2 doorPosition)
 {
-	//TODO: check if new door position is valid
+	bool bInsert = CheckDoorInsertion(doorPosition.x, doorPosition.y);
 
-	m_vDoorPositions.push_back(doorPosition);
-	return true;
+	if(bInsert)
+		m_vDoorPositions.push_back(doorPosition);
+	
+	return bInsert;
 }
 
 bool Grid::AddDoor(int iDoorX, int iDoorY)
 {
-	//TODO: check if new door position is valid
+	bool bInsert = CheckDoorInsertion(iDoorX, iDoorY);
 
-	m_vDoorPositions.push_back(glm::vec2(iDoorX, iDoorY));
+	if(bInsert)
+		m_vDoorPositions.push_back(glm::vec2(iDoorX, iDoorY));
+	
+	return bInsert;
+}
+
+bool Grid::CheckDoorInsertion(const int iX, const int iY)
+{
+	if(iX < 1 || iX > 9 || iY < 1 || iY > 9)
+		return false;
+
+	for(int i = 0; i < m_vDoorPositions.size(); i++)
+	{
+		glm::vec2 current = m_vDoorPositions.at(i);
+		if(iX < current.x-1 || iX > current.x+1 || iY < current.y-1 || iY > current.y+1)
+		{
+			continue;
+		}
+		else
+		{
+			return false;
+		}
+	}
 	return true;
 }
 

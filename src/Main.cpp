@@ -35,6 +35,10 @@ int main()
 
 	Grid grid;
 	grid.AddDoor(1,1);
+	grid.AddDoor(1,1); //False
+	grid.AddDoor(2,1); //False
+	grid.AddDoor(0,1); //False
+	grid.AddDoor(10,3);  //False
 	grid.AddDoor(4,4);
 	grid.AddDoor(6,7);
 	grid.AddDoor(1,5);

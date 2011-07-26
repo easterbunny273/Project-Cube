@@ -45,6 +45,11 @@ private:
 		/// of at least 1 square (example: (1,1) (3,1) is right; (1,1) (2,1) is wrong)
 		std::vector<glm::vec2> m_vDoorPositions;
 	//@}
+
+	/*! \name Private methods */
+	//@{
+		bool CheckDoorInsertion(const int iX, const int iY);
+	//@}
 };
 
 #endif
