@@ -19,8 +19,8 @@ log.txt
 visual studio files/ipch
 visual studio files/Release
 visual studio files/Debug
-visual studio files/log.txt
 visual studio files/bin
+visual studio files/Project Cube Test
 
 #doxygen
 doc/html/
@@ -33,3 +33,7 @@ external/glm
 external/lua*
 external/glew
 external/glfw
+external/cppunit
+
+#test results
+testresults*
