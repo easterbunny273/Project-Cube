@@ -40,6 +40,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)\bin\$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -51,7 +52,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../external/glfw/include/;../external/glew/include/;../include/;../external/tinyxml/;../external/glm/;../external/lua/include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../include/Gamelogic/;../include/Graphics/;../external/glfw/include/;../external/glew/include/;../include/;../external/tinyxml/;../external/glm/;../external/lua/include/</AdditionalIncludeDirectories>
       <ProgramDataBaseFileName>$(IntDir)\vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
@@ -59,6 +60,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../external/glfw/lib-msvc100/debug/;../external/lua/lib/;../external/glew/lib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>GLFW.lib;glew32.lib;lua.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ProgramDatabaseFile>$(IntDir)$(Configuration)$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
@@ -109,6 +111,8 @@
     <ClInclude Include="..\include\IXMLSerializeable.h" />
     <ClInclude Include="..\include\Logger.h" />
     <ClInclude Include="..\include\Settings.h" />
+    <ClInclude Include="..\src\gamelogic\Cube.h" />
+    <ClInclude Include="..\src\Gamelogic\Grid.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
