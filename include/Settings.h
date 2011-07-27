@@ -117,6 +117,15 @@ public:
 	};
     //@}
 
+    /*! \name Construction / Destruction */
+    //@{
+        /// constructor
+        Settings();
+
+        /// destructor
+        ~Settings();
+    //@}
+
     /*! \name methods of the IXMLSerializeable interface */
     //@{
         virtual bool WriteToXMLString(std::string &rsString);
@@ -125,9 +134,6 @@ public:
 
     /*! \name Public methods */
     //@{
-	/// returns the singelton instance
-	static Settings *instance();
-
         /// clears all settings
         void Clear();
 
@@ -143,15 +149,6 @@ public:
 
 
 private:
-    /*! \name Construction / Destruction */
-    //@{
-	/// constructor
-	Settings();
-
-	/// destructor
-	~Settings();
-    //@}
-
     /*! \name Internal methods */
     //@{
             TSettingsGroup *ItlGetMainGroup();

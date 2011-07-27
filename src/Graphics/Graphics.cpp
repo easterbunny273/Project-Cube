@@ -4,6 +4,7 @@
 #include "Error.h"
 #include "Settings.h"
 #include "Logger.h"
+#include "MainApp.h"
 
 Graphics::Graphics()
 {
@@ -25,10 +26,11 @@ bool Graphics::StartUp()
     int iWidth = -1;
     int iHeight = -1;
 
-    Settings::instance()->GetGroup("graphics")->GetValueOrDefault("window_width", 800, iWidth);
-    Settings::instance()->GetGroup("graphics")->GetValueOrDefault("window_height", 600, iHeight);
-    Settings::instance()->GetGroup("graphics")->GetValueOrDefault("fullscreen", false, bFullscreen);
-    Settings::instance()->GetGroup("graphics")->GetValueOrDefault("antialiasing", false, bAntiAliasing);
+
+    MainApp::GetInstance()->GetCoreSettings()->GetGroup("graphics")->GetValueOrDefault("window_width", 800, iWidth);
+    MainApp::GetInstance()->GetCoreSettings()->GetGroup("graphics")->GetValueOrDefault("window_height", 600, iHeight);
+    MainApp::GetInstance()->GetCoreSettings()->GetGroup("graphics")->GetValueOrDefault("fullscreen", false, bFullscreen);
+    MainApp::GetInstance()->GetCoreSettings()->GetGroup("graphics")->GetValueOrDefault("antialiasing", false, bAntiAliasing);
 
     int iFlags = (bFullscreen) ? GLFW_FULLSCREEN : GLFW_WINDOW;
 

@@ -19,14 +19,6 @@ Settings::~Settings()
     Clear();
 }
 
-Settings * Settings::instance()
-{
-    // create instance, if not done yet
-    static Settings pInstance;
-
-    return &pInstance;
-}
-
 void Settings::TSettingsGroup::SetValue(std::string sName, int iValue)
 {
     std::map<std::string, int>::iterator iter = m_mIntEntries.find(sName);
