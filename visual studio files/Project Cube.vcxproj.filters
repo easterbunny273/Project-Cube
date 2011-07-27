@@ -57,11 +57,11 @@
     <ClCompile Include="..\src\Graphics\Graphics.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Gamelogic\Grid.cpp">
-      <Filter>Source Files\gamelogic</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\MainApp.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Gamelogic\Grid.cpp">
+      <Filter>Source Files\gamelogic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
