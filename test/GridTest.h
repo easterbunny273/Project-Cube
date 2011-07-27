@@ -19,8 +19,7 @@ protected:
 	virtual void tear_down();
 
 private:
-	Grid grid1;
-	Grid grid2;
+	Grid testgrid;
 
 	void TestDoorInsertion();
 	void TestRotation1();

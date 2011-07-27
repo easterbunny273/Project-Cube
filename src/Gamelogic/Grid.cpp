@@ -73,28 +73,25 @@ bool Grid::RotateGrid(const int iFactor)
 
 	if(iFactor == 1 || iFactor == -3)
 	{
-		while(!temp.empty())
+		for(int i = 0; i < temp.size(); i++)
 		{
-			glm::vec2 old = temp.back();
-			temp.pop_back();
+			glm::vec2 old = temp.at(i);
 			m_vDoorPositions.push_back(glm::vec2(10-old.y, old.x));
 		}
 	}
 	else if(iFactor == 2 || iFactor == -2)
 	{
-		while(!temp.empty())
+		for(int i = 0; i < temp.size(); i++)
 		{
-			glm::vec2 old = temp.back();
-			temp.pop_back();
+			glm::vec2 old = temp.at(i);
 			m_vDoorPositions.push_back(glm::vec2(10-old.x, 10-old.y));
 		}
 	}
 	else if(iFactor == 3 || iFactor == -1)
 	{
-		while(!temp.empty())
+		for(int i = 0; i < temp.size(); i++)
 		{
-			glm::vec2 old = temp.back();
-			temp.pop_back();
+			glm::vec2 old = temp.at(i);
 			m_vDoorPositions.push_back(glm::vec2(old.y, 10-old.x));
 		}
 	}
