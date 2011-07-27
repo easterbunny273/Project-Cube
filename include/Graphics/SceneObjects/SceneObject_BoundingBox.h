@@ -7,7 +7,7 @@
 #ifndef __bambooengine_sceneobject_boundingbox_header
 #define __bambooengine_sceneobject_boundingbox_header
 
-#include "Graphics/SceneObject.h"
+#include "SceneObject.h"
 
 //!  A SceneObject which renders a bounding sphere.
 /*!
