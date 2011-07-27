@@ -95,6 +95,7 @@
     <ClCompile Include="..\src\Graphics\Graphics.cpp" />
     <ClCompile Include="..\src\Logger.cpp" />
     <ClCompile Include="..\src\Main.cpp" />
+    <ClCompile Include="..\src\MainApp.cpp" />
     <ClCompile Include="..\src\Settings.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -113,6 +114,7 @@
     <ClInclude Include="..\include\IInputEventListener.h" />
     <ClInclude Include="..\include\IXMLSerializeable.h" />
     <ClInclude Include="..\include\Logger.h" />
+    <ClInclude Include="..\include\MainApp.h" />
     <ClInclude Include="..\include\Settings.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

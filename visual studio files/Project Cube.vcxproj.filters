@@ -60,6 +60,9 @@
     <ClCompile Include="..\src\Gamelogic\Grid.cpp">
       <Filter>Source Files\gamelogic</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\MainApp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Logger.h">
@@ -109,6 +112,9 @@
     </ClInclude>
     <ClInclude Include="..\include\Gamelogic\Grid.h">
       <Filter>Header Files\gamelogic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\MainApp.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
