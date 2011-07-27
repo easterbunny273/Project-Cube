@@ -1,17 +1,14 @@
-#include <cppunit/TestFixture.h>
-#include <cppunit/extensions/HelperMacros.h>
-
+#include "cpptest.h"
 using namespace std;
 
-class GridTest : public CPPUNIT_NS :: TestFixture {
-	CPPUNIT_TEST_SUITE(GridTest);
-	CPPUNIT_TEST(test1);
-	CPPUNIT_TEST_SUITE_END();
+class GridTest : public Test::Suite {
 
 public:
-	void setUp();
-	void tearDown();
+	GridTest()
+	{
+		TEST_ADD(GridTest::test1);
+	}
 
-protected:
+private:
 	void test1();
 };
