@@ -9,13 +9,13 @@
 
 #include <memory>
 #include "Graphics/SceneObject.h"
+#include "Graphics/Graphic.h"
 
-class Camera;
 
 class SceneObject_Camera : public SceneObject
 {
 public:
-    SceneObject_Camera(std::shared_ptr<Camera> spCamera, bool bSetMatrices=true);
+    SceneObject_Camera(std::shared_ptr<Graphic::Camera> spCamera, bool bSetMatrices=true);
 
     /*! \name Operations */
     //@{
@@ -35,7 +35,7 @@ protected:
     //@}
 
 private:
-    std::shared_ptr<Camera> m_spCamera;
+    std::shared_ptr<Graphic::Camera> m_spCamera;
     bool m_bSetMatrices;
 
     GLuint m_nVertexArrayObject;	///< The opengl name (=unsigned int) of the vertex array object

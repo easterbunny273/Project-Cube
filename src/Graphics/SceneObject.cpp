@@ -5,8 +5,8 @@
 #include <glm/gtx/transform2.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Graphics/Graphic.h"
 #include "Graphics/ShaderManager.h"
-#include "Camera.h"
 #include "Graphics/SceneObject.h"
 #include "Graphics/SceneObjects/SceneObject_BoundingBox.h"
 
@@ -57,7 +57,7 @@ void SceneObject::ItlSendTransformMatrices()
     {
 	if (m_spShadowCaster.get() != 0)
 	{
-	    glm::mat4 puffer = m_spShadowCaster->getProjectionMatrix() * m_spShadowCaster->getViewMatrix();
+            glm::mat4 puffer = m_spShadowCaster->GetProjectionMatrix() * m_spShadowCaster->GetViewMatrix();
 	    glUniformMatrix4fv(l_tempTransformMatrix, 1, GL_FALSE, &puffer[0][0]);
 	}
     }
@@ -83,7 +83,7 @@ void SceneObject::ItlSendLightPosition()
 }
 
 
-void SceneObject::SetLightSourceForShadowMapping(std::shared_ptr<Camera> spShadowCaster, bool bRecursivelySetForChildren)
+void SceneObject::SetLightSourceForShadowMapping(std::shared_ptr<Graphic::Camera> spShadowCaster, bool bRecursivelySetForChildren)
 {
     m_spShadowCaster = spShadowCaster;
 

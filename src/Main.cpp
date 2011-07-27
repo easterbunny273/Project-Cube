@@ -1,6 +1,6 @@
 #include "Settings.h"
 #include "Logger.h"
-#include "Graphics/Graphics.h"
+#include "Graphics/Graphic.h"
 #include "lua.hpp"
 #include "ICube.h"
 
@@ -30,18 +30,14 @@ int main()
     // for demonstration, read settings.xml and then write the settings to settings2.xml
     Settings::instance()->RestoreSettingsFromXMLFile("config/settings.xml");
 
-    Graphics test;
+    Graphic test;
 
-    test.StartUp();
+    test.InitializeOpenGL();
+    test.SetActiveRenderPath("default");
 
-    for (int i=0; i < 100000000; i++)
+    while (true)
     {
-        // burn cpu time
-
-
-        int *a = new int[10000];
-
-        delete [] a;
+        test.Render();
     }
 
     test.ShutDown();

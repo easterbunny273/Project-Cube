@@ -12,6 +12,7 @@
 #include <vector>
 #include <memory>
 
+#include "Graphics/Graphic.h"
 #include "common_gl.h"
 
 
@@ -21,7 +22,6 @@
 */
 
 class TRenderPass;
-class Camera;
 
 class SceneObject
 {
@@ -76,7 +76,7 @@ public:
     //@}
 
 
-    void SetLightSourceForShadowMapping(std::shared_ptr<Camera> spShadowCaster, bool bSetForChildren = true);
+    void SetLightSourceForShadowMapping(std::shared_ptr<Graphic::Camera> spShadowCaster, bool bSetForChildren = true);
 
     /*! \name Interfaces */
     //@{
@@ -173,7 +173,7 @@ protected:
 
 	std::vector<std::shared_ptr<SceneObject> > m_vChildren;
 
-	std::shared_ptr<Camera> m_spShadowCaster;
+        std::shared_ptr<Graphic::Camera> m_spShadowCaster;
 
 	bool m_bHasChildren;
     //@}
