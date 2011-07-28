@@ -10,6 +10,8 @@
 #ifndef __ICUBE_PROJECTCUBE_HEADER
 #define __ICUBE_PROJECTCUBE_HEADER
 
+#include <glm/glm.hpp>
+
 class ICube
 {
 public:

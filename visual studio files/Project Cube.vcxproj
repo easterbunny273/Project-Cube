@@ -93,6 +93,7 @@
     <ClCompile Include="..\external\tinyxml\tinyxml.cpp" />
     <ClCompile Include="..\external\tinyxml\tinyxmlerror.cpp" />
     <ClCompile Include="..\external\tinyxml\tinyxmlparser.cpp" />
+    <ClCompile Include="..\src\Gamelogic\Cube.cpp" />
     <ClCompile Include="..\src\Gamelogic\Grid.cpp" />
     <ClCompile Include="..\src\Graphics\Graphics.cpp" />
     <ClCompile Include="..\src\Logger.cpp" />

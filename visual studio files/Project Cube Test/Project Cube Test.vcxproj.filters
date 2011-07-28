@@ -54,6 +54,12 @@
     <ClCompile Include="..\..\external\tinyxml\tinyxmlerror.cpp">
       <Filter>Source Files\Project Cube</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Gamelogic\Cube.cpp">
+      <Filter>Source Files\Project Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\CubeTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\GridTest.h">
@@ -109,6 +115,9 @@
     </ClInclude>
     <ClInclude Include="..\..\external\tinyxml\tinystr.h">
       <Filter>Header Files\Project Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\test\CubeTest.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

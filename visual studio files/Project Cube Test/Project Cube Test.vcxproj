@@ -89,11 +89,13 @@
     <ClCompile Include="..\..\external\tinyxml\tinyxml.cpp" />
     <ClCompile Include="..\..\external\tinyxml\tinyxmlerror.cpp" />
     <ClCompile Include="..\..\external\tinyxml\tinyxmlparser.cpp" />
+    <ClCompile Include="..\..\src\Gamelogic\Cube.cpp" />
     <ClCompile Include="..\..\src\Gamelogic\Grid.cpp" />
     <ClCompile Include="..\..\src\Graphics\Graphics.cpp" />
     <ClCompile Include="..\..\src\Logger.cpp" />
     <ClCompile Include="..\..\src\MainApp.cpp" />
     <ClCompile Include="..\..\src\Settings.cpp" />
+    <ClCompile Include="..\..\test\CubeTest.cpp" />
     <ClCompile Include="..\..\test\GridTest.cpp" />
     <ClCompile Include="..\..\test\TestMain.cpp" />
   </ItemGroup>
@@ -115,6 +117,7 @@
     <ClInclude Include="..\..\include\Logger.h" />
     <ClInclude Include="..\..\include\MainApp.h" />
     <ClInclude Include="..\..\include\Settings.h" />
+    <ClInclude Include="..\..\test\CubeTest.h" />
     <ClInclude Include="..\..\test\GridTest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

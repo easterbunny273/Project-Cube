@@ -8,12 +8,12 @@ class GridTest : public Test::Suite {
 public:
 	GridTest()
 	{
-		TEST_ADD(GridTest::TestDoorInsertion);
-		TEST_ADD(GridTest::TestRotation1);
-		TEST_ADD(GridTest::TestRotation2);
-		TEST_ADD(GridTest::TestRotation3);
-		TEST_ADD(GridTest::TestMirrorHorizontal);
-		TEST_ADD(GridTest::TestMirrorVertical);
+		TEST_ADD(GridTest::TestDoorInsertion)
+		TEST_ADD(GridTest::TestRotation1)
+		TEST_ADD(GridTest::TestRotation2)
+		TEST_ADD(GridTest::TestRotation3)
+		TEST_ADD(GridTest::TestMirrorHorizontal)
+		TEST_ADD(GridTest::TestMirrorVertical)
 	}
 
 protected:
