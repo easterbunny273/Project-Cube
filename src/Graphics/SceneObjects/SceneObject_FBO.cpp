@@ -8,9 +8,9 @@
 std::stack<GLuint> bound_fbos;
 
 SceneObject_FBO::SceneObject_FBO(bool bDummy, int iWidth, int iHeight, const char * szColorTexture)
-    : m_iWidth(iWidth),
+    : m_bMipMapped(false),
+      m_iWidth(iWidth),
       m_iHeight(iHeight),
-      m_bMipMapped(false),
       m_szColorTextureName(szColorTexture),
       m_szDepthTextureName(0)
 {
@@ -76,7 +76,15 @@ SceneObject_FBO::SceneObject_FBO(bool bDummy, int iWidth, int iHeight, const cha
  *  \param bFloating16 If true, the generated color texture used 16bit floating precision.
  *  \param bMipMapped If true, mipmaps for the color texture are generated after each update of the color texture
  */
-SceneObject_FBO::SceneObject_FBO(int iWidth, int iHeight, const char *szColorTextureName, bool bFloating16, bool bMipMapped) : m_iWidth(iWidth), m_iHeight(iHeight), m_szColorTextureName(szColorTextureName), m_szDepthTextureName(0), m_bMipMapped(bMipMapped)
+SceneObject_FBO::SceneObject_FBO(int iWidth,
+                                 int iHeight,
+                                 const char *szColorTextureName,
+                                 bool bFloating16, bool bMipMapped)
+    : m_bMipMapped(bMipMapped),
+      m_iWidth(iWidth),
+      m_iHeight(iHeight),
+      m_szColorTextureName(szColorTextureName),
+      m_szDepthTextureName(0)
 {
     //write down which rendertargets we use
     m_bColorTexture = true;	    //we use a color texture
@@ -90,7 +98,7 @@ SceneObject_FBO::SceneObject_FBO(int iWidth, int iHeight, const char *szColorTex
     glActiveTexture(GL_TEXTURE0 + textureUnit);
 
 
-    bool bNewTexture = false;
+    //bool bNewTexture = false;
 
     if (TextureManager::instance()->isTextureRegistered(szColorTextureName, m_nColorTexture) == false)
     {
@@ -126,7 +134,7 @@ SceneObject_FBO::SceneObject_FBO(int iWidth, int iHeight, const char *szColorTex
 	//register color texture in texture manager, for easy use by simple calling TextureManager::useTexture(szColorTextureName);
 	TextureManager::instance()->registerManualTexture(szColorTextureName, m_nColorTexture);
 
-	bNewTexture = true;
+//	bNewTexture = true;
     }
     else
 	Logger::debug() << "new fbo, already registered texture used (" << m_nColorTexture << ", " << szColorTextureName << Logger::endl;
@@ -183,7 +191,16 @@ SceneObject_FBO::SceneObject_FBO(int iWidth, int iHeight, const char *szColorTex
  *  \param szDepthTextureName The texture name which is used to register the depth texture at the TextureManager
  *  \param bMipMapped If true, mipmaps for the color texture are generated after each update of the color texture
  */
-SceneObject_FBO::SceneObject_FBO(int iWidth, int iHeight, const char *szColorTextureName, const char *szDepthTextureName, bool bMipMapped) : m_iWidth(iWidth), m_iHeight(iHeight), m_szColorTextureName(szColorTextureName), m_szDepthTextureName(szDepthTextureName), m_bMipMapped(bMipMapped)
+SceneObject_FBO::SceneObject_FBO(int iWidth,
+                                 int iHeight,
+                                 const char *szColorTextureName,
+                                 const char *szDepthTextureName,
+                                 bool bMipMapped)
+    : m_bMipMapped(bMipMapped),
+      m_iWidth(iWidth),
+      m_iHeight(iHeight),
+      m_szColorTextureName(szColorTextureName),
+      m_szDepthTextureName(szDepthTextureName)
 {
     //write down which rendertargets we use
     m_bColorTexture = true;	    //we use a color texture

@@ -32,10 +32,9 @@ void ShaderManager::addShader(std::string name, Shader *shader)
 
 bool ShaderManager::activateShader(std::string name)
 {
-    int a;
     bool success = false;
 
-    for (a=0; a < this->m_vpShaders.size(); a++)
+    for (unsigned int a=0; a < this->m_vpShaders.size(); a++)
     {
 	if (this->m_vsShaderNames[a].compare(name)==0)
 	{

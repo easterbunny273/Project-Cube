@@ -30,7 +30,7 @@ void SceneObject::ItlSendTransformMatrices()
     const GLint l_modelviewprojection_matrix = ShaderManager::instance()->getUniform("ModelViewProjectionMatrix");
     const GLint l_normal_matrix = ShaderManager::instance()->getUniform("NormalMatrix");
     const GLint l_model_matrix = ShaderManager::instance()->getUniform("ModelMatrix");
-    const GLint l_lastFrameTransformMatrix = ShaderManager::instance()->getUniform("Camera_TransformMatrix_LastFrame");
+    //const GLint l_lastFrameTransformMatrix = ShaderManager::instance()->getUniform("Camera_TransformMatrix_LastFrame");
     const GLint l_tempTransformMatrix = ShaderManager::instance()->getUniform("Camera_TempTransformMatrix");
 
     //if a position is -1, it was not found, so we write only in uniforms where we found a valid position
@@ -88,7 +88,7 @@ void SceneObject::SetLightSourceForShadowMapping(std::shared_ptr<Graphic::Camera
     m_spShadowCaster = spShadowCaster;
 
     if (bRecursivelySetForChildren)
-	for (int a=0; a < m_vChildren.size(); a++)
+        for (unsigned int a=0; a < m_vChildren.size(); a++)
 	    m_vChildren[a]->SetLightSourceForShadowMapping(spShadowCaster, true);
 }
 
@@ -125,7 +125,7 @@ void SceneObject::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderInfo)
 		ItlPreRenderChildren();
 
 		//call render method in child nodes
-		for (int a=0; a < m_vChildren.size(); a++)
+                for (unsigned int a=0; a < m_vChildren.size(); a++)
 		    m_vChildren[a]->Render(pCurrentRenderInfo);
 
 		ItlPostRenderChildren();

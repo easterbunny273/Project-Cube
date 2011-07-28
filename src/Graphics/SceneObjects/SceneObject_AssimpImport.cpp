@@ -92,8 +92,8 @@ SceneObject_AssimpImport::SceneObject_AssimpImport(std::string sFilename)
 	Logger::debug() << "Loaded file " << sFilename << " with assimp" << Logger::endl;
 
 	bool bModelHasMeshes = scene->HasMeshes();
-	bool bModelHasMaterials = scene->HasMaterials();
-	bool bModelHasTextures = scene->HasTextures();
+//	bool bModelHasMaterials = scene->HasMaterials();
+//	bool bModelHasTextures = scene->HasTextures();
 
 	assert (bModelHasMeshes);
 
@@ -101,7 +101,7 @@ SceneObject_AssimpImport::SceneObject_AssimpImport(std::string sFilename)
 
 	assert (iNumMeshes > 0);
 
-	for (int i=0; i < scene->mNumMaterials; i++)
+        for (unsigned int i=0; i < scene->mNumMaterials; i++)
 	{
 	    struct TItlMaterialData *material_data = new TItlMaterialData;
 	    aiMaterial *mat = scene->mMaterials[i];
@@ -141,6 +141,12 @@ SceneObject_AssimpImport::SceneObject_AssimpImport(std::string sFilename)
 
 	    bool bOk5 = (AI_SUCCESS == mat->Get(AI_MATKEY_SHININESS_STRENGTH, material_data->fShininess_Strength));
 
+
+            assert (bOk1);
+            assert (bOk2);
+            assert (bOk3);
+            assert (bOk4);
+            assert (bOk5);
 
 	    //get texture
 	    //first, find texture. we allow only one texture per material
@@ -198,7 +204,7 @@ SceneObject_AssimpImport::SceneObject_AssimpImport(std::string sFilename)
 	    material_data->bHasColorTexture = bTextureFound;
 
 	    //check if new index in m_vMaterialData will be the same as current i
-	    assert (m_vMaterialData.size() == i);
+            assert (m_vMaterialData.size() == static_cast<unsigned int>(i));
 
 	    m_vMaterialData.push_back(material_data);
 	}
@@ -278,14 +284,14 @@ SceneObject_AssimpImport::SceneObject_AssimpImport(std::string sFilename)
 
 	    }
 
-	    int iTestSize = vVertexBufferData.size();
+           // unsigned int nTestSize = vVertexBufferData.size();
 
 	    assert (pMesh->GetNumUVChannels() > 0);
 
 	    meshData->nVboOffsetUVCoords = vVertexBufferData.size();
 	    meshData->nNumUVChannels = pMesh->GetNumUVChannels();
 
-	    for (int l=0; l < meshData->nNumUVChannels; l++)
+            for (unsigned int l=0; l < meshData->nNumUVChannels; l++)
 		for (int ii=0; ii < iNumVertices; ii++)
 		{
 		    vVertexBufferData.push_back(pMesh->mTextureCoords[l][ii].x);
@@ -329,7 +335,7 @@ void SceneObject_AssimpImport::ItlCreateVertexBufferObject(std::vector<GLfloat> 
     //create one big array and copy vector contents
     GLfloat *packed_vertex_buffer_data = new GLfloat[data.size()];
 
-    for (int i=0; i < data.size(); i++)
+    for (unsigned int i=0; i < data.size(); i++)
     {
 	packed_vertex_buffer_data[i] = data[i];
     }
@@ -346,7 +352,7 @@ void SceneObject_AssimpImport::ItlCreateVerticesArray(std::vector<GLfloat> &data
 {
     unsigned int nNumVertices = 0;
 
-    for (int i=0; i < m_nNumMeshes; i++)
+    for (unsigned int i=0; i < m_nNumMeshes; i++)
     {
 	nNumVertices += m_vMeshData[i]->nNumVertices;
     }
@@ -354,11 +360,11 @@ void SceneObject_AssimpImport::ItlCreateVerticesArray(std::vector<GLfloat> &data
     m_pfVertices = new float[nNumVertices*3];
     unsigned int iter=0;
 
-    for (int i=0; i < m_nNumMeshes; i++)
+    for (unsigned int i=0; i < m_nNumMeshes; i++)
     {
 	unsigned int nOffset = m_vMeshData[i]->nVboOffsetVertices;
 
-	for (int ii=0; ii < m_vMeshData[i]->nNumVertices; ii++)
+        for (unsigned int ii=0; ii < m_vMeshData[i]->nNumVertices; ii++)
 	{
 	    m_pfVertices[iter] = data[nOffset + ii * 3];
 	    m_pfVertices[iter + 1] = data[nOffset + ii * 3 + 1];
@@ -397,7 +403,7 @@ void SceneObject_AssimpImport::ItlCreateIndicesArray(std::vector<GLuint> &data)
 {
     unsigned int nNumIndices = 0;
 
-    for (int i=0; i < m_nNumMeshes; i++)
+    for (unsigned int i=0; i < m_nNumMeshes; i++)
     {
 	nNumIndices += m_vMeshData[i]->nNumFaces * 3;
     }
@@ -407,11 +413,11 @@ void SceneObject_AssimpImport::ItlCreateIndicesArray(std::vector<GLuint> &data)
     unsigned int iter=0;
     unsigned int nVerticesLeftOfUs = 0;
 
-    for (int i=0; i < m_nNumMeshes; i++)
+    for (unsigned int i=0; i < m_nNumMeshes; i++)
     {
 	unsigned int nOffset = m_vMeshData[i]->nIboOffsetFaces;
 
-	for (int ii=0; ii < m_vMeshData[i]->nNumFaces*3; ii++)
+        for (unsigned int ii=0; ii < m_vMeshData[i]->nNumFaces*3; ii++)
 	{
 	    m_piIndices[iter] = data[nOffset + ii] + nVerticesLeftOfUs;
 	    iter++;
@@ -445,7 +451,7 @@ void SceneObject_AssimpImport::ItlCreateIndexBufferObject(std::vector<GLuint> &d
     //create one big array and copy vector contents
     GLuint *packed_index_buffer_data = new GLuint[data.size()];
 
-    for (int i=0; i < data.size(); i++)
+    for (unsigned int i=0; i < data.size(); i++)
     {
 	packed_index_buffer_data[i] = data[i];
     }
@@ -506,9 +512,9 @@ void SceneObject_AssimpImport::ItlRender()
 	    glUniform1i(l_opacity_opacity_texture, texture_unit_opacity_opacity);   //tell the shader which texture unit was used
     }
 
-    for (int iMesh=0; iMesh < m_nNumMeshes; iMesh++)
+    for (unsigned int nMesh=0; nMesh < m_nNumMeshes; nMesh++)
     {
-	const TItlMeshData *pMeshData = m_vMeshData[iMesh];
+        const TItlMeshData *pMeshData = m_vMeshData[nMesh];
 	const TItlMaterialData *pMaterialData = m_vMaterialData[pMeshData->nMaterialIndex];
 
 	glUniform4fv(ShaderManager::instance()->getUniform("MaterialAmbient"), 1, &pMaterialData->fColorAmbient[0]);

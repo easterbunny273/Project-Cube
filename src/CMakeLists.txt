@@ -8,7 +8,7 @@ include_directories(../include/)
 include_directories(../external/tinyxml/)
 
 #add definitions (for gcc)
-add_definitions(-ggdb -std=c++0x)
+add_definitions(-ggdb -std=c++0x -Wall)
 
 #define headers
 file(GLOB HEADERS "../include/*.h")

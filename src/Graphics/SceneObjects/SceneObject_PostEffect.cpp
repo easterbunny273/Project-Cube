@@ -69,9 +69,6 @@ void SceneObject_PostEffect::ItlRender()
     const GLint l_in_Position(ShaderManager::instance()->getAttribute("in_Position"));
     const GLint l_texcoords(ShaderManager::instance()->getAttribute("in_Texcoord"));
 
-    bool bTexture2HasOwnUnit = false;
-    bool bTexture3HasOwnUnit = false;
-
     glVertexAttribPointer(l_in_Position, 3, GL_DOUBLE, GL_FALSE, 6 * sizeof(GLdouble), NULL);
     glVertexAttribPointer(l_texcoords, 3, GL_DOUBLE, GL_FALSE, 6 * sizeof(GLdouble), (GLvoid *) (3 * sizeof(GLdouble)));
 

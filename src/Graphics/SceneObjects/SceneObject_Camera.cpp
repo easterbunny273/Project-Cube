@@ -157,8 +157,8 @@ void SceneObject_Camera::ItlRender()
 	glEnableVertexAttribArray(l_in_Position);
     }
 
-    float fPreviousLineWidth;
-    int iPreviousPolygonMode;
+    //float fPreviousLineWidth;
+    //int iPreviousPolygonMode;
 
     //glGetFloatv(GL_LINE_WIDTH, &fPreviousLineWidth);
     //glGetIntegerv(GL_POLYGON_MODE, &iPreviousPolygonMode);

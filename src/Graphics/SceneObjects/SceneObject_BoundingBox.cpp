@@ -161,7 +161,7 @@ void SceneObject_BoundingBox::ItlRender()
 	glEnableVertexAttribArray(l_in_Position);
     }
 
-    float fPreviousLineWidth;
+    //float fPreviousLineWidth;
 
     //glGetFloatv(GL_LINE_WIDTH, &fPreviousLineWidth);
 

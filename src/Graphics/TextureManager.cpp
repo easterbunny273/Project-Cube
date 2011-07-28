@@ -60,13 +60,13 @@ bool TextureManager::loadTexture(std::string sTextureName, std::string sFilename
 	}
 	else
 	{
-		long h, w, bpp, f;
+                long h, w, f;
 		unsigned char *texdata=0;
 		GLuint OpenGLID;
 
 		w=ilGetInteger(IL_IMAGE_WIDTH);		    // Breite des Bildes holen
 		h=ilGetInteger(IL_IMAGE_HEIGHT);	    // Höhe des Bildes holen
-		bpp=ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL); // Farbtiefe des Bildes
+                //bpp=ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL); // Farbtiefe des Bildes
 		f=ilGetInteger(IL_IMAGE_FORMAT);	    // Format des Bildes z.B. RGB RGBA BGR BGRA usw.
 		texdata=ilGetData();			    // Zeiger auf Bilddaten holen
 
@@ -113,7 +113,7 @@ bool TextureManager::loadTexture(std::string sTextureName, std::string sFilename
 
 GLuint TextureManager::useTexture(std::string sTextureName)
 {
-    int old_size = this->m_mTextureIDs.size();
+    unsigned int old_size = this->m_mTextureIDs.size();
     GLuint texture_id = this->m_mTextureIDs[sTextureName];
 
     assert (m_mTextureLocks.find(texture_id) == m_mTextureLocks.end() || m_mTextureLocks[texture_id] == false);
@@ -172,6 +172,9 @@ GLuint TextureManager::useTexture(std::string sTextureName)
 	    }
 	}
     }
+
+    assert (!"should not reach this point");
+    return 0;
 }
 
 void TextureManager::unuseTexture(std::string sTextureName)
@@ -217,14 +220,14 @@ void TextureManager::registerManualTexture(std::string sTextureName, GLuint nTex
 {
     Logger::debug() << "Registered manual texture \"" << sTextureName << "\" with id " << nTextureID << Logger::endl;
 
-    int iOldSize = m_mTextureIDs.size();
+    unsigned int nOldSize = m_mTextureIDs.size();
 
     m_mTextureIDs[sTextureName] = nTextureID;
     m_mTextureTargets[sTextureName] = eTarget;
 
     this->textures_in_units[sTextureName] = -1;
 
-    assert (m_mTextureIDs.size() != iOldSize);
+    assert (m_mTextureIDs.size() != nOldSize);
 }
 
 bool TextureManager::isTextureRegistered(std::string sTextureName, GLuint &rnTextureID)
@@ -315,12 +318,12 @@ GLuint TextureManager::CreateSampler(std::string sTextureName, GLenum eTarget, G
 
 GLint TextureManager::GetTextureTarget(std::string sTextureName)
 {
-    int iOldSize = m_mTextureTargets.size();
+    unsigned int nOldSize = m_mTextureTargets.size();
 
     GLint iTarget = m_mTextureTargets[sTextureName];
 
     // check that size has not changed (else the entry did not exist before)
-    assert (m_mTextureTargets.size() == iOldSize);
+    assert (m_mTextureTargets.size() == nOldSize);
 
     return iTarget;
 }

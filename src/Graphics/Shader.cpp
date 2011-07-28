@@ -33,7 +33,7 @@ bool Shader::ItlLoadFileToString(const char* filename, GLubyte** ShaderSource, u
 	return false;
     }
 
-    unsigned long pos=file.tellg();
+    //unsigned long pos=file.tellg();
     file.seekg(0,ios::end);
     *len = file.tellg();
     file.seekg(ios::beg);
@@ -106,6 +106,8 @@ void Shader::ItlAddShader(GLenum tShaderType, const char *szFilename)
 
     source_ok = ItlLoadFileToString(szFilename, &shaderSource, &shaderLength);
 
+    assert (source_ok);
+
     GLuint shaderObject = glCreateShader(tShaderType);
 
     glShaderSource(shaderObject, 1,  (const GLchar **) &shaderSource, (const GLint *) &shaderLength);
@@ -134,9 +136,9 @@ void Shader::ItlAddShader(GLenum tShaderType, const char *szFilename)
 
 void Shader::ItlLinkShader()
 {
-    GLuint ProgramObject = glCreateProgram();
+    GLint ProgramObject = glCreateProgram();
 
-    for (int i=0; i < m_glShaderObjects.size(); i++)
+    for (unsigned int i=0; i < m_glShaderObjects.size(); i++)
 	glAttachShader(ProgramObject, m_glShaderObjects.at(i));
 
     glLinkProgram(ProgramObject);
@@ -229,7 +231,7 @@ GLint Shader::getUniformLocation(const char *name)
 {
     std::string sName(name);
 
-    if (last_active != this->m_nShaderId)
+    if ((GLuint) last_active != this->m_nShaderId)
 	Logger::error() << "While setting an uniform of an shader, the shader must be active!" << Logger::endl;
 
     std::map<std::string, GLint>::iterator iter = m_mCachedUniformLocations.find(sName);
@@ -251,7 +253,7 @@ GLint Shader::getUniformLocation(const char *name)
 
 GLint Shader::getAttribLocation(const char *name)
 {
-    if (last_active != this->m_nShaderId)
+    if (static_cast<GLuint>(last_active) != this->m_nShaderId)
 	Logger::error() << "While setting an attribute of an shader, the shader must be active!" << Logger::endl;
 
     std::string sName(name);

@@ -42,9 +42,9 @@ Graphic *Graphic::s_pInstance = NULL;
   *************************************************************** */
 Graphic::Graphic()
     : m_bWindowOpenened(false),
-      m_fTimeOfLastRenderCall(0),
       m_iFramesInThisSecondYet(0),
       m_iFramesPerSecond(0),
+      m_fTimeOfLastRenderCall(0),
       m_pInputEventListener(NULL)
 {
     // check if this is the first instance
@@ -139,7 +139,7 @@ void Graphic::Render()
         ssConversionBuffer << m_iFramesInThisSecondYet;
         ssConversionBuffer >> sFramesPerSecond;
 
-        std:string sWindowTitle = std::string("Project CUBE, frames per second: ") + sFramesPerSecond;
+        std::string sWindowTitle = std::string("Project CUBE, frames per second: ") + sFramesPerSecond;
         glfwSetWindowTitle(sWindowTitle.data());
 
         m_iFramesPerSecond = m_iFramesInThisSecondYet;
