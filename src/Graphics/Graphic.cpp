@@ -160,6 +160,7 @@ bool Graphic::InitializeOpenGL()
     */
 
     Logger::debug() << "graphic initialized" << Logger::endl;
+	return true;
 }
 
 /****************************************************************

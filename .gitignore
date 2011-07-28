@@ -37,6 +37,8 @@ external/glew
 external/glfw
 external/cpptest
 external/cppunit
+external/assimp
+external/DevIL
 
 #test results
 testresults*

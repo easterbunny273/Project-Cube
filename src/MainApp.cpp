@@ -38,7 +38,7 @@ void MainApp::Run()
     while(true)
         GetGraphic()->Render();
 
-    GetGraphic()->ShutDown();
+    //GetGraphic()->ShutDown();
 }
 
 Graphic * MainApp::GetGraphic()

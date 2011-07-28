@@ -274,7 +274,7 @@ bool SceneObject_BoundingBoxed::ItlInitializeBoundingBox()
 		m_fMinZ = fCurrentZ;
 	}
     }
-
+	return true;
 }
 
 bool SceneObject_BoundingBoxed::ItlTestIfVisible()
