@@ -75,12 +75,12 @@ bool Grid::RotateGrid(const int iFactor)
 {
 	if(iFactor == 0)
 		return true;
-	if(iFactor < -270 || iFactor > 270)
+	if(!(iFactor%90 == 0))
 		return false;
 
 	glm::ivec2 old;
 
-	if(iFactor == 90 || iFactor == -270)
+	if((iFactor-90)%360 == 0)
 	{
 		for(unsigned int i = 0; i < m_vDoorPositions.size(); i++)
 		{
@@ -88,7 +88,7 @@ bool Grid::RotateGrid(const int iFactor)
 			m_vDoorPositions.at(i) = glm::ivec2(10-old.y, old.x);
 		}
 	}
-	else if(iFactor == 180 || iFactor == -180)
+	else if((iFactor-180)%360 == 0)
 	{
 		for(unsigned int i = 0; i < m_vDoorPositions.size(); i++)
 		{
@@ -96,7 +96,7 @@ bool Grid::RotateGrid(const int iFactor)
 			m_vDoorPositions.at(i) = glm::ivec2(10-old.x, 10-old.y);
 		}
 	}
-	else if(iFactor == 270 || iFactor == -90)
+	else if((iFactor-270)%360 == 0)
 	{
 		for(unsigned int i = 0; i < m_vDoorPositions.size(); i++)
 		{

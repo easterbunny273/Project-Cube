@@ -38,10 +38,10 @@ bool Cube::RotateX(const int iFactor)
 {
 	if(iFactor == 0)
 		return true;
-	if(iFactor < -270 || iFactor > 270)
+	if(!(iFactor%90 == 0))
 		return false;
 
-	if(iFactor == 90 || iFactor == -270)
+	if((iFactor-90)%360 == 0)
 	{
 		m_Xplus.RotateGrid(-90);
 		m_Xminus.RotateGrid(-90);
@@ -49,7 +49,7 @@ bool Cube::RotateX(const int iFactor)
 		m_Zminus.MirrorGridHorizontal();
 		itlSwitchGrids(m_Zplus, m_Yplus, m_Zminus, m_Yminus);
 	}
-	else if(iFactor == 180 || iFactor == -180)
+	else if((iFactor-180)%360 == 0)
 	{
 		m_Xplus.RotateGrid(-180);
 		m_Xminus.RotateGrid(-180);
@@ -60,7 +60,7 @@ bool Cube::RotateX(const int iFactor)
 		itlSwitchGrids(m_Yplus, m_Yminus);
 		itlSwitchGrids(m_Zplus, m_Zminus);
 	}
-	else if(iFactor == 270 || iFactor == -90)
+	else if((iFactor-270)%360 == 0)
 	{
 		m_Xplus.RotateGrid(-270);
 		m_Xminus.RotateGrid(-270);
@@ -75,10 +75,10 @@ bool Cube::RotateY(const int iFactor)
 {
 	if(iFactor == 0)
 		return true;
-	if(iFactor < -270 || iFactor > 270)
+	if(!(iFactor%90 == 0))
 		return false;
 
-	if(iFactor == 90 || iFactor == -270)
+	if((iFactor-90)%360 == 0)
 	{
 		m_Yplus.RotateGrid(-90);
 		m_Yminus.RotateGrid(-90);
@@ -86,7 +86,7 @@ bool Cube::RotateY(const int iFactor)
 		m_Xminus.MirrorGridVertical();
 		itlSwitchGrids(m_Xminus, m_Zminus, m_Xplus, m_Zplus);
 	}
-	else if(iFactor == 180 || iFactor == -180)
+	else if((iFactor-180)%360 == 0)
 	{
 		m_Yplus.RotateGrid(-180);
 		m_Yminus.RotateGrid(-180);
@@ -97,7 +97,7 @@ bool Cube::RotateY(const int iFactor)
 		itlSwitchGrids(m_Xplus, m_Xminus);
 		itlSwitchGrids(m_Zplus, m_Zminus);
 	}
-	else if(iFactor == 270 || iFactor == -90)
+	else if((iFactor-270)%360 == 0)
 	{
 		m_Yplus.RotateGrid(-270);
 		m_Yminus.RotateGrid(-270);
@@ -112,10 +112,10 @@ bool Cube::RotateZ(const int iFactor)
 {
 	if(iFactor == 0)
 		return true;
-	if(iFactor < -270 || iFactor > 270)
+	if(!(iFactor%90 == 0))
 		return false;
 
-	if(iFactor == 90 || iFactor == -270)
+	if((iFactor-90)%360 == 0)
 	{
 		m_Zplus.RotateGrid(-90);
 		m_Zminus.RotateGrid(-90);
@@ -127,7 +127,7 @@ bool Cube::RotateZ(const int iFactor)
 		m_Yminus.MirrorGridVertical();
 		itlSwitchGrids(m_Xplus, m_Yminus, m_Xminus, m_Yplus);
 	}
-	else if(iFactor == 180 || iFactor == -180)
+	else if((iFactor-180)%360 == 0)
 	{
 		m_Zplus.RotateGrid(-180);
 		m_Zminus.RotateGrid(-180);
@@ -138,7 +138,7 @@ bool Cube::RotateZ(const int iFactor)
 		itlSwitchGrids(m_Xplus, m_Xminus);
 		itlSwitchGrids(m_Yplus, m_Yminus);
 	}
-	else if(iFactor == 270 || iFactor == -90)
+	else if((iFactor-270)%360 == 0)
 	{
 		m_Zplus.RotateGrid(-270);
 		m_Zminus.RotateGrid(-270);
