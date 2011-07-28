@@ -16,7 +16,7 @@
  * a texture if a texture is still bound to an unit but the unit is marked as "free for used".
  * In this case, the texturemanager just marks the unit as "used" and prevents rebinding - but
  * I think that the overhead to do this beats the benefit, so its disabled by default */
-//#define PREVENT_REBINDING_TEXTURE
+#define PREVENT_REBINDING_TEXTURE
 
 /*! \brief A class for loading textures and manage the use of the texture units.
  *
@@ -41,14 +41,14 @@ private:
     std::map<std::string, GLint> m_mTextureTargets;
 
     /*! This map holds all textures (first parameter) which are currently stored in texture units (second parameter) */
-    std::map<std::string, GLint> textures_in_units;
-    std::list<GLuint> free_units;
+    std::map<std::string, GLint> m_mTexturesInUnits;
+    std::list<GLuint> m_lFreeUnits;
 
     std::map<GLuint, bool> m_mTextureLocks;
 
 #ifdef PREVENT_REBINDING_TEXTURE
     /*! this map holds the texture_ids which where loaded in the units (first parameter: unit, second parameter: texture id) */
-    std::map<GLint, GLuint> unit_has_texture;
+    std::map<GLint, GLuint> m_mUnitHasTexture;
 #endif
 
     /*! \brief Constructor, only for internal use (singelton pattern) */
@@ -69,7 +69,10 @@ public:
      *  \param bAlreadyGammaCorrected Specify if the image which should be loaded is already gamma-corrected or not
      *  \sa TextureManager::useTexture(), TextureManager::unuseTexture()
      */
-    bool loadTexture(std::string sTextureName, std::string sFilename, bool bAlreadyGammaCorrected, GLint iTarget = GL_TEXTURE_2D);
+    bool LoadTexture(std::string sTextureName,
+		     std::string sFilename,
+		     bool bAlreadyGammaCorrected,
+		     GLint iTarget = GL_TEXTURE_2D);
 
     /*! \brief Method to use an already loaded texture
      *
@@ -85,7 +88,7 @@ public:
      *  \return The ID of the used texture unit
      *  \sa TextureManager::loadTexture(), TextureManager::unuseTexture()
      */
-    GLuint useTexture(std::string sTextureName);
+    GLuint UseTexture(std::string sTextureName);
 
     /*! \brief Method to unuse a texture
      *
@@ -101,7 +104,7 @@ public:
      *  \param sTextureName The name of the texture
      *  \sa TextureManager::loadTexture(), TextureManager::useTexture()
      */
-    void unuseTexture(std::string sTextureName);
+    void UnuseTexture(std::string sTextureName);
 
     /*! \brief Returns the ID of a free unit and marks it as used
      *
@@ -116,7 +119,7 @@ public:
      *  \return The ID of a free texture unit.
      *  \sa TextureManager::releaseUnit(), TextureManager::useTexture()
      */
-    GLuint getFreeUnit();
+    GLuint GetFreeUnit();
 
     /*! \brief Marks a given texture unit as free
      *
@@ -127,7 +130,7 @@ public:
      *  \param nUnit The id of the texture unit
      *  \sa TextureManager::getFreeUnit(), TextureManager::unuseTexture()
      */
-    void releaseUnit(GLuint nUnit);
+    void ReleaseUnit(GLuint nUnit);
 
     /*! \brief Registers an initialized opengl-texture in TextureManager to use it with TextureManager::useTexture()
      *
@@ -141,23 +144,23 @@ public:
      *
      *  \sa TextureManager::useTexture(), TextureManager::loadTexture()
      */
-    void registerManualTexture(std::string sTextureName, GLuint nTextureID, GLenum eTarget = GL_TEXTURE_2D);
+    void RegisterManualTexture(std::string sTextureName, GLuint nTextureID, GLenum eTarget = GL_TEXTURE_2D);
 
     /// returns wheter this texture is registered in the texture manager, and returns the opengl id if it is registered
-    bool isTextureRegistered(std::string sTextureName, GLuint &rnTextureID);
+    bool IsTextureRegistered(std::string sTextureName, GLuint &rnTextureID);
 
     /// returns if this texture is currently in use
-    bool isTextureInUse(GLuint nTextureID);
+    bool IsTextureInUse(GLuint nTextureID);
 
     /// returns if this texture is currently locked (in use)
-    bool isTextureLocked(GLuint nTextureID);
+    bool IsTextureLocked(GLuint nTextureID);
 
 
     /// locks a texture (marks it as in use)
-    void lockTextureID(GLuint nTextureID);
+    void LockTextureID(GLuint nTextureID);
 
     /// unlocks a texture
-    void unlockTextureID(GLuint nTextureID);
+    void UnlockTextureID(GLuint nTextureID);
 
     /// creates a sampler according to the given parameters and registers it in the texture manager,
     /// and returns the opengl id of the created texture

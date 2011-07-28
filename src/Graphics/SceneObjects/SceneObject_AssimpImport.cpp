@@ -180,9 +180,9 @@ SceneObject_AssimpImport::SceneObject_AssimpImport(std::string sFilename)
 		    std::string sBumpTextureName(sColorTextureName);
 		    sBumpTextureName.append("_BUMP");
 
-		    bool bOk = TextureManager::instance()->loadTexture(sColorTextureName, sTexturePath, true);
-		    bool bOk_Normal = TextureManager::instance()->loadTexture(sNormalTextureName, sTextureNormalPath, false);
-		    bool bOk_Bump = TextureManager::instance()->loadTexture(sBumpTextureName, sTextureBumpPath, false);
+		    bool bOk = TextureManager::instance()->LoadTexture(sColorTextureName, sTexturePath, true);
+		    bool bOk_Normal = TextureManager::instance()->LoadTexture(sNormalTextureName, sTextureNormalPath, false);
+		    bool bOk_Bump = TextureManager::instance()->LoadTexture(sBumpTextureName, sTextureBumpPath, false);
 
 		    if (!bOk)
 			Logger::fatal() << "Could not load material for model" << Logger::endl;
@@ -493,7 +493,7 @@ void SceneObject_AssimpImport::ItlRender()
 
     if (l_shadow_texture != -1)
     {
-	    GLuint texture_unit_shadowmap = TextureManager::instance()->useTexture("fbo_light_color");	    //load texture in texture unit
+	    GLuint texture_unit_shadowmap = TextureManager::instance()->UseTexture("fbo_light_color");	    //load texture in texture unit
 	    glUniform1i(l_shadow_texture, texture_unit_shadowmap);   //tell the shader which texture unit was used
     }
 
@@ -501,14 +501,14 @@ void SceneObject_AssimpImport::ItlRender()
     GLint l_opacity_depth_texture = ShaderManager::instance()->GetUniform("opacity_depth");
     if (l_opacity_depth_texture != -1)
     {
-	    GLuint texture_unit_opacity_depth = TextureManager::instance()->useTexture("fbo_deep_opacity_map_depth");	    //load texture in texture unit
+	    GLuint texture_unit_opacity_depth = TextureManager::instance()->UseTexture("fbo_deep_opacity_map_depth");	    //load texture in texture unit
 	    glUniform1i(l_opacity_depth_texture, texture_unit_opacity_depth);   //tell the shader which texture unit was used
     }
 
     GLint l_opacity_opacity_texture = ShaderManager::instance()->GetUniform("opacity_opacity");
     if (l_opacity_opacity_texture != -1)
     {
-	    GLuint texture_unit_opacity_opacity = TextureManager::instance()->useTexture("fbo_deep_opacity_map_opacities");	    //load texture in texture unit
+	    GLuint texture_unit_opacity_opacity = TextureManager::instance()->UseTexture("fbo_deep_opacity_map_opacities");	    //load texture in texture unit
 	    glUniform1i(l_opacity_opacity_texture, texture_unit_opacity_opacity);   //tell the shader which texture unit was used
     }
 
@@ -527,7 +527,7 @@ void SceneObject_AssimpImport::ItlRender()
 
 	if (pMaterialData->bHasColorTexture)
 	{
-	    glUniform1i(ShaderManager::instance()->GetUniform("color_texture"), TextureManager::instance()->useTexture(pMaterialData->sInternalLoadedColorTexture));
+	    glUniform1i(ShaderManager::instance()->GetUniform("color_texture"), TextureManager::instance()->UseTexture(pMaterialData->sInternalLoadedColorTexture));
 	    glUniform1i(ShaderManager::instance()->GetUniform("ColorTextureAvailable"), 1);
 	}
 	else
@@ -535,7 +535,7 @@ void SceneObject_AssimpImport::ItlRender()
 
 	if (pMaterialData->bHasNormalTexture)
 	{
-	    glUniform1i(ShaderManager::instance()->GetUniform("normal_texture"), TextureManager::instance()->useTexture(pMaterialData->sInternalLoadedNormalTexture));
+	    glUniform1i(ShaderManager::instance()->GetUniform("normal_texture"), TextureManager::instance()->UseTexture(pMaterialData->sInternalLoadedNormalTexture));
 	    glUniform1i(ShaderManager::instance()->GetUniform("NormalTextureAvailable"), 1);
 	}
 	else
@@ -595,10 +595,10 @@ void SceneObject_AssimpImport::ItlRender()
 	//glDrawArrays(GL_TRIANGLES, 0, pMeshData->nNumFaces * 3);
 
 	if (pMaterialData->bHasColorTexture)
-	    TextureManager::instance()->unuseTexture(pMaterialData->sInternalLoadedColorTexture);
+	    TextureManager::instance()->UnuseTexture(pMaterialData->sInternalLoadedColorTexture);
 
 	if (pMaterialData->bHasNormalTexture)
-	    TextureManager::instance()->unuseTexture(pMaterialData->sInternalLoadedNormalTexture);
+	    TextureManager::instance()->UnuseTexture(pMaterialData->sInternalLoadedNormalTexture);
 
 #ifdef CHECK_FOR_GLERROR
 	GLenum error = glGetError();
@@ -609,13 +609,13 @@ void SceneObject_AssimpImport::ItlRender()
     }
 
     if (l_shadow_texture != -1)
-	TextureManager::instance()->unuseTexture("fbo_light_color");	    //load texture in texture unit
+	TextureManager::instance()->UnuseTexture("fbo_light_color");	    //load texture in texture unit
 
     if (l_opacity_depth_texture != -1)
-	TextureManager::instance()->unuseTexture("fbo_deep_opacity_map_depth");	    //load texture in texture unit
+	TextureManager::instance()->UnuseTexture("fbo_deep_opacity_map_depth");	    //load texture in texture unit
 
     if (l_opacity_opacity_texture != -1)
-	TextureManager::instance()->unuseTexture("fbo_deep_opacity_map_opacities");	    //load texture in texture unit
+	TextureManager::instance()->UnuseTexture("fbo_deep_opacity_map_opacities");	    //load texture in texture unit
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

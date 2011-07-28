@@ -83,7 +83,7 @@ void SceneObject_PostEffect::ItlRender()
         std::string sUniformName = iter->first;
 
         // load texture in a free unit and remember used texture unit
-        GLuint nUsedTextureUnit = TextureManager::instance()->useTexture(sTextureName);
+        GLuint nUsedTextureUnit = TextureManager::instance()->UseTexture(sTextureName);
 
         // get the uniform location
         GLint iUniformLocation = ShaderManager::instance()->GetUniform(sUniformName);
@@ -142,7 +142,7 @@ void SceneObject_PostEffect::ItlRender()
         // alias for better code reading
         std::string sTextureName = iter->second;
 
-        TextureManager::instance()->unuseTexture(sTextureName);
+        TextureManager::instance()->UnuseTexture(sTextureName);
     }
 }
 

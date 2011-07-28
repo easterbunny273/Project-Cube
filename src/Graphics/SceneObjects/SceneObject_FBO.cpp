@@ -19,7 +19,7 @@ SceneObject_FBO::SceneObject_FBO(bool bDummy, int iWidth, int iHeight, const cha
     m_bDepthTexture = false;	    //we use no depth texture
     m_bDepthRenderbuffer = true;    //but we use a renderbuffer for the depth
 
-    bool bOk = TextureManager::instance()->isTextureRegistered(szColorTexture, m_nColorTexture);
+    bool bOk = TextureManager::instance()->IsTextureRegistered(szColorTexture, m_nColorTexture);
 
     if (!bOk)
 	Logger::fatal() << "created new fbo with color texture " << szColorTexture << "; but this texture is not registered yet!" << Logger::endl;
@@ -92,7 +92,7 @@ SceneObject_FBO::SceneObject_FBO(int iWidth,
     m_bDepthRenderbuffer = true;    //but we use a renderbuffer for the depth
 
     //get the id of a free texture unit from the texture manager
-    GLuint textureUnit = TextureManager::instance()->getFreeUnit();
+    GLuint textureUnit = TextureManager::instance()->GetFreeUnit();
 
     //activate this unit
     glActiveTexture(GL_TEXTURE0 + textureUnit);
@@ -100,7 +100,7 @@ SceneObject_FBO::SceneObject_FBO(int iWidth,
 
     //bool bNewTexture = false;
 
-    if (TextureManager::instance()->isTextureRegistered(szColorTextureName, m_nColorTexture) == false)
+    if (TextureManager::instance()->IsTextureRegistered(szColorTextureName, m_nColorTexture) == false)
     {
 
 	//generate color texture (=create new opengl id)
@@ -132,7 +132,7 @@ SceneObject_FBO::SceneObject_FBO(int iWidth,
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	//register color texture in texture manager, for easy use by simple calling TextureManager::useTexture(szColorTextureName);
-	TextureManager::instance()->registerManualTexture(szColorTextureName, m_nColorTexture);
+	TextureManager::instance()->RegisterManualTexture(szColorTextureName, m_nColorTexture);
 
 //	bNewTexture = true;
     }
@@ -140,7 +140,7 @@ SceneObject_FBO::SceneObject_FBO(int iWidth,
 	Logger::debug() << "new fbo, already registered texture used (" << m_nColorTexture << ", " << szColorTextureName << Logger::endl;
 
     //release unit
-    TextureManager::instance()->releaseUnit(textureUnit);
+    TextureManager::instance()->ReleaseUnit(textureUnit);
 
     //generate renderbuffer
     glGenRenderbuffers(1, &m_nDepthRenderbuffer);
@@ -208,7 +208,7 @@ SceneObject_FBO::SceneObject_FBO(int iWidth,
     m_bDepthRenderbuffer = false;   //so we don't use a depth renderbuffer
 
     //get the id of a free texture unit from the texture manager
-    GLuint textureUnit = TextureManager::instance()->getFreeUnit(); //ask for a free texture unit
+    GLuint textureUnit = TextureManager::instance()->GetFreeUnit(); //ask for a free texture unit
 
     //activate unit
     glActiveTexture(GL_TEXTURE0 + textureUnit);
@@ -258,10 +258,10 @@ SceneObject_FBO::SceneObject_FBO(int iWidth,
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
     //register color texture in texture manager, for easy use by simple calling TextureManager::useTexture(szColorTextureName);
-    TextureManager::instance()->registerManualTexture(szColorTextureName, m_nColorTexture);
+    TextureManager::instance()->RegisterManualTexture(szColorTextureName, m_nColorTexture);
 
     //register depth texture in texture manager, for easy use by simple calling TextureManager::useTexture(szColorTextureName);
-    TextureManager::instance()->registerManualTexture(szDepthTextureName, m_nDepthTexture);
+    TextureManager::instance()->RegisterManualTexture(szDepthTextureName, m_nDepthTexture);
 
     glGenFramebuffers(1, &m_nFramebuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, m_nFramebuffer);
@@ -281,7 +281,7 @@ SceneObject_FBO::SceneObject_FBO(int iWidth,
 	Logger::debug() << "Initialized FBO" << Logger::endl;
 
     //release used texture unit
-    TextureManager::instance()->releaseUnit(textureUnit);
+    TextureManager::instance()->ReleaseUnit(textureUnit);
 
     //unbind fbo
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -312,9 +312,9 @@ SceneObject_FBO::~SceneObject_FBO()
  */
 void SceneObject_FBO::ItlPreRenderChildren()
 {
-    assert (TextureManager::instance()->isTextureInUse(m_nColorTexture) == false);
+    assert (TextureManager::instance()->IsTextureInUse(m_nColorTexture) == false);
 
-    TextureManager::instance()->lockTextureID(m_nColorTexture);
+    TextureManager::instance()->LockTextureID(m_nColorTexture);
 
     //save current viewport params
     glGetIntegerv(GL_VIEWPORT, m_iGeneralViewportParams);
@@ -343,9 +343,9 @@ void SceneObject_FBO::ItlPostRenderChildren()
     //if mipmapping is activated, update mipmaps
     if (m_bMipMapped)
     {
-	TextureManager::instance()->useTexture(m_szColorTextureName);
+	TextureManager::instance()->UseTexture(m_szColorTextureName);
 	glGenerateMipmap(GL_TEXTURE_2D);
-	TextureManager::instance()->unuseTexture(m_szColorTextureName);
+	TextureManager::instance()->UnuseTexture(m_szColorTextureName);
     }
 
     //remove the fbo (THIS fbo) from the bound_fbos stack
@@ -363,7 +363,7 @@ void SceneObject_FBO::ItlPostRenderChildren()
     //restore viewport params
     glViewport(m_iGeneralViewportParams[0], m_iGeneralViewportParams[1], m_iGeneralViewportParams[2], m_iGeneralViewportParams[3]);
 
-    TextureManager::instance()->unlockTextureID(m_nColorTexture);
+    TextureManager::instance()->UnlockTextureID(m_nColorTexture);
 }
 
 void SceneObject_FBO::ItlPreRender()
