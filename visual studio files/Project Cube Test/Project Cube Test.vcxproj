@@ -53,14 +53,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../../external/tinyxml;../../external/cpptest/include;../../external/glfw/include;../../external/glew/include;../../external/glm;../../include/Gamelogic;../../include/Graphics;../../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../external/assimp/include;../../external/DevIL/include;../../external/tinyxml;../../external/cpptest/include;../../external/glfw/include;../../external/glew/include;../../external/glm;../../include/Gamelogic;../../include/Graphics;../../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../../external/lua/lib/;../../external/glfw/lib-msvc100/debug/;../../external/glew/lib/;../../external/cpptest/lib/Debug/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>GLFW.lib;glew32.lib;lua.lib;cpptest.lib;opengl32.lib;msvcrtd.lib;libcmtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../external/DevIL/lib;../../external/assimp/lib/assimp_debug-dll_win32;../../external/lua/lib/;../../external/glfw/lib-msvc100/debug/;../../external/glew/lib/;../../external/cpptest/lib/Debug/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp.lib;DevIL.lib;ILU.lib;ILUT.lib;GLFW.lib;glew32.lib;lua.lib;cpptest.lib;opengl32.lib;msvcrtd.lib;libcmtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>msvcrtd.lib;libcmtd.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -91,7 +91,19 @@
     <ClCompile Include="..\..\external\tinyxml\tinyxmlparser.cpp" />
     <ClCompile Include="..\..\src\Gamelogic\Cube.cpp" />
     <ClCompile Include="..\..\src\Gamelogic\Grid.cpp" />
-    <ClCompile Include="..\..\src\Graphics\Graphics.cpp" />
+    <ClCompile Include="..\..\src\Graphics\Graphic.cpp" />
+    <ClCompile Include="..\..\src\Graphics\SceneObject.cpp" />
+    <ClCompile Include="..\..\src\Graphics\SceneObjects\SceneObject_AssimpImport.cpp" />
+    <ClCompile Include="..\..\src\Graphics\SceneObjects\SceneObject_BoundingBox.cpp" />
+    <ClCompile Include="..\..\src\Graphics\SceneObjects\SceneObject_Camera.cpp" />
+    <ClCompile Include="..\..\src\Graphics\SceneObjects\SceneObject_Cube.cpp" />
+    <ClCompile Include="..\..\src\Graphics\SceneObjects\SceneObject_EmptyNode.cpp" />
+    <ClCompile Include="..\..\src\Graphics\SceneObjects\SceneObject_FBO.cpp" />
+    <ClCompile Include="..\..\src\Graphics\SceneObjects\SceneObject_PostEffect.cpp" />
+    <ClCompile Include="..\..\src\Graphics\SceneObjects\SceneObject_RenderPass.cpp" />
+    <ClCompile Include="..\..\src\Graphics\Shader.cpp" />
+    <ClCompile Include="..\..\src\Graphics\ShaderManager.cpp" />
+    <ClCompile Include="..\..\src\Graphics\TextureManager.cpp" />
     <ClCompile Include="..\..\src\Logger.cpp" />
     <ClCompile Include="..\..\src\MainApp.cpp" />
     <ClCompile Include="..\..\src\Settings.cpp" />
@@ -110,8 +122,20 @@
     <ClInclude Include="..\..\include\Gamelogic\IGameState.h" />
     <ClInclude Include="..\..\include\Gamelogic\IObject.h" />
     <ClInclude Include="..\..\include\Graphics\common_gl.h" />
-    <ClInclude Include="..\..\include\Graphics\Graphics.h" />
+    <ClInclude Include="..\..\include\Graphics\Graphic.h" />
     <ClInclude Include="..\..\include\Graphics\prevent_old_opengl.h" />
+    <ClInclude Include="..\..\include\Graphics\SceneObject.h" />
+    <ClInclude Include="..\..\include\Graphics\SceneObjects\SceneObject_AssimpImport.h" />
+    <ClInclude Include="..\..\include\Graphics\SceneObjects\SceneObject_BoundingBox.h" />
+    <ClInclude Include="..\..\include\Graphics\SceneObjects\SceneObject_Camera.h" />
+    <ClInclude Include="..\..\include\Graphics\SceneObjects\SceneObject_Cube.h" />
+    <ClInclude Include="..\..\include\Graphics\SceneObjects\SceneObject_EmptyNode.h" />
+    <ClInclude Include="..\..\include\Graphics\SceneObjects\SceneObject_FBO.h" />
+    <ClInclude Include="..\..\include\Graphics\SceneObjects\SceneObject_PostEffect.h" />
+    <ClInclude Include="..\..\include\Graphics\SceneObjects\SceneObject_RenderPass.h" />
+    <ClInclude Include="..\..\include\Graphics\Shader.h" />
+    <ClInclude Include="..\..\include\Graphics\ShaderManager.h" />
+    <ClInclude Include="..\..\include\Graphics\TextureManager.h" />
     <ClInclude Include="..\..\include\IInputEventListener.h" />
     <ClInclude Include="..\..\include\IXMLSerializeable.h" />
     <ClInclude Include="..\..\include\Logger.h" />

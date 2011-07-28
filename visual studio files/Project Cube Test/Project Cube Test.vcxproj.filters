@@ -30,9 +30,6 @@
     <ClCompile Include="..\..\src\Gamelogic\Grid.cpp">
       <Filter>Source Files\Project Cube</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Graphics\Graphics.cpp">
-      <Filter>Source Files\Project Cube</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Logger.cpp">
       <Filter>Source Files\Project Cube</Filter>
     </ClCompile>
@@ -59,6 +56,45 @@
     </ClCompile>
     <ClCompile Include="..\..\test\CubeTest.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Graphics\SceneObject.cpp">
+      <Filter>Source Files\Project Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Graphics\Shader.cpp">
+      <Filter>Source Files\Project Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Graphics\ShaderManager.cpp">
+      <Filter>Source Files\Project Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Graphics\TextureManager.cpp">
+      <Filter>Source Files\Project Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Graphics\Graphic.cpp">
+      <Filter>Source Files\Project Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Graphics\SceneObjects\SceneObject_AssimpImport.cpp">
+      <Filter>Source Files\Project Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Graphics\SceneObjects\SceneObject_BoundingBox.cpp">
+      <Filter>Source Files\Project Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Graphics\SceneObjects\SceneObject_Camera.cpp">
+      <Filter>Source Files\Project Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Graphics\SceneObjects\SceneObject_Cube.cpp">
+      <Filter>Source Files\Project Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Graphics\SceneObjects\SceneObject_EmptyNode.cpp">
+      <Filter>Source Files\Project Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Graphics\SceneObjects\SceneObject_FBO.cpp">
+      <Filter>Source Files\Project Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Graphics\SceneObjects\SceneObject_PostEffect.cpp">
+      <Filter>Source Files\Project Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Graphics\SceneObjects\SceneObject_RenderPass.cpp">
+      <Filter>Source Files\Project Cube</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -89,12 +125,6 @@
     <ClInclude Include="..\..\include\Graphics\common_gl.h">
       <Filter>Header Files\Project Cube</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Graphics\Graphics.h">
-      <Filter>Header Files\Project Cube</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Graphics\prevent_old_opengl.h">
-      <Filter>Header Files\Project Cube</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\IInputEventListener.h">
       <Filter>Header Files\Project Cube</Filter>
     </ClInclude>
@@ -118,6 +148,48 @@
     </ClInclude>
     <ClInclude Include="..\..\test\CubeTest.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Graphics\Graphic.h">
+      <Filter>Header Files\Project Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Graphics\prevent_old_opengl.h">
+      <Filter>Header Files\Project Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Graphics\SceneObject.h">
+      <Filter>Header Files\Project Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Graphics\Shader.h">
+      <Filter>Header Files\Project Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Graphics\ShaderManager.h">
+      <Filter>Header Files\Project Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Graphics\TextureManager.h">
+      <Filter>Header Files\Project Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Graphics\SceneObjects\SceneObject_AssimpImport.h">
+      <Filter>Header Files\Project Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Graphics\SceneObjects\SceneObject_BoundingBox.h">
+      <Filter>Header Files\Project Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Graphics\SceneObjects\SceneObject_Camera.h">
+      <Filter>Header Files\Project Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Graphics\SceneObjects\SceneObject_Cube.h">
+      <Filter>Header Files\Project Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Graphics\SceneObjects\SceneObject_EmptyNode.h">
+      <Filter>Header Files\Project Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Graphics\SceneObjects\SceneObject_FBO.h">
+      <Filter>Header Files\Project Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Graphics\SceneObjects\SceneObject_PostEffect.h">
+      <Filter>Header Files\Project Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Graphics\SceneObjects\SceneObject_RenderPass.h">
+      <Filter>Header Files\Project Cube</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
