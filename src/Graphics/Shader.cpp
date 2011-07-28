@@ -21,50 +21,50 @@ int last_active;
 
 //#define CHECK_FOR_GLERROR
 
-bool Shader::ItlLoadFileToString(const char* filename, GLubyte** ShaderSource, unsigned long* len)
+bool Shader::ItlLoadFileToString(const char* szFilename, GLubyte** pszShaderSource, unsigned long* nLength)
 {
     ifstream file;
-    file.open(filename, ios::in); // opens as ASCII!
+    file.open(szFilename, ios::in); // opens as ASCII!
 
     if(!file || !file.good())
     {
-	Logger::fatal() << "Could not read shader source code from " << filename << Logger::endl;
+        Logger::fatal() << "Could not read shader source code from " << szFilename << Logger::endl;
 
 	return false;
     }
 
     //unsigned long pos=file.tellg();
     file.seekg(0,ios::end);
-    *len = file.tellg();
+    *nLength = file.tellg();
     file.seekg(ios::beg);
 
-    if (*len==0)
+    if (*nLength==0)
     {
-	Logger::fatal() << "Could not read shader source code from " << filename << " (File was empty)" << Logger::endl;
+        Logger::fatal() << "Could not read shader source code from " << szFilename << " (File was empty)" << Logger::endl;
 	return false;
     }
 
-    *ShaderSource = (GLubyte*) new GLubyte[(*len)+1];
+    *pszShaderSource = (GLubyte*) new GLubyte[(*nLength)+1];
 
-    if (*ShaderSource == 0)
+    if (*pszShaderSource == 0)
     {
-	Logger::fatal() << "Could not reserve memory for shader source code (reading " << filename << ")" << Logger::endl;
+        Logger::fatal() << "Could not reserve memory for shader source code (reading " << szFilename << ")" << Logger::endl;
 	return false;
     }
 
     // len isn't always strlen cause some characters are stripped in ascii read...
     // it is important to 0-terminate the real length later, len is just max possible value...
-    (*ShaderSource)[*len] = 0;
+    (*pszShaderSource)[*nLength] = 0;
 
-    unsigned int i=0;
+    unsigned int nPos=0;
     while (file.good())
     {
-       (*ShaderSource)[i] = file.get();       // get character from file.
+       (*pszShaderSource)[nPos] = file.get();       // get character from file.
        if (!file.eof())
-	i++;
+        nPos++;
     }
 
-    (*ShaderSource)[i] = 0;  // 0-terminate it at the correct position
+    (*pszShaderSource)[nPos] = 0;  // 0-terminate it at the correct position
 
     file.close();
 
@@ -73,25 +73,25 @@ bool Shader::ItlLoadFileToString(const char* filename, GLubyte** ShaderSource, u
 
 void Shader::ItlPrintShaderLog(GLuint obj)
 {
-    int infologLength = 0;
-    int maxLength=0;
+    int iLogLength = 0;
+    int iMaximalLength=0;
 
     if(glIsShader(obj))
-	    glGetShaderiv(obj,GL_INFO_LOG_LENGTH,&maxLength);
+            glGetShaderiv(obj,GL_INFO_LOG_LENGTH,&iMaximalLength);
     else
-	    glGetProgramiv(obj,GL_INFO_LOG_LENGTH,&maxLength);
+            glGetProgramiv(obj,GL_INFO_LOG_LENGTH,&iMaximalLength);
 
-    char *infoLog = new char[maxLength];
+    char *szInfoLog = new char[iMaximalLength];
 
     if (glIsShader(obj))
-	    glGetShaderInfoLog(obj, maxLength, &infologLength, infoLog);
+            glGetShaderInfoLog(obj, iMaximalLength, &iLogLength, szInfoLog);
     else
-	    glGetProgramInfoLog(obj, maxLength, &infologLength, infoLog);
+            glGetProgramInfoLog(obj, iMaximalLength, &iLogLength, szInfoLog);
 
-    if (infologLength > 1)
-	Logger::error() << "Shader messages: \n" << infoLog << Logger::endl;
+    if (iLogLength > 1)
+        Logger::error() << "Shader messages: \n" << szInfoLog << Logger::endl;
 
-    delete[] infoLog;
+    delete[] szInfoLog;
 }
 
 
@@ -99,97 +99,110 @@ void Shader::ItlAddShader(GLenum tShaderType, const char *szFilename)
 {
     Logger::debug() << "Loading shader source: " << szFilename << Logger::endl;
 
-    GLubyte *shaderSource = 0;
-    unsigned long int shaderLength;
+    GLubyte *szShaderLog = 0;
+    unsigned long int nShaderLength;
 
     bool source_ok = false;
 
-    source_ok = ItlLoadFileToString(szFilename, &shaderSource, &shaderLength);
+    source_ok = ItlLoadFileToString(szFilename, &szShaderLog, &nShaderLength);
 
     assert (source_ok);
 
-    GLuint shaderObject = glCreateShader(tShaderType);
+    GLuint nShaderID = glCreateShader(tShaderType);
 
-    glShaderSource(shaderObject, 1,  (const GLchar **) &shaderSource, (const GLint *) &shaderLength);
+    glShaderSource(nShaderID, 1,  (const GLchar **) &szShaderLog, (const GLint *) &nShaderLength);
 
-    glCompileShader(shaderObject);
+    glCompileShader(nShaderID);
 
     //lets see if an error happened
-    GLint compiled;
+    GLint iCompileStatus;
 
     //check vertex shader object
-    glGetShaderiv(shaderObject, GL_COMPILE_STATUS, &compiled);
-    if (!compiled)
+    glGetShaderiv(nShaderID, GL_COMPILE_STATUS, &iCompileStatus);
+    if (!iCompileStatus)
     {
-	ItlPrintShaderLog(shaderObject);
+        ItlPrintShaderLog(nShaderID);
 	Logger::fatal() << "Could not compile shader " << szFilename << Logger::endl;
     }
     else
     {
 	Logger::debug() << "Successfully compiled shader " << szFilename << Logger::endl;
-	m_glShaderObjects.push_back(shaderObject);
+        m_glShaderObjects.push_back(nShaderID);
     }
 
-    if (shaderSource != 0)
-	delete[] shaderSource;
+    if (szShaderLog != 0)
+        delete[] szShaderLog;
 }
 
 void Shader::ItlLinkShader()
 {
-    GLint ProgramObject = glCreateProgram();
+    GLint iProgrammID = glCreateProgram();
 
     for (unsigned int i=0; i < m_glShaderObjects.size(); i++)
-	glAttachShader(ProgramObject, m_glShaderObjects.at(i));
+        glAttachShader(iProgrammID, m_glShaderObjects.at(i));
 
-    glLinkProgram(ProgramObject);
+    glLinkProgram(iProgrammID);
 
-    GLint linked;
-    glGetProgramiv(ProgramObject, GL_LINK_STATUS, &linked);
+    GLint iLinkStatus;
+    glGetProgramiv(iProgrammID, GL_LINK_STATUS, &iLinkStatus);
 
-    if (!linked)
+    if (!iLinkStatus)
     {
-       ItlPrintShaderLog(ProgramObject);
+       ItlPrintShaderLog(iProgrammID);
        Logger::fatal() << "Could not link shader program" << Logger::endl;
     }
     else
     {
-	    this->m_nShaderId = ProgramObject;
-	    this->m_bReadyForUse = true;
+            m_nShaderId = iProgrammID;
+            m_bReadyForUse = true;
+
 	    Logger::debug() << "Successfully linked shader program" << Logger::endl;
     }
 }
 
-Shader::Shader(const char *vertexshader_filename, const char *tesselation_control_shader_filename, const char *tesselation_evaluation_shader_filename, const char *geometry_shader_filename, const char *fragmentshader_filename)
+Shader::Shader(const char *szVertexShaderFilename,
+               const char *szTesselationControlShaderFilename,
+               const char *szTesselationEvaluationShaderFilename,
+               const char *szGeometryShaderFilename,
+               const char *szFragmentShaderFilename)
 {
-    ItlAddShader(GL_VERTEX_SHADER, vertexshader_filename);
-    ItlAddShader(GL_TESS_CONTROL_SHADER, tesselation_control_shader_filename);
-    ItlAddShader(GL_TESS_EVALUATION_SHADER, tesselation_evaluation_shader_filename);
-    ItlAddShader(GL_GEOMETRY_SHADER, geometry_shader_filename);
-    ItlAddShader(GL_FRAGMENT_SHADER, fragmentshader_filename);
+    ItlAddShader(GL_VERTEX_SHADER, szVertexShaderFilename);
+    ItlAddShader(GL_TESS_CONTROL_SHADER, szTesselationControlShaderFilename);
+    ItlAddShader(GL_TESS_EVALUATION_SHADER, szTesselationEvaluationShaderFilename);
+    ItlAddShader(GL_GEOMETRY_SHADER, szGeometryShaderFilename);
+    ItlAddShader(GL_FRAGMENT_SHADER, szFragmentShaderFilename);
     ItlLinkShader();
 }
 
-Shader::Shader(const char *vertexshader_filename, const char *tesselation_control_shader_filename, const char *tesselation_evaluation_shader_filename, const char *fragmentshader_filename)
+Shader::Shader(const char *szVertexShaderFilename,
+               const char *szTesselationControlShaderFilename,
+               const char *szTesselationEvaluationShaderFilename,
+               const char *szFragmentShaderFilename)
 {
-    ItlAddShader(GL_VERTEX_SHADER, vertexshader_filename);
-    ItlAddShader(GL_TESS_CONTROL_SHADER, tesselation_control_shader_filename);
-    ItlAddShader(GL_TESS_EVALUATION_SHADER, tesselation_evaluation_shader_filename);
-    ItlAddShader(GL_FRAGMENT_SHADER, fragmentshader_filename);
+    ItlAddShader(GL_VERTEX_SHADER, szVertexShaderFilename);
+    ItlAddShader(GL_TESS_CONTROL_SHADER, szTesselationControlShaderFilename);
+    ItlAddShader(GL_TESS_EVALUATION_SHADER, szTesselationEvaluationShaderFilename);
+    ItlAddShader(GL_FRAGMENT_SHADER, szFragmentShaderFilename);
     ItlLinkShader();
 }
 
-Shader::Shader(const char *vertexshader_filename, const char *fragmentshader_filename) : m_bReadyForUse(false)
+Shader::Shader(const char *szVertexShaderFilename,
+               const char *szFragmentShaderFilename)
+    : m_bReadyForUse(false)
 {
-    ItlAddShader(GL_VERTEX_SHADER, vertexshader_filename);
-    ItlAddShader(GL_FRAGMENT_SHADER, fragmentshader_filename);
+    ItlAddShader(GL_VERTEX_SHADER, szVertexShaderFilename);
+    ItlAddShader(GL_FRAGMENT_SHADER, szFragmentShaderFilename);
     ItlLinkShader();
 }
 
-Shader::Shader(const char *vertexshader_filename, const char *geometryshader_filename, const char *fragmentshader_filename) : m_bReadyForUse(false)
+Shader::Shader(const char *szVertexShaderFilename,
+               const char *szGeometryShaderFilename,
+               const char *szFragmentShaderFilename)
+    : m_bReadyForUse(false)
 {
-    ItlAddShader(GL_VERTEX_SHADER, vertexshader_filename);
-    ItlAddShader(GL_GEOMETRY_SHADER, geometryshader_filename);
-    ItlAddShader(GL_FRAGMENT_SHADER, fragmentshader_filename);
+    ItlAddShader(GL_VERTEX_SHADER, szVertexShaderFilename);
+    ItlAddShader(GL_GEOMETRY_SHADER, szGeometryShaderFilename);
+    ItlAddShader(GL_FRAGMENT_SHADER, szFragmentShaderFilename);
     ItlLinkShader();
 }
 
@@ -203,7 +216,7 @@ Shader::~Shader()
     for_each(m_glShaderObjects.begin(), m_glShaderObjects.end(), [](GLuint shader) { glDeleteShader(shader); });
 }
 
-void Shader::activate()
+void Shader::Activate()
 {
     //activate shader if it is ready for use, else log an error message
 
@@ -227,50 +240,50 @@ void Shader::activate()
 	Logger::error() << "Could not activate shader because it is not ready for use" << Logger::endl;
 }
 
-GLint Shader::getUniformLocation(const char *name)
+GLint Shader::GetUniformLocation(const char *szName)
 {
-    std::string sName(name);
+    std::string sName(szName);
 
     if ((GLuint) last_active != this->m_nShaderId)
 	Logger::error() << "While setting an uniform of an shader, the shader must be active!" << Logger::endl;
 
     std::map<std::string, GLint>::iterator iter = m_mCachedUniformLocations.find(sName);
 
-    GLint location;
+    GLint iLocation;
 
     if (iter == m_mCachedUniformLocations.end())
     {
-	location = glGetUniformLocation(this->m_nShaderId, name);
-	m_mCachedUniformLocations[sName] = location;
+        iLocation = glGetUniformLocation(this->m_nShaderId, szName);
+        m_mCachedUniformLocations[sName] = iLocation;
     }
     else
     {
-	location = iter->second;
+        iLocation = iter->second;
     }
 
-    return location;
+    return iLocation;
 }
 
-GLint Shader::getAttribLocation(const char *name)
+GLint Shader::GetAttribLocation(const char *szName)
 {
     if (static_cast<GLuint>(last_active) != this->m_nShaderId)
 	Logger::error() << "While setting an attribute of an shader, the shader must be active!" << Logger::endl;
 
-    std::string sName(name);
+    std::string sName(szName);
 
     std::map<std::string, GLint>::iterator iter = m_mCachedAttributeLocations.find(sName);
 
-    GLint location;
+    GLint iLocation;
 
     if (iter == m_mCachedAttributeLocations.end())
     {
-	location = glGetAttribLocation(this->m_nShaderId, name);
-	m_mCachedAttributeLocations[sName] = location;
+        iLocation = glGetAttribLocation(this->m_nShaderId, szName);
+        m_mCachedAttributeLocations[sName] = iLocation;
     }
     else
     {
-	location = iter->second;
+        iLocation = iter->second;
     }
 
-    return location;
+    return iLocation;
 }

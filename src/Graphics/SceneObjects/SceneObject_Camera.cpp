@@ -143,8 +143,8 @@ void SceneObject_Camera::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderIn
 
 void SceneObject_Camera::ItlRender()
 {
-    const GLint l_in_Position(ShaderManager::instance()->getAttribute("in_Position"));
-    const GLint l_cameraInverse_Position = ShaderManager::instance()->getUniform("Camera_InverseMatrix");
+    const GLint l_in_Position(ShaderManager::instance()->GetAttribute("in_Position"));
+    const GLint l_cameraInverse_Position = ShaderManager::instance()->GetUniform("Camera_InverseMatrix");
 
     glm::mat4 mInverseViewProjectionMatrix = glm::inverse(m_spCamera->GetProjectionMatrix() * m_spCamera->GetViewMatrix());
 
@@ -179,15 +179,15 @@ void SceneObject_Camera::ItlPreRender()
     glBindVertexArray(m_nVertexArrayObject);
     glBindBuffer(GL_ARRAY_BUFFER, m_nVertexBufferObject);
 
-    ShaderManager::instance()->pushActiveShader();
+    ShaderManager::instance()->PushActiveShader();
     if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_SHADOWMAP)
-	ShaderManager::instance()->activateShader("camera-debug");
+	ShaderManager::instance()->ActivateShader("camera-debug");
     else
-	ShaderManager::instance()->activateShader("camera-debug");
+	ShaderManager::instance()->ActivateShader("camera-debug");
 }
 
 void SceneObject_Camera::ItlPostRender()
 {
-    ShaderManager::instance()->popActiveShader();
+    ShaderManager::instance()->PopActiveShader();
 }
 

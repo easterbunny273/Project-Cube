@@ -37,25 +37,25 @@ public:
     //@{
 	/// adds a shader program to the manager, from now on the shader can be activated with activateShader(name),
 	/// and the Shader instance is destroyed when the ShaderManager gets destroyed.  \sa activateShader()
-	void addShader(std::string name, Shader *shader);
+        void AddShader(std::string sName, Shader *pShader);
 
 	/// activates the given shader if possible, else the method prints an error message to the Logger. \sa Logger
-	bool activateShader(std::string name);
+        bool ActivateShader(std::string sName);
 
 	/// pushs the active shader on the stack
-	void pushActiveShader();
+        void PushActiveShader();
 
 	/// pops the top shader from the stack and activates it
-	void popActiveShader();
+        void PopActiveShader();
     //@}
 
     /*! \name Public attributes */
     //@{
 	/// returns the location of an uniform variable within the current active shader program
-	GLint getUniform(std::string uniform_name);
+        GLint GetUniform(std::string sUniformName);
 
 	/// returns the location of an attribute variable within the current active shader program
-	GLint getAttribute(std::string attribute_name);
+        GLint GetAttribute(std::string sAttributeName);
     //@}
 
 private:

@@ -60,14 +60,14 @@ void SceneObject_PostEffect::ItlPreRender()
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, this->buffer_vertices3f);
 
-    ShaderManager::instance()->pushActiveShader();
-    ShaderManager::instance()->activateShader(m_sShaderName);
+    ShaderManager::instance()->PushActiveShader();
+    ShaderManager::instance()->ActivateShader(m_sShaderName);
 }
 
 void SceneObject_PostEffect::ItlRender()
 {
-    const GLint l_in_Position(ShaderManager::instance()->getAttribute("in_Position"));
-    const GLint l_texcoords(ShaderManager::instance()->getAttribute("in_Texcoord"));
+    const GLint l_in_Position(ShaderManager::instance()->GetAttribute("in_Position"));
+    const GLint l_texcoords(ShaderManager::instance()->GetAttribute("in_Texcoord"));
 
     glVertexAttribPointer(l_in_Position, 3, GL_DOUBLE, GL_FALSE, 6 * sizeof(GLdouble), NULL);
     glVertexAttribPointer(l_texcoords, 3, GL_DOUBLE, GL_FALSE, 6 * sizeof(GLdouble), (GLvoid *) (3 * sizeof(GLdouble)));
@@ -86,7 +86,7 @@ void SceneObject_PostEffect::ItlRender()
         GLuint nUsedTextureUnit = TextureManager::instance()->useTexture(sTextureName);
 
         // get the uniform location
-        GLint iUniformLocation = ShaderManager::instance()->getUniform(sUniformName);
+        GLint iUniformLocation = ShaderManager::instance()->GetUniform(sUniformName);
 
         // check if the uniform exists
         assert (iUniformLocation != -1);
@@ -99,38 +99,38 @@ void SceneObject_PostEffect::ItlRender()
     // set the user defined uniforms
     for (auto iter=m_mUniforms_Floats.begin(); iter != m_mUniforms_Floats.end(); iter++)
     {
-	GLint iLocation = ShaderManager::instance()->getUniform(iter->first);
+	GLint iLocation = ShaderManager::instance()->GetUniform(iter->first);
 
 	std::string sDebug = iter->first;
 
 	assert (iLocation != -1);
 
 	if (iLocation != -1)
-	    glUniform1f(ShaderManager::instance()->getUniform(iter->first), iter->second);
+	    glUniform1f(ShaderManager::instance()->GetUniform(iter->first), iter->second);
     }
 
     for (auto iter=m_mUniforms_Vec2.begin(); iter != m_mUniforms_Vec2.end(); iter++)
     {
-	GLint iLocation = ShaderManager::instance()->getUniform(iter->first);
+	GLint iLocation = ShaderManager::instance()->GetUniform(iter->first);
 
 	std::string sDebug = iter->first;
 
 	assert (iLocation != -1);
 
 	if (iLocation != -1)
-	    glUniform2f(ShaderManager::instance()->getUniform(iter->first), iter->second.x, iter->second.y);
+	    glUniform2f(ShaderManager::instance()->GetUniform(iter->first), iter->second.x, iter->second.y);
     }
 
     for (auto iter=m_mUniforms_Vec3.begin(); iter != m_mUniforms_Vec3.end(); iter++)
     {
-	GLint iLocation = ShaderManager::instance()->getUniform(iter->first);
+	GLint iLocation = ShaderManager::instance()->GetUniform(iter->first);
 
 	std::string sDebug = iter->first;
 
 	assert (iLocation != -1);
 
 	if (iLocation != -1)
-	    glUniform3f(ShaderManager::instance()->getUniform(iter->first), iter->second.x, iter->second.y, iter->second.z);
+	    glUniform3f(ShaderManager::instance()->GetUniform(iter->first), iter->second.x, iter->second.y, iter->second.z);
     }
 
     //draw data
@@ -148,7 +148,7 @@ void SceneObject_PostEffect::ItlRender()
 
 void SceneObject_PostEffect::ItlPostRender()
 {
-    ShaderManager::instance()->popActiveShader();
+    ShaderManager::instance()->PopActiveShader();
 }
 
 void SceneObject_PostEffect::SetUniform(std::string sUniform, float fValue)

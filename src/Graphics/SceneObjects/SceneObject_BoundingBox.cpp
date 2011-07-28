@@ -139,21 +139,21 @@ void SceneObject_BoundingBox::ItlPreRender()
     glBindVertexArray(m_nVertexArrayObject);
     glBindBuffer(GL_ARRAY_BUFFER, m_nVertexBufferObject);
 
-    ShaderManager::instance()->pushActiveShader();
+    ShaderManager::instance()->PushActiveShader();
     if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_SHADOWMAP)
-	ShaderManager::instance()->activateShader("bounding_shader");
+	ShaderManager::instance()->ActivateShader("bounding_shader");
     else
-	ShaderManager::instance()->activateShader("bounding_shader");
+	ShaderManager::instance()->ActivateShader("bounding_shader");
 }
 
 void SceneObject_BoundingBox::ItlPostRender()
 {
-    ShaderManager::instance()->popActiveShader();
+    ShaderManager::instance()->PopActiveShader();
 }
 
 void SceneObject_BoundingBox::ItlRender()
 {
-    const GLint l_in_Position(ShaderManager::instance()->getAttribute("in_Position"));
+    const GLint l_in_Position(ShaderManager::instance()->GetAttribute("in_Position"));
 
     if (l_in_Position != -1)
     {

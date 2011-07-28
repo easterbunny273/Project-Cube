@@ -25,13 +25,13 @@ void SceneObject::setTransformMatrix(float *transformMatrix)
 void SceneObject::ItlSendTransformMatrices()
 {
     //first, get the positions
-    const GLint l_projection_matrix = ShaderManager::instance()->getUniform("ProjectionMatrix");
-    const GLint l_view_matrix = ShaderManager::instance()->getUniform("ViewMatrix");
-    const GLint l_modelviewprojection_matrix = ShaderManager::instance()->getUniform("ModelViewProjectionMatrix");
-    const GLint l_normal_matrix = ShaderManager::instance()->getUniform("NormalMatrix");
-    const GLint l_model_matrix = ShaderManager::instance()->getUniform("ModelMatrix");
+    const GLint l_projection_matrix = ShaderManager::instance()->GetUniform("ProjectionMatrix");
+    const GLint l_view_matrix = ShaderManager::instance()->GetUniform("ViewMatrix");
+    const GLint l_modelviewprojection_matrix = ShaderManager::instance()->GetUniform("ModelViewProjectionMatrix");
+    const GLint l_normal_matrix = ShaderManager::instance()->GetUniform("NormalMatrix");
+    const GLint l_model_matrix = ShaderManager::instance()->GetUniform("ModelMatrix");
     //const GLint l_lastFrameTransformMatrix = ShaderManager::instance()->getUniform("Camera_TransformMatrix_LastFrame");
-    const GLint l_tempTransformMatrix = ShaderManager::instance()->getUniform("Camera_TempTransformMatrix");
+    const GLint l_tempTransformMatrix = ShaderManager::instance()->GetUniform("Camera_TempTransformMatrix");
 
     //if a position is -1, it was not found, so we write only in uniforms where we found a valid position
 
@@ -71,7 +71,7 @@ void SceneObject::ItlSendTransformMatrices()
 
 void SceneObject::ItlSendLightPosition()
 {
-    GLint l_Light0Position = ShaderManager::instance()->getUniform("Light0Position");
+    GLint l_Light0Position = ShaderManager::instance()->GetUniform("Light0Position");
 
     if (l_Light0Position != -1)
     {

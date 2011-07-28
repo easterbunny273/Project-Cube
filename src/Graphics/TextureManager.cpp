@@ -18,7 +18,10 @@ TextureManager::~TextureManager()
 
 }
 
-bool TextureManager::loadTexture(std::string sTextureName, std::string sFilename, bool bAlreadyGammaCorrected, GLint iTarget /*= GL_TEXTURE_2D*/)
+bool TextureManager::loadTexture(std::string sTextureName,
+                                 std::string sFilename,
+                                 bool bAlreadyGammaCorrected,
+                                 GLint iTarget /*= GL_TEXTURE_2D*/)
 {
 	if (m_bDevIL_Initialized == false)
 	{

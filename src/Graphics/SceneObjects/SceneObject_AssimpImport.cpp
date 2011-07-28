@@ -466,15 +466,15 @@ void SceneObject_AssimpImport::ItlCreateIndexBufferObject(std::vector<GLuint> &d
 
 void SceneObject_AssimpImport::ItlPreRender()
 {
-    ShaderManager::instance()->pushActiveShader();
+    ShaderManager::instance()->PushActiveShader();
     if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_SHADOWMAP)
-	ShaderManager::instance()->activateShader("simple_shader");
+	ShaderManager::instance()->ActivateShader("simple_shader");
     else if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_DEEP_OPACITY_MAP1)
-	ShaderManager::instance()->activateShader("assimp_deep_step1_shader");
+	ShaderManager::instance()->ActivateShader("assimp_deep_step1_shader");
     else if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_DEEP_OPACITY_MAP2)
-	ShaderManager::instance()->activateShader("assimp_deep_step2_shader");
+	ShaderManager::instance()->ActivateShader("assimp_deep_step2_shader");
     else
-	ShaderManager::instance()->activateShader("test-shader");
+	ShaderManager::instance()->ActivateShader("test-shader");
 }
 
 void SceneObject_AssimpImport::ItlRender()
@@ -483,13 +483,13 @@ void SceneObject_AssimpImport::ItlRender()
     glBindBuffer(GL_ARRAY_BUFFER, m_nVBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_nIBO);
 
-    const GLint l_in_Position(ShaderManager::instance()->getAttribute("in_Position"));
-    const GLint l_tangents(ShaderManager::instance()->getAttribute("in_Tangent"));
-    const GLint l_bitangents(ShaderManager::instance()->getAttribute("in_Bitangent"));
-    const GLint l_normals(ShaderManager::instance()->getAttribute("in_Normal"));
-    const GLint l_uvcoords(ShaderManager::instance()->getAttribute("in_Texcoord"));
+    const GLint l_in_Position(ShaderManager::instance()->GetAttribute("in_Position"));
+    const GLint l_tangents(ShaderManager::instance()->GetAttribute("in_Tangent"));
+    const GLint l_bitangents(ShaderManager::instance()->GetAttribute("in_Bitangent"));
+    const GLint l_normals(ShaderManager::instance()->GetAttribute("in_Normal"));
+    const GLint l_uvcoords(ShaderManager::instance()->GetAttribute("in_Texcoord"));
 
-    GLint l_shadow_texture = ShaderManager::instance()->getUniform("shadowmap");
+    GLint l_shadow_texture = ShaderManager::instance()->GetUniform("shadowmap");
 
     if (l_shadow_texture != -1)
     {
@@ -498,14 +498,14 @@ void SceneObject_AssimpImport::ItlRender()
     }
 
 
-    GLint l_opacity_depth_texture = ShaderManager::instance()->getUniform("opacity_depth");
+    GLint l_opacity_depth_texture = ShaderManager::instance()->GetUniform("opacity_depth");
     if (l_opacity_depth_texture != -1)
     {
 	    GLuint texture_unit_opacity_depth = TextureManager::instance()->useTexture("fbo_deep_opacity_map_depth");	    //load texture in texture unit
 	    glUniform1i(l_opacity_depth_texture, texture_unit_opacity_depth);   //tell the shader which texture unit was used
     }
 
-    GLint l_opacity_opacity_texture = ShaderManager::instance()->getUniform("opacity_opacity");
+    GLint l_opacity_opacity_texture = ShaderManager::instance()->GetUniform("opacity_opacity");
     if (l_opacity_opacity_texture != -1)
     {
 	    GLuint texture_unit_opacity_opacity = TextureManager::instance()->useTexture("fbo_deep_opacity_map_opacities");	    //load texture in texture unit
@@ -517,29 +517,29 @@ void SceneObject_AssimpImport::ItlRender()
         const TItlMeshData *pMeshData = m_vMeshData[nMesh];
 	const TItlMaterialData *pMaterialData = m_vMaterialData[pMeshData->nMaterialIndex];
 
-	glUniform4fv(ShaderManager::instance()->getUniform("MaterialAmbient"), 1, &pMaterialData->fColorAmbient[0]);
-	glUniform4fv(ShaderManager::instance()->getUniform("MaterialDiffuse"), 1, &pMaterialData->fColorDiffuse[0]);
-	glUniform4fv(ShaderManager::instance()->getUniform("MaterialSpecular"), 1, &pMaterialData->fColorSpecular[0]);
-	glUniform1f(ShaderManager::instance()->getUniform("MaterialShininess"), pMaterialData->fShininess);
-	glUniform1f(ShaderManager::instance()->getUniform("MaterialShininessStrength"), pMaterialData->fShininess_Strength);
+	glUniform4fv(ShaderManager::instance()->GetUniform("MaterialAmbient"), 1, &pMaterialData->fColorAmbient[0]);
+	glUniform4fv(ShaderManager::instance()->GetUniform("MaterialDiffuse"), 1, &pMaterialData->fColorDiffuse[0]);
+	glUniform4fv(ShaderManager::instance()->GetUniform("MaterialSpecular"), 1, &pMaterialData->fColorSpecular[0]);
+	glUniform1f(ShaderManager::instance()->GetUniform("MaterialShininess"), pMaterialData->fShininess);
+	glUniform1f(ShaderManager::instance()->GetUniform("MaterialShininessStrength"), pMaterialData->fShininess_Strength);
 
 	assert (pMaterialData->bHasColorTexture);
 
 	if (pMaterialData->bHasColorTexture)
 	{
-	    glUniform1i(ShaderManager::instance()->getUniform("color_texture"), TextureManager::instance()->useTexture(pMaterialData->sInternalLoadedColorTexture));
-	    glUniform1i(ShaderManager::instance()->getUniform("ColorTextureAvailable"), 1);
+	    glUniform1i(ShaderManager::instance()->GetUniform("color_texture"), TextureManager::instance()->useTexture(pMaterialData->sInternalLoadedColorTexture));
+	    glUniform1i(ShaderManager::instance()->GetUniform("ColorTextureAvailable"), 1);
 	}
 	else
-	    glUniform1i(ShaderManager::instance()->getUniform("ColorTextureAvailable"), 0);
+	    glUniform1i(ShaderManager::instance()->GetUniform("ColorTextureAvailable"), 0);
 
 	if (pMaterialData->bHasNormalTexture)
 	{
-	    glUniform1i(ShaderManager::instance()->getUniform("normal_texture"), TextureManager::instance()->useTexture(pMaterialData->sInternalLoadedNormalTexture));
-	    glUniform1i(ShaderManager::instance()->getUniform("NormalTextureAvailable"), 1);
+	    glUniform1i(ShaderManager::instance()->GetUniform("normal_texture"), TextureManager::instance()->useTexture(pMaterialData->sInternalLoadedNormalTexture));
+	    glUniform1i(ShaderManager::instance()->GetUniform("NormalTextureAvailable"), 1);
 	}
 	else
-	    glUniform1i(ShaderManager::instance()->getUniform("NormalTextureAvailable"), 0);
+	    glUniform1i(ShaderManager::instance()->GetUniform("NormalTextureAvailable"), 0);
 
 	assert (l_in_Position != -1);
 
@@ -574,7 +574,7 @@ void SceneObject_AssimpImport::ItlRender()
 	    glEnableVertexAttribArray(l_normals);
 	}
 
-	GLint l_use_shadow = ShaderManager::instance()->getUniform("bUseShadow");
+	GLint l_use_shadow = ShaderManager::instance()->GetUniform("bUseShadow");
 
 	if (l_use_shadow != -1)
 	{
@@ -623,7 +623,7 @@ void SceneObject_AssimpImport::ItlRender()
 
 void SceneObject_AssimpImport::ItlPostRender()
 {
-    ShaderManager::instance()->popActiveShader();
+    ShaderManager::instance()->PopActiveShader();
 }
 
 void SceneObject_AssimpImport::ItlPreRenderChildren()

@@ -27,16 +27,16 @@ public:
     /*! \name Constructors / Destructor */
     //@{
 	/// Constructor which creates a shader program with a vertex shader and a fragment shader
-	Shader(const char *vertexshader_filename, const char *fragmentshader_filename);
+        Shader(const char *szVertexShaderFilename, const char *szFragmentShaderFilename);
 
 	/// Constructor which creates a shader program with a vertex shader, a geometry shader and a fragment shader
-	Shader(const char *vertexshader_filename, const char *fragmentshader_filename, const char *geometryshader_filename);
+        Shader(const char *szVertexShaderFilename, const char *szFragmentShaderFilename, const char *szGeometryShaderFilename);
 
 	/// Constructor which creates a shader program with a vertex shader, tesselation control shader, tesselation evaluation shader and a fragment shader
-	Shader(const char *vertexshader_filename, const char *tesselation_control_shader_filename, const char *tesselation_evaluation_shader_filename, const char *fragmentshader_filename);
+        Shader(const char *szVertexShaderFilename, const char *szTesselationControlShaderFilename, const char *szTesselationEvaluationShaderFilename, const char *szFragmentShaderFilename);
 
 	/// Constructor which creates a shader program with a vertex shader, tesselation control shader, tesselation evaluation shader, geometry shader and fragment shader
-	Shader(const char *vertexshader_filename, const char *tesselation_control_shader_filename, const char *tesselation_evaluation_shader_filename, const char *geometry_shader_filename, const char *fragmentshader_filename);
+        Shader(const char *szVertexShaderFilename, const char *szTesselationControlShaderFilename, const char *szTesselationEvaluationShaderFilename, const char *szGeometryShaderFilename, const char *szFragmentShaderFilename);
 
 	/// Destructor
 	~Shader();
@@ -45,16 +45,16 @@ public:
     /*! \name Access to the shader programm */
     //@{
 	/// activates the shader - attention: only one shader can be active. activating a shader deactivates the previous active shader
-	void    activate();
+        void    Activate();
 
 	/// returns the position of a given uniform variable
-	GLint   getUniformLocation(const char *name);
+        GLint   GetUniformLocation(const char *szName);
 
 	/// returns the position of a given attribute variable
-	GLint   getAttribLocation(const char *name);
+        GLint   GetAttribLocation(const char *szName);
 
 	/// returns the id of the shader
-	GLuint  getShaderID() { return m_nShaderId; }
+        GLuint  GetShaderID() { return m_nShaderId; }
     //@}
 private:
     /*! \name Internal help methods */
