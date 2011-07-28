@@ -31,4 +31,17 @@ void MainApp::Run()
 {
     // init game logic, graphics, do main loop, all this nasty stuff.
     Logger::debug() << "hello!" << Logger::endl;
+
+    GetGraphic()->InitializeOpenGL();
+    GetGraphic()->SetActiveRenderPath("default");
+
+    while(true)
+        GetGraphic()->Render();
+
+    GetGraphic()->ShutDown();
+}
+
+Graphic * MainApp::GetGraphic()
+{
+    return &m_Graphic;
 }

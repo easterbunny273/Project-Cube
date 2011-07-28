@@ -11,6 +11,8 @@
 #include <stdexcept>
 #include <string>
 
+#include "Logger.h"
+
 //*
 // Should we use an own error class for error handling? How should we handle errors in subsystems ?
 // At the moment, a message streamed to Logger::fatal() instantly stops the application, but I think
@@ -18,7 +20,7 @@
 //*
 
 // this class is only a draft
-class Error : public std::runtime_error
+class FatalError : public std::runtime_error
 {
 public:
     Error(std::string sSubsystem, std::string sErrorMessage)
