@@ -11,11 +11,8 @@
 #include "Graphics/ShaderManager.h"
 #include "Graphics/SceneObjects/SceneObject_PostEffect.h"
 
-SceneObject_PostEffect::SceneObject_PostEffect(std::string shader_name, std::string texture_name, std::string texture_name2, std::string texture_name3)
-    : m_sShaderName(shader_name),
-    m_sTextureName(texture_name),
-    m_sTextureName2(texture_name2),
-    m_sTextureName3(texture_name3)
+SceneObject_PostEffect::SceneObject_PostEffect(std::string sShaderToUse)
+    : m_sShaderName(sShaderToUse)
 {
     const GLdouble vertices3f[]= {
       -1.0, 1.0, 0.0,    //vertex position
@@ -81,41 +78,26 @@ void SceneObject_PostEffect::ItlRender()
     glEnableVertexAttribArray(l_in_Position);
     glEnableVertexAttribArray(l_texcoords);
 
-    //load first texture and tell the shader the units id
-    GLuint used_texture_unit1 = TextureManager::instance()->useTexture(m_sTextureName);	    //load texture in texture unit
-
-    glUniform1i(ShaderManager::instance()->getUniform("texture1"),used_texture_unit1);   //tell the shader which texture unit was used
-
-    //if two textures were given, load the second texture in an unit and tell the id the shader
-    if (m_sTextureName2.length() > 0)
+    // load necessary textures and tell the shader
+    for (auto iter = m_mTextures.begin(); iter != m_mTextures.end(); iter++)
     {
-	assert (ShaderManager::instance()->getUniform("texture2") != -1);
+        // alias for better code reading
+        std::string sTextureName = iter->second;
+        std::string sUniformName = iter->first;
 
-	if (m_sTextureName.compare(m_sTextureName2) == 0)
-	    glUniform1i(ShaderManager::instance()->getUniform("texture2"),used_texture_unit1);
-	else
-	{
-	    GLuint used_texture_unit2 = TextureManager::instance()->useTexture(m_sTextureName2);	    //load texture in texture unit
-	    glUniform1i(ShaderManager::instance()->getUniform("texture2"),used_texture_unit2);   //tell the shader which texture unit was used
+        // load texture in a free unit and remember used texture unit
+        GLuint nUsedTextureUnit = TextureManager::instance()->useTexture(sTextureName);
 
-	    bTexture2HasOwnUnit = true;
-	}
+        // get the uniform location
+        GLint iUniformLocation = ShaderManager::instance()->getUniform(sUniformName);
+
+        // check if the uniform exists
+        assert (iUniformLocation != -1);
+
+        // write used texture unit to shader uniform
+        glUniform1i(iUniformLocation, nUsedTextureUnit);
     }
 
-    //if three textures were given, load the third texture in an unit and tell the id the shader
-    if (m_sTextureName3.length() > 0)
-    {
-	if (m_sTextureName.compare(m_sTextureName3) == 0)
-	    glUniform1i(ShaderManager::instance()->getUniform("texture2"),used_texture_unit1);
-	else
-	{
-	    GLuint used_texture_unit3 = TextureManager::instance()->useTexture(m_sTextureName3);	    //load texture in texture unit
-	    glUniform1i(ShaderManager::instance()->getUniform("texture3"),used_texture_unit3);   //tell the shader which texture unit was used
-
-	    bTexture3HasOwnUnit = true;
-	}
-
-    }
 
     // set the user defined uniforms
     for (auto iter=m_mUniforms_Floats.begin(); iter != m_mUniforms_Floats.end(); iter++)
@@ -158,12 +140,13 @@ void SceneObject_PostEffect::ItlRender()
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
     //release used texture units
-    TextureManager::instance()->unuseTexture(m_sTextureName);				    //tell the texturemanager to release the used texture unit
-    if (m_sTextureName2.length() > 0 && bTexture2HasOwnUnit)
-	TextureManager::instance()->unuseTexture(m_sTextureName2);
+    for (auto iter = m_mTextures.begin(); iter != m_mTextures.end(); iter++)
+    {
+        // alias for better code reading
+        std::string sTextureName = iter->second;
 
-    if (m_sTextureName3.length() > 0 && bTexture3HasOwnUnit)
-	TextureManager::instance()->unuseTexture(m_sTextureName3);
+        TextureManager::instance()->unuseTexture(sTextureName);
+    }
 }
 
 void SceneObject_PostEffect::ItlPostRender()

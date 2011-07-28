@@ -11,7 +11,7 @@
 
 #include "Settings.h"
 #include "Logger.h"
-#include "Graphics/Graphics.h"
+#include "Graphics/Graphic.h"
 
 class MainApp
 {
@@ -19,7 +19,7 @@ public:
     /*! \name Access to the subsystems */
     //@{
         // returns ptr to the graphic subsystem
-        Graphics * GetGraphic();
+        Graphic * GetGraphic();
 
         // returns ptr to the core settings
         Settings * GetCoreSettings();
@@ -50,7 +50,7 @@ private:
 
     /*! \name Private members */
     //@{
-        Graphics m_Graphic;
+        Graphic m_Graphic;
 
         Settings m_CoreSettings;
     //@}

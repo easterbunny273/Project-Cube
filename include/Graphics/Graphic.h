@@ -141,6 +141,30 @@ public:
     //@}
 
 private:
+    /*! \name Static helper methods */
+    //@{
+        /// handles keyboard events and sends signals to listener
+        static void ItlStaticHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState);
+
+        static void ItlStaticHandleMousePos(int iX, int iY);
+
+        static void ItlStaticHandleMouseWheel(int iPosition);
+
+        static void ItlStaticHandleMouseButton(int iButton, int iAction);
+    //@}
+
+    /*! \name Internal helper methods */
+    //@{
+        /// handles keyboard events and sends signals to listener
+        void ItlHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState);
+
+        void ItlHandleMousePos(int iX, int iY);
+
+        void ItlHandleMouseWheel(int iPosition);
+
+        void ItlHandleMouseButton(int iButton, int iAction);
+    //@}
+
     std::map<std::string, std::shared_ptr<SceneObject> >    m_vRenderPaths;
 
     std::list<std::shared_ptr<SceneObject> >                m_vSceneGraphs;
@@ -159,6 +183,11 @@ private:
 
     Camera      m_Camera;
     Camera      m_DebugCamera;
+
+    static int        s_iInstances;
+    static Graphic *  s_pInstance;
+
+    IInputEventListener *m_pInputEventListener;
 };
 
 #endif

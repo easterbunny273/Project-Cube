@@ -29,7 +29,7 @@ public:
     /*! \name Constructors / Destructor */
     //@{
 	/// This constructor takes the name of shader to use, and the name of one or two textures to pass it on the shader
-	SceneObject_PostEffect(std::string shader_name, std::string texture_name, std::string texture_name2  = std::string(""), std::string texture_name3 = std::string(""));
+        SceneObject_PostEffect(std::string sShaderToUse);
 	~SceneObject_PostEffect();	
     //@}
 
@@ -38,6 +38,8 @@ public:
 	void SetUniform(std::string sUniform, float fValue);
 	void SetUniform(std::string sUniform, glm::vec2 v2Value);
 	void SetUniform(std::string sUniform, glm::vec3 v3Value);
+
+        void SetTexture(std::string sUniformName, std::string sTextureName);
     //@}
 
 protected:
@@ -60,17 +62,21 @@ protected:
      //@}
 
 private:
-     std::map<std::string, float>    m_mUniforms_Floats;
-     std::map<std::string, glm::vec2>    m_mUniforms_Vec2;
-     std::map<std::string, glm::vec3>    m_mUniforms_Vec3;
+    /*! \name SceneObject Interface */
+    //@{
+         std::map<std::string, float>       m_mUniforms_Floats;
+         std::map<std::string, glm::vec2>    m_mUniforms_Vec2;
+         std::map<std::string, glm::vec3>    m_mUniforms_Vec3;
+         std::map<std::string, std::string>     m_mTextures;
 
-     GLuint buffer_vertices3f;
-     GLuint vao;
+         GLuint buffer_vertices3f;
+         GLuint vao;
 
-     std::string m_sShaderName;
-     std::string m_sTextureName;
-     std::string m_sTextureName2;
-     std::string m_sTextureName3;
+         std::string m_sShaderName;
+         std::string m_sTextureName;
+         std::string m_sTextureName2;
+         std::string m_sTextureName3;
+     //@}
 
 };
 

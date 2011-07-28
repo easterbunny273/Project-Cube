@@ -6,7 +6,6 @@
 //class specific
 #include "Graphics/SceneObjects/SceneObject_AssimpImport.h"
 #include "Graphics/SceneObjects/SceneObject_RenderPass.h"
-#include "Graphics/SceneObjects/SceneObject_BoundingSphere.h"
 #include "Graphics/SceneObjects/SceneObject_BoundingBox.h"
 #include "Settings.h"
 #include <assimp/assimp.hpp>
@@ -573,9 +572,9 @@ void SceneObject_AssimpImport::ItlRender()
 
 	if (l_use_shadow != -1)
 	{
-	    bool bUseShadow;
+            bool bUseShadow=true;
 
-	    Settings::instance()->GetGroup("shadow")->GetValueOrDefault("bUseShadow", false, bUseShadow);
+            //Settings::instance()->GetGroup("shadow")->GetValueOrDefault("bUseShadow", false, bUseShadow);
 	    glUniform1i(l_use_shadow, (int)bUseShadow);   //tell the shader which texture unit was used
 	}
 

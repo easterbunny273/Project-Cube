@@ -120,6 +120,9 @@ protected:
 
     /*! \name Methods which must be implemented by inherit classes */
     //@{
+        /// this method should load all necessary ressources
+        //virtual void ItlLoadRessources() = 0;
+
 	/*! this method is called before the render() method calls the render() methods of the children,
 	    and can be used to bind a fbo (to render the children in this fbo) or something like that */
 	virtual void ItlPreRenderChildren() = 0;
