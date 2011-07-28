@@ -1,4 +1,4 @@
-#include "Cube.h"
+#include "Gamelogic/Cube.h"
 #include "Logger.h"
 
 Cube::Cube()

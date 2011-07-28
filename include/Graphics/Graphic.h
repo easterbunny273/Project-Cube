@@ -163,6 +163,10 @@ private:
         void ItlHandleMouseWheel(int iPosition);
 
         void ItlHandleMouseButton(int iButton, int iAction);
+
+        void ItlCreateOpenGLWindow();
+
+        void ItlInitializeOpenGLStates();
     //@}
 
     std::map<std::string, std::shared_ptr<SceneObject> >    m_vRenderPaths;

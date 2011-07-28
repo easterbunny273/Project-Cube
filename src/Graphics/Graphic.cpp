@@ -81,86 +81,13 @@ Graphic::~Graphic()
   *************************************************************** */
 bool Graphic::InitializeOpenGL()
 {
-    int flags = (false) ? GLFW_FULLSCREEN : GLFW_WINDOW;	//if fullscreen is true, flags is set to GLFW_FULLSCREEN, else to GLFW_WINDOW
+    // create window
+    ItlCreateOpenGLWindow();
 
-    glfwInit();
+    // initialize opengl state variables
+    ItlInitializeOpenGLStates();
 
-    // Set flags so GLFW creates the desired OpenGL context
-    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
-    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);
-    glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    //Activate 4x antialiasing
-    //glfwOpenWindowHint(GLFW_FSAA_SAMPLES, 4);
-
-    if (glfwOpenWindow(m_iWidth, m_iHeight, 0,0,0,0, 24, 8, flags) != GL_TRUE)
-            Logger::fatal() << "failed to initialize OpenGL window" << Logger::endl;
-    else
-            Logger::debug() << "OpenGL window initialized" << Logger::endl;
-
-    glfwSetKeyCallback(Graphic::ItlStaticHandleKeyboardEvent);
-    glfwSetMousePosCallback(Graphic::ItlStaticHandleMousePos);
-    glfwSetMouseWheelCallback(Graphic::ItlStaticHandleMouseWheel);
-    glfwSetMouseButtonCallback(Graphic::ItlStaticHandleMouseButton);
-
-    glfwSetWindowTitle("Free Pool (NG) written by Christian Moellinger");
-
-    // Disable the mouse cursor
-    //glfwDisable(GLFW_MOUSE_CURSOR);
-
-    // Disable VSync
-    //glfwSwaPInterval(0);
-
-    // start up GLEW
-    glewExperimental = GL_TRUE; //set experimental flag to true, needed for correct importing of function pointers when using core-profile
-    if (glewInit() != GLEW_OK)
-            Logger::fatal() << "glew initialization failed" << Logger::endl;
-    else
-            Logger::debug() << "glew initialized" << Logger::endl;
-
-    Logger::debug() << "Opened context with OpenGL Version " << (char *) glGetString(GL_VERSION) << Logger::endl;
-
-    if (GLEW_VERSION_3_2)
-    {
-            GLint profile;
-
-            // check if we have a core-profile
-            glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &profile);
-            /*if (profile == GL_CONTEXT_CORE_PROFILE_BIT)
-                    Logger::debug() << "got rendering context with core profile" << Logger::endl;
-            else
-                    Logger::fatal() << "got rendering context with compatibility profile instead of core profile" << Logger::endl;
-            */
-    }
-    else
-            Logger::fatal() << "OpenGL version 3.2 is needed but not supported" << Logger::endl;
-
-    // Enable sRGB gamma correction for framebuffer output.
-    glEnable(GL_FRAMEBUFFER_SRGB);
-
-    //Enable depth test
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
-
-    //Enable face culling (default: backface culling)
-    glEnable(GL_CULL_FACE);
-
-    glPolygonOffset(1.1f, 4.0f);
-
-    //set viewport
-    glViewport(0,0, m_iWidth, m_iHeight);
-
-    //clear error status
-    glGetError();
-
-    /*
-    m_spMainCamera = shared_ptr<Camera> (new Camera(glm::vec3(4,3,6), 210, -15, 45.0, 1.33, 0.1, 100.0));
-    m_spDebugCamera = shared_ptr<Camera> (new Camera(glm::vec3(0,5,10), 180, 0, 45.0, 1.33, 0.1, 100.0));
-    m_spLightCamera = shared_ptr<Camera> (new Camera(glm::vec3(0,6,0), 180, -90, 50.0, 1.0, 2.5, 10.0));
-    */
-
-    Logger::debug() << "graphic initialized" << Logger::endl;
-	return true;
+    return true;
 }
 
 /****************************************************************
@@ -191,13 +118,16 @@ void Graphic::Render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // draw the scene
-  /*  if (m_vRenderPaths.find(m_sActiveRenderPath) != m_vRenderPaths.end())
+    if (m_vRenderPaths.find(m_sActiveRenderPath) != m_vRenderPaths.end())
         m_vRenderPaths[m_sActiveRenderPath]->Render();
     else
         Logger::error() << "RenderPath " << m_sActiveRenderPath << " does not exist!" << Logger::endl;
 
-   */ // swap back and front buffers
+    // swap back and front buffers
     glfwSwapBuffers();
+
+    // increase frames counter
+    m_iFramesInThisSecondYet ++ ;
 
     // print frames per second each second
     if (glfwGetTime() - m_fTimeOfLastRenderCall >= 1.0)
@@ -415,6 +345,103 @@ void Graphic::ItlHandleMouseButton(int iButton, int iAction)
 }
 
 /****************************************************************
+  *************************************************************** */
+void Graphic::ItlCreateOpenGLWindow()
+{
+    int flags = (false) ? GLFW_FULLSCREEN : GLFW_WINDOW;	//if fullscreen is true, flags is set to GLFW_FULLSCREEN, else to GLFW_WINDOW
+
+    // initialize glfw
+    if (glfwInit() == GL_TRUE)
+            Logger::debug() << "glfw sucessfully initialized" << Logger::endl;
+    else
+            Logger::fatal() << "glfw initialization failed" << Logger::endl;
+
+    // Set flags so GLFW creates the desired OpenGL context
+    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
+    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 3);
+    glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+    //Activate 4x antialiasing
+    //glfwOpenWindowHint(GLFW_FSAA_SAMPLES, 4);
+
+    if (glfwOpenWindow(m_iWidth, m_iHeight, 0,0,0,0, 24, 8, flags) != GL_TRUE)
+            Logger::fatal() << "failed to initialize OpenGL window" << Logger::endl;
+    else
+            Logger::debug() << "OpenGL window initialized" << Logger::endl;
+
+    // set input handling callback methods
+    glfwSetKeyCallback(Graphic::ItlStaticHandleKeyboardEvent);
+    glfwSetMousePosCallback(Graphic::ItlStaticHandleMousePos);
+    glfwSetMouseWheelCallback(Graphic::ItlStaticHandleMouseWheel);
+    glfwSetMouseButtonCallback(Graphic::ItlStaticHandleMouseButton);
+
+    // set window title
+    glfwSetWindowTitle("Project CUBE");
+
+    // Disable the mouse cursor
+    //glfwDisable(GLFW_MOUSE_CURSOR);
+
+    // set experimental flag to true, needed for correct importing of function pointers when using core-profile
+    glewExperimental = GL_TRUE;
+
+    // start up GLEW
+    if (glewInit() != GLEW_OK)
+            Logger::fatal() << "glew initialization failed" << Logger::endl;
+    else
+            Logger::debug() << "glew initialized" << Logger::endl;
+
+    Logger::debug() << "Opened context with OpenGL Version " << (char *) glGetString(GL_VERSION) << Logger::endl;
+
+    // check if we got the right version
+    if (GLEW_VERSION_3_3)
+    {
+            GLint profile;
+
+            // check if we have a core-profile
+            glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &profile);
+
+           /* if (profile == GL_CONTEXT_CORE_PROFILE_BIT)
+                    Logger::debug() << "got rendering context with core profile" << Logger::endl;
+            else
+                    Logger::fatal() << "got rendering context with compatibility profile instead of core profile" << Logger::endl;
+            */
+    }
+    else
+            Logger::fatal() << "OpenGL version 3.3 is needed but not supported" << Logger::endl;
+}
+
+/****************************************************************
+  *************************************************************** */
+void Graphic::ItlInitializeOpenGLStates()
+{
+    // Enable sRGB gamma correction for framebuffer output.
+    glEnable(GL_FRAMEBUFFER_SRGB);
+
+    //Enable depth test
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+
+    //Enable face culling (default: backface culling)
+    glEnable(GL_CULL_FACE);
+
+    glPolygonOffset(1.1f, 4.0f);
+
+    //set viewport
+    glViewport(0,0, m_iWidth, m_iHeight);
+
+    //clear error status
+    glGetError();
+
+    /*
+    m_spMainCamera = shared_ptr<Camera> (new Camera(glm::vec3(4,3,6), 210, -15, 45.0, 1.33, 0.1, 100.0));
+    m_spDebugCamera = shared_ptr<Camera> (new Camera(glm::vec3(0,5,10), 180, 0, 45.0, 1.33, 0.1, 100.0));
+    m_spLightCamera = shared_ptr<Camera> (new Camera(glm::vec3(0,6,0), 180, -90, 50.0, 1.0, 2.5, 10.0));
+    */
+
+    Logger::debug() << "graphic initialized" << Logger::endl;
+}
+
+/****************************************************************
   ** Nestes class Graphic::Camera **
   *************************************************************** */
 Graphic::Camera::Camera()
@@ -545,3 +572,5 @@ void Graphic::Camera::Move(float fFactor)
 
     m_m4ViewMatrix = glm::lookAt(m_v3CameraPosition, m_v3CameraPosition + v3LookAt, glm::vec3(0,1,0));
 }
+
+
