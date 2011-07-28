@@ -14,6 +14,9 @@ public:
 		TEST_ADD(CubeTest::TestCubeRotationY1)
 		TEST_ADD(CubeTest::TestCubeRotationY2)
 		TEST_ADD(CubeTest::TestCubeRotationY3)
+		TEST_ADD(CubeTest::TestCubeRotationZ1)
+		TEST_ADD(CubeTest::TestCubeRotationZ2)
+		TEST_ADD(CubeTest::TestCubeRotationZ3)
 	}
 
 protected:
