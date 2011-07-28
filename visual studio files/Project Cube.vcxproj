@@ -52,7 +52,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../external/DevIL/include/;../external/assimp/include/;../include/Graphics/SceneObjects/;../include/Gamelogic/;../include/Graphics/;../external/glfw/include/;../external/glew/include/;../include/;../external/tinyxml/;../external/glm/;../external/lua/include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../external/DevIL/include/;../external/assimp/include/;../include/Graphics/SceneObjects/;../external/glfw/include/;../external/glew/include/;../include/;../external/tinyxml/;../external/glm/;../external/lua/include/</AdditionalIncludeDirectories>
       <ProgramDataBaseFileName>$(IntDir)\vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
