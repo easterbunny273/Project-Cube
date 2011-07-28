@@ -25,7 +25,7 @@ void CubeTest::tear_down()
 	testcube.SetGrids(grid1, grid2, grid3, grid4, grid5, grid6);
 }
 
-void CubeTest::TestCubeRotation()
+void CubeTest::TestCubeRotationX1()
 {
 	bool test = testcube.RotateX(1);
 	TEST_ASSERT(test)
@@ -42,4 +42,27 @@ void CubeTest::TestCubeRotation()
 	TEST_ASSERT(testcube.GetGrid(5).GetDoorPositions().at(0).y == 3)
 	TEST_ASSERT(testcube.GetGrid(6).GetDoorPositions().at(0).x == 4)
 	TEST_ASSERT(testcube.GetGrid(6).GetDoorPositions().at(0).y == 4)
+}
+
+void CubeTest::TestCubeRotationX2()
+{
+	bool test = testcube.RotateX(2);
+	TEST_ASSERT(test)
+
+	TEST_ASSERT(testcube.GetGrid(1).GetDoorPositions().at(0).x == 9)
+	TEST_ASSERT(testcube.GetGrid(1).GetDoorPositions().at(0).y == 9)
+	TEST_ASSERT(testcube.GetGrid(2).GetDoorPositions().at(0).x == 8)
+	TEST_ASSERT(testcube.GetGrid(2).GetDoorPositions().at(0).y == 8)
+	TEST_ASSERT(testcube.GetGrid(3).GetDoorPositions().at(0).x == 4)
+	TEST_ASSERT(testcube.GetGrid(3).GetDoorPositions().at(0).y == 6)
+	TEST_ASSERT(testcube.GetGrid(4).GetDoorPositions().at(0).x == 3)
+	TEST_ASSERT(testcube.GetGrid(4).GetDoorPositions().at(0).y == 7)
+	TEST_ASSERT(testcube.GetGrid(5).GetDoorPositions().at(0).x == 6)
+	TEST_ASSERT(testcube.GetGrid(5).GetDoorPositions().at(0).y == 4)
+	TEST_ASSERT(testcube.GetGrid(6).GetDoorPositions().at(0).x == 5)
+	TEST_ASSERT(testcube.GetGrid(6).GetDoorPositions().at(0).y == 5)
+}
+
+void CubeTest::TestCubeRotationX3()
+{
 }

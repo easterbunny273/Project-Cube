@@ -8,7 +8,9 @@ class CubeTest: public Test::Suite
 public:
 	CubeTest()
 	{
-		TEST_ADD(CubeTest::TestCubeRotation)
+		TEST_ADD(CubeTest::TestCubeRotationX1)
+		TEST_ADD(CubeTest::TestCubeRotationX2)
+		TEST_ADD(CubeTest::TestCubeRotationX3)
 	}
 
 protected:
@@ -25,5 +27,7 @@ private:
 
 	Cube testcube;
 
-	void TestCubeRotation();
+	void TestCubeRotationX1();
+	void TestCubeRotationX2();
+	void TestCubeRotationX3();
 };
