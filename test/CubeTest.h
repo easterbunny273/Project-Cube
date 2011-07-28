@@ -11,6 +11,9 @@ public:
 		TEST_ADD(CubeTest::TestCubeRotationX1)
 		TEST_ADD(CubeTest::TestCubeRotationX2)
 		TEST_ADD(CubeTest::TestCubeRotationX3)
+		TEST_ADD(CubeTest::TestCubeRotationY1)
+		TEST_ADD(CubeTest::TestCubeRotationY2)
+		TEST_ADD(CubeTest::TestCubeRotationY3)
 	}
 
 protected:
@@ -30,4 +33,10 @@ private:
 	void TestCubeRotationX1();
 	void TestCubeRotationX2();
 	void TestCubeRotationX3();
+	void TestCubeRotationY1();
+	void TestCubeRotationY2();
+	void TestCubeRotationY3();
+	void TestCubeRotationZ1();
+	void TestCubeRotationZ2();
+	void TestCubeRotationZ3();
 };

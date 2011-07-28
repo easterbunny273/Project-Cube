@@ -36,17 +36,81 @@ void Cube::SetGrids(Grid& xplus, Grid& xminus, Grid& yplus, Grid& yminus, Grid& 
 
 bool Cube::RotateX(const int iFactor)
 {
-	return itlRotateGrids(m_Xplus, m_Xminus, m_Zplus, m_Zminus, m_Yplus, m_Yminus, iFactor);
+	if(iFactor == 0)
+		return true;
+	if(iFactor < -3 || iFactor > 3)
+		return false;
+
+	if(iFactor == 1 || iFactor == -3)
+	{
+		m_Xplus.RotateGrid(-1);
+		m_Xminus.RotateGrid(-1);
+		m_Zplus.MirrorGridHorizontal();
+		m_Zminus.MirrorGridHorizontal();
+		itlSwitchGrids(m_Zplus, m_Yplus, m_Zminus, m_Yminus);
+	}
+	else if(iFactor == 2 || iFactor == -2)
+	{
+		m_Xplus.RotateGrid(-2);
+		m_Xminus.RotateGrid(-2);
+		m_Yplus.MirrorGridHorizontal();
+		m_Yminus.MirrorGridHorizontal();
+		m_Zplus.MirrorGridHorizontal();
+		m_Zminus.MirrorGridHorizontal();
+		itlSwitchGrids(m_Yplus, m_Yminus);
+		itlSwitchGrids(m_Zplus, m_Zminus);
+	}
+	else if(iFactor == 3 || iFactor == -1)
+	{
+		m_Xplus.RotateGrid(-3);
+		m_Xminus.RotateGrid(-3);
+		m_Yplus.MirrorGridHorizontal();
+		m_Yminus.MirrorGridHorizontal();
+		itlSwitchGrids(m_Zplus, m_Yminus, m_Zminus, m_Yplus);
+	}
+	return true;
 }
 
 bool Cube::RotateY(const int iFactor)
 {
-	return itlRotateGrids(m_Yplus, m_Yminus, m_Xminus, m_Xplus, m_Zminus, m_Zplus, iFactor);
+	if(iFactor == 0)
+		return true;
+	if(iFactor < -3 || iFactor > 3)
+		return false;
+
+	if(iFactor == 1 || iFactor == -3)
+	{
+		m_Yplus.RotateGrid(-1);
+		m_Yminus.RotateGrid(-1);
+		m_Xplus.MirrorGridVertical();
+		m_Xminus.MirrorGridVertical();
+		itlSwitchGrids(m_Xminus, m_Zminus, m_Xplus, m_Zplus);
+	}
+	else if(iFactor == 2 || iFactor == -2)
+	{
+		m_Yplus.RotateGrid(-2);
+		m_Yminus.RotateGrid(-2);
+		m_Xplus.MirrorGridVertical();
+		m_Xminus.MirrorGridVertical();
+		m_Zplus.MirrorGridVertical();
+		m_Zminus.MirrorGridVertical();
+		itlSwitchGrids(m_Xplus, m_Xminus);
+		itlSwitchGrids(m_Zplus, m_Zminus);
+	}
+	else if(iFactor == 3 || iFactor == -1)
+	{
+		m_Yplus.RotateGrid(-3);
+		m_Yminus.RotateGrid(-3);
+		m_Zplus.MirrorGridVertical();
+		m_Zminus.MirrorGridVertical();
+		itlSwitchGrids(m_Xplus, m_Zminus, m_Xminus, m_Zplus);
+	}
+	return true;
 }
 
 bool Cube::RotateZ(const int iFactor)
 {
-	return itlRotateGrids(m_Zplus, m_Zminus, m_Xminus, m_Xplus, m_Yplus, m_Yminus, iFactor);
+	return false;
 }
 
 Grid Cube::GetGrid(const unsigned int nID)
@@ -76,41 +140,4 @@ void Cube::itlSwitchGrids(Grid& grid1, Grid& grid2)
 	Grid temp = grid1;
 	grid1 = grid2;
 	grid2 = temp;
-}
-
-bool Cube::itlRotateGrids(Grid& axisGridPlus, Grid& axisGridMinus, Grid& gridLeft, Grid& gridRight, Grid& gridTop, Grid& gridBot, const int iFactor)
-{
-	if(iFactor == 0)
-		return true;
-	if(iFactor < -3 || iFactor > 3)
-		return false;
-
-	if(iFactor == 1 || iFactor == -3)
-	{
-		axisGridPlus.RotateGrid(-1);
-		axisGridMinus.RotateGrid(-1);
-		gridLeft.MirrorGridHorizontal();
-		gridRight.MirrorGridHorizontal();
-		itlSwitchGrids(gridLeft, gridTop, gridRight, gridBot);
-	}
-	else if(iFactor == 2 || iFactor == -2)
-	{
-		axisGridPlus.RotateGrid(-2);
-		axisGridMinus.RotateGrid(-2);
-		gridTop.MirrorGridHorizontal();
-		gridBot.MirrorGridHorizontal();
-		gridLeft.MirrorGridHorizontal();
-		gridRight.MirrorGridHorizontal();
-		itlSwitchGrids(gridTop, gridBot);
-		itlSwitchGrids(gridLeft, gridRight);
-	}
-	else if(iFactor == 3 || iFactor == -1)
-	{
-		axisGridPlus.RotateGrid(-3);
-		axisGridMinus.RotateGrid(-3);
-		gridTop.MirrorGridHorizontal();
-		gridBot.MirrorGridHorizontal();
-		itlSwitchGrids(gridLeft, gridBot, gridRight, gridTop);
-	}
-	return true;
 }

@@ -65,7 +65,6 @@ private:
 
 		void itlSwitchGrids(Grid& grid1, Grid& grid2, Grid& grid3, Grid& grid4);
 		void itlSwitchGrids(Grid& grid1, Grid& grid2);
-		bool itlRotateGrids(Grid& axisGridPlus, Grid& axisGridMinus, Grid& gridLeft, Grid& gridRight, Grid& gridTop, Grid& gridBot, const int iFactor);
 	//@}
 };
 
