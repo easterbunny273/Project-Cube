@@ -9,10 +9,10 @@
 #ifndef __GAMELOGIC_PROJECT_CUBE_HEADER
 #define __GAMELOGIC_PROJECT_CUBE_HEADER
 
-#include "ICube.h"
-#include "Grid.h"
+#include "Gamelogic/ICube.h"
+#include "GameLogic/Grid.h"
 
-class Cube : ICube
+class Cube : public ICube
 {
 public:
 	/*! \name Construction / Destruction */

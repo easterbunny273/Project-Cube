@@ -197,5 +197,11 @@
     <ClInclude Include="..\include\Graphics\SceneObjects\SceneObject_AssimpImport.h">
       <Filter>Header Files\graphics\sceneobjects</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\Gamelogic\Level.h">
+      <Filter>Header Files\gamelogic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Gamelogic\ILevel.h">
+      <Filter>Header Files\gamelogic</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

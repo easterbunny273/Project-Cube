@@ -25,9 +25,9 @@ void CubeTest::tear_down()
 	testcube.SetGrids(grid1, grid2, grid3, grid4, grid5, grid6);
 }
 
-void CubeTest::TestCubeRotationX1()
+void CubeTest::TestCubeRotationX90()
 {
-	bool test = testcube.RotateX(1);
+	bool test = testcube.RotateX(90);
 	TEST_ASSERT(test)
 
 	TEST_ASSERT(testcube.GetGrid(1).GetDoorPositions().at(0).x == 1)
@@ -49,9 +49,9 @@ void CubeTest::TestCubeRotationX1()
 	TEST_ASSERT(testcube.GetGrid(6).GetDoorPositions().at(0).y == 6)
 }
 
-void CubeTest::TestCubeRotationX2()
+void CubeTest::TestCubeRotationX180()
 {
-	bool test = testcube.RotateX(2);
+	bool test = testcube.RotateX(180);
 	TEST_ASSERT(test)
 
 	TEST_ASSERT(testcube.GetGrid(1).GetDoorPositions().at(0).x == 9)
@@ -73,9 +73,9 @@ void CubeTest::TestCubeRotationX2()
 	TEST_ASSERT(testcube.GetGrid(6).GetDoorPositions().at(0).y == 4)
 }
 
-void CubeTest::TestCubeRotationX3()
+void CubeTest::TestCubeRotationX270()
 {
-	bool test = testcube.RotateX(3);
+	bool test = testcube.RotateX(270);
 	TEST_ASSERT(test)
 
 	TEST_ASSERT(testcube.GetGrid(1).GetDoorPositions().at(0).x == 9)
@@ -97,9 +97,9 @@ void CubeTest::TestCubeRotationX3()
 	TEST_ASSERT(testcube.GetGrid(6).GetDoorPositions().at(0).y == 3)
 }
 
-void CubeTest::TestCubeRotationY1()
+void CubeTest::TestCubeRotationY90()
 {
-	bool test = testcube.RotateY(1);
+	bool test = testcube.RotateY(90);
 	TEST_ASSERT(test)
 
 	TEST_ASSERT(testcube.GetGrid(1).GetDoorPositions().at(0).x == 4)
@@ -121,9 +121,9 @@ void CubeTest::TestCubeRotationY1()
 	TEST_ASSERT(testcube.GetGrid(6).GetDoorPositions().at(0).y == 1)
 }
 
-void CubeTest::TestCubeRotationY2()
+void CubeTest::TestCubeRotationY180()
 {
-	bool test = testcube.RotateY(2);
+	bool test = testcube.RotateY(180);
 	TEST_ASSERT(test)
 
 	TEST_ASSERT(testcube.GetGrid(1).GetDoorPositions().at(0).x == 8)
@@ -145,9 +145,9 @@ void CubeTest::TestCubeRotationY2()
 	TEST_ASSERT(testcube.GetGrid(6).GetDoorPositions().at(0).y == 6)
 }
 
-void CubeTest::TestCubeRotationY3()
+void CubeTest::TestCubeRotationY270()
 {
-	bool test = testcube.RotateY(3);
+	bool test = testcube.RotateY(270);
 	TEST_ASSERT(test)
 
 	TEST_ASSERT(testcube.GetGrid(1).GetDoorPositions().at(0).x == 5)
@@ -169,9 +169,9 @@ void CubeTest::TestCubeRotationY3()
 	TEST_ASSERT(testcube.GetGrid(6).GetDoorPositions().at(0).y == 8)
 }
 
-void CubeTest::TestCubeRotationZ1()
+void CubeTest::TestCubeRotationZ90()
 {
-	bool test = testcube.RotateZ(1);
+	bool test = testcube.RotateZ(90);
 	TEST_ASSERT(test)
 
 	TEST_ASSERT(testcube.GetGrid(1).GetDoorPositions().at(0).x == 4)
@@ -193,9 +193,9 @@ void CubeTest::TestCubeRotationZ1()
 	TEST_ASSERT(testcube.GetGrid(6).GetDoorPositions().at(0).y == 5)
 }
 
-void CubeTest::TestCubeRotationZ2()
+void CubeTest::TestCubeRotationZ180()
 {
-	bool test = testcube.RotateZ(2);
+	bool test = testcube.RotateZ(180);
 	TEST_ASSERT(test)
 
 	TEST_ASSERT(testcube.GetGrid(1).GetDoorPositions().at(0).x == 2)
@@ -217,9 +217,9 @@ void CubeTest::TestCubeRotationZ2()
 	TEST_ASSERT(testcube.GetGrid(6).GetDoorPositions().at(0).y == 5)
 }
 
-void CubeTest::TestCubeRotationZ3()
+void CubeTest::TestCubeRotationZ270()
 {
-	bool test = testcube.RotateZ(3);
+	bool test = testcube.RotateZ(270);
 	TEST_ASSERT(test)
 
 	TEST_ASSERT(testcube.GetGrid(1).GetDoorPositions().at(0).x == 3)

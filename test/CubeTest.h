@@ -8,15 +8,15 @@ class CubeTest: public Test::Suite
 public:
 	CubeTest()
 	{
-		TEST_ADD(CubeTest::TestCubeRotationX1)
-		TEST_ADD(CubeTest::TestCubeRotationX2)
-		TEST_ADD(CubeTest::TestCubeRotationX3)
-		TEST_ADD(CubeTest::TestCubeRotationY1)
-		TEST_ADD(CubeTest::TestCubeRotationY2)
-		TEST_ADD(CubeTest::TestCubeRotationY3)
-		TEST_ADD(CubeTest::TestCubeRotationZ1)
-		TEST_ADD(CubeTest::TestCubeRotationZ2)
-		TEST_ADD(CubeTest::TestCubeRotationZ3)
+		TEST_ADD(CubeTest::TestCubeRotationX90)
+		TEST_ADD(CubeTest::TestCubeRotationX180)
+		TEST_ADD(CubeTest::TestCubeRotationX270)
+		TEST_ADD(CubeTest::TestCubeRotationY90)
+		TEST_ADD(CubeTest::TestCubeRotationY180)
+		TEST_ADD(CubeTest::TestCubeRotationY270)
+		TEST_ADD(CubeTest::TestCubeRotationZ90)
+		TEST_ADD(CubeTest::TestCubeRotationZ180)
+		TEST_ADD(CubeTest::TestCubeRotationZ270)
 	}
 
 protected:
@@ -33,13 +33,13 @@ private:
 
 	Cube testcube;
 
-	void TestCubeRotationX1();
-	void TestCubeRotationX2();
-	void TestCubeRotationX3();
-	void TestCubeRotationY1();
-	void TestCubeRotationY2();
-	void TestCubeRotationY3();
-	void TestCubeRotationZ1();
-	void TestCubeRotationZ2();
-	void TestCubeRotationZ3();
+	void TestCubeRotationX90();
+	void TestCubeRotationX180();
+	void TestCubeRotationX270();
+	void TestCubeRotationY90();
+	void TestCubeRotationY180();
+	void TestCubeRotationY270();
+	void TestCubeRotationZ90();
+	void TestCubeRotationZ180();
+	void TestCubeRotationZ270();
 };

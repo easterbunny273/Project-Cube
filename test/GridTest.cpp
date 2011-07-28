@@ -26,10 +26,10 @@ void GridTest::TestDoorInsertion()
 	TEST_ASSERT(testgrid.AddDoor(3,7))
 }
 
-void GridTest::TestRotation1()
+void GridTest::TestRotation90()
 {
-	TEST_ASSERT(testgrid.RotateGrid(1))
-	std::vector<glm::vec2> doors = testgrid.GetDoorPositions();
+	TEST_ASSERT(testgrid.RotateGrid(90))
+	std::vector<glm::ivec2> doors = testgrid.GetDoorPositions();
 	
 	TEST_ASSERT(doors.size() == 4)
 	TEST_ASSERT(doors.at(0).x == 7)
@@ -42,10 +42,10 @@ void GridTest::TestRotation1()
 	TEST_ASSERT(doors.at(3).y == 5)
 }
 
-void GridTest::TestRotation2()
+void GridTest::TestRotation180()
 {
-	TEST_ASSERT(testgrid.RotateGrid(2))
-	std::vector<glm::vec2> doors = testgrid.GetDoorPositions();
+	TEST_ASSERT(testgrid.RotateGrid(180))
+	std::vector<glm::ivec2> doors = testgrid.GetDoorPositions();
 	
 	TEST_ASSERT(doors.size() == 4)
 	TEST_ASSERT(doors.at(0).x == 7)
@@ -58,10 +58,10 @@ void GridTest::TestRotation2()
 	TEST_ASSERT(doors.at(3).y == 1)
 }
 
-void GridTest::TestRotation3()
+void GridTest::TestRotation270()
 {
-	TEST_ASSERT(testgrid.RotateGrid(3))
-	std::vector<glm::vec2> doors = testgrid.GetDoorPositions();
+	TEST_ASSERT(testgrid.RotateGrid(270))
+	std::vector<glm::ivec2> doors = testgrid.GetDoorPositions();
 	
 	TEST_ASSERT(doors.size() == 4)
 	TEST_ASSERT(doors.at(0).x == 3)
@@ -77,7 +77,7 @@ void GridTest::TestRotation3()
 void GridTest::TestMirrorHorizontal()
 {
 	testgrid.MirrorGridHorizontal();
-	std::vector<glm::vec2> doors = testgrid.GetDoorPositions();
+	std::vector<glm::ivec2> doors = testgrid.GetDoorPositions();
 	
 	TEST_ASSERT(doors.size() == 4)
 	TEST_ASSERT(doors.at(0).x == 3)
@@ -93,7 +93,7 @@ void GridTest::TestMirrorHorizontal()
 void GridTest::TestMirrorVertical()
 {
 	testgrid.MirrorGridVertical();
-	std::vector<glm::vec2> doors = testgrid.GetDoorPositions();
+	std::vector<glm::ivec2> doors = testgrid.GetDoorPositions();
 	
 	TEST_ASSERT(doors.size() == 4)
 	TEST_ASSERT(doors.at(0).x == 7)

@@ -29,12 +29,12 @@ public:
 
 	/*! name Public methods */
 	//@{
-		bool AddDoor(glm::vec2 doorPosition);
+		bool AddDoor(glm::ivec2 doorPosition);
 		bool AddDoor(int iDoorX, int iDoorY);
 
 		void ClearGrid();
 
-		std::vector<glm::vec2> GetDoorPositions();
+		std::vector<glm::ivec2> GetDoorPositions();
 
 		bool RotateGrid(const int iFactor);
 		void MirrorGridVertical();
@@ -48,7 +48,7 @@ private:
         /// A vector which holds the door positions of a grid. Positions can go from
 		/// (1,1) to (9,9). You have to consider that 2 doors need to have a distance
 		/// of at least 1 square (example: (1,1) (3,1) is right; (1,1) (2,1) is wrong)
-		std::vector<glm::vec2> m_vDoorPositions;
+		std::vector<glm::ivec2> m_vDoorPositions;
 	//@}
 
 	/*! \name Private methods */

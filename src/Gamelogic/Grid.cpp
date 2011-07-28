@@ -19,7 +19,7 @@ Grid::Grid(Grid& grid)
 	}
 }
 
-bool Grid::AddDoor(glm::vec2 doorPosition)
+bool Grid::AddDoor(glm::ivec2 doorPosition)
 {
 	bool bInsert = CheckDoorInsertion(doorPosition.x, doorPosition.y);
 
@@ -34,7 +34,7 @@ bool Grid::AddDoor(int iDoorX, int iDoorY)
 	bool bInsert = CheckDoorInsertion(iDoorX, iDoorY);
 
 	if(bInsert)
-		m_vDoorPositions.push_back(glm::vec2(iDoorX, iDoorY));
+		m_vDoorPositions.push_back(glm::ivec2(iDoorX, iDoorY));
 	
 	return bInsert;
 }
@@ -44,9 +44,10 @@ bool Grid::CheckDoorInsertion(const int iX, const int iY)
 	if(iX < 1 || iX > 9 || iY < 1 || iY > 9)
 		return false;
 
+	glm::ivec2 current;
 	for(unsigned int i = 0; i < m_vDoorPositions.size(); i++)
 	{
-		glm::vec2 current = m_vDoorPositions.at(i);
+		current = m_vDoorPositions.at(i);
 		if(iX < current.x-1 || iX > current.x+1 || iY < current.y-1 || iY > current.y+1)
 		{
 			continue;
@@ -65,7 +66,7 @@ void Grid::ClearGrid()
 	m_vDoorPositions.clear();
 }
 
-std::vector<glm::vec2> Grid::GetDoorPositions()
+std::vector<glm::ivec2> Grid::GetDoorPositions()
 {
 	return m_vDoorPositions;
 }
@@ -74,33 +75,33 @@ bool Grid::RotateGrid(const int iFactor)
 {
 	if(iFactor == 0)
 		return true;
-	if(iFactor < -3 || iFactor > 3)
+	if(iFactor < -270 || iFactor > 270)
 		return false;
 
-	glm::vec2 old;
+	glm::ivec2 old;
 
-	if(iFactor == 1 || iFactor == -3)
+	if(iFactor == 90 || iFactor == -270)
 	{
 		for(unsigned int i = 0; i < m_vDoorPositions.size(); i++)
 		{
 			old = m_vDoorPositions.at(i);
-			m_vDoorPositions.at(i) = glm::vec2(10-old.y, old.x);
+			m_vDoorPositions.at(i) = glm::ivec2(10-old.y, old.x);
 		}
 	}
-	else if(iFactor == 2 || iFactor == -2)
+	else if(iFactor == 180 || iFactor == -180)
 	{
 		for(unsigned int i = 0; i < m_vDoorPositions.size(); i++)
 		{
 			old = m_vDoorPositions.at(i);
-			m_vDoorPositions.at(i) = glm::vec2(10-old.x, 10-old.y);
+			m_vDoorPositions.at(i) = glm::ivec2(10-old.x, 10-old.y);
 		}
 	}
-	else if(iFactor == 3 || iFactor == -1)
+	else if(iFactor == 270 || iFactor == -90)
 	{
 		for(unsigned int i = 0; i < m_vDoorPositions.size(); i++)
 		{
 			old = m_vDoorPositions.at(i);
-			m_vDoorPositions.at(i) = glm::vec2(old.y, 10-old.x);
+			m_vDoorPositions.at(i) = glm::ivec2(old.y, 10-old.x);
 		}
 	}
 	return true;
@@ -108,20 +109,20 @@ bool Grid::RotateGrid(const int iFactor)
 
 void Grid::MirrorGridVertical()
 {
-	glm::vec2 old;
+	glm::ivec2 old;
 	for(unsigned int i = 0; i < m_vDoorPositions.size(); i++)
 	{
 		old = m_vDoorPositions.at(i);
-		m_vDoorPositions.at(i) = glm::vec2(10-old.x, old.y);
+		m_vDoorPositions.at(i) = glm::ivec2(10-old.x, old.y);
 	}
 }
 
 void Grid::MirrorGridHorizontal()
 {
-	glm::vec2 old;
+	glm::ivec2 old;
 	for(unsigned int i = 0; i < m_vDoorPositions.size(); i++)
 	{
 		old = m_vDoorPositions.at(i);
-		m_vDoorPositions.at(i) = glm::vec2(old.x, 10-old.y);
+		m_vDoorPositions.at(i) = glm::ivec2(old.x, 10-old.y);
 	}
 }
