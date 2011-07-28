@@ -19,7 +19,10 @@ log.txt
 visual studio files/ipch
 visual studio files/Release
 visual studio files/Debug
-visual studio files/log.txt
+visual studio files/bin
+visual studio files/Project Cube Test/Debug
+visual studio files/Project Cube Test/Release
+visual studio files/Test
 
 #doxygen
 doc/html/
@@ -30,3 +33,12 @@ qtcreator-build/
 #external libs
 external/glm
 external/lua*
+external/glew
+external/glfw
+external/cpptest
+external/cppunit
+external/assimp
+external/DevIL
+
+#test results
+testresults*

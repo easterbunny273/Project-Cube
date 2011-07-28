@@ -86,6 +86,8 @@ bool Graphic::InitializeOpenGL()
 
     // initialize opengl state variables
     ItlInitializeOpenGLStates();
+
+    return true;
 }
 
 /****************************************************************
