@@ -1,4 +1,5 @@
 #include "Grid.h"
+#include "Logger.h"
 
 Grid::Grid()
 {
@@ -8,6 +9,14 @@ Grid::Grid()
 Grid::~Grid()
 {
 
+}
+
+Grid::Grid(Grid& grid)
+{
+	for(int i = 0; i < grid.GetDoorPositions().size(); i++)
+	{
+		this->AddDoor(grid.GetDoorPositions().at(i));
+	}
 }
 
 bool Grid::AddDoor(glm::vec2 doorPosition)
@@ -96,4 +105,24 @@ bool Grid::RotateGrid(const int iFactor)
 		}
 	}
 	return true;
+}
+
+void Grid::MirrorGridVertical()
+{
+	std::vector<glm::vec2> temp = m_vDoorPositions;
+	m_vDoorPositions.clear();
+	for(int i = 0; i < temp.size(); i++)
+	{
+		m_vDoorPositions.push_back(glm::vec2(10-temp.at(i).x, temp.at(i).y));
+	}
+}
+
+void Grid::MirrorGridHorizontal()
+{
+	std::vector<glm::vec2> temp = m_vDoorPositions;
+	m_vDoorPositions.clear();
+	for(int i = 0; i < temp.size(); i++)
+	{
+		m_vDoorPositions.push_back(glm::vec2(temp.at(i).x, 10-temp.at(i).y));
+	}
 }

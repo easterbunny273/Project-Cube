@@ -22,6 +22,9 @@ public:
 
         /// destructor
         ~Grid();
+
+		/// copy constructor
+		Grid(Grid& grid);
     //@}
 
 	/*! name Public methods */
@@ -34,6 +37,8 @@ public:
 		std::vector<glm::vec2> GetDoorPositions();
 
 		bool RotateGrid(const int iFactor);
+		void MirrorGridVertical();
+		void MirrorGridHorizontal();
 	//@}
 
 

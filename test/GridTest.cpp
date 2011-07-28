@@ -73,3 +73,35 @@ void GridTest::TestRotation3()
 	TEST_ASSERT(doors.at(3).x == 9)
 	TEST_ASSERT(doors.at(3).y == 5)
 }
+
+void GridTest::TestMirrorHorizontal()
+{
+	testgrid.MirrorGridHorizontal();
+	std::vector<glm::vec2> doors = testgrid.GetDoorPositions();
+	
+	TEST_ASSERT(doors.size() == 4)
+	TEST_ASSERT(doors.at(0).x == 3)
+	TEST_ASSERT(doors.at(0).y == 7)
+	TEST_ASSERT(doors.at(1).x == 7)
+	TEST_ASSERT(doors.at(1).y == 8)
+	TEST_ASSERT(doors.at(2).x == 6)
+	TEST_ASSERT(doors.at(2).y == 5)
+	TEST_ASSERT(doors.at(3).x == 5)
+	TEST_ASSERT(doors.at(3).y == 1)
+}
+
+void GridTest::TestMirrorVertical()
+{
+	testgrid.MirrorGridVertical();
+	std::vector<glm::vec2> doors = testgrid.GetDoorPositions();
+	
+	TEST_ASSERT(doors.size() == 4)
+	TEST_ASSERT(doors.at(0).x == 7)
+	TEST_ASSERT(doors.at(0).y == 3)
+	TEST_ASSERT(doors.at(1).x == 3)
+	TEST_ASSERT(doors.at(1).y == 2)
+	TEST_ASSERT(doors.at(2).x == 4)
+	TEST_ASSERT(doors.at(2).y == 5)
+	TEST_ASSERT(doors.at(3).x == 5)
+	TEST_ASSERT(doors.at(3).y == 9)
+}
