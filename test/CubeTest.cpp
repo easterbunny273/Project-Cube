@@ -65,4 +65,19 @@ void CubeTest::TestCubeRotationX2()
 
 void CubeTest::TestCubeRotationX3()
 {
+	bool test = testcube.RotateX(3);
+	TEST_ASSERT(test)
+
+	TEST_ASSERT(testcube.GetGrid(1).GetDoorPositions().at(0).x == 9)
+	TEST_ASSERT(testcube.GetGrid(1).GetDoorPositions().at(0).y == 1)
+	TEST_ASSERT(testcube.GetGrid(2).GetDoorPositions().at(0).x == 8)
+	TEST_ASSERT(testcube.GetGrid(2).GetDoorPositions().at(0).y == 2)
+	TEST_ASSERT(testcube.GetGrid(3).GetDoorPositions().at(0).x == 5)
+	TEST_ASSERT(testcube.GetGrid(3).GetDoorPositions().at(0).y == 5)
+	TEST_ASSERT(testcube.GetGrid(4).GetDoorPositions().at(0).x == 6)
+	TEST_ASSERT(testcube.GetGrid(4).GetDoorPositions().at(0).y == 6)
+	TEST_ASSERT(testcube.GetGrid(5).GetDoorPositions().at(0).x == 4)
+	TEST_ASSERT(testcube.GetGrid(5).GetDoorPositions().at(0).y == 6)
+	TEST_ASSERT(testcube.GetGrid(6).GetDoorPositions().at(0).x == 3)
+	TEST_ASSERT(testcube.GetGrid(6).GetDoorPositions().at(0).y == 7)
 }

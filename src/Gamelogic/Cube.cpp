@@ -106,6 +106,11 @@ bool Cube::itlRotateGrids(Grid& axisGridPlus, Grid& axisGridMinus, Grid& gridLef
 	}
 	else if(iFactor == 3 || iFactor == -1)
 	{
+		axisGridPlus.RotateGrid(-3);
+		axisGridMinus.RotateGrid(-3);
+		gridTop.MirrorGridHorizontal();
+		gridBot.MirrorGridHorizontal();
+		itlSwitchGrids(gridLeft, gridBot, gridRight, gridTop);
 	}
 	return true;
 }
