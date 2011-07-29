@@ -14,7 +14,7 @@ unsigned int Cube::GetCubeID()
 	return m_nCubeID;
 }
 
-glm::vec3 Cube::GetCubePosition()
+glm::ivec3 Cube::GetCubePosition()
 {
 	return m_CubePosition;
 }

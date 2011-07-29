@@ -21,7 +21,7 @@ public:
     virtual unsigned int GetCubeID() = 0;
 
     /// returns the position of the cube in the big cube matrix
-    virtual glm::vec3 GetCubePosition() = 0;
+    virtual glm::ivec3 GetCubePosition() = 0;
 
     /// returns the current transformation matrix of the object
     virtual glm::mat4 GetTransformation() = 0;

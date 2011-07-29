@@ -6,8 +6,8 @@
  */
 
 #pragma once
-#ifndef __GAMELOGIC_PROJECT_CUBE_HEADER
-#define __GAMELOGIC_PROJECT_CUBE_HEADER
+#ifndef __CUBE_PROJECT_CUBE_HEADER
+#define __CUBE_PROJECT_CUBE_HEADER
 
 #include "Gamelogic/ICube.h"
 #include "GameLogic/Grid.h"
@@ -30,7 +30,7 @@ public:
 		virtual unsigned int GetCubeID();
 
 	    /// returns the position of the cube in the big cube matrix
-	    virtual glm::vec3 GetCubePosition();
+	    virtual glm::ivec3 GetCubePosition();
 
 	    /// returns the current transformation matrix of the object
 	    virtual glm::mat4 GetTransformation();
@@ -44,26 +44,45 @@ public:
 		///Rotates the cube around its z-axis for the given factor
 		bool RotateZ(const int iFactor);
 
+		///Sets all 6 grids
 		void SetGrids(Grid& xplus, Grid& xminus, Grid& yplus, Grid& yminus, Grid& zplus, Grid& zminus);
 		
+		///Returns the grid with the given id
+		///1 = Xplus, 2 = Xminus, 3 = Yplus, 4 = Yminus, 5 = Zplus, 6 = Zminus
+		///TODO: find a better solution
 		Grid GetGrid(const unsigned int nID);
 	//@}
 
 private:
 	/*! \name Private members */
 	//@{
+		///Cube-ID
 		unsigned int m_nCubeID;
-		glm::vec3 m_CubePosition;
+		
+		///Returns the relative position of the cube inside a level
+		glm::ivec3 m_CubePosition;
+
+		///Returns the transformation of a cube; not used yet
 		glm::mat4 m_CubeTransformation;
 		
+		///Grid Xplus
 		Grid m_Xplus;
+		///Grid Xminus
 		Grid m_Xminus;
+		///Grid Yplus
 		Grid m_Yplus;
+		///Grid Yminus
 		Grid m_Yminus;
+		///Grid Zplus
 		Grid m_Zplus;
+		///Grid Zminus
 		Grid m_Zminus;
 
+		///Rotates the grid-order
+		///grid1<-grid2<-grid3<-grid4<-grid1
 		void itlSwitchGrids(Grid& grid1, Grid& grid2, Grid& grid3, Grid& grid4);
+		
+		///Switches two grids
 		void itlSwitchGrids(Grid& grid1, Grid& grid2);
 	//@}
 };

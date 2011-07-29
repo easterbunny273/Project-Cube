@@ -21,7 +21,7 @@ Grid::Grid(Grid& grid)
 
 bool Grid::AddDoor(glm::ivec2 doorPosition)
 {
-	bool bInsert = CheckDoorInsertion(doorPosition.x, doorPosition.y);
+	bool bInsert = itlCheckDoorInsertion(doorPosition.x, doorPosition.y);
 
 	if(bInsert)
 		m_vDoorPositions.push_back(doorPosition);
@@ -31,7 +31,7 @@ bool Grid::AddDoor(glm::ivec2 doorPosition)
 
 bool Grid::AddDoor(int iDoorX, int iDoorY)
 {
-	bool bInsert = CheckDoorInsertion(iDoorX, iDoorY);
+	bool bInsert = itlCheckDoorInsertion(iDoorX, iDoorY);
 
 	if(bInsert)
 		m_vDoorPositions.push_back(glm::ivec2(iDoorX, iDoorY));
@@ -39,7 +39,7 @@ bool Grid::AddDoor(int iDoorX, int iDoorY)
 	return bInsert;
 }
 
-bool Grid::CheckDoorInsertion(const int iX, const int iY)
+bool Grid::itlCheckDoorInsertion(const int iX, const int iY)
 {
 	if(iX < 1 || iX > 9 || iY < 1 || iY > 9)
 		return false;
