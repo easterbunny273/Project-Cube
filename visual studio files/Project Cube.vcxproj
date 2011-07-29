@@ -95,6 +95,7 @@
     <ClCompile Include="..\external\tinyxml\tinyxmlparser.cpp" />
     <ClCompile Include="..\src\Gamelogic\Cube.cpp" />
     <ClCompile Include="..\src\Gamelogic\Grid.cpp" />
+    <ClCompile Include="..\src\Gamelogic\Level.cpp" />
     <ClCompile Include="..\src\Graphics\Graphic.cpp" />
     <ClCompile Include="..\src\Graphics\SceneObject.cpp" />
     <ClCompile Include="..\src\Graphics\SceneObjects\SceneObject_AssimpImport.cpp" />
