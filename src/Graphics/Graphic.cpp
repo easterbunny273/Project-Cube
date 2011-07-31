@@ -400,11 +400,16 @@ void Graphic::ItlCreateOpenGLWindow()
             // check if we have a core-profile
             glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &profile);
 
-           /* if (profile == GL_CONTEXT_CORE_PROFILE_BIT)
+	    /*if (profile == GL_CONTEXT_CORE_PROFILE_BIT)
                     Logger::debug() << "got rendering context with core profile" << Logger::endl;
             else
                     Logger::fatal() << "got rendering context with compatibility profile instead of core profile" << Logger::endl;
-            */
+*/
+	    int iMayor, iMinor, iRev;
+
+	    glfwGetVersion(&iMayor, &iMinor, &iRev);
+
+	    Logger::error() << iMayor << ":" << iMinor << ":" << iRev << Logger::endl;
     }
     else
             Logger::fatal() << "OpenGL version 3.3 is needed but not supported" << Logger::endl;
@@ -571,6 +576,23 @@ void Graphic::Camera::Move(float fFactor)
     v3LookAt.z = cos((m_fRotationHorizontal / 180.0) * PI);
 
     m_m4ViewMatrix = glm::lookAt(m_v3CameraPosition, m_v3CameraPosition + v3LookAt, glm::vec3(0,1,0));
+}
+
+bool Graphic::ShutDown()
+{
+    return true;
+}
+
+void Graphic::RegisterInputHandler(IInputEventListener *pListener)
+{
+    assert (pListener != NULL);
+
+    m_pInputEventListener = pListener;
+}
+
+void Graphic::Camera::AddToMoveVector(glm::vec3 vVector)
+{
+    m_v3MoveVector += vVector;
 }
 
 
