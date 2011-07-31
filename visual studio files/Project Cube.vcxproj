@@ -95,6 +95,7 @@
     <ClCompile Include="..\external\tinyxml\tinyxmlparser.cpp" />
     <ClCompile Include="..\src\Gamelogic\Cube.cpp" />
     <ClCompile Include="..\src\Gamelogic\Grid.cpp" />
+    <ClCompile Include="..\src\Gamelogic\Level.cpp" />
     <ClCompile Include="..\src\Graphics\Graphic.cpp" />
     <ClCompile Include="..\src\Graphics\SceneObject.cpp" />
     <ClCompile Include="..\src\Graphics\SceneObjects\SceneObject_AssimpImport.cpp" />
@@ -122,7 +123,9 @@
     <ClInclude Include="..\include\Gamelogic\Grid.h" />
     <ClInclude Include="..\include\Gamelogic\ICube.h" />
     <ClInclude Include="..\include\Gamelogic\IGameState.h" />
+    <ClInclude Include="..\include\Gamelogic\ILevel.h" />
     <ClInclude Include="..\include\Gamelogic\IObject.h" />
+    <ClInclude Include="..\include\Gamelogic\Level.h" />
     <ClInclude Include="..\include\Graphics\common_gl.h" />
     <ClInclude Include="..\include\Graphics\Graphics.h" />
     <ClInclude Include="..\include\Graphics\prevent_old_opengl.h" />

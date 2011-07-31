@@ -9,9 +9,9 @@ public:
 	GridTest()
 	{
 		TEST_ADD(GridTest::TestDoorInsertion)
-		TEST_ADD(GridTest::TestRotation1)
-		TEST_ADD(GridTest::TestRotation2)
-		TEST_ADD(GridTest::TestRotation3)
+		TEST_ADD(GridTest::TestRotation90)
+		TEST_ADD(GridTest::TestRotation180)
+		TEST_ADD(GridTest::TestRotation270)
 		TEST_ADD(GridTest::TestMirrorHorizontal)
 		TEST_ADD(GridTest::TestMirrorVertical)
 	}
@@ -24,9 +24,9 @@ private:
 	Grid testgrid;
 
 	void TestDoorInsertion();
-	void TestRotation1();
-	void TestRotation2();
-	void TestRotation3();
+	void TestRotation90();
+	void TestRotation180();
+	void TestRotation270();
 	void TestMirrorHorizontal();
 	void TestMirrorVertical();
 };

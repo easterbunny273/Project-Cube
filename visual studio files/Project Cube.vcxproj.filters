@@ -108,6 +108,9 @@
     <ClCompile Include="..\src\Graphics\SceneObjects\SceneObject_RenderPass.cpp">
       <Filter>Source Files\graphics\sceneobjects</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Gamelogic\Level.cpp">
+      <Filter>Source Files\gamelogic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Logger.h">
@@ -196,6 +199,12 @@
     </ClInclude>
     <ClInclude Include="..\include\Graphics\SceneObjects\SceneObject_AssimpImport.h">
       <Filter>Header Files\graphics\sceneobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Gamelogic\Level.h">
+      <Filter>Header Files\gamelogic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Gamelogic\ILevel.h">
+      <Filter>Header Files\gamelogic</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
