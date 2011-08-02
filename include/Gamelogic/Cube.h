@@ -10,7 +10,7 @@
 #define __CUBE_PROJECT_CUBE_HEADER
 
 #include "Gamelogic/ICube.h"
-#include "GameLogic/Grid.h"
+#include "Gamelogic/Grid.h"
 
 class Cube : public ICube
 {

@@ -27,6 +27,12 @@
 class DummyGame : public IGameState, public IInputEventListener
 {
 public:
+    /*! \name Construction / Destruction */
+    //@{
+	// constructor
+	DummyGame();
+    //@}
+
     /*! \name IGameState interface */
     //@{
 	/// returns a list of the objects in the current cube
@@ -61,6 +67,15 @@ public:
 	/// fired when a mouse button is released
 	virtual void OnMouseButtonReleased(TMouseButton eButton);
     //@}
+
+    inline bool GetStop() { return m_bStop; }
+private:
+    /*! \name Private members */
+    //@{
+	bool m_bLeftMouseButtonDown;
+	bool m_bStop;
+    //@}
+
 };
 
 #endif

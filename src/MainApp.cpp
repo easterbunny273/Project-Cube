@@ -36,8 +36,10 @@ void MainApp::Run()
     GetGraphic()->RegisterInputHandler(GetGame());
     GetGraphic()->SetActiveRenderPath("default");
 
-    while(true)
+    while(GetGame()->GetStop() == false)
+    {
         GetGraphic()->Render();
+    }
 
     GetGraphic()->ShutDown();
 }

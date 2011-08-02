@@ -45,6 +45,7 @@ Graphic::Graphic()
       m_iFramesInThisSecondYet(0),
       m_iFramesPerSecond(0),
       m_fTimeOfLastRenderCall(0),
+      m_bIsMouseLocked(false),
       m_pInputEventListener(NULL)
 {
     // check if this is the first instance
@@ -84,6 +85,10 @@ bool Graphic::InitializeOpenGL()
     // create window
     ItlCreateOpenGLWindow();
 
+    m_bWindowOpenened = true;
+
+    m_bIsMouseLocked = false;
+
     // initialize opengl state variables
     ItlInitializeOpenGLStates();
 
@@ -118,11 +123,11 @@ void Graphic::Render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // draw the scene
-    if (m_vRenderPaths.find(m_sActiveRenderPath) != m_vRenderPaths.end())
+   /* if (m_vRenderPaths.find(m_sActiveRenderPath) != m_vRenderPaths.end())
         m_vRenderPaths[m_sActiveRenderPath]->Render();
     else
         Logger::error() << "RenderPath " << m_sActiveRenderPath << " does not exist!" << Logger::endl;
-
+*/
     // swap back and front buffers
     glfwSwapBuffers();
 
@@ -304,6 +309,9 @@ void Graphic::ItlHandleMousePos(int iX, int iY)
     {
         m_pInputEventListener->OnMouseMove(iX, iY);
     }
+
+    if (m_bIsMouseLocked)
+	glfwSetMousePos(m_iWidth / 2, m_iHeight / 2);
 }
 
 /****************************************************************
@@ -580,6 +588,11 @@ void Graphic::Camera::Move(float fFactor)
 
 bool Graphic::ShutDown()
 {
+    glfwCloseWindow();
+    glfwTerminate();
+
+    m_bWindowOpenened = false;
+
     return true;
 }
 
@@ -593,6 +606,24 @@ void Graphic::RegisterInputHandler(IInputEventListener *pListener)
 void Graphic::Camera::AddToMoveVector(glm::vec3 vVector)
 {
     m_v3MoveVector += vVector;
+}
+
+void Graphic::HideAndLockMouseToWindowCenter()
+{
+    assert (m_bWindowOpenened);
+
+    glfwDisable(GLFW_MOUSE_CURSOR);
+
+    m_bIsMouseLocked = true;
+}
+
+void Graphic::UnHideAndUnLockMouse()
+{
+    assert (m_bWindowOpenened);
+
+    glfwEnable(GLFW_MOUSE_CURSOR);
+
+    m_bIsMouseLocked = false;
 }
 
 
