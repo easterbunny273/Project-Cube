@@ -15,7 +15,7 @@
 class SceneObject_Camera : public SceneObject
 {
 public:
-    SceneObject_Camera(std::shared_ptr<Graphic::Camera> spCamera, bool bSetMatrices=true);
+    SceneObject_Camera(Graphic::Camera *pCamera, bool bSetMatrices=true);
 
     /*! \name Operations */
     //@{
@@ -35,7 +35,7 @@ protected:
     //@}
 
 private:
-    std::shared_ptr<Graphic::Camera> m_spCamera;
+    Graphic::Camera * m_pCamera;
     bool m_bSetMatrices;
 
     GLuint m_nVertexArrayObject;	///< The opengl name (=unsigned int) of the vertex array object

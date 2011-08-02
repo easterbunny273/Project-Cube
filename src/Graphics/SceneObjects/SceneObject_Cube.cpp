@@ -118,7 +118,7 @@ SceneObject_Cube::SceneObject_Cube()
     /* zum befüllen mal aktivieren ...*/
     glBindBuffer(GL_ARRAY_BUFFER, m_nVertexBufferObject);
     /* befüllen ... */
-    glBufferData(GL_ARRAY_BUFFER, 144 * sizeof(pdVerticeData[0]), pdVerticeData, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 142 * sizeof(pdVerticeData[0]), pdVerticeData, GL_STATIC_DRAW);
 
     /* nun nur noch den Index-Array in den Bufferbereich schreiben */
     //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_nIndexBufferObject);
@@ -155,7 +155,7 @@ void SceneObject_Cube::ItlPreRender()
     if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_SHADOWMAP)
 	ShaderManager::instance()->ActivateShader("bounding_shader");
     else
-	ShaderManager::instance()->ActivateShader("bounding_shader");
+	ShaderManager::instance()->ActivateShader("basic_shading");
 }
 
 void SceneObject_Cube::ItlPostRender()
@@ -165,6 +165,8 @@ void SceneObject_Cube::ItlPostRender()
 
 void SceneObject_Cube::ItlRender()
 {
+    glBindBuffer(GL_ARRAY_BUFFER, m_nVertexBufferObject);
+
     const GLint l_in_Position(ShaderManager::instance()->GetAttribute("in_Position"));
 
     if (l_in_Position != -1)
@@ -181,7 +183,12 @@ void SceneObject_Cube::ItlRender()
 	glEnableVertexAttribArray(l_in_Normal);
     }
 
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 2);
+    GLenum eError = glGetError();
+
+    if (eError != GL_NO_ERROR)
+	Logger::error() << TranslateGLerror(eError) << Logger::endl;
+
+    glDrawArrays(GL_TRIANGLES, 0, 10);
 }
 
 void SceneObject_Cube::ItlLoadRessources()

@@ -135,7 +135,7 @@ public:
 
     /*! \name Public Attributes */
     //@{
-        Camera * GetCamera() { return &m_Camera; }
+	Camera * GetCamera() { return &m_Camera; }
         Camera * GetDebugCamera() { return &m_DebugCamera; }
     //@}
 
@@ -171,33 +171,39 @@ private:
         void ItlCreateOpenGLWindow();
 
         void ItlInitializeOpenGLStates();
+
+	void ItlLoadShaderPrograms();
+
+	void ItlCreateBaseRenderPath();
     //@}
 
-    std::map<std::string, std::shared_ptr<SceneObject> >    m_vRenderPaths;
+    /*! \name Private members */
+    //@{
+	std::map<std::string, std::shared_ptr<SceneObject> >    m_vRenderPaths;
 
-    std::list<std::shared_ptr<SceneObject> >                m_vSceneGraphs;
+	std::list<std::shared_ptr<SceneObject> >                m_vSceneGraphs;
 
 
-    int m_iWidth;           ///< width of the created opengl window
-    int m_iHeight;          ///< height of the created opengl window
+	int		    m_iWidth;			///< width of the created opengl window
+	int		    m_iHeight;			///< height of the created opengl window
+	bool		    m_bWindowOpenened;		///< whether an output window is currently open
 
-    bool m_bWindowOpenened; ///< wheter an output window is currently open
+	int		    m_iFramesInThisSecondYet;
+	int		    m_iFramesPerSecond;
+	float		    m_fTimeOfLastRenderCall;
 
-    int m_iFramesInThisSecondYet;
-    int m_iFramesPerSecond;
-    float m_fTimeOfLastRenderCall;
+	bool		    m_bIsMouseLocked;		///< whether the mouse is currently locked to the center
 
-    bool    m_bIsMouseLocked;
+	std::string	    m_sActiveRenderPath;
 
-    std::string m_sActiveRenderPath;
+	Camera		    m_Camera;			///< the main camera, also used for culling
+	Camera		    m_DebugCamera;		///< the debug camera, used to debug things like culling process
 
-    Camera      m_Camera;
-    Camera      m_DebugCamera;
+	static int	    s_iInstances;		///< how many instances are created ?
+	static Graphic *    s_pInstance;
 
-    static int        s_iInstances;
-    static Graphic *  s_pInstance;
-
-    IInputEventListener *m_pInputEventListener;
+	IInputEventListener *m_pInputEventListener;
+    //@}
 };
 
 #endif

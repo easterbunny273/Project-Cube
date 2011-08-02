@@ -33,6 +33,7 @@ void MainApp::Run()
     Logger::debug() << "hello!" << Logger::endl;
 
     GetGraphic()->InitializeOpenGL();
+    GetGraphic()->GetCamera()->SetPerspectiveProjection(45.0f, 1.3f, 0.1f, 100.0f);
     GetGraphic()->RegisterInputHandler(GetGame());
     GetGraphic()->SetActiveRenderPath("default");
 
