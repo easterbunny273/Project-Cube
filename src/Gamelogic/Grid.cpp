@@ -11,14 +11,6 @@ Grid::~Grid()
 
 }
 
-Grid::Grid(Grid& grid)
-{
-	for(unsigned int i = 0; i < grid.GetDoorPositions().size(); i++)
-	{
-		this->AddDoor(grid.GetDoorPositions().at(i));
-	}
-}
-
 bool Grid::AddDoor(glm::ivec2 doorPosition)
 {
 	bool bInsert = itlCheckDoorInsertion(doorPosition.x, doorPosition.y);
