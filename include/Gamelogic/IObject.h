@@ -7,11 +7,15 @@
  */
 
 #pragma once
-#ifndef __IGAMESTATE_PROJECTCUBE_HEADER
-#define __IGAMESTATE_PROJECTCUBE_HEADER
+#ifndef __IOBJECT_PROJECTCUBE_HEADER
+#define __IOBJECT_PROJECTCUBE_HEADER
 
 #include <memory>
 #include <list>
+
+#include <string>
+
+#include <glm/core/type_mat4x4.hpp>
 
 class IObject
 {
@@ -36,4 +40,4 @@ public:
 
 };
 
-#endif // __IGAMESTATE_PROJECTCUBE_HEADER
+#endif // __IOBJECT_PROJECTCUBE_HEADER

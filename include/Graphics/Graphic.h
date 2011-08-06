@@ -109,7 +109,7 @@ public:
         bool ShutDown();
     //@}
 
-    /*! \name Register object to handle input events */
+    /*! \name Methods for input event handling */
     //@{
         /// registers an input handler to the graphic engine, which
         /// will redirect all input events of the opengl window to this handler
@@ -118,6 +118,10 @@ public:
 
         /// returns wheter an input event handler is registered
         bool IsInputHandlerRegistered();
+
+	void HideAndLockMouseToWindowCenter();
+
+	void UnHideAndUnLockMouse();
     //@}
 
     /*! \name Methods for render paths */
@@ -182,6 +186,8 @@ private:
     int m_iFramesInThisSecondYet;
     int m_iFramesPerSecond;
     float m_fTimeOfLastRenderCall;
+
+    bool    m_bIsMouseLocked;
 
     std::string m_sActiveRenderPath;
 

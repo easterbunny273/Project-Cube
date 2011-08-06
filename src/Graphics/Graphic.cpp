@@ -45,6 +45,7 @@ Graphic::Graphic()
       m_iFramesInThisSecondYet(0),
       m_iFramesPerSecond(0),
       m_fTimeOfLastRenderCall(0),
+      m_bIsMouseLocked(false),
       m_pInputEventListener(NULL)
 {
     // check if this is the first instance
@@ -84,6 +85,10 @@ bool Graphic::InitializeOpenGL()
     // create window
     ItlCreateOpenGLWindow();
 
+    m_bWindowOpenened = true;
+
+    m_bIsMouseLocked = false;
+
     // initialize opengl state variables
     ItlInitializeOpenGLStates();
 
@@ -118,11 +123,11 @@ void Graphic::Render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // draw the scene
-    if (m_vRenderPaths.find(m_sActiveRenderPath) != m_vRenderPaths.end())
+   /* if (m_vRenderPaths.find(m_sActiveRenderPath) != m_vRenderPaths.end())
         m_vRenderPaths[m_sActiveRenderPath]->Render();
     else
         Logger::error() << "RenderPath " << m_sActiveRenderPath << " does not exist!" << Logger::endl;
-
+*/
     // swap back and front buffers
     glfwSwapBuffers();
 
@@ -304,6 +309,9 @@ void Graphic::ItlHandleMousePos(int iX, int iY)
     {
         m_pInputEventListener->OnMouseMove(iX, iY);
     }
+
+    if (m_bIsMouseLocked)
+	glfwSetMousePos(m_iWidth / 2, m_iHeight / 2);
 }
 
 /****************************************************************
@@ -400,11 +408,16 @@ void Graphic::ItlCreateOpenGLWindow()
             // check if we have a core-profile
             glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &profile);
 
-           /* if (profile == GL_CONTEXT_CORE_PROFILE_BIT)
+	    /*if (profile == GL_CONTEXT_CORE_PROFILE_BIT)
                     Logger::debug() << "got rendering context with core profile" << Logger::endl;
             else
                     Logger::fatal() << "got rendering context with compatibility profile instead of core profile" << Logger::endl;
-            */
+*/
+	    int iMayor, iMinor, iRev;
+
+	    glfwGetVersion(&iMayor, &iMinor, &iRev);
+
+	    Logger::error() << iMayor << ":" << iMinor << ":" << iRev << Logger::endl;
     }
     else
             Logger::fatal() << "OpenGL version 3.3 is needed but not supported" << Logger::endl;
@@ -571,6 +584,46 @@ void Graphic::Camera::Move(float fFactor)
     v3LookAt.z = cos((m_fRotationHorizontal / 180.0) * PI);
 
     m_m4ViewMatrix = glm::lookAt(m_v3CameraPosition, m_v3CameraPosition + v3LookAt, glm::vec3(0,1,0));
+}
+
+bool Graphic::ShutDown()
+{
+    glfwCloseWindow();
+    glfwTerminate();
+
+    m_bWindowOpenened = false;
+
+    return true;
+}
+
+void Graphic::RegisterInputHandler(IInputEventListener *pListener)
+{
+    assert (pListener != NULL);
+
+    m_pInputEventListener = pListener;
+}
+
+void Graphic::Camera::AddToMoveVector(glm::vec3 vVector)
+{
+    m_v3MoveVector += vVector;
+}
+
+void Graphic::HideAndLockMouseToWindowCenter()
+{
+    assert (m_bWindowOpenened);
+
+    glfwDisable(GLFW_MOUSE_CURSOR);
+
+    m_bIsMouseLocked = true;
+}
+
+void Graphic::UnHideAndUnLockMouse()
+{
+    assert (m_bWindowOpenened);
+
+    glfwEnable(GLFW_MOUSE_CURSOR);
+
+    m_bIsMouseLocked = false;
 }
 
 

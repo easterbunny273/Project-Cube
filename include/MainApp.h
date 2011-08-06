@@ -12,6 +12,7 @@
 #include "Settings.h"
 #include "Logger.h"
 #include "Graphics/Graphic.h"
+#include "DummyGame/Game.h"
 
 class MainApp
 {
@@ -25,7 +26,7 @@ public:
         Settings * GetCoreSettings();
 
         // dummy
-        //GameLogic GetGameLogic();
+	DummyGame * GetGame();
     //@}
 
     /*! \name Run methods */
@@ -53,6 +54,8 @@ private:
         Graphic m_Graphic;
 
         Settings m_CoreSettings;
+
+	DummyGame m_Game;
     //@}
 };
 

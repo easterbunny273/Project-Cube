@@ -20,7 +20,7 @@ class SceneObject_Cube : public SceneObject
 public:
     /*! \name Constructor / Destructor */
     //@{
-    SceneObject_Cube(float fMinX, float fMaxX, float fMinY, float fMaxY, float fMinZ, float fMaxZ);
+    SceneObject_Cube();
     ~SceneObject_Cube();
     //@}
 
@@ -43,6 +43,10 @@ protected:
         virtual void ItlPostRenderChildren() {};
     //@}
 
+    /*! \name other helper functions */
+    //@{
+	virtual void ItlLoadRessources();
+    //@}
 private:
     /*! \name Private members */
     //@{

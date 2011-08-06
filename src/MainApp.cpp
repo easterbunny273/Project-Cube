@@ -33,15 +33,23 @@ void MainApp::Run()
     Logger::debug() << "hello!" << Logger::endl;
 
     GetGraphic()->InitializeOpenGL();
+    GetGraphic()->RegisterInputHandler(GetGame());
     GetGraphic()->SetActiveRenderPath("default");
 
-    while(true)
+    while(GetGame()->GetStop() == false)
+    {
         GetGraphic()->Render();
+    }
 
-    //GetGraphic()->ShutDown();
+    GetGraphic()->ShutDown();
 }
 
 Graphic * MainApp::GetGraphic()
 {
     return &m_Graphic;
+}
+
+DummyGame * MainApp::GetGame()
+{
+    return &m_Game;
 }

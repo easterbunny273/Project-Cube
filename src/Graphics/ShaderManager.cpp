@@ -20,7 +20,8 @@ ShaderManager::ShaderManager()
 
 ShaderManager::~ShaderManager()
 {
-    //destroy all used Shader instances
+    // destroy all used Shader instances
+    // C++0x construct with lambda function :)
     for_each(m_vpShaders.begin(), m_vpShaders.end(), [](Shader *pShader) { delete pShader; });
 }
 
@@ -36,39 +37,39 @@ bool ShaderManager::ActivateShader(std::string sName)
 
     for (unsigned int a=0; a < this->m_vpShaders.size(); a++)
     {
-        if (this->m_vsShaderNames[a].compare(sName)==0)
+	if (m_vsShaderNames[a].compare(sName)==0)
 	{
-            this->m_vpShaders[a]->Activate();
-	    this->m_nCurrentActiveShaderProgram = a;
-            bSuccess = true;
+	    m_vpShaders[a]->Activate();
+	    m_nCurrentActiveShaderProgram = a;
+	    bSuccess = true;
 	    break;
 	}
     }
 
     if (bSuccess == false)
-        Logger::error() << "Could not activate shader with internal name \"" << sName  << "\", because it is not registered in ShaderManager" << Logger::endl;
+	Logger::error() << "Could not activate shader with internal name \"" << sName  << "\", because it is not registered in ShaderManager" << Logger::endl;
 
     return bSuccess;
 }
 
 GLint ShaderManager::GetAttribute(std::string sAttributeName)
 {
-    return this->m_vpShaders[this->m_nCurrentActiveShaderProgram]->GetAttribLocation(sAttributeName.data());
+    return m_vpShaders[m_nCurrentActiveShaderProgram]->GetAttribLocation(sAttributeName.data());
 }
 
 GLint ShaderManager::GetUniform(std::string sUniformName)
 {
-    return this->m_vpShaders[this->m_nCurrentActiveShaderProgram]->GetUniformLocation(sUniformName.data());
+    return m_vpShaders[m_nCurrentActiveShaderProgram]->GetUniformLocation(sUniformName.data());
 }
 
 void ShaderManager::PushActiveShader()
 {
-    m_vActiveShaderStack.push(this->m_nCurrentActiveShaderProgram);
+    m_vActiveShaderStack.push(m_nCurrentActiveShaderProgram);
 }
 
 void ShaderManager::PopActiveShader()
 {
-    this->m_nCurrentActiveShaderProgram = this->m_vActiveShaderStack.top();
-    this->m_vActiveShaderStack.pop();
-    this->m_vpShaders[this->m_nCurrentActiveShaderProgram]->Activate();
+    m_nCurrentActiveShaderProgram = m_vActiveShaderStack.top();
+    m_vActiveShaderStack.pop();
+    m_vpShaders[m_nCurrentActiveShaderProgram]->Activate();
 }
