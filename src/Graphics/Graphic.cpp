@@ -134,6 +134,8 @@ void Graphic::Render()
     //clear buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    m_Camera.Move(0.7f);
+
     // draw the scene
     if (m_vRenderPaths.find(m_sActiveRenderPath) != m_vRenderPaths.end())
         m_vRenderPaths[m_sActiveRenderPath]->Render();
@@ -447,6 +449,7 @@ void Graphic::ItlInitializeOpenGLStates()
     glDepthFunc(GL_LEQUAL);
 
     //Enable face culling (default: backface culling)
+    //glDisable(GL_CULL_FACE);
     glEnable(GL_CULL_FACE);
 
     glPolygonOffset(1.1f, 4.0f);
@@ -545,6 +548,8 @@ void Graphic::Camera::RotateHorizontal(float fValue)
   *************************************************************** */
 void Graphic::Camera::Move(float fFactor)
 {
+    Logger::debug() << m_fRotationHorizontal << ":" << m_fRotationVertical << Logger::endl;
+
     glm::vec3 v3MoveX;
     glm::vec3 v3MoveZ;
 
@@ -645,6 +650,7 @@ void Graphic::ItlLoadShaderPrograms()
     assert (pShaderManager != NULL);
 
     pShaderManager->AddShader("basic_shading", new Shader("shaders/basic_shading.vs", "shaders/basic_shading.fs"));
+    pShaderManager->AddShader("camera-debug", new Shader("shaders/camera-debug.vs", "shaders/camera-debug.fs"));
 }
 
 void Graphic::ItlCreateBaseRenderPath()
