@@ -461,7 +461,7 @@ void Graphic::ItlInitializeOpenGLStates()
 
     //Enable face culling (default: backface culling)
     //glDisable(GL_CULL_FACE);
-   // glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
 
     glPolygonOffset(1.1f, 4.0f);
 
@@ -488,7 +488,7 @@ Graphic::Camera::Camera()
     m_bInitialized = false;
     m_m4ProjectionMatrix = glm::mat4();
 
-    m_fRotationHorizontal = 0;
+    m_fRotationHorizontal = 180;
     m_fRotationVertical = 0;
 }
 
@@ -610,9 +610,9 @@ void Graphic::Camera::Move(float fFactor)
 
     glm::vec3 v3LookAt;
 
-    v3LookAt.x = sin((m_fRotationHorizontal / 180.0) * PI);
+    v3LookAt.x = sin(((m_fRotationHorizontal) / 180.0) * PI);
     v3LookAt.y = tan((m_fRotationVertical / 180.0) * PI);
-    v3LookAt.z = cos((m_fRotationHorizontal / 180.0) * PI);
+    v3LookAt.z = cos(((m_fRotationHorizontal) / 180.0) * PI);
 
     m_m4ViewMatrix = glm::lookAt(m_v3CameraPosition, m_v3CameraPosition + v3LookAt, glm::vec3(0,1,0));
 }
