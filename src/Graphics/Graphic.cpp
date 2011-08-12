@@ -134,7 +134,7 @@ void Graphic::Render()
     //clear buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    m_Camera.Move(0.7f);
+    m_Camera.Move(0.05f);
 
     // draw the scene
     if (m_vRenderPaths.find(m_sActiveRenderPath) != m_vRenderPaths.end())
@@ -321,7 +321,15 @@ void Graphic::ItlHandleMousePos(int iX, int iY)
 {
     if (m_pInputEventListener != NULL)
     {
-        m_pInputEventListener->OnMouseMove(iX, iY);
+	// only deliver relative mouse position to center
+	int iRelX = iX - m_iWidth / 2;
+	int iRelY = iY - m_iHeight / 2;
+
+	// issue 7 - workaround
+	iRelX = -iRelX;
+	iRelY = -iRelY;
+
+	m_pInputEventListener->OnMouseMove(iRelX, iRelY);
     }
 
     if (m_bIsMouseLocked)
@@ -370,6 +378,9 @@ void Graphic::ItlHandleMouseButton(int iButton, int iAction)
   *************************************************************** */
 void Graphic::ItlCreateOpenGLWindow()
 {
+    m_iWidth = 800;
+    m_iHeight = 600;
+
     int flags = (false) ? GLFW_FULLSCREEN : GLFW_WINDOW;	//if fullscreen is true, flags is set to GLFW_FULLSCREEN, else to GLFW_WINDOW
 
     // initialize glfw
@@ -450,7 +461,7 @@ void Graphic::ItlInitializeOpenGLStates()
 
     //Enable face culling (default: backface culling)
     //glDisable(GL_CULL_FACE);
-    glEnable(GL_CULL_FACE);
+   // glEnable(GL_CULL_FACE);
 
     glPolygonOffset(1.1f, 4.0f);
 
@@ -476,6 +487,9 @@ Graphic::Camera::Camera()
 {
     m_bInitialized = false;
     m_m4ProjectionMatrix = glm::mat4();
+
+    m_fRotationHorizontal = 0;
+    m_fRotationVertical = 0;
 }
 
 /****************************************************************
@@ -548,7 +562,7 @@ void Graphic::Camera::RotateHorizontal(float fValue)
   *************************************************************** */
 void Graphic::Camera::Move(float fFactor)
 {
-    Logger::debug() << m_fRotationHorizontal << ":" << m_fRotationVertical << Logger::endl;
+    //Logger::debug() << m_fRotationHorizontal << ":" << m_fRotationVertical << Logger::endl;
 
     glm::vec3 v3MoveX;
     glm::vec3 v3MoveZ;
@@ -558,9 +572,9 @@ void Graphic::Camera::Move(float fFactor)
         //if camera should move in x-direction, we must calculate the look-at point
         //on the camera-sphere and use this vector as reference, and move normal to this vector
 
-        v3MoveX.x = sin(((m_fRotationHorizontal+90) / 180.0) * PI);
+	v3MoveX.x = sin(((m_fRotationHorizontal+270) / 180.0) * PI);
         v3MoveX.y = 0.0;
-        v3MoveX.z = cos(((m_fRotationHorizontal+90) / 180.0) * PI);
+	v3MoveX.z = cos(((m_fRotationHorizontal+270) / 180.0) * PI);
 
         //normalize to project point on our sphere
         v3MoveX /= sqrt(v3MoveX.x*v3MoveX.x + v3MoveX.y*v3MoveX.y + v3MoveX.z*v3MoveX.z);
@@ -632,6 +646,8 @@ void Graphic::HideAndLockMouseToWindowCenter()
     glfwDisable(GLFW_MOUSE_CURSOR);
 
     m_bIsMouseLocked = true;
+
+    glfwSetMousePos(m_iWidth / 2, m_iHeight / 2);
 }
 
 void Graphic::UnHideAndUnLockMouse()

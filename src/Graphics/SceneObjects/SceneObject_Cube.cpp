@@ -30,7 +30,15 @@ SceneObject_Cube::SceneObject_Cube()
     //GLuint *indexArray;
 
     const GLdouble pdVerticeData[] = {
-	// front face
+	-1.0, 0.0, 1.0,
+	0.0, 1.0, 1.0,
+	1.0, 0.0, 1.0,
+
+	-1.0, 0.0, -1.0,
+	0.0, 1.0, -1.0,
+	1.0, 0.0, -1.0,
+
+	/*// front face
 	// -- left bottom
 	-1.0, -1.0, -1.0,    // vertex position
 	0.0, 0.0, 0.0,	    // texcoord
@@ -104,7 +112,7 @@ SceneObject_Cube::SceneObject_Cube()
 
 	1.0, 1.0, 1.0,
 	1.0, 1.0, 0.0,
-	-1.0, 0.0, 0.0
+	-1.0, 0.0, 0.0*/
     };
 
 
@@ -118,7 +126,7 @@ SceneObject_Cube::SceneObject_Cube()
     /* zum befüllen mal aktivieren ...*/
     glBindBuffer(GL_ARRAY_BUFFER, m_nVertexBufferObject);
     /* befüllen ... */
-    glBufferData(GL_ARRAY_BUFFER, 142 * sizeof(pdVerticeData[0]), pdVerticeData, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 18 * sizeof(pdVerticeData[0]), pdVerticeData, GL_STATIC_DRAW);
 
     /* nun nur noch den Index-Array in den Bufferbereich schreiben */
     //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_nIndexBufferObject);
@@ -176,7 +184,7 @@ void SceneObject_Cube::ItlRender()
 
     if (l_in_Position != -1)
     {
-	glVertexAttribPointer(l_in_Position, 3, GL_DOUBLE, GL_FALSE, 9 * sizeof(GLdouble), NULL);
+	glVertexAttribPointer(l_in_Position, 3, GL_DOUBLE, GL_FALSE, 0 * sizeof(GLdouble), NULL);
 	glEnableVertexAttribArray(l_in_Position);
     }
 
@@ -184,8 +192,8 @@ void SceneObject_Cube::ItlRender()
 
     if (l_in_Normal != -1)
     {
-	glVertexAttribPointer(l_in_Normal, 3, GL_DOUBLE, GL_FALSE, 9 * sizeof(GLdouble),  (const GLvoid *)(6 * sizeof(GLdouble)));
-	glEnableVertexAttribArray(l_in_Normal);
+	//glVertexAttribPointer(l_in_Normal, 3, GL_DOUBLE, GL_FALSE, 9 * sizeof(GLdouble),  (const GLvoid *)(6 * sizeof(GLdouble)));
+	//glEnableVertexAttribArray(l_in_Normal);
     }
 
     eError = glGetError();
@@ -193,7 +201,7 @@ void SceneObject_Cube::ItlRender()
     if (eError != GL_NO_ERROR)
 	Logger::error() << TranslateGLerror(eError) << Logger::endl;
 
-    glDrawArrays(GL_TRIANGLES, 0, 30);
+    glDrawArrays(GL_TRIANGLES, 0, 18);
 }
 
 void SceneObject_Cube::ItlLoadRessources()
