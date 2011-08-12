@@ -183,9 +183,9 @@ void SceneObject_Cube::ItlPreRender()
     glBindBuffer(GL_ARRAY_BUFFER, m_nVertexBufferObject);
 
     ShaderManager::instance()->PushActiveShader();
-    if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_SHADOWMAP)
+   /* if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_SHADOWMAP)
 	ShaderManager::instance()->ActivateShader("bounding_shader");
-    else
+    else*/
 	ShaderManager::instance()->ActivateShader("basic_shading");
 }
 
@@ -250,9 +250,5 @@ void SceneObject_Cube::ItlRender()
 
 void SceneObject_Cube::ItlLoadRessources()
 {
-    TextureManager::instance()->LoadTexture("cube_face_left", "textures/cube_left.jpg", false);
-    TextureManager::instance()->LoadTexture("cube_face_right", "textures/cube_right.jpg", false);
-    TextureManager::instance()->LoadTexture("cube_face_front", "textures/cube_front.jpg", false);
-    TextureManager::instance()->LoadTexture("cube_face_back", "textures/cube_back.jpg", false);
     TextureManager::instance()->LoadTexture("cube_texture", "textures/cube_texture.jpg", false);
 }
