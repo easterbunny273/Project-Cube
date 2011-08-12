@@ -28,67 +28,114 @@ SceneObject_Cube::SceneObject_Cube()
 {
     //GLdouble *vertexArray;
     //GLuint *indexArray;
+    const double dLeftStart = 0.5;
+    const double dLeftStop = dLeftStart + 1.0 / 6;
+
+    const double dRightStart = 1.0 / 6;
+    const double dRightStop = dRightStart + 1.0 / 6;
+
+    const double dBackStart = 0.0;
+    const double dBackStop = dBackStart + 1.0 / 6;
+
+    const double dFrontStart = 2.0 / 6;
+    const double dFrontStop = dFrontStart + 1.0 / 6;
+
+    const double dTopStart = 5.0 / 6;
+    const double dTopStop = dTopStart + 1.0 / 6;
+
+    const double dBottomStart = 4.0 / 6;
+    const double dBottomStop = dBottomStart + 1.0 / 6;
+
 
     const GLdouble pdVerticeData[] = {
 	-1.0, -1.0, -1.0,
-	0.0, 0.0, 0.0,	    //texcoord
+	dLeftStop, 1.0, 0.0,	    //texcoord
 	-1.0, 1.0, -1.0,
-	0.0, 1.0, 0.0,	    //texcoord
+	dLeftStop, 0.0, 0.0,	    //texcoord
 	-1.0, -1.0, 1.0,
-	1.0, 0.0, 0.0,	    //texcoord
+	dLeftStart, 1.0, 0.0,	    //texcoord
 
 	-1.0, 1.0, -1.0,
-	0.0, 1.0, 0.0,	    //texcoord
+	dLeftStop, 0.0, 0.0,	    //texcoord
 	-1.0, 1.0, 1.0,
-	1.0, 1.0, 0.0,	    //texcoord
+	dLeftStart, 0.0, 0.0,	    //texcoord
 	-1.0, -1.0, 1.0,
-	1.0, 0.0, 0.0,	    //texcoord
+	dLeftStart, 1.0, 0.0,	    //texcoord
 
 	// #############################
 	-1.0, -1.0, 1.0,
-	0.0, 0.0, 0.0,	    //texcoord
+	dBackStop, 1.0, 0.0,	    //texcoord
 	-1.0, 1.0, 1.0,
-	0.0, 1.0, 0.0,	    //texcoord
+	dBackStop, 0.0, 0.0,	    //texcoord
 	1.0, -1.0, 1.0,
-	1.0, 0.0, 0.0,	    //texcoord
+	dBackStart, 1.0, 0.0,	    //texcoord
 
 	-1.0, 1.0, 1.0,
-	0.0, 1.0, 0.0,	//texcoord
+	dBackStop, 0.0, 0.0,	//texcoord
 	1.0, 1.0, 1.0,
-	1.0, 1.0, 0.0,	    //texcoord
+	dBackStart, 0.0, 0.0,	    //texcoord
 	1.0, -1.0, 1.0,
-	1.0, 0.0, 0.0,	    //texcoord
+	dBackStart, 1.0, 0.0,	    //texcoord
 
 	// #############################
 	1.0, -1.0, 1.0,
-	0.0, 0.0, 0.0,	    //texcoord
+	dRightStop, 1.0, 0.0,	    //texcoord
 	1.0, 1.0, 1.0,
-	0.0, 1.0, 0.0,	    //texcoord
+	dRightStop, 0.0, 0.0,	    //texcoord
 	1.0, -1.0, -1.0,
-	1.0, 0.0, 0.0,	    //texcoord
+	dRightStart, 1.0, 0.0,	    //texcoord
 
 	1.0, 1.0, 1.0,
-	0.0, 1.0, 0.0,	//texcoord
+	dRightStop, 0.0, 0.0,	//texcoord
 	1.0, 1.0, -1.0,
-	1.0, 1.0, 0.0,	    //texcoord
+	dRightStart, 0.0, 0.0,	    //texcoord
 	1.0, -1.0, -1.0,
-	1.0, 0.0, 0.0,	    //texcoord
+	dRightStart, 1.0, 0.0,	    //texcoord
 
 	// #############################
 	1.0, -1.0, -1.0,
-	0.0, 0.0, 0.0,	    //texcoord
+	dFrontStop, 1.0, 0.0,	    //texcoord
 	1.0, 1.0, -1.0,
-	0.0, 1.0, 0.0,	    //texcoord
+	dFrontStop, 0.0, 0.0,	    //texcoord
 	-1.0, -1.0, -1.0,
-	1.0, 0.0, 0.0,	    //texcoord
+	dFrontStart, 1.0, 0.0,	    //texcoord
 
 	1.0, 1.0, -1.0,
-	0.0, 1.0, 0.0,	//texcoord
+	dFrontStop, 0.0, 0.0,	//texcoord
 	-1.0, 1.0, -1.0,
-	1.0, 1.0, 0.0,	    //texcoord
+	dFrontStart, 0.0, 0.0,	    //texcoord
 	-1.0, -1.0, -1.0,
-	1.0, 0.0, 0.0	    //texcoord
+	dFrontStart, 1.0, 0.0,	    //texcoord
 
+	// #############################
+	-1.0, 1.0, 1.0,
+	dTopStop, 1.0, 0.0,	    //texcoord
+	-1.0, 1.0, -1.0,
+	dTopStop, 0.0, 0.0,	    //texcoord
+	1.0, 1.0, 1.0,
+	dTopStart, 1.0, 0.0,	    //texcoord
+
+	-1.0, 1.0, -1.0,
+	dTopStop, 0.0, 0.0,	    //texcoord
+	1.0, 1.0, -1.0,
+	dTopStart, 0.0, 0.0,	    //texcoord
+	1.0, 1.0, 1.0,
+	dTopStart, 1.0, 0.0,	    //texcoord
+
+	// #############################
+	-1.0, -1.0, 1.0,
+	dBottomStart, 1.0, 0.0,	    //texcoord
+	1.0, -1.0, 1.0,
+	dBottomStop, 1.0, 0.0,	    //texcoord
+	-1.0, -1.0, -1.0,
+	dBottomStart, 0.0, 0.0,	    //texcoord
+
+	-1.0, -1.0, -1.0,
+	dBottomStart, 0.0, 0.0,	    //texcoord
+	1.0, -1.0, 1.0,
+	dBottomStop, 1.0, 0.0,	    //texcoord
+	1.0, -1.0, -1.0,
+	dBottomStop, 0.0, 0.0	    //texcoord
     };
 
 
@@ -102,7 +149,7 @@ SceneObject_Cube::SceneObject_Cube()
     /* zum befüllen mal aktivieren ...*/
     glBindBuffer(GL_ARRAY_BUFFER, m_nVertexBufferObject);
     /* befüllen ... */
-    glBufferData(GL_ARRAY_BUFFER, 144 * sizeof(pdVerticeData[0]), pdVerticeData, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 216 * sizeof(pdVerticeData[0]), pdVerticeData, GL_STATIC_DRAW);
 
     /* nun nur noch den Index-Array in den Bufferbereich schreiben */
     //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_nIndexBufferObject);
@@ -186,7 +233,7 @@ void SceneObject_Cube::ItlRender()
 	Logger::error() << TranslateGLerror(eError) << Logger::endl;
 
     // load texture in texture unit
-    GLuint nUsedUnit = TextureManager::instance()->UseTexture("cube_face_back");
+    GLuint nUsedUnit = TextureManager::instance()->UseTexture("cube_texture");
 
     const GLint l_texture1(ShaderManager::instance()->GetUniform("texture1"));
 
@@ -195,10 +242,10 @@ void SceneObject_Cube::ItlRender()
     if (l_texture1 != -1)
 	glUniform1i(l_texture1, nUsedUnit);
 
-    glDrawArrays(GL_TRIANGLES, 0, 144);
+    glDrawArrays(GL_TRIANGLES, 0, 216);
 
     // release used texture unit
-    TextureManager::instance()->UnuseTexture("cube_face_back");
+    TextureManager::instance()->UnuseTexture("cube_texture");
 }
 
 void SceneObject_Cube::ItlLoadRessources()
@@ -207,4 +254,5 @@ void SceneObject_Cube::ItlLoadRessources()
     TextureManager::instance()->LoadTexture("cube_face_right", "textures/cube_right.jpg", false);
     TextureManager::instance()->LoadTexture("cube_face_front", "textures/cube_front.jpg", false);
     TextureManager::instance()->LoadTexture("cube_face_back", "textures/cube_back.jpg", false);
+    TextureManager::instance()->LoadTexture("cube_texture", "textures/cube_texture.jpg", false);
 }

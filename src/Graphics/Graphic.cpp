@@ -134,7 +134,7 @@ void Graphic::Render()
     //clear buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    m_Camera.Move(0.05f);
+    m_Camera.Move(0.01f);
 
     // draw the scene
     if (m_vRenderPaths.find(m_sActiveRenderPath) != m_vRenderPaths.end())
@@ -536,13 +536,16 @@ glm::mat4 Graphic::Camera::GetViewMatrix() const
   *************************************************************** */
 void Graphic::Camera::RotateVertical(float fValue)
 {
+    // lock vertical rotation to ]-90, 90[ because else
+    // the view vector changes the direction if it exceeds 90 or -90
+
     m_fRotationVertical += fValue;
 
-    while (fValue < 0.0f)
-          fValue += 360.0f;
-
-    while (fValue >= 360.0f)
-        fValue -= 360.0f;
+    if (m_fRotationVertical < -89.99f)
+	m_fRotationVertical = -89.99f;
+    else
+    if (m_fRotationVertical > 89.99f)
+	m_fRotationVertical = 89.99f;
 }
 
 /****************************************************************
@@ -551,11 +554,11 @@ void Graphic::Camera::RotateHorizontal(float fValue)
 {
     m_fRotationHorizontal += fValue;
 
-    while (fValue < 0.0f)
-          fValue += 360.0f;
+    while (m_fRotationHorizontal < 0.0f)
+	  m_fRotationHorizontal += 360.0f;
 
-    while (fValue >= 360.0f)
-        fValue -= 360.0f;
+    while (m_fRotationHorizontal >= 360.0f)
+	m_fRotationHorizontal -= 360.0f;
 }
 
 /****************************************************************
