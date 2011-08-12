@@ -47,6 +47,10 @@ void DummyGame::OnKeyDown(IInputEventListener::TKey eKey)
 	pCamera->AddToMoveVector(glm::vec3(-1.0, 0.0, 0.0));
     else if (eKey == 'D')
 	pCamera->AddToMoveVector(glm::vec3(1.0, 0.0, 0.0));
+    else if (eKey == IInputEventListener::KEY_LCTRL)
+	pCamera->AddToMoveVector(glm::vec3(0.0, -1.0, 0.0));
+    else if (eKey == IInputEventListener::KEY_SPACE)
+	pCamera->AddToMoveVector(glm::vec3(0.0, 1.0, 0.0));
 
 }
 
@@ -72,6 +76,10 @@ void DummyGame::OnKeyUp(IInputEventListener::TKey eKey)
 	pCamera->AddToMoveVector(glm::vec3(1.0, 0.0, 0.0));
     else if (eKey == 'D')
 	pCamera->AddToMoveVector(glm::vec3(-1.0, 0.0, 0.0));
+    else if (eKey == IInputEventListener::KEY_LCTRL)
+	pCamera->AddToMoveVector(glm::vec3(0.0, 1.0, 0.0));
+    else if (eKey == IInputEventListener::KEY_SPACE)
+	pCamera->AddToMoveVector(glm::vec3(0.0, -1.0, 0.0));
     else if (eKey == IInputEventListener::KEY_ESC)
 	m_bStop = true;
 }
