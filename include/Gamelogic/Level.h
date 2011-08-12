@@ -42,11 +42,20 @@ public:
 
 		///Reads a level from a xml-file
 	    virtual bool ReadFromXMLString(std::string sString);
+
+		void Clear();
 	//@}
 private:
 	/* \name Private members */
 	//@{
 		///Contains all cubes inside the level
 		std::vector<Cube> m_Cubes;
+
+		unsigned int m_nNumCubes;
+	//@}
+
+	/* \name Private methods */
+	//@{
+		void itlAddCube(Cube& cube);
 	//@}
 };

@@ -22,9 +22,6 @@ public:
 
         /// destructor
         ~Grid();
-
-		/// copy constructor
-		Grid(Grid& grid);
     //@}
 
 	/*! name Public methods */
