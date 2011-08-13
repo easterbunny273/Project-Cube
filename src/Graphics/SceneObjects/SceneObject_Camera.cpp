@@ -6,8 +6,8 @@
 
 extern bool bUseCamera1;
 
-SceneObject_Camera::SceneObject_Camera(std::shared_ptr<Graphic::Camera> spCamera, bool bSetMatrices)
-    : m_spCamera(spCamera), m_bSetMatrices(bSetMatrices)
+SceneObject_Camera::SceneObject_Camera(Graphic::Camera * pCamera, bool bSetMatrices)
+    : m_pCamera(pCamera), m_bSetMatrices(bSetMatrices)
 {
     GLdouble *vertexArray;
     GLuint *indexArray;
@@ -121,9 +121,9 @@ void SceneObject_Camera::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderIn
 	glm::mat4 SavedViewMatrix = pCurrentRenderInfo->ViewMatrix;
 	glm::mat4 SavedModelViewProjectionMatrix = pCurrentRenderInfo->ModelViewProjectionMatrix;
 
-        pCurrentRenderInfo->ProjectionMatrix = m_spCamera->GetProjectionMatrix();
-        pCurrentRenderInfo->ViewMatrix = m_spCamera->GetViewMatrix();
-        pCurrentRenderInfo->ModelViewProjectionMatrix = m_spCamera->GetProjectionMatrix() * m_spCamera->GetViewMatrix();
+	pCurrentRenderInfo->ProjectionMatrix = m_pCamera->GetProjectionMatrix();
+	pCurrentRenderInfo->ViewMatrix = m_pCamera->GetViewMatrix();
+	pCurrentRenderInfo->ModelViewProjectionMatrix = m_pCamera->GetProjectionMatrix() * m_pCamera->GetViewMatrix();
 	pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = pCurrentRenderInfo->ModelViewProjectionMatrix;
 
 	SceneObject::Render(pCurrentRenderInfo);
@@ -135,7 +135,7 @@ void SceneObject_Camera::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderIn
     }
     else
     {
-        pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = m_spCamera->GetProjectionMatrix() * m_spCamera->GetViewMatrix();
+	pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = m_pCamera->GetProjectionMatrix() * m_pCamera->GetViewMatrix();
 	SceneObject::Render(pCurrentRenderInfo);
 	pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = pCurrentRenderInfo->ModelViewProjectionMatrix;
     }
@@ -146,7 +146,7 @@ void SceneObject_Camera::ItlRender()
     const GLint l_in_Position(ShaderManager::instance()->GetAttribute("in_Position"));
     const GLint l_cameraInverse_Position = ShaderManager::instance()->GetUniform("Camera_InverseMatrix");
 
-    glm::mat4 mInverseViewProjectionMatrix = glm::inverse(m_spCamera->GetProjectionMatrix() * m_spCamera->GetViewMatrix());
+    glm::mat4 mInverseViewProjectionMatrix = glm::inverse(m_pCamera->GetProjectionMatrix() * m_pCamera->GetViewMatrix());
 
     if (l_cameraInverse_Position != -1)
 	glUniformMatrix4fv(l_cameraInverse_Position, 1, GL_FALSE, &mInverseViewProjectionMatrix[0][0]);

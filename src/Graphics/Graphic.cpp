@@ -24,6 +24,7 @@
 #include "Graphics/SceneObjects/SceneObject_EmptyNode.h"
 #include "Graphics/SceneObjects/SceneObject_Camera.h"
 #include "Graphics/SceneObjects/SceneObject_FBO.h"
+#include "Graphics/SceneObjects/SceneObject_Cube.h"
 
 #include "Graphics/SceneObjects/SceneObject_AssimpImport.h"
 
@@ -92,6 +93,12 @@ bool Graphic::InitializeOpenGL()
     // initialize opengl state variables
     ItlInitializeOpenGLStates();
 
+    // initialize shader programs
+    ItlLoadShaderPrograms();
+
+    // create basic render path
+    ItlCreateBaseRenderPath();
+
     return true;
 }
 
@@ -109,7 +116,12 @@ void Graphic::SetActiveRenderPath(std::string sRenderPath)
   *************************************************************** */
 void Graphic::AddRenderPath(std::shared_ptr<SceneObject> spRoot, std::string sRenderPath)
 {
-    this->m_vRenderPaths[sRenderPath] = spRoot;
+    unsigned int nOldSize = m_vRenderPaths.size();
+
+    m_vRenderPaths[sRenderPath] = spRoot;
+
+    if (nOldSize == m_vRenderPaths.size())
+	Logger::error() << "New renderpath " << sRenderPath << " uses an already existing name" << Logger::endl;
 }
 
 /****************************************************************
@@ -122,12 +134,14 @@ void Graphic::Render()
     //clear buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    m_Camera.Move(0.7f);
+
     // draw the scene
-   /* if (m_vRenderPaths.find(m_sActiveRenderPath) != m_vRenderPaths.end())
+    if (m_vRenderPaths.find(m_sActiveRenderPath) != m_vRenderPaths.end())
         m_vRenderPaths[m_sActiveRenderPath]->Render();
     else
         Logger::error() << "RenderPath " << m_sActiveRenderPath << " does not exist!" << Logger::endl;
-*/
+
     // swap back and front buffers
     glfwSwapBuffers();
 
@@ -435,6 +449,7 @@ void Graphic::ItlInitializeOpenGLStates()
     glDepthFunc(GL_LEQUAL);
 
     //Enable face culling (default: backface culling)
+    //glDisable(GL_CULL_FACE);
     glEnable(GL_CULL_FACE);
 
     glPolygonOffset(1.1f, 4.0f);
@@ -533,6 +548,8 @@ void Graphic::Camera::RotateHorizontal(float fValue)
   *************************************************************** */
 void Graphic::Camera::Move(float fFactor)
 {
+    Logger::debug() << m_fRotationHorizontal << ":" << m_fRotationVertical << Logger::endl;
+
     glm::vec3 v3MoveX;
     glm::vec3 v3MoveZ;
 
@@ -624,6 +641,31 @@ void Graphic::UnHideAndUnLockMouse()
     glfwEnable(GLFW_MOUSE_CURSOR);
 
     m_bIsMouseLocked = false;
+}
+
+void Graphic::ItlLoadShaderPrograms()
+{
+    ShaderManager *pShaderManager = ShaderManager::instance();
+
+    assert (pShaderManager != NULL);
+
+    pShaderManager->AddShader("basic_shading", new Shader("shaders/basic_shading.vs", "shaders/basic_shading.fs"));
+    pShaderManager->AddShader("camera-debug", new Shader("shaders/camera-debug.vs", "shaders/camera-debug.fs"));
+}
+
+void Graphic::ItlCreateBaseRenderPath()
+{
+    std::shared_ptr<SceneObject> spRootNode (new SceneObject_EmptyNode());
+
+    std::shared_ptr<SceneObject> spCameraNode (new SceneObject_Camera(GetCamera()));
+
+    std::shared_ptr<SceneObject> spCubeNode (new SceneObject_Cube());
+
+
+    spRootNode->AddChild(spCameraNode);
+    spCameraNode->AddChild(spCubeNode);
+
+    AddRenderPath(spRootNode, "default");
 }
 
 
