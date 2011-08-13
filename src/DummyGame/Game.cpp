@@ -89,6 +89,7 @@ void DummyGame::OnMouseMove(int iX, int iY)
 	Graphic::Camera *pCamera = pGraphic->GetCamera();
 	assert (pCamera != NULL);
 
+	//Logger::debug() << "input: " << iX << ":" << iY << Logger::endl;
 	// update camera
 	pCamera->RotateHorizontal(iX / 10.0f);
 	pCamera->RotateVertical(iY / 10.0f);
