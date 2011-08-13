@@ -3,6 +3,8 @@
 
 void CubeTest::setup()
 {
+	testcube = Cube(1, 0, 0, 0);
+
 	grid1.AddDoor(1,1);
 	grid2.AddDoor(2,8);
 	grid3.AddDoor(3,7);
