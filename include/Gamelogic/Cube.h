@@ -21,7 +21,7 @@ public:
 		Cube();
 
         /// constructor
-        Cube(int iCubeID, int iX, int iY, int iZ);
+        Cube(unsigned int iCubeID, int iX, int iY, int iZ);
 
         /// destructor
         ~Cube();
@@ -50,6 +50,13 @@ public:
 		///Sets all 6 grids
 		void SetGrids(Grid& xplus, Grid& xminus, Grid& yplus, Grid& yminus, Grid& zplus, Grid& zminus);
 		
+		void SetXplus(Grid& xplus);
+		void SetXminus(Grid& xminus);
+		void SetYplus(Grid& yplus);
+		void SetYminus(Grid& yminus);
+		void SetZplus(Grid& zplus);
+		void SetZminus(Grid& zminus);
+		
 		///Returns the grid with the given id
 		///1 = Xplus, 2 = Xminus, 3 = Yplus, 4 = Yminus, 5 = Zplus, 6 = Zminus
 		///TODO: find a better solution
@@ -60,7 +67,7 @@ private:
 	/*! \name Private members */
 	//@{
 		///Cube-ID
-		int m_nCubeID;
+		unsigned int m_nCubeID;
 		
 		///Returns the relative position of the cube inside a level
 		glm::ivec3 m_CubePosition;
