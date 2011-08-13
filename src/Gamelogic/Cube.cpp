@@ -3,6 +3,13 @@
 
 Cube::Cube()
 {
+	m_nCubeID = -1;
+}
+
+Cube::Cube(int iCubeID, int iX, int iY, int iZ)
+{
+	m_nCubeID = iCubeID;
+	m_CubePosition = glm::ivec3(iX, iY, iZ);
 }
 
 Cube::~Cube()

@@ -17,8 +17,11 @@ class Cube : public ICube
 public:
 	/*! \name Construction / Destruction */
     //@{
+		// default constructor
+		Cube();
+
         /// constructor
-        Cube();
+        Cube(int iCubeID, int iX, int iY, int iZ);
 
         /// destructor
         ~Cube();
@@ -57,7 +60,7 @@ private:
 	/*! \name Private members */
 	//@{
 		///Cube-ID
-		unsigned int m_nCubeID;
+		int m_nCubeID;
 		
 		///Returns the relative position of the cube inside a level
 		glm::ivec3 m_CubePosition;
