@@ -93,6 +93,8 @@
     <ClCompile Include="..\external\tinyxml\tinyxml.cpp" />
     <ClCompile Include="..\external\tinyxml\tinyxmlerror.cpp" />
     <ClCompile Include="..\external\tinyxml\tinyxmlparser.cpp" />
+    <ClCompile Include="..\src\DummyGame\Game.cpp" />
+    <ClCompile Include="..\src\DummyGame\SampleObject.cpp" />
     <ClCompile Include="..\src\Gamelogic\Cube.cpp" />
     <ClCompile Include="..\src\Gamelogic\Grid.cpp" />
     <ClCompile Include="..\src\Gamelogic\Level.cpp" />
@@ -117,6 +119,8 @@
   <ItemGroup>
     <ClInclude Include="..\external\tinyxml\tinystr.h" />
     <ClInclude Include="..\external\tinyxml\tinyxml.h" />
+    <ClInclude Include="..\include\DummyGame\Game.h" />
+    <ClInclude Include="..\include\DummyGame\SampleObject.h" />
     <ClInclude Include="..\include\Error.h" />
     <ClInclude Include="..\include\Gamelogic\Cube.h" />
     <ClInclude Include="..\include\Gamelogic\GameLogic.h" />

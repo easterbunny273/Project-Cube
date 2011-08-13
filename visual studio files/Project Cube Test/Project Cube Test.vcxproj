@@ -89,8 +89,11 @@
     <ClCompile Include="..\..\external\tinyxml\tinyxml.cpp" />
     <ClCompile Include="..\..\external\tinyxml\tinyxmlerror.cpp" />
     <ClCompile Include="..\..\external\tinyxml\tinyxmlparser.cpp" />
+    <ClCompile Include="..\..\src\DummyGame\Game.cpp" />
+    <ClCompile Include="..\..\src\DummyGame\SampleObject.cpp" />
     <ClCompile Include="..\..\src\Gamelogic\Cube.cpp" />
     <ClCompile Include="..\..\src\Gamelogic\Grid.cpp" />
+    <ClCompile Include="..\..\src\Gamelogic\Level.cpp" />
     <ClCompile Include="..\..\src\Graphics\Graphic.cpp" />
     <ClCompile Include="..\..\src\Graphics\SceneObject.cpp" />
     <ClCompile Include="..\..\src\Graphics\SceneObjects\SceneObject_AssimpImport.cpp" />
@@ -114,13 +117,17 @@
   <ItemGroup>
     <ClInclude Include="..\..\external\tinyxml\tinystr.h" />
     <ClInclude Include="..\..\external\tinyxml\tinyxml.h" />
+    <ClInclude Include="..\..\include\DummyGame\Game.h" />
+    <ClInclude Include="..\..\include\DummyGame\SampleObject.h" />
     <ClInclude Include="..\..\include\Error.h" />
     <ClInclude Include="..\..\include\Gamelogic\Cube.h" />
     <ClInclude Include="..\..\include\Gamelogic\GameLogic.h" />
     <ClInclude Include="..\..\include\Gamelogic\Grid.h" />
     <ClInclude Include="..\..\include\Gamelogic\ICube.h" />
     <ClInclude Include="..\..\include\Gamelogic\IGameState.h" />
+    <ClInclude Include="..\..\include\Gamelogic\ILevel.h" />
     <ClInclude Include="..\..\include\Gamelogic\IObject.h" />
+    <ClInclude Include="..\..\include\Gamelogic\Level.h" />
     <ClInclude Include="..\..\include\Graphics\common_gl.h" />
     <ClInclude Include="..\..\include\Graphics\Graphic.h" />
     <ClInclude Include="..\..\include\Graphics\prevent_old_opengl.h" />
@@ -143,6 +150,7 @@
     <ClInclude Include="..\..\include\Settings.h" />
     <ClInclude Include="..\..\test\CubeTest.h" />
     <ClInclude Include="..\..\test\GridTest.h" />
+    <ClInclude Include="..\..\test\LevelTest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

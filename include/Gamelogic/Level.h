@@ -6,7 +6,8 @@
  * 07/2011, Project "Project Cube"
  */
 
-
+#include "tinyxml.h"
+#include "tinystr.h"
 #include "Gamelogic/ILevel.h"
 #include "IXMLSerializeable.h"
 #include "Gamelogic/Cube.h"
@@ -18,7 +19,7 @@ public:
 	/*! \name Construction / Destruction */
     //@{
         /// constructor
-		Level(std::string sFilename);
+		Level();
 		/// destructor
 		~Level();
 	//@}
@@ -48,14 +49,24 @@ public:
 private:
 	/* \name Private members */
 	//@{
+		unsigned int m_nLevelID;
+		std::string m_sLevelName;
+
 		///Contains all cubes inside the level
 		std::vector<Cube> m_Cubes;
 
-		unsigned int m_nNumCubes;
+		int m_nNumCubes;
 	//@}
 
 	/* \name Private methods */
 	//@{
+		bool itlReadGroupFromXML(TiXmlElement *pGroup);
+
+		bool itlLoadCubesFromXML(TiXmlElement *pCubeGroup);
+		bool itlLoadGridFromXML(TiXmlElement *pGrid, Grid& grid);
+
 		void itlAddCube(Cube& cube);
+		
+
 	//@}
 };

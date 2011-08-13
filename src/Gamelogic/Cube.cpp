@@ -5,6 +5,12 @@ Cube::Cube()
 {
 }
 
+Cube::Cube(unsigned int iCubeID, int iX, int iY, int iZ)
+{
+	m_nCubeID = iCubeID;
+	m_CubePosition = glm::ivec3(iX, iY, iZ);
+}
+
 Cube::~Cube()
 {
 }
@@ -31,6 +37,36 @@ void Cube::SetGrids(Grid& xplus, Grid& xminus, Grid& yplus, Grid& yminus, Grid& 
 	m_Yplus = yplus;
 	m_Yminus = yminus;
 	m_Zplus = zplus;
+	m_Zminus = zminus;
+}
+
+void Cube::SetXplus(Grid& xplus)
+{
+	m_Xplus = xplus;
+}
+
+void Cube::SetXminus(Grid& xminus)
+{
+	m_Xminus = xminus;
+}
+
+void Cube::SetYplus(Grid& yplus)
+{
+	m_Yplus = yplus;
+}
+
+void Cube::SetYminus(Grid& yminus)
+{
+	m_Yminus = yminus;
+}
+
+void Cube::SetZplus(Grid& zplus)
+{
+	m_Zplus = zplus;
+}
+
+void Cube::SetZminus(Grid& zminus)
+{
 	m_Zminus = zminus;
 }
 
