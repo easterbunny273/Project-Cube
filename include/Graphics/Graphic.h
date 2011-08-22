@@ -21,6 +21,8 @@
 class SceneObject;
 class SceneObject_RenderTarget;
 class Camera;
+class ShaderManager;
+class TextureManager;
 
 class IInputEventListener;
 
@@ -135,8 +137,17 @@ public:
 
     /*! \name Public Attributes */
     //@{
+	/// returns the main camera
 	Camera * GetCamera() { return &m_Camera; }
+
+	/// returns the debug camera
         Camera * GetDebugCamera() { return &m_DebugCamera; }
+
+	/// returns the responsible shader manager for this graphics instance
+	ShaderManager * GetShaderManager();
+
+	/// returns the responsible texture manager for this graphics instance
+	TextureManager * GetTextureManager();
     //@}
 
     /*! \name Methods for render */
@@ -162,18 +173,25 @@ private:
         /// handles keyboard events and sends signals to listener
         void ItlHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState);
 
+	/// handles mouse movements and sends signals to the listener
         void ItlHandleMousePos(int iX, int iY);
 
+	/// handles mouse wheel input events and sends signals to the listener
         void ItlHandleMouseWheel(int iPosition);
 
+	/// handles mouse button events and sends signals to the listener
         void ItlHandleMouseButton(int iButton, int iAction);
 
+	/// creates the opengl context and window
         void ItlCreateOpenGLWindow();
 
+	/// initializes some basic opengl state variables
         void ItlInitializeOpenGLStates();
 
+	/// loads some shader programs
 	void ItlLoadShaderPrograms();
 
+	/// creates a base render path
 	void ItlCreateBaseRenderPath();
     //@}
 
@@ -202,7 +220,7 @@ private:
 	static int	    s_iInstances;		///< how many instances are created ?
 	static Graphic *    s_pInstance;
 
-	IInputEventListener *m_pInputEventListener;
+	IInputEventListener * m_pInputEventListener;
     //@}
 };
 

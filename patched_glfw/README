@@ -1,0 +1,3 @@
+This is a patched version of glfw 2.7.0, because the original version does not work on linux when using bumblebee (NVIDIA optimus). 
+The bug is already reported:
+https://sourceforge.net/tracker/index.php?func=detail&aid=3396541&group_id=117509&atid=678327

@@ -27,6 +27,8 @@
 
 class ShaderManager
 {
+    friend class Graphic;
+
 public:
     /*! \name Singelton getter */
     //@{

@@ -66,6 +66,7 @@ Graphic::Graphic()
 
     // set instance ptr
     s_pInstance = this;
+
 }
 
 /****************************************************************
@@ -390,14 +391,14 @@ void Graphic::ItlCreateOpenGLWindow()
             Logger::fatal() << "glfw initialization failed" << Logger::endl;
 
     // Set flags so GLFW creates the desired OpenGL context
-    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
-    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 3);
-    glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 2);
+    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 1);
+    //glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     //Activate 4x antialiasing
     //glfwOpenWindowHint(GLFW_FSAA_SAMPLES, 4);
 
-    if (glfwOpenWindow(m_iWidth, m_iHeight, 0,0,0,0, 24, 8, flags) != GL_TRUE)
+    if (glfwOpenWindow(m_iWidth, m_iHeight, 8,8,8,8, 24, 8, flags) != GL_TRUE)
             Logger::fatal() << "failed to initialize OpenGL window" << Logger::endl;
     else
             Logger::debug() << "OpenGL window initialized" << Logger::endl;
@@ -685,6 +686,16 @@ void Graphic::ItlCreateBaseRenderPath()
     spCameraNode->AddChild(spCubeNode);
 
     AddRenderPath(spRootNode, "default");
+}
+
+ShaderManager * Graphic::GetShaderManager()
+{
+    return ShaderManager::instance();
+}
+
+TextureManager * Graphic::GetTextureManager()
+{
+    return TextureManager::instance();
 }
 
 
