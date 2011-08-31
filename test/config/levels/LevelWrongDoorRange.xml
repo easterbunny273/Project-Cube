@@ -1,4 +1,8 @@
-<level id="2" name="wrongdoor">
+<level>
+	<group name="attributes">
+		<id>3</id>
+		<name>wrongdoor</name>
+	</group>
 	<group name="cubes"> 
 		<cube id="1" x="0" y="0" z="0">
 			<grid pos="Xplus">

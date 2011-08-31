@@ -1,4 +1,8 @@
-<level id="2" name="wronggrouptag">
+<level>
+	<group name="attributes">
+		<id>2</id>
+		<name>wronggrouptag</name>
+	</group>
 	<cubes name="cubes"> <!-- ERROR: 'cubes' instead of 'group' -->
 		<cube id="1" x="0" y="0" z="0">
 			<grid pos="Xplus">

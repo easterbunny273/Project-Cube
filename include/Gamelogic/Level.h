@@ -57,6 +57,7 @@ private:
 	//@{
 		unsigned int m_nLevelID;
 		std::string m_sLevelName;
+		std::string m_sFileName;
 
 		///Contains all cubes inside the level
 		std::vector<Cube> m_Cubes;
@@ -68,6 +69,7 @@ private:
 	//@{
 		bool itlReadGroupFromXML(TiXmlElement *pGroup);
 
+		bool itlLoadAttributesFromXML(TiXmlElement *pAttribGroup);
 		bool itlLoadCubesFromXML(TiXmlElement *pCubeGroup);
 		bool itlLoadGridFromXML(TiXmlElement *pGrid, Grid& grid);
 

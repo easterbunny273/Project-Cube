@@ -1,4 +1,8 @@
-<level id="1" name="testlevel">
+<level>
+	<group name="attributes">
+		<id>1</id>
+		<name>testlevel</name>
+	</group>
 	<group name="cubes">
 		<cube id="1" x="0" y="0" z="0">
 			<grid pos="Xplus">
