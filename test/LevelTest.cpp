@@ -9,7 +9,7 @@ void LevelTest::tear_down()
 {
 }
 
-void LevelTest::TestLevelAttributes()
+void LevelTest::Test_loadXML_LevelAttributes()
 {
 	bool bRead = testlevel.ReadFromXMLString("test/config/levels/testlevel1.xml");
 
@@ -19,26 +19,38 @@ void LevelTest::TestLevelAttributes()
 	TEST_ASSERT(testlevel.GetNumCubes() == 2)
 }
 
-void LevelTest::TestWrongGroupTag()
+void LevelTest::Test_loadXML_NotExistingLevel()
+{
+	bool bRead = testlevel.ReadFromXMLString("test/config/levels/abasobaba.xml");
+	TEST_ASSERT(bRead==false)
+}
+
+void LevelTest::Test_loadXML_WrongGroupTag()
 {
 	bool bRead = testlevel.ReadFromXMLString("test/config/levels/LevelWrongGroupTag.xml");
 	TEST_ASSERT(bRead==false)
 }
 
-void LevelTest::TestWrongCubeTag()
+void LevelTest::Test_loadXML_WrongCubeTag()
 {
 	bool bRead = testlevel.ReadFromXMLString("test/config/levels/LevelWrongCubeTag.xml");
 	TEST_ASSERT(bRead==false)
 }
 
-void LevelTest::TestWrongGridTag()
+void LevelTest::Test_loadXML_WrongGridTag()
 {
 	bool bRead = testlevel.ReadFromXMLString("test/config/levels/LevelWrongGridTag.xml");
 	TEST_ASSERT(bRead==false)
 }
 
-void LevelTest::TestWrongDoorTag()
+void LevelTest::Test_loadXML_WrongDoorTag()
 {
 	bool bRead = testlevel.ReadFromXMLString("test/config/levels/LevelWrongDoorTag.xml");
+	TEST_ASSERT(bRead==false)
+}
+
+void LevelTest::Test_loadXML_WrongDoorRange()
+{
+	bool bRead = testlevel.ReadFromXMLString("test/config/levels/LevelWrongDoorRange.xml");
 	TEST_ASSERT(bRead==false)
 }

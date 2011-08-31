@@ -32,6 +32,7 @@ public:
 
 		int GetNumCubes();
 
+		void Clear();
 
 		///Rotates a level around its x-axis
 		///allowed factors are 90, 180, 270, ...
@@ -45,13 +46,11 @@ public:
 		///allowed factors are 90, 180, 270, ...
 		bool RotateZ(const int iFactor);
 
-		///Writes the current level state to an xml-file
-		virtual bool WriteToXMLString(std::string &rsString);
-
 		///Reads a level from a xml-file
 	    virtual bool ReadFromXMLString(std::string sString);
 
-		void Clear();
+		///Writes the current level state to an xml-file
+		virtual bool WriteToXMLString(std::string &rsString);
 	//@}
 private:
 	/* \name Private members */

@@ -15,6 +15,10 @@ Level::~Level()
 {
 }
 
+/*#############################################################
+*################## PUBLIC METHODS ###########################
+#############################################################*/
+
 unsigned int Level::GetLevelID()
 {
 	return m_nLevelID;
@@ -28,6 +32,14 @@ std::string Level::GetLevelName()
 int Level::GetNumCubes()
 {
 	return m_iNumCubes;
+}
+
+void Level::Clear()
+{
+	m_Cubes.clear();
+	m_iNumCubes = 0;
+	m_nLevelID = 0;
+	m_sLevelName = "empty level";
 }
 
 bool Level::RotateX(const int iFactor)
@@ -50,7 +62,7 @@ bool Level::ReadFromXMLString(std::string sFilename)
 	TiXmlDocument document(sFilename);
 	if(!document.LoadFile())
 	{
-		Logger::debug() << "XML-file " << sFilename << " could not be loaded!" << Logger::endl;
+		Logger::debug() << "### XML-file " << sFilename << " could not be loaded!" << Logger::endl;
 		return false;
 	}
 	
@@ -76,7 +88,7 @@ bool Level::ReadFromXMLString(std::string sFilename)
 		pRootElement->QueryUnsignedAttribute("id", &m_nLevelID);
 		pRootElement->QueryStringAttribute("name", &m_sLevelName);
 
-		Logger::debug() << "Loading level from XML: id=" << m_nLevelID << " name=" << m_sLevelName << Logger::endl;
+		Logger::debug() << "### Loading level from XML: id=" << m_nLevelID << " name=" << m_sLevelName << Logger::endl;
 		
 		TiXmlElement* pChildElement = pRootElement->FirstChildElement();
 		
@@ -111,13 +123,9 @@ bool Level::WriteToXMLString(std::string &sFilename)
 
 
 
-void Level::Clear()
-{
-	m_Cubes.clear();
-	m_iNumCubes = 0;
-	m_nLevelID = 0;
-	m_sLevelName = "empty level";
-}
+/*#############################################################
+*################## PRIVATE METHODS ##########################
+#############################################################*/
 
 bool Level::itlReadGroupFromXML(TiXmlElement *pGroup)
 {
@@ -278,7 +286,9 @@ bool Level::itlLoadGridFromXML(TiXmlElement* pGridElement, Grid& grid)
 			pDoorElement->QueryIntAttribute("x", &iX);
 			pDoorElement->QueryIntAttribute("y", &iY);
 
-			grid.AddDoor(iX, iY);
+			bOk = grid.AddDoor(iX, iY);
+			if(!bOk)
+				Logger::debug() << m_sLevelName << ": line " << pDoorElement->Row() << ": x and y have to be an int between 1 and 9" << Logger::endl;
 		}
 	}
 	while(bOk && (pDoorElement = pDoorElement->NextSiblingElement()));
