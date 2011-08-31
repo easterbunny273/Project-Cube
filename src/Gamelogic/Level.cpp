@@ -177,48 +177,51 @@ bool Level::itlLoadCubesFromXML(TiXmlElement *pCubeGroup)
 			std::string sTagName(pGridElement->Value());
 			if(sTagName.compare("grid")!=0)
 			{
-				Logger::debug() << m_sLevelName << ": line " << pGridElement->Row() << ": Tagname should be a grid, instead is: " << sTagName << Logger::endl;
-				return false;
-			}
-			std::string sGridPos;
-			pGridElement->QueryStringAttribute("pos", &sGridPos);
-
-			Grid grid;
-
-			if(sGridPos.compare("Xplus"))
-			{
-				bOk = itlLoadGridFromXML(pGridElement, grid);
-				cube.SetXplus(grid);
-			}
-			else if(sGridPos.compare("Xminus"))
-			{
-				bOk = itlLoadGridFromXML(pGridElement, grid);
-				cube.SetXminus(grid);
-			}
-			else if(sGridPos.compare("Yplus"))
-			{
-				bOk = itlLoadGridFromXML(pGridElement, grid);
-				cube.SetYplus(grid);
-			}
-			else if(sGridPos.compare("Yminus"))
-			{
-				bOk = itlLoadGridFromXML(pGridElement, grid);
-				cube.SetYminus(grid);
-			}
-			else if(sGridPos.compare("Zplus"))
-			{
-				bOk = itlLoadGridFromXML(pGridElement, grid);
-				cube.SetZplus(grid);
-			}
-			else if(sGridPos.compare("Zminus"))
-			{
-				bOk = itlLoadGridFromXML(pGridElement, grid);
-				cube.SetZminus(grid);
+				Logger::debug() << m_sLevelName << ": line " << pGridElement->Row() << ": Tagname should be 'grid', instead is: " << sTagName << Logger::endl;
+				bOk = false;
 			}
 			else
 			{
-				Logger::debug() << m_sLevelName << ": line " << pGridElement->Column() << " Gridpos is not valid: " << sGridPos << Logger::endl;
-				bOk = false;
+				std::string sGridPos;
+				pGridElement->QueryStringAttribute("pos", &sGridPos);
+
+				Grid grid;
+
+				if(sGridPos.compare("Xplus"))
+				{
+					bOk = itlLoadGridFromXML(pGridElement, grid);
+					cube.SetXplus(grid);
+				}
+				else if(sGridPos.compare("Xminus"))
+				{
+					bOk = itlLoadGridFromXML(pGridElement, grid);
+					cube.SetXminus(grid);
+				}
+				else if(sGridPos.compare("Yplus"))
+				{
+					bOk = itlLoadGridFromXML(pGridElement, grid);
+					cube.SetYplus(grid);
+				}
+				else if(sGridPos.compare("Yminus"))
+				{
+					bOk = itlLoadGridFromXML(pGridElement, grid);
+					cube.SetYminus(grid);
+				}
+				else if(sGridPos.compare("Zplus"))
+				{
+					bOk = itlLoadGridFromXML(pGridElement, grid);
+					cube.SetZplus(grid);
+				}
+				else if(sGridPos.compare("Zminus"))
+				{
+					bOk = itlLoadGridFromXML(pGridElement, grid);
+					cube.SetZminus(grid);
+				}
+				else
+				{
+					Logger::debug() << m_sLevelName << ": line " << pGridElement->Column() << " Gridpos is not valid: " << sGridPos << Logger::endl;
+					bOk = false;
+				}
 			}
 		}
 		while(bOk && (pGridElement = pGridElement->NextSiblingElement()));
@@ -226,6 +229,11 @@ bool Level::itlLoadCubesFromXML(TiXmlElement *pCubeGroup)
 		if(bOk)
 		{
 			itlAddCube(cube);
+		}
+		else
+		{
+			Logger::debug() << m_sLevelName << ": Cube-loading NOT SUCCESSFUL" << Logger::endl;
+			Logger::debug() << m_sLevelName << ": COULD NOT LOAD LEVEL" << Logger::endl;
 		}
 
 	}
@@ -251,15 +259,20 @@ bool Level::itlLoadGridFromXML(TiXmlElement* pGridElement, Grid& grid)
 
 		std::string sTagName(pDoorElement->Value());
 		if(sTagName.compare("door")!=0)
-			return false;
+		{
+			Logger::debug() << m_sLevelName << ": line " << pDoorElement->Row() << ": Tagname should be 'door', instead is: " << sTagName << Logger::endl;
+			bOk = false;
+		}
+		else
+		{
+			int iX;
+			int iY;
 
-		int iX;
-		int iY;
+			pDoorElement->QueryIntAttribute("x", &iX);
+			pDoorElement->QueryIntAttribute("y", &iY);
 
-		pDoorElement->QueryIntAttribute("x", &iX);
-		pDoorElement->QueryIntAttribute("y", &iY);
-
-		grid.AddDoor(iX, iY);
+			grid.AddDoor(iX, iY);
+		}
 	}
 	while(bOk && (pDoorElement = pDoorElement->NextSiblingElement()));
 
