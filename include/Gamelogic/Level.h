@@ -26,6 +26,13 @@ public:
 
 	/* \name Public methods */
 	//@{
+		unsigned int GetLevelID();
+
+		std::string GetLevelName();
+
+		int GetNumCubes();
+
+
 		///Rotates a level around its x-axis
 		///allowed factors are 90, 180, 270, ...
 		bool RotateX(const int iFactor);
@@ -55,7 +62,7 @@ private:
 		///Contains all cubes inside the level
 		std::vector<Cube> m_Cubes;
 
-		int m_nNumCubes;
+		int m_iNumCubes;
 	//@}
 
 	/* \name Private methods */

@@ -8,7 +8,7 @@ class LevelTest: public Test::Suite
 public:
 	LevelTest()
 	{
-		TEST_ADD(LevelTest::testLevelAttributes)
+		TEST_ADD(LevelTest::TestLevelAttributes)
 	}
 
 protected:
@@ -18,5 +18,5 @@ protected:
 private:
 	Level testlevel;
 
-	void testLevelAttributes();
+	void TestLevelAttributes();
 };

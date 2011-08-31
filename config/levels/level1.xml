@@ -1,4 +1,4 @@
-<level id="1" numcubes="2" name="first level">
+<level id="1" name="first level">
 	<group name="cubes">
 		<cube id="1" x="0" y="0" z="0">
 			<grid pos="Xplus">

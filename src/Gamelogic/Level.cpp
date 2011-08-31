@@ -8,11 +8,39 @@ using namespace std;
 
 Level::Level()
 {
-	m_nNumCubes = 0;
+	m_iNumCubes = 0;
 }
 
 Level::~Level()
 {
+}
+
+unsigned int Level::GetLevelID()
+{
+	return m_nLevelID;
+}
+
+std::string Level::GetLevelName()
+{
+	return m_sLevelName;
+}
+
+int Level::GetNumCubes()
+{
+	return m_iNumCubes;
+}
+
+bool Level::RotateX(const int iFactor)
+{
+	return false;
+}
+bool Level::RotateY(const int iFactor)
+{
+	return false;
+}
+bool Level::RotateZ(const int iFactor)
+{
+	return false;
 }
 
 bool Level::ReadFromXMLString(std::string sFilename)
@@ -35,6 +63,7 @@ bool Level::ReadFromXMLString(std::string sFilename)
 
 	if(pRootElement == NULL)
 	{
+		Logger::debug() << "pRootElement is NULL" << Logger::endl;
 		bOk = false;
 	}
 
@@ -45,10 +74,9 @@ bool Level::ReadFromXMLString(std::string sFilename)
 		assert (sRootElementName.length() > 0);
 
 		pRootElement->QueryUnsignedAttribute("id", &m_nLevelID);
-		pRootElement->QueryIntAttribute("numcubes", &m_nNumCubes);
 		pRootElement->QueryStringAttribute("name", &m_sLevelName);
 
-		Logger::debug() << m_nLevelID << " " << m_nNumCubes << " " << m_sLevelName << Logger::endl;
+		Logger::debug() << "Loading level from XML: id=" << m_nLevelID << " name=" << m_sLevelName << Logger::endl;
 		
 		TiXmlElement* pChildElement = pRootElement->FirstChildElement();
 		
@@ -56,18 +84,16 @@ bool Level::ReadFromXMLString(std::string sFilename)
 		{
 			std::string sTagName(pChildElement->Value());
 			if(sTagName.compare("group")!=0)
+			{
+				Logger::debug() << m_sLevelName << ": line " << pChildElement->Row() << ": Tagname should be a group, instead is: " << sTagName << Logger::endl;
 				bOk = false;
-
+			}
 			bOk = itlReadGroupFromXML(pChildElement);
 		}
 		while(bOk && (pChildElement = pChildElement->NextSiblingElement()));
-		
-
-
 	}
 
 	return bOk;
-
 }
 
 bool Level::WriteToXMLString(std::string &sFilename)
@@ -75,32 +101,24 @@ bool Level::WriteToXMLString(std::string &sFilename)
 	return false;
 }
 
-bool Level::RotateX(const int iFactor)
-{
-	return false;
-}
-bool Level::RotateY(const int iFactor)
-{
-	return false;
-}
-bool Level::RotateZ(const int iFactor)
-{
-	return false;
-}
+
 
 void Level::Clear()
 {
 	m_Cubes.clear();
-	m_nNumCubes = 0;
+	m_iNumCubes = 0;
+	m_nLevelID = 0;
+	m_sLevelName = "empty level";
 }
 
 bool Level::itlReadGroupFromXML(TiXmlElement *pGroup)
 {
 	std::string sName;
-
 	pGroup->QueryStringAttribute("name", &sName);
 
-	if(sName.compare("cubes"))
+	Logger::debug() << m_sLevelName << ": line " << pGroup->Row() << ": Loading group: " << sName << Logger::endl;
+
+	if(sName.compare("cubes")==0)
 	{
 		return itlLoadCubesFromXML(pGroup);
 	}
@@ -114,9 +132,15 @@ bool Level::itlReadGroupFromXML(TiXmlElement *pGroup)
 
 bool Level::itlLoadCubesFromXML(TiXmlElement *pCubeGroup)
 {
+	Logger::debug() << m_sLevelName << ": line " << pCubeGroup->Row() << ": Loading cubegroup" << Logger::endl;
+
 	bool bOk = true;
 
 	TiXmlElement* pCubeElement = pCubeGroup->FirstChildElement();
+
+	std::string sName;
+
+	pCubeGroup->QueryStringAttribute("name", &sName);
 
 	do
 	{
@@ -125,7 +149,12 @@ bool Level::itlLoadCubesFromXML(TiXmlElement *pCubeGroup)
 		std::string sTagName(pCubeElement->Value());
 
 		if(sTagName.compare("cube")!=0)
+		{
+			Logger::debug() << m_sLevelName << ": line " << pCubeElement->Row() << ": Tagname should be a cube, instead is: " << sTagName << Logger::endl;
 			return false;
+		}
+
+		Logger::debug() << m_sLevelName << ": line " << pCubeElement->Row() << ": Loading cube" << Logger::endl;
 
 		unsigned int iCubeID;
 		int iX;
@@ -147,8 +176,10 @@ bool Level::itlLoadCubesFromXML(TiXmlElement *pCubeGroup)
 
 			std::string sTagName(pGridElement->Value());
 			if(sTagName.compare("grid")!=0)
+			{
+				Logger::debug() << m_sLevelName << ": line " << pGridElement->Row() << ": Tagname should be a grid, instead is: " << sTagName << Logger::endl;
 				return false;
-
+			}
 			std::string sGridPos;
 			pGridElement->QueryStringAttribute("pos", &sGridPos);
 
@@ -186,14 +217,16 @@ bool Level::itlLoadCubesFromXML(TiXmlElement *pCubeGroup)
 			}
 			else
 			{
+				Logger::debug() << m_sLevelName << ": line " << pGridElement->Column() << " Gridpos is not valid: " << sGridPos << Logger::endl;
 				bOk = false;
 			}
-
 		}
 		while(bOk && (pGridElement = pGridElement->NextSiblingElement()));
 		
 		if(bOk)
+		{
 			itlAddCube(cube);
+		}
 
 	}
 	while(bOk && (pCubeElement = pCubeElement->NextSiblingElement()));
@@ -205,6 +238,10 @@ bool Level::itlLoadCubesFromXML(TiXmlElement *pCubeGroup)
 bool Level::itlLoadGridFromXML(TiXmlElement* pGridElement, Grid& grid)
 {
 	bool bOk = true;
+
+	std::string sGridPos;
+	pGridElement->QueryStringAttribute("pos", &sGridPos);
+	Logger::debug() << m_sLevelName << ": line " << pGridElement->Row() << ": Loading grid: " << sGridPos << Logger::endl;
 
 	TiXmlElement* pDoorElement = pGridElement->FirstChildElement();
 
@@ -231,6 +268,7 @@ bool Level::itlLoadGridFromXML(TiXmlElement* pGridElement, Grid& grid)
 
 void Level::itlAddCube(Cube& cube)
 {
+	Logger::debug() << m_sLevelName << ": Add cube with id: " << cube.GetCubeID() << Logger::endl;
 	m_Cubes.push_back(cube);
-	m_nNumCubes++;
+	m_iNumCubes++;
 }
