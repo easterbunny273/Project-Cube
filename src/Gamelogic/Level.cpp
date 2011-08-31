@@ -345,32 +345,32 @@ bool Level::itlLoadCubesFromXML(TiXmlElement *pCubeGroup)
 
 				Grid grid;
 
-				if(sGridPos.compare("Xplus"))
+				if(sGridPos.compare("Xplus")==0)
 				{
 					bOk = itlLoadGridFromXML(pGridElement, grid);
 					cube.SetXplus(grid);
 				}
-				else if(sGridPos.compare("Xminus"))
+				else if(sGridPos.compare("Xminus")==0)
 				{
 					bOk = itlLoadGridFromXML(pGridElement, grid);
 					cube.SetXminus(grid);
 				}
-				else if(sGridPos.compare("Yplus"))
+				else if(sGridPos.compare("Yplus")==0)
 				{
 					bOk = itlLoadGridFromXML(pGridElement, grid);
 					cube.SetYplus(grid);
 				}
-				else if(sGridPos.compare("Yminus"))
+				else if(sGridPos.compare("Yminus")==0)
 				{
 					bOk = itlLoadGridFromXML(pGridElement, grid);
 					cube.SetYminus(grid);
 				}
-				else if(sGridPos.compare("Zplus"))
+				else if(sGridPos.compare("Zplus")==0)
 				{
 					bOk = itlLoadGridFromXML(pGridElement, grid);
 					cube.SetZplus(grid);
 				}
-				else if(sGridPos.compare("Zminus"))
+				else if(sGridPos.compare("Zminus")==0)
 				{
 					bOk = itlLoadGridFromXML(pGridElement, grid);
 					cube.SetZminus(grid);

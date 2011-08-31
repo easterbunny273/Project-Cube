@@ -53,6 +53,8 @@ public:
 		void setPosition(std::string sPosition);
 
 		std::string getPosition();
+
+		void PrintGrid();
 	//@}
 
 
@@ -64,7 +66,7 @@ private:
 		/// of at least 1 square (example: (1,1) (3,1) is right; (1,1) (2,1) is wrong)
 		std::vector<glm::ivec2> m_vDoorPositions;
 
-		std::string sPosition;
+		std::string m_sPosition;
 	//@}
 
 	/*! \name Private methods */

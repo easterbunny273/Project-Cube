@@ -120,12 +120,21 @@ void Grid::MirrorGridHorizontal()
 }
 
 
-void Grid::setPosition(std::string sPosition_)
+void Grid::setPosition(std::string sPosition)
 {
-	sPosition = sPosition_;
+	m_sPosition = sPosition;
 }
 
 std::string Grid::getPosition()
 {
-	return sPosition;
+	return m_sPosition;
+}
+
+
+void Grid::PrintGrid()
+{
+	for(int i = 0; i < m_vDoorPositions.size(); i++)
+	{
+		Logger::debug() << "grid: " << m_sPosition << "; door: (" << m_vDoorPositions.at(i).x << "," << m_vDoorPositions.at(i).y << ")" << Logger::endl;
+	}
 }
