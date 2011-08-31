@@ -122,7 +122,85 @@ bool Level::ReadFromXMLString(std::string sFilename)
 
 bool Level::WriteToXMLString(std::string &sFilename)
 {
-	return false;
+	bool bOk = true;
+
+	TiXmlDocument doc;
+	TiXmlElement* pElem;
+	TiXmlElement* pGroup;
+
+	//<level>
+	TiXmlElement* pRootElement = new TiXmlElement("level");
+	doc.LinkEndChild(pRootElement);
+
+	//	<group name="attributes">
+	pGroup = new TiXmlElement("group");
+	pGroup->SetAttribute("name", "attributes");
+	pRootElement->LinkEndChild(pGroup);
+	
+	//		<id>THE_ID</id>
+	pElem = new TiXmlElement("id");
+	stringstream s;
+	std::string str;
+	s << m_nLevelID;
+	s >> str;
+	pElem->LinkEndChild(new TiXmlText(str));
+	pGroup->LinkEndChild(pElem);
+
+	//		<name>THE_NAME</name>
+	pElem = new TiXmlElement("name");
+	pElem->LinkEndChild(new TiXmlText(m_sLevelName));
+	pGroup->LinkEndChild(pElem);
+
+	//	</group>
+	//  <group name="cubes">
+	pGroup = new TiXmlElement("group");
+	pGroup->SetAttribute("name", "cubes");
+	pRootElement->LinkEndChild(pGroup);
+
+	//		<cube>
+	Cube cube;
+	Grid grid;
+	glm::ivec2 door;
+	std::vector<glm::ivec2> doors;
+	TiXmlElement* pCube;
+	TiXmlElement* pGrid;
+	TiXmlElement* pDoor;
+	for(int i = 0; i < m_Cubes.size(); i++)
+	{
+		cube = m_Cubes.at(i);
+		pCube = new TiXmlElement("cube");
+		pCube->SetAttribute("id", cube.GetCubeID());
+		pCube->SetAttribute("x", cube.GetCubePosition().x);
+		pCube->SetAttribute("y", cube.GetCubePosition().y);
+		pCube->SetAttribute("z", cube.GetCubePosition().z);
+		
+		//		<grid>
+		for(int j = 1; j <= 6; j++)
+		{
+			grid = cube.GetGrid(j);
+			pGrid = new TiXmlElement("grid");
+			pGrid->SetAttribute("pos", grid.getPosition());
+			
+			//		<door>
+			doors = grid.GetDoorPositions();
+			while(doors.size()>0)
+			{
+				door = doors.back();
+				doors.pop_back();
+				pDoor = new TiXmlElement("door");
+				pDoor->SetAttribute("x", door.x);
+				pDoor->SetAttribute("y", door.y);
+				pGrid->LinkEndChild(pDoor);
+			}
+			pCube->LinkEndChild(pGrid);
+		}
+		pGroup->LinkEndChild(pCube);
+	}
+
+
+
+	doc.SaveFile(sFilename);
+	return true;
 }
 
 

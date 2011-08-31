@@ -9,6 +9,7 @@ Cube::Cube(unsigned int iCubeID, int iX, int iY, int iZ)
 {
 	m_nCubeID = iCubeID;
 	m_CubePosition = glm::ivec3(iX, iY, iZ);
+	itlUpdateGridPositions();
 }
 
 Cube::~Cube()
@@ -38,36 +39,43 @@ void Cube::SetGrids(Grid& xplus, Grid& xminus, Grid& yplus, Grid& yminus, Grid& 
 	m_Yminus = yminus;
 	m_Zplus = zplus;
 	m_Zminus = zminus;
+	itlUpdateGridPositions();
 }
 
 void Cube::SetXplus(Grid& xplus)
 {
 	m_Xplus = xplus;
+	m_Xplus.setPosition("Xplus");
 }
 
 void Cube::SetXminus(Grid& xminus)
 {
 	m_Xminus = xminus;
+	m_Xminus.setPosition("Xminus");
 }
 
 void Cube::SetYplus(Grid& yplus)
 {
 	m_Yplus = yplus;
+	m_Yplus.setPosition("Yplus");
 }
 
 void Cube::SetYminus(Grid& yminus)
 {
 	m_Yminus = yminus;
+	m_Yminus.setPosition("Yminus");
 }
 
 void Cube::SetZplus(Grid& zplus)
 {
 	m_Zplus = zplus;
+	m_Zplus.setPosition("Zplus");
 }
 
 void Cube::SetZminus(Grid& zminus)
 {
 	m_Zminus = zminus;
+	m_Zminus.setPosition("Zminus");
 }
 
 bool Cube::RotateX(const int iFactor)
@@ -104,6 +112,7 @@ bool Cube::RotateX(const int iFactor)
 		m_Yminus.MirrorGridHorizontal();
 		itlSwitchGrids(m_Zplus, m_Yminus, m_Zminus, m_Yplus);
 	}
+	itlUpdateGridPositions();
 	return true;
 }
 
@@ -141,6 +150,7 @@ bool Cube::RotateY(const int iFactor)
 		m_Zminus.MirrorGridVertical();
 		itlSwitchGrids(m_Xplus, m_Zminus, m_Xminus, m_Zplus);
 	}
+	itlUpdateGridPositions();
 	return true;
 }
 
@@ -187,6 +197,7 @@ bool Cube::RotateZ(const int iFactor)
 		m_Zminus.MirrorGridVertical();
 		itlSwitchGrids(m_Xplus, m_Yplus, m_Xminus, m_Yminus);
 	}
+	itlUpdateGridPositions();
 	return true;
 }
 
@@ -217,4 +228,14 @@ void Cube::itlSwitchGrids(Grid& grid1, Grid& grid2)
 	Grid temp = grid1;
 	grid1 = grid2;
 	grid2 = temp;
+}
+
+void Cube::itlUpdateGridPositions()
+{
+	m_Xplus.setPosition("Xplus");
+	m_Xminus.setPosition("Xminus");
+	m_Yplus.setPosition("Yplus");
+	m_Yminus.setPosition("Yminus");
+	m_Zplus.setPosition("Zplus");
+	m_Zminus.setPosition("Zminus");
 }

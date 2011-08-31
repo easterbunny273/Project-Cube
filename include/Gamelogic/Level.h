@@ -50,7 +50,7 @@ public:
 	    virtual bool ReadFromXMLString(std::string sString);
 
 		///Writes the current level state to an xml-file
-		virtual bool WriteToXMLString(std::string &rsString);
+		virtual bool WriteToXMLString(std::string &sString);
 	//@}
 private:
 	/* \name Private members */

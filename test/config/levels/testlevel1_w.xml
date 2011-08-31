@@ -1,0 +1,32 @@
+<level>
+    <group name="attributes">
+        <id>1</id>
+        <name>testlevel</name>
+    </group>
+    <group name="cubes">
+        <cube id="1" x="0" y="0" z="0">
+            <grid pos="Xplus">
+                <door x="6" y="7" />
+            </grid>
+            <grid pos="Xminus">
+                <door x="1" y="1" />
+            </grid>
+            <grid pos="Yplus" />
+            <grid pos="Yminus" />
+            <grid pos="Zplus" />
+            <grid pos="Zminus" />
+        </cube>
+        <cube id="2" x="0" y="1" z="0">
+            <grid pos="Xplus">
+                <door x="9" y="9" />
+            </grid>
+            <grid pos="Xminus">
+                <door x="5" y="5" />
+            </grid>
+            <grid pos="Yplus" />
+            <grid pos="Yminus" />
+            <grid pos="Zplus" />
+            <grid pos="Zminus" />
+        </cube>
+    </group>
+</level>

@@ -94,6 +94,9 @@ private:
 		
 		///Switches two grids
 		void itlSwitchGrids(Grid& grid1, Grid& grid2);
+
+		///Updates the position-strings inside the grids
+		void itlUpdateGridPositions();
 	//@}
 };
 

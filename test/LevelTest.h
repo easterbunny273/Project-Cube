@@ -10,6 +10,7 @@ public:
 	{
 		//Tests for normal functionality
 		TEST_ADD(LevelTest::Test_loadXML_LevelAttributes)
+		TEST_ADD(LevelTest::Test_writeXML)
 
 		//Tests for error handling
 		TEST_ADD(LevelTest::Test_loadXML_NotExistingLevel)
@@ -29,6 +30,7 @@ private:
 	
 	//Tests for normal functionality
 	void Test_loadXML_LevelAttributes();
+	void Test_writeXML();
 
 	//Tests for error handling
 	void Test_loadXML_NotExistingLevel();

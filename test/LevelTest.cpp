@@ -19,6 +19,15 @@ void LevelTest::Test_loadXML_LevelAttributes()
 	TEST_ASSERT(testlevel.GetNumCubes() == 2)
 }
 
+void LevelTest::Test_writeXML()
+{
+	bool bRead = testlevel.ReadFromXMLString("test/config/levels/testlevel1.xml");
+	std::string sFilename("test/config/levels/testlevel1_w.xml");
+	bool bWrite = testlevel.WriteToXMLString(sFilename);
+
+
+}
+
 void LevelTest::Test_loadXML_NotExistingLevel()
 {
 	bool bRead = testlevel.ReadFromXMLString("test/config/levels/abasobaba.xml");
