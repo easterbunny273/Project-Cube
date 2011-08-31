@@ -9,6 +9,10 @@ public:
 	LevelTest()
 	{
 		TEST_ADD(LevelTest::TestLevelAttributes)
+		TEST_ADD(LevelTest::TestWrongGroupTag)
+		TEST_ADD(LevelTest::TestWrongCubeTag)
+		TEST_ADD(LevelTest::TestWrongGridTag)
+		TEST_ADD(LevelTest::TestWrongDoorTag)
 	}
 
 protected:
@@ -19,4 +23,8 @@ private:
 	Level testlevel;
 
 	void TestLevelAttributes();
+	void TestWrongGroupTag();
+	void TestWrongCubeTag();
+	void TestWrongGridTag();
+	void TestWrongDoorTag();
 };

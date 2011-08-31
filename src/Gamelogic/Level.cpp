@@ -88,10 +88,18 @@ bool Level::ReadFromXMLString(std::string sFilename)
 				Logger::debug() << m_sLevelName << ": line " << pChildElement->Row() << ": Tagname should be a group, instead is: " << sTagName << Logger::endl;
 				bOk = false;
 			}
-			bOk = itlReadGroupFromXML(pChildElement);
+			else
+			{
+				bOk = itlReadGroupFromXML(pChildElement);
+			}
 		}
 		while(bOk && (pChildElement = pChildElement->NextSiblingElement()));
 	}
+
+	if(bOk == false)
+		Logger::debug() << m_sLevelName << ": COULD NOT LOAD LEVEL" << Logger::endl;
+	else
+		Logger::debug() << m_sLevelName << ": LEVEL LOADING SUCCESSFUL" << Logger::endl;
 
 	return bOk;
 }
@@ -233,7 +241,6 @@ bool Level::itlLoadCubesFromXML(TiXmlElement *pCubeGroup)
 		else
 		{
 			Logger::debug() << m_sLevelName << ": Cube-loading NOT SUCCESSFUL" << Logger::endl;
-			Logger::debug() << m_sLevelName << ": COULD NOT LOAD LEVEL" << Logger::endl;
 		}
 
 	}

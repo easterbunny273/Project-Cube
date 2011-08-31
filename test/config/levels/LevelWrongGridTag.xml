@@ -1,0 +1,12 @@
+<level id="2" name="wronggridtag">
+	<group name="cubes"> 
+		<cube id="1" x="0" y="0" z="0">
+			<grid1 pos="Xplus"><!-- ERROR: 'grid1' instead of 'grid' -->
+				<door x="1" y="1"/>
+			</grid1>
+		</cube>
+	</group>
+	<group name="objects">
+		<object name="object1"/>
+	</group>
+</level>
