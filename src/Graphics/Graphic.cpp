@@ -391,9 +391,9 @@ void Graphic::ItlCreateOpenGLWindow()
             Logger::fatal() << "glfw initialization failed" << Logger::endl;
 
     // Set flags so GLFW creates the desired OpenGL context
-    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 2);
-    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 1);
-    //glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
+    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 3);
+    glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     //Activate 4x antialiasing
     //glfwOpenWindowHint(GLFW_FSAA_SAMPLES, 4);
@@ -434,11 +434,11 @@ void Graphic::ItlCreateOpenGLWindow()
             // check if we have a core-profile
             glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &profile);
 
-	    /*if (profile == GL_CONTEXT_CORE_PROFILE_BIT)
+	    if (profile == GL_CONTEXT_CORE_PROFILE_BIT)
                     Logger::debug() << "got rendering context with core profile" << Logger::endl;
             else
                     Logger::fatal() << "got rendering context with compatibility profile instead of core profile" << Logger::endl;
-*/
+
 	    int iMayor, iMinor, iRev;
 
 	    glfwGetVersion(&iMayor, &iMinor, &iRev);
