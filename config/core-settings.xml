@@ -4,9 +4,16 @@
             <value name="volume" type="float">0.8</value>
         </group>
         <group name="graphics">
-            <group name="screen">
+            <group name="camera">
+                <value name="far-plane" type="float">100</value>
+		<value name="fov" type="float">45</value>
+                <value name="near-plane" type="float">0.1</value>
+                <value name="ratio" type="float">1.33</value>
+            </group>
+            <group name="window">
                 <value name="height" type="int">600</value>
                 <value name="width" type="int">800</value>
+                <value name="fullscreen" type="boolean">0</value>
             </group>
         </group>
     </group>

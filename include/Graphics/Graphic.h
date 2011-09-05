@@ -17,6 +17,9 @@
 // glm includes
 #include <glm/core/type_mat4x4.hpp>
 
+// settings class
+#include "Settings.h"
+
 // forward declarations
 class SceneObject;
 class SceneObject_RenderTarget;
@@ -104,6 +107,7 @@ public:
 
     /*! \name Initialization / Cleanup */
     //@{
+
         /// initializes the open gl stuff and creates the window + context.
         bool InitializeOpenGL();
 
@@ -170,6 +174,9 @@ private:
 
     /*! \name Internal helper methods */
     //@{
+	/// load basic settings
+	void ItlLoadSettings();
+
         /// handles keyboard events and sends signals to listener
         void ItlHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState);
 
@@ -204,6 +211,7 @@ private:
 
 	int		    m_iWidth;			///< width of the created opengl window
 	int		    m_iHeight;			///< height of the created opengl window
+	bool		    m_bFullscreen;		///< whether the window is in fullscreen mode or not
 	bool		    m_bWindowOpenened;		///< whether an output window is currently open
 
 	int		    m_iFramesInThisSecondYet;
@@ -221,6 +229,7 @@ private:
 	static Graphic *    s_pInstance;
 
 	IInputEventListener * m_pInputEventListener;
+	Settings::TSettingsGroup * m_pSettings;		///< the settings group used for the graphics engine
     //@}
 };
 

@@ -396,6 +396,10 @@ bool Settings::TSettingsGroup::ItlReadGroupFromXML(TiXmlElement *pElement)
     // get first child element
     TiXmlElement* pChildElement = pElement->FirstChildElement();
 
+    // if element has no children, return with success
+    if (pChildElement == NULL)
+	return true;
+
     do
     {
         // make sure that we got a valid pointer

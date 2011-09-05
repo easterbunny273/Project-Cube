@@ -68,18 +68,43 @@ public:
 		bool GetValue(std::string sName, glm::vec3 &vValue);
 		bool GetValue(std::string sName, glm::vec4 &vValue);
 
-                /// this method returns the value if it was found, else the given default value
+		/// this method returns the value if it was found by reference, else the given default value
                 /// the template creates an method GetValueOrDefault for each T,
                 /// if a fitting GetValue(std::string, T) exists
-		template<class T> bool GetValueOrDefault(std::string sName, T tDefault, T &tValue)
+		template<class T> bool GetValueOrDefault(std::string sName, T tDefault, T &tValue, bool bSetIfNotFound=true)
 		{
 		    bool bFound = GetValue(sName, tValue);
 
 		    if (bFound == false)
+		    {
 			tValue = tDefault;
+
+			if (bSetIfNotFound)
+			    SetValue(sName, tDefault);
+		    }
 
 		    return bFound;
 		};
+
+		/// this method returns the value if it was found, else the given default value
+		/// the template creates an method GetValueOrDefault for each T,
+		/// if a fitting GetValue(std::string, T) exists
+		template<class T> T GetValueOrDefault(std::string sName, T tDefault, bool bSetIfNotFound=true)
+		{
+		    T tValue;
+		    bool bFound = GetValue(sName, tValue);
+
+		    if (bFound == false)
+		    {
+			tValue = tDefault;
+
+			if (bSetIfNotFound)
+			    SetValue(sName, tDefault);
+		    }
+
+		    return tValue;
+		};
+
 	    //@}
 	private:
 	    /*! \name Construction / Destruction */

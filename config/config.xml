@@ -1,16 +1,9 @@
 <?xml version="1.0" ?>
-<window>
-	<size>
-		<width type="int" value="800"/>
-		<height type="int" value="600"/>
-	</size>
-</window>
-<stringtest>
-	<string1 type="string" value="blabla"/>
-</stringtest>
-<booltest>
-	<bool1 type="bool" value="true"/>
-</booltest>
-<floattest>
-	<pi type="float" value="3.1415"/>
-</floattest>
+<group name="#">
+    <group name="graphics">
+	    <group name="window">
+		    <value name="width" type="int">800</value>
+		    <value name="height" type="int">200</value>
+	    </group>
+    </group>
+</group>

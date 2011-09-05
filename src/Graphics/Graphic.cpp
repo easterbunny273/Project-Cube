@@ -32,6 +32,8 @@
 
 #include "IInputEventListener.h"
 
+#include "MainApp.h"
+
 using namespace std;
 
 #define PI 3.14159265f
@@ -47,7 +49,8 @@ Graphic::Graphic()
       m_iFramesPerSecond(0),
       m_fTimeOfLastRenderCall(0),
       m_bIsMouseLocked(false),
-      m_pInputEventListener(NULL)
+      m_pInputEventListener(NULL),
+      m_pSettings(NULL)
 {
     // check if this is the first instance
     assert (s_iInstances == 0);
@@ -84,11 +87,13 @@ Graphic::~Graphic()
   *************************************************************** */
 bool Graphic::InitializeOpenGL()
 {
+    // first, set settings group
+    ItlLoadSettings();
+
     // create window
     ItlCreateOpenGLWindow();
 
     m_bWindowOpenened = true;
-
     m_bIsMouseLocked = false;
 
     // initialize opengl state variables
@@ -99,6 +104,16 @@ bool Graphic::InitializeOpenGL()
 
     // create basic render path
     ItlCreateBaseRenderPath();
+
+    // set main camera values
+    assert (m_pSettings != NULL);
+    Settings::TSettingsGroup *pCameraSettings = m_pSettings->GetGroup("camera");
+    float fFieldOfView = pCameraSettings->GetValueOrDefault("fov", 45.0f);
+    float fRatio = pCameraSettings->GetValueOrDefault("ratio", 1.33f);
+    float fNearPlane = pCameraSettings->GetValueOrDefault("near-plane", 0.1f);
+    float fFarPlane = pCameraSettings->GetValueOrDefault("far-plane", 100.0f);
+
+    GetCamera()->SetPerspectiveProjection(fFieldOfView, fRatio, fNearPlane, fFarPlane);
 
     return true;
 }
@@ -379,10 +394,13 @@ void Graphic::ItlHandleMouseButton(int iButton, int iAction)
   *************************************************************** */
 void Graphic::ItlCreateOpenGLWindow()
 {
-    m_iWidth = 800;
-    m_iHeight = 600;
+    assert (m_pSettings != NULL);
 
-    int flags = (false) ? GLFW_FULLSCREEN : GLFW_WINDOW;	//if fullscreen is true, flags is set to GLFW_FULLSCREEN, else to GLFW_WINDOW
+    m_iWidth = m_pSettings->GetGroup("window")->GetValueOrDefault("width", 800);
+    m_iHeight = m_pSettings->GetGroup("window")->GetValueOrDefault("height", 600);
+    m_bFullscreen = m_pSettings->GetGroup("window")->GetValueOrDefault("fullscreen", false);
+
+    int iFlags = (m_bFullscreen) ? GLFW_FULLSCREEN : GLFW_WINDOW;	//if fullscreen is true, flags is set to GLFW_FULLSCREEN, else to GLFW_WINDOW
 
     // initialize glfw
     if (glfwInit() == GL_TRUE)
@@ -398,7 +416,7 @@ void Graphic::ItlCreateOpenGLWindow()
     //Activate 4x antialiasing
     //glfwOpenWindowHint(GLFW_FSAA_SAMPLES, 4);
 
-    if (glfwOpenWindow(m_iWidth, m_iHeight, 8,8,8,8, 24, 8, flags) != GL_TRUE)
+    if (glfwOpenWindow(m_iWidth, m_iHeight, 8,8,8,8, 24, 8, iFlags) != GL_TRUE)
             Logger::fatal() << "failed to initialize OpenGL window" << Logger::endl;
     else
             Logger::debug() << "OpenGL window initialized" << Logger::endl;
@@ -621,6 +639,8 @@ void Graphic::Camera::Move(float fFactor)
     m_m4ViewMatrix = glm::lookAt(m_v3CameraPosition, m_v3CameraPosition + v3LookAt, glm::vec3(0,1,0));
 }
 
+/****************************************************************
+  *************************************************************** */
 bool Graphic::ShutDown()
 {
     glfwCloseWindow();
@@ -631,6 +651,8 @@ bool Graphic::ShutDown()
     return true;
 }
 
+/****************************************************************
+  *************************************************************** */
 void Graphic::RegisterInputHandler(IInputEventListener *pListener)
 {
     assert (pListener != NULL);
@@ -638,11 +660,15 @@ void Graphic::RegisterInputHandler(IInputEventListener *pListener)
     m_pInputEventListener = pListener;
 }
 
+/****************************************************************
+  *************************************************************** */
 void Graphic::Camera::AddToMoveVector(glm::vec3 vVector)
 {
     m_v3MoveVector += vVector;
 }
 
+/****************************************************************
+  *************************************************************** */
 void Graphic::HideAndLockMouseToWindowCenter()
 {
     assert (m_bWindowOpenened);
@@ -654,6 +680,8 @@ void Graphic::HideAndLockMouseToWindowCenter()
     glfwSetMousePos(m_iWidth / 2, m_iHeight / 2);
 }
 
+/****************************************************************
+  *************************************************************** */
 void Graphic::UnHideAndUnLockMouse()
 {
     assert (m_bWindowOpenened);
@@ -663,6 +691,8 @@ void Graphic::UnHideAndUnLockMouse()
     m_bIsMouseLocked = false;
 }
 
+/****************************************************************
+  *************************************************************** */
 void Graphic::ItlLoadShaderPrograms()
 {
     ShaderManager *pShaderManager = ShaderManager::instance();
@@ -673,8 +703,12 @@ void Graphic::ItlLoadShaderPrograms()
     pShaderManager->AddShader("camera-debug", new Shader("shaders/camera-debug.vs", "shaders/camera-debug.fs"));
 }
 
+/****************************************************************
+  *************************************************************** */
 void Graphic::ItlCreateBaseRenderPath()
 {
+    // only a dummy method, should be refactored
+
     std::shared_ptr<SceneObject> spRootNode (new SceneObject_EmptyNode());
 
     std::shared_ptr<SceneObject> spCameraNode (new SceneObject_Camera(GetCamera()));
@@ -688,14 +722,28 @@ void Graphic::ItlCreateBaseRenderPath()
     AddRenderPath(spRootNode, "default");
 }
 
+/****************************************************************
+  *************************************************************** */
 ShaderManager * Graphic::GetShaderManager()
 {
+    // TODO: should we use the shader manager as a singelton or as a member of the graphics class?
+
     return ShaderManager::instance();
 }
 
+/****************************************************************
+  *************************************************************** */
 TextureManager * Graphic::GetTextureManager()
 {
+    // TODO: should we use the texture manager as a singelton or as a member of the graphics class?
     return TextureManager::instance();
+}
+
+/****************************************************************
+  *************************************************************** */
+void Graphic::ItlLoadSettings()
+{
+    m_pSettings = MainApp::GetInstance()->GetCoreSettings()->GetGroup("graphics");
 }
 
 

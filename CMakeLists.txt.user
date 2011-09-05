@@ -43,7 +43,7 @@
     <value key="ProjectExplorer.BuildCOnfiguration.ToolChain" type="QString">ProjectExplorer.ToolChain.Gcc:/usr/bin/g++.x86-linux-generic-elf-64bit.</value>
     <valuemap key="ProjectExplorer.BuildConfiguration.BuildStepList.0" type="QVariantMap">
      <valuemap key="ProjectExplorer.BuildStepList.Step.0" type="QVariantMap">
-      <value key="CMakeProjectManager.MakeStep.AdditionalArguments" type="QString"></value>
+      <value key="CMakeProjectManager.MakeStep.AdditionalArguments" type="QString">-j 6</value>
       <valuelist key="CMakeProjectManager.MakeStep.BuildTargets" type="QVariantList"/>
       <value key="CMakeProjectManager.MakeStep.Clean" type="bool">false</value>
       <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString">Make</value>
