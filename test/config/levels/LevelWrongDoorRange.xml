@@ -1,0 +1,16 @@
+<level>
+	<group name="attributes">
+		<id>3</id>
+		<name>wrongdoor</name>
+	</group>
+	<group name="cubes"> 
+		<cube id="1" x="0" y="0" z="0">
+			<grid pos="Xplus">
+				<door x="10" y="1"/><!-- ERROR: x and y have to be an int between 1 and 9 -->
+			</grid>
+		</cube>
+	</group>
+	<group name="objects">
+		<object name="object1"/>
+	</group>
+</level>

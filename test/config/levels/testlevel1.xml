@@ -1,4 +1,8 @@
-<level id="1" numcubes="2" name="first level">
+<level>
+	<group name="attributes">
+		<id>1</id>
+		<name>testlevel</name>
+	</group>
 	<group name="cubes">
 		<cube id="1" x="0" y="0" z="0">
 			<grid pos="Xplus">
@@ -21,7 +25,7 @@
 				<door x="9" y="1"/>
 			</grid>
 			<grid pos="Zminus">
-				<door x="5" y="7"/>
+				<door x="6" y="7"/>
 			</grid>
 		</cube>
 		<cube id="2" x="0" y="1" z="0">

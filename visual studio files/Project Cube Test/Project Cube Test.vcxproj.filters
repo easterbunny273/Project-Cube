@@ -105,6 +105,9 @@
     <ClCompile Include="..\..\src\Gamelogic\Level.cpp">
       <Filter>Source Files\Project Cube</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\LevelTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\GridTest.h">

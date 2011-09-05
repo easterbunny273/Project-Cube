@@ -2,6 +2,7 @@
 #include <cpptest-htmloutput.h>
 #include "GridTest.h"
 #include "CubeTest.h"
+#include "LevelTest.h"
 #include <fstream>
 #include <memory>
 
@@ -12,6 +13,7 @@ int main()
 	Test::Suite ts;
 	ts.add(auto_ptr<Test::Suite> (new GridTest()));
 	ts.add(auto_ptr<Test::Suite> (new CubeTest()));
+	ts.add(auto_ptr<Test::Suite> (new LevelTest()));
 
 	filebuf fbhtml;
 	fbhtml.open("testresults.html", ios::out);

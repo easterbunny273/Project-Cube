@@ -118,3 +118,23 @@ void Grid::MirrorGridHorizontal()
 		m_vDoorPositions.at(i) = glm::ivec2(old.x, 10-old.y);
 	}
 }
+
+
+void Grid::setPosition(std::string sPosition)
+{
+	m_sPosition = sPosition;
+}
+
+std::string Grid::getPosition()
+{
+	return m_sPosition;
+}
+
+
+void Grid::PrintGrid()
+{
+	for(int i = 0; i < m_vDoorPositions.size(); i++)
+	{
+		Logger::debug() << "grid: " << m_sPosition << "; door: (" << m_vDoorPositions.at(i).x << "," << m_vDoorPositions.at(i).y << ")" << Logger::endl;
+	}
+}

@@ -26,6 +26,14 @@ public:
 
 	/* \name Public methods */
 	//@{
+		unsigned int GetLevelID();
+
+		std::string GetLevelName();
+
+		int GetNumCubes();
+
+		void Clear();
+
 		///Rotates a level around its x-axis
 		///allowed factors are 90, 180, 270, ...
 		bool RotateX(const int iFactor);
@@ -38,30 +46,30 @@ public:
 		///allowed factors are 90, 180, 270, ...
 		bool RotateZ(const int iFactor);
 
-		///Writes the current level state to an xml-file
-		virtual bool WriteToXMLString(std::string &rsString);
-
 		///Reads a level from a xml-file
 	    virtual bool ReadFromXMLString(std::string sString);
 
-		void Clear();
+		///Writes the current level state to an xml-file
+		virtual bool WriteToXMLString(std::string &sString);
 	//@}
 private:
 	/* \name Private members */
 	//@{
 		unsigned int m_nLevelID;
 		std::string m_sLevelName;
+		std::string m_sFileName;
 
 		///Contains all cubes inside the level
 		std::vector<Cube> m_Cubes;
 
-		int m_nNumCubes;
+		int m_iNumCubes;
 	//@}
 
 	/* \name Private methods */
 	//@{
 		bool itlReadGroupFromXML(TiXmlElement *pGroup);
 
+		bool itlLoadAttributesFromXML(TiXmlElement *pAttribGroup);
 		bool itlLoadCubesFromXML(TiXmlElement *pCubeGroup);
 		bool itlLoadGridFromXML(TiXmlElement *pGrid, Grid& grid);
 

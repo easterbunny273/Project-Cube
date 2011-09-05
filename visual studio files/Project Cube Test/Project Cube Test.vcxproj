@@ -112,6 +112,7 @@
     <ClCompile Include="..\..\src\Settings.cpp" />
     <ClCompile Include="..\..\test\CubeTest.cpp" />
     <ClCompile Include="..\..\test\GridTest.cpp" />
+    <ClCompile Include="..\..\test\LevelTest.cpp" />
     <ClCompile Include="..\..\test\TestMain.cpp" />
   </ItemGroup>
   <ItemGroup>
