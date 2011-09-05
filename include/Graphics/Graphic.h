@@ -213,6 +213,7 @@ private:
 	int		    m_iHeight;			///< height of the created opengl window
 	bool		    m_bFullscreen;		///< whether the window is in fullscreen mode or not
 	bool		    m_bWindowOpenened;		///< whether an output window is currently open
+	bool		    m_bUseOpenGL_4_1;		///< whether a opengl 4.1 context should be created
 
 	int		    m_iFramesInThisSecondYet;
 	int		    m_iFramesPerSecond;

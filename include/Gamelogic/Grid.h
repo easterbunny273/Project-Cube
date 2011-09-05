@@ -73,7 +73,7 @@ private:
 	/*! \name Private methods */
 	//@{
 		///Checks if a door can be inserted to the grid
-		bool itlCheckDoorInsertion(const int iX, const int iY);
+		bool ItlCheckDoorInsertion(const int iX, const int iY);
 	//@}
 };
 

@@ -50,7 +50,8 @@ Graphic::Graphic()
       m_fTimeOfLastRenderCall(0),
       m_bIsMouseLocked(false),
       m_pInputEventListener(NULL),
-      m_pSettings(NULL)
+      m_pSettings(NULL),
+      m_bUseOpenGL_4_1(false)
 {
     // check if this is the first instance
     assert (s_iInstances == 0);
@@ -399,6 +400,7 @@ void Graphic::ItlCreateOpenGLWindow()
     m_iWidth = m_pSettings->GetGroup("window")->GetValueOrDefault("width", 800);
     m_iHeight = m_pSettings->GetGroup("window")->GetValueOrDefault("height", 600);
     m_bFullscreen = m_pSettings->GetGroup("window")->GetValueOrDefault("fullscreen", false);
+    m_bUseOpenGL_4_1 = m_pSettings->GetGroup("window")->GetValueOrDefault("use_opengl_4.1", false);
 
     int iFlags = (m_bFullscreen) ? GLFW_FULLSCREEN : GLFW_WINDOW;	//if fullscreen is true, flags is set to GLFW_FULLSCREEN, else to GLFW_WINDOW
 
@@ -409,8 +411,18 @@ void Graphic::ItlCreateOpenGLWindow()
             Logger::fatal() << "glfw initialization failed" << Logger::endl;
 
     // Set flags so GLFW creates the desired OpenGL context
-    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
-    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 3);
+    if (m_bUseOpenGL_4_1)
+    {
+	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 4);
+	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 1);
+    }
+    else
+    {
+	// else we want opengl 3.3
+	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
+	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 3);
+    }
+
     glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     //Activate 4x antialiasing
@@ -445,7 +457,8 @@ void Graphic::ItlCreateOpenGLWindow()
     Logger::debug() << "Opened context with OpenGL Version " << (char *) glGetString(GL_VERSION) << Logger::endl;
 
     // check if we got the right version
-    if (GLEW_VERSION_3_3)
+    if ((GLEW_VERSION_3_3 && !m_bUseOpenGL_4_1) ||
+	(GLEW_VERSION_4_1 && m_bUseOpenGL_4_1))
     {
             GLint profile;
 
@@ -456,15 +469,14 @@ void Graphic::ItlCreateOpenGLWindow()
                     Logger::debug() << "got rendering context with core profile" << Logger::endl;
             else
                     Logger::fatal() << "got rendering context with compatibility profile instead of core profile" << Logger::endl;
-
-	    int iMayor, iMinor, iRev;
-
-	    glfwGetVersion(&iMayor, &iMinor, &iRev);
-
-	    Logger::error() << iMayor << ":" << iMinor << ":" << iRev << Logger::endl;
     }
     else
-            Logger::fatal() << "OpenGL version 3.3 is needed but not supported" << Logger::endl;
+    {
+	if (m_bUseOpenGL_4_1)
+	    Logger::info() << "The graphics engine was configured to use OpenGL 4. Maybe you should change the configuration to 3.3, see config/core_config.xml" << Logger::endl;
+
+	Logger::fatal() << "The window could not be created. The wanted OpenGL version was not supported by the system." << Logger::endl;
+    }
 }
 
 /****************************************************************
