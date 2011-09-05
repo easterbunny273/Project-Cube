@@ -1,9 +1,0 @@
-<?xml version="1.0" ?>
-<group name="#">
-    <group name="graphics">
-	    <group name="window">
-		    <value name="width" type="int">800</value>
-		    <value name="height" type="int">200</value>
-	    </group>
-    </group>
-</group>
