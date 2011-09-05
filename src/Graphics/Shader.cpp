@@ -19,7 +19,7 @@ using namespace std;
 
 int last_active;
 
-//#define CHECK_FOR_GLERROR
+#define CHECK_FOR_GLERROR
 
 bool Shader::ItlLoadFileToString(const char* szFilename, GLubyte** pszShaderSource, unsigned long* nLength)
 {
@@ -220,21 +220,21 @@ void Shader::Activate()
 {
     //activate shader if it is ready for use, else log an error message
 
-    if (this->m_bReadyForUse)
+    if (m_bReadyForUse)
     {
 #ifdef CHECK_FOR_GLERROR
 	glGetError();
 #endif
 
-	glUseProgram(this->m_nShaderId);
+	glUseProgram(m_nShaderId);
 
 #ifdef CHECK_FOR_GLERROR
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR)
-	    Logger::error() << "glGetError(): " << translateGLerror(error) << Logger::endl;
+	    Logger::error() << "glGetError(): " << TranslateGLerror(error) << Logger::endl;
 #endif
 
-	last_active = this->m_nShaderId;
+	last_active = m_nShaderId;
     }
     else
 	Logger::error() << "Could not activate shader because it is not ready for use" << Logger::endl;
@@ -244,7 +244,7 @@ GLint Shader::GetUniformLocation(const char *szName)
 {
     std::string sName(szName);
 
-    if ((GLuint) last_active != this->m_nShaderId)
+    if ((GLuint) last_active != m_nShaderId)
 	Logger::error() << "While setting an uniform of an shader, the shader must be active!" << Logger::endl;
 
     std::map<std::string, GLint>::iterator iter = m_mCachedUniformLocations.find(sName);
@@ -253,7 +253,7 @@ GLint Shader::GetUniformLocation(const char *szName)
 
     if (iter == m_mCachedUniformLocations.end())
     {
-        iLocation = glGetUniformLocation(this->m_nShaderId, szName);
+	iLocation = glGetUniformLocation(m_nShaderId, szName);
         m_mCachedUniformLocations[sName] = iLocation;
     }
     else
@@ -266,7 +266,7 @@ GLint Shader::GetUniformLocation(const char *szName)
 
 GLint Shader::GetAttribLocation(const char *szName)
 {
-    if (static_cast<GLuint>(last_active) != this->m_nShaderId)
+    if (static_cast<GLuint>(last_active) != m_nShaderId)
 	Logger::error() << "While setting an attribute of an shader, the shader must be active!" << Logger::endl;
 
     std::string sName(szName);
@@ -277,7 +277,7 @@ GLint Shader::GetAttribLocation(const char *szName)
 
     if (iter == m_mCachedAttributeLocations.end())
     {
-        iLocation = glGetAttribLocation(this->m_nShaderId, szName);
+	iLocation = glGetAttribLocation(m_nShaderId, szName);
         m_mCachedAttributeLocations[sName] = iLocation;
     }
     else

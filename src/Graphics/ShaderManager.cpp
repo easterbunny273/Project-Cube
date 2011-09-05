@@ -27,15 +27,15 @@ ShaderManager::~ShaderManager()
 
 void ShaderManager::AddShader(std::string sName, Shader *pShader)
 {
-    this->m_vpShaders.push_back(pShader);
-    this->m_vsShaderNames.push_back(sName);
+    m_vpShaders.push_back(pShader);
+    m_vsShaderNames.push_back(sName);
 }
 
 bool ShaderManager::ActivateShader(std::string sName)
 {
     bool bSuccess = false;
 
-    for (unsigned int a=0; a < this->m_vpShaders.size(); a++)
+    for (unsigned int a=0; a < m_vpShaders.size(); a++)
     {
 	if (m_vsShaderNames[a].compare(sName)==0)
 	{

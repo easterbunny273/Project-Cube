@@ -38,7 +38,7 @@ bool TextureManager::LoadTexture(std::string sTextureName,
 
 
 		for (int a=0; a < m_iMaxTextureUnits; a++)			    //push them all in the free_units queue
-			this->m_lFreeUnits.push_back(a);
+			m_lFreeUnits.push_back(a);
 
 		Logger::debug() << puffer2 << " texture units available" << Logger::endl;
 
@@ -105,9 +105,9 @@ bool TextureManager::LoadTexture(std::string sTextureName,
 		if (eError != GL_NO_ERROR)
 		    Logger::error() << "glGetError: " << TranslateGLerror(eError) << Logger::endl;
 
-		this->m_mTextureIDs[sTextureName] = OpenGLID;
-		this->m_mTextureTargets[sTextureName] = iTarget;
-		this->m_mTexturesInUnits[sTextureName] = -1;
+		m_mTextureIDs[sTextureName] = OpenGLID;
+		m_mTextureTargets[sTextureName] = iTarget;
+		m_mTexturesInUnits[sTextureName] = -1;
 
 		Logger::debug() << "texture from " << sFilename << " loaded to intern name \"" << sTextureName << "\"" << Logger::endl;
 		return true;
@@ -117,8 +117,8 @@ bool TextureManager::LoadTexture(std::string sTextureName,
 
 GLuint TextureManager::UseTexture(std::string sTextureName)
 {
-    unsigned int nPreviousSize = this->m_mTextureIDs.size();
-    GLuint nTextureID = this->m_mTextureIDs[sTextureName];
+    unsigned int nPreviousSize = m_mTextureIDs.size();
+    GLuint nTextureID = m_mTextureIDs[sTextureName];
 
     assert (m_mTextureLocks.find(nTextureID) == m_mTextureLocks.end() || m_mTextureLocks[nTextureID] == false);
 
@@ -126,7 +126,7 @@ GLuint TextureManager::UseTexture(std::string sTextureName)
 
     //if the size of the texture-container NOW is creater than old_size,
     //the [] operator created a new entry in the map, which means that an entry with the given name did not exist
-    if (nPreviousSize != this->m_mTextureIDs.size())
+    if (nPreviousSize != m_mTextureIDs.size())
 	Logger::fatal() << "Texture \"" << sTextureName << "\" could not be found (not loaded?)" << Logger::endl;
     else
     {
