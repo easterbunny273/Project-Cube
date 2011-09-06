@@ -145,7 +145,7 @@ void SceneObject::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderInfo)
 	pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = SavedModelViewProjectionMatrix_ForFrustumCulling;
     }
 
-    m_pCurrentRenderInfo = NULL;
+    m_pCurrentRenderInfo = std::shared_ptr<TItlRenderInfo>();
 }
 
 SceneObject::SceneObject()
