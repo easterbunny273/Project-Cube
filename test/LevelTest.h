@@ -1,7 +1,7 @@
 #include "cpptest.h"
 using namespace std;
 
-#include "Level.h"
+#include "Gamelogic/Level.h"
 
 class LevelTest: public Test::Suite
 {
