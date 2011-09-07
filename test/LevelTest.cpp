@@ -11,7 +11,7 @@ void LevelTest::tear_down()
 
 void LevelTest::Test_loadXML_LevelAttributes()
 {
-	bool bRead = testlevel.ReadFromXMLString("test/config/levels/testlevel1.xml");
+        bool bRead = testlevel.LoadLevelFromXMLFile("test/config/levels/testlevel1.xml");
 
         TEST_ASSERT(bRead)
         TEST_ASSERT(testlevel.GetLevelID() == 1)
@@ -21,45 +21,46 @@ void LevelTest::Test_loadXML_LevelAttributes()
 
 void LevelTest::Test_writeXML()
 {
-	bool bRead = testlevel.ReadFromXMLString("test/config/levels/testlevel1.xml");
+        bool bRead = testlevel.LoadLevelFromXMLFile("test/config/levels/testlevel1.xml");
 	std::string sFilename("test/config/levels/testlevel1_w.xml");
-	bool bWrite = testlevel.WriteToXMLString(sFilename);
+        bool bWrite = testlevel.StoreLevelAsXMLFile(sFilename);
 
-
+        TEST_ASSERT(bRead==true)
+        TEST_ASSERT(bWrite==true)
 }
 
 void LevelTest::Test_loadXML_NotExistingLevel()
 {
-	bool bRead = testlevel.ReadFromXMLString("test/config/levels/abasobaba.xml");
+        bool bRead = testlevel.LoadLevelFromXMLFile("test/config/levels/abasobaba.xml");
 	TEST_ASSERT(bRead==false)
 }
 
 void LevelTest::Test_loadXML_WrongGroupTag()
 {
-	bool bRead = testlevel.ReadFromXMLString("test/config/levels/LevelWrongGroupTag.xml");
+        bool bRead = testlevel.LoadLevelFromXMLFile("test/config/levels/LevelWrongGroupTag.xml");
 	TEST_ASSERT(bRead==false)
 }
 
 void LevelTest::Test_loadXML_WrongCubeTag()
 {
-	bool bRead = testlevel.ReadFromXMLString("test/config/levels/LevelWrongCubeTag.xml");
+        bool bRead = testlevel.LoadLevelFromXMLFile("test/config/levels/LevelWrongCubeTag.xml");
 	TEST_ASSERT(bRead==false)
 }
 
 void LevelTest::Test_loadXML_WrongGridTag()
 {
-	bool bRead = testlevel.ReadFromXMLString("test/config/levels/LevelWrongGridTag.xml");
+        bool bRead = testlevel.LoadLevelFromXMLFile("test/config/levels/LevelWrongGridTag.xml");
 	TEST_ASSERT(bRead==false)
 }
 
 void LevelTest::Test_loadXML_WrongDoorTag()
 {
-	bool bRead = testlevel.ReadFromXMLString("test/config/levels/LevelWrongDoorTag.xml");
+        bool bRead = testlevel.LoadLevelFromXMLFile("test/config/levels/LevelWrongDoorTag.xml");
 	TEST_ASSERT(bRead==false)
 }
 
 void LevelTest::Test_loadXML_WrongDoorRange()
 {
-	bool bRead = testlevel.ReadFromXMLString("test/config/levels/LevelWrongDoorRange.xml");
+        bool bRead = testlevel.LoadLevelFromXMLFile("test/config/levels/LevelWrongDoorRange.xml");
 	TEST_ASSERT(bRead==false)
 }
