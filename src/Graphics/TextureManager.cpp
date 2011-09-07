@@ -54,11 +54,13 @@ bool TextureManager::LoadTexture(std::string sTextureName,
 	ilGenImages(1,&nIlTextureId);			// generieren von IL ID für Texturen
 	ilBindImage(nIlTextureId);			// bestimmten Texturindex als aktell setzen
 
-	if (!ilLoadImage (sFilename.data()))		// laden der Textur
-	{
+        if (!ilLoadImage (sFilename.data()))		// laden der Textur
+        {
+                ILenum Error;
+                Error = ilGetError();
 		ilDeleteImages(1,&nIlTextureId);		// bei Fehlschlag wieder Index freigeben
 
-		Logger::error() << "Could not find texture file " << sFilename << ", loading failed." << Logger::endl;
+                Logger::error() << "Could not find texture file " << sFilename << ", loading failed. DevIL error-code: " << Error << Logger::endl;
 
 		return false;
 	}

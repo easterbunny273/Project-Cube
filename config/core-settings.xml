@@ -14,7 +14,7 @@
                 <value name="height" type="int">600</value>
                 <value name="width" type="int">800</value>
                 <value name="fullscreen" type="boolean">0</value>
-		<value name="use_opengl_4.1" type="boolean">1</value>
+                <value name="use_opengl_4.1" type="boolean">0</value>
             </group>
         </group>
     </group>
