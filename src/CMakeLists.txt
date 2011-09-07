@@ -1,14 +1,14 @@
 #CMakeLists.txt for src-Folder
 
 #define libraries which should be linked additionally
-link_libraries(glfw GLEW IL lua assimp)
+link_libraries(glfw GLEW IL lua assimp pthread)
 
 #add include directories
 include_directories(../include/)
 include_directories(../external/tinyxml/)
 
 #add definitions (for gcc)
-add_definitions(-ggdb -std=c++0x -Wall)
+add_definitions(-ggdb -std=c++0x -Wall -lpthread)
 
 #define headers
 file(GLOB HEADERS "../include/*.h")
