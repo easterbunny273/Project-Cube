@@ -13,10 +13,10 @@ void LevelTest::Test_loadXML_LevelAttributes()
 {
 	bool bRead = testlevel.ReadFromXMLString("test/config/levels/testlevel1.xml");
 
-	TEST_ASSERT(bRead)
-	TEST_ASSERT(testlevel.GetLevelID() == 1)
-	TEST_ASSERT(testlevel.GetLevelName().compare("testlevel")==0)
-	TEST_ASSERT(testlevel.GetNumCubes() == 2)
+        TEST_ASSERT(bRead)
+        TEST_ASSERT(testlevel.GetLevelID() == 1)
+        TEST_ASSERT(testlevel.GetLevelName().compare("testlevel")==0)
+        TEST_ASSERT(testlevel.GetNumCubes() == 2)
 }
 
 void LevelTest::Test_writeXML()

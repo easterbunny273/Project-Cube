@@ -1,4 +1,4 @@
-#include "cpptest.h"
+#include "TestMain.h"
 #include <cpptest-htmloutput.h>
 #include "GridTest.h"
 #include "CubeTest.h"
@@ -8,19 +8,31 @@
 
 using namespace std;
 
-int main()
+TestMain::TestMain()
 {
-	Test::Suite ts;
-	ts.add(auto_ptr<Test::Suite> (new GridTest()));
-	ts.add(auto_ptr<Test::Suite> (new CubeTest()));
-	ts.add(auto_ptr<Test::Suite> (new LevelTest()));
+    m_TestSuite.add(auto_ptr<Test::Suite> (new GridTest()));
+    m_TestSuite.add(auto_ptr<Test::Suite> (new CubeTest()));
+    m_TestSuite.add(auto_ptr<Test::Suite> (new LevelTest()));
+}
 
+TestMain::~TestMain()
+{
+}
+
+TestMain * TestMain::GetInstance()
+{
+    static TestMain instance;
+
+    return &instance;
+}
+
+void TestMain::Run()
+{
 	filebuf fbhtml;
 	fbhtml.open("testresults.html", ios::out);
 	ostream ofile(&fbhtml);
 
 	Test::HtmlOutput output;
-	ts.run(output);
+        m_TestSuite.run(output);
 	output.generate(ofile);
-	return 0;
 }

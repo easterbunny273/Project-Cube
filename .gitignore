@@ -29,6 +29,7 @@ doc/html/
 
 #qtcreator
 qtcreator-build/
+CMakeLists.txt.user
 
 #external libs
 external/glm

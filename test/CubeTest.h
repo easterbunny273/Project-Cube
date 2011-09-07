@@ -1,7 +1,7 @@
 #include "cpptest.h"
 using namespace std;
 
-#include "Cube.h"
+#include "Gamelogic/Cube.h"
 
 class CubeTest: public Test::Suite
 {

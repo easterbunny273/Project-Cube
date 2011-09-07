@@ -1,7 +1,7 @@
 #include "cpptest.h"
 using namespace std;
 
-#include "Grid.h"
+#include "Gamelogic/Grid.h"
 
 class GridTest : public Test::Suite {
 
