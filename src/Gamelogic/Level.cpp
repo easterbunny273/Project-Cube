@@ -56,6 +56,7 @@ bool Level::RotateX(const int iFactor)
             int iOldY = m_Cubes.at(i).GetY();
             m_Cubes.at(i).SetY(-m_Cubes.at(i).GetZ());
             m_Cubes.at(i).SetZ(iOldY);
+            m_Cubes.at(i).RotateX(iFactor);
         }
     }
     else if((iFactor-180)%360 == 0)
@@ -64,6 +65,7 @@ bool Level::RotateX(const int iFactor)
         {
             m_Cubes.at(i).SetY(-m_Cubes.at(i).GetY());
             m_Cubes.at(i).SetZ(-m_Cubes.at(i).GetZ());
+            m_Cubes.at(i).RotateX(iFactor);
         }
     }
     else if((iFactor-270)%360 == 0)
@@ -73,6 +75,7 @@ bool Level::RotateX(const int iFactor)
             int iOldY = m_Cubes.at(i).GetY();
             m_Cubes.at(i).SetY(m_Cubes.at(i).GetZ());
             m_Cubes.at(i).SetZ(-iOldY);
+            m_Cubes.at(i).RotateX(iFactor);
         }
     }
 }
@@ -91,6 +94,7 @@ bool Level::RotateY(const int iFactor)
             int iOldZ = m_Cubes.at(i).GetZ();
             m_Cubes.at(i).SetZ(-m_Cubes.at(i).GetX());
             m_Cubes.at(i).SetX(iOldZ);
+            m_Cubes.at(i).RotateY(iFactor);
         }
     }
     else if((iFactor-180)%360 == 0)
@@ -99,6 +103,7 @@ bool Level::RotateY(const int iFactor)
         {
             m_Cubes.at(i).SetX(-m_Cubes.at(i).GetX());
             m_Cubes.at(i).SetZ(-m_Cubes.at(i).GetZ());
+            m_Cubes.at(i).RotateY(iFactor);
         }
     }
     else if((iFactor-270)%360 == 0)
@@ -108,6 +113,7 @@ bool Level::RotateY(const int iFactor)
             int iOldZ = m_Cubes.at(i).GetZ();
             m_Cubes.at(i).SetZ(m_Cubes.at(i).GetX());
             m_Cubes.at(i).SetX(-iOldZ);
+            m_Cubes.at(i).RotateY(iFactor);
         }
     }
 }
@@ -126,6 +132,7 @@ bool Level::RotateZ(const int iFactor)
             int iOldX = m_Cubes.at(i).GetX();
             m_Cubes.at(i).SetX(-m_Cubes.at(i).GetY());
             m_Cubes.at(i).SetY(iOldX);
+            m_Cubes.at(i).RotateZ(iFactor);
         }
     }
     else if((iFactor-180)%360 == 0)
@@ -134,6 +141,7 @@ bool Level::RotateZ(const int iFactor)
         {
             m_Cubes.at(i).SetX(-m_Cubes.at(i).GetX());
             m_Cubes.at(i).SetY(-m_Cubes.at(i).GetY());
+            m_Cubes.at(i).RotateZ(iFactor);
         }
     }
     else if((iFactor-270)%360 == 0)
@@ -143,6 +151,7 @@ bool Level::RotateZ(const int iFactor)
             int iOldX = m_Cubes.at(i).GetX();
             m_Cubes.at(i).SetX(m_Cubes.at(i).GetY());
             m_Cubes.at(i).SetY(-iOldX);
+            m_Cubes.at(i).RotateZ(iFactor);
         }
     }
 }
