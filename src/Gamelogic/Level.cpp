@@ -44,15 +44,107 @@ void Level::Clear()
 
 bool Level::RotateX(const int iFactor)
 {
-	return false;
+    if(iFactor == 0)
+            return true;
+    if(!(iFactor%90 == 0))
+            return false;
+
+    if((iFactor-90)%360 == 0)
+    {
+        for(int i = 0; i < m_Cubes.size(); i++)
+        {
+            int iOldY = m_Cubes.at(i).GetY();
+            m_Cubes.at(i).SetY(-m_Cubes.at(i).GetZ());
+            m_Cubes.at(i).SetZ(iOldY);
+        }
+    }
+    else if((iFactor-180)%360 == 0)
+    {
+        for(int i = 0; i < m_Cubes.size(); i++)
+        {
+            m_Cubes.at(i).SetY(-m_Cubes.at(i).GetY());
+            m_Cubes.at(i).SetZ(-m_Cubes.at(i).GetZ());
+        }
+    }
+    else if((iFactor-270)%360 == 0)
+    {
+        for(int i = 0; i < m_Cubes.size(); i++)
+        {
+            int iOldY = m_Cubes.at(i).GetY();
+            m_Cubes.at(i).SetY(m_Cubes.at(i).GetZ());
+            m_Cubes.at(i).SetZ(-iOldY);
+        }
+    }
 }
+
 bool Level::RotateY(const int iFactor)
 {
-	return false;
+    if(iFactor == 0)
+            return true;
+    if(!(iFactor%90 == 0))
+            return false;
+
+    if((iFactor-90)%360 == 0)
+    {
+        for(int i = 0; i < m_Cubes.size(); i++)
+        {
+            int iOldZ = m_Cubes.at(i).GetZ();
+            m_Cubes.at(i).SetZ(-m_Cubes.at(i).GetX());
+            m_Cubes.at(i).SetX(iOldZ);
+        }
+    }
+    else if((iFactor-180)%360 == 0)
+    {
+        for(int i = 0; i < m_Cubes.size(); i++)
+        {
+            m_Cubes.at(i).SetX(-m_Cubes.at(i).GetX());
+            m_Cubes.at(i).SetZ(-m_Cubes.at(i).GetZ());
+        }
+    }
+    else if((iFactor-270)%360 == 0)
+    {
+        for(int i = 0; i < m_Cubes.size(); i++)
+        {
+            int iOldZ = m_Cubes.at(i).GetZ();
+            m_Cubes.at(i).SetZ(m_Cubes.at(i).GetX());
+            m_Cubes.at(i).SetX(-iOldZ);
+        }
+    }
 }
+
 bool Level::RotateZ(const int iFactor)
 {
-	return false;
+    if(iFactor == 0)
+            return true;
+    if(!(iFactor%90 == 0))
+            return false;
+
+    if((iFactor-90)%360 == 0)
+    {
+        for(int i = 0; i < m_Cubes.size(); i++)
+        {
+            int iOldX = m_Cubes.at(i).GetX();
+            m_Cubes.at(i).SetX(-m_Cubes.at(i).GetY());
+            m_Cubes.at(i).SetY(iOldX);
+        }
+    }
+    else if((iFactor-180)%360 == 0)
+    {
+        for(int i = 0; i < m_Cubes.size(); i++)
+        {
+            m_Cubes.at(i).SetX(-m_Cubes.at(i).GetX());
+            m_Cubes.at(i).SetY(-m_Cubes.at(i).GetY());
+        }
+    }
+    else if((iFactor-270)%360 == 0)
+    {
+        for(int i = 0; i < m_Cubes.size(); i++)
+        {
+            int iOldX = m_Cubes.at(i).GetX();
+            m_Cubes.at(i).SetX(m_Cubes.at(i).GetY());
+            m_Cubes.at(i).SetY(-iOldX);
+        }
+    }
 }
 
 bool Level::ReadFromXMLString(std::string sFile)
