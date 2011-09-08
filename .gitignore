@@ -7,6 +7,7 @@ Project Cube.vcxproj.REMOTE.*
 
 #test files
 settings2.xml
+test/config/levels/testlevel1_w.xml
 
 #logger files
 log.txt

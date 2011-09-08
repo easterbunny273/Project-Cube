@@ -42,6 +42,30 @@ void Level::Clear()
 	m_sLevelName = "empty level";
 }
 
+std::vector<Cube*> Level::GetCubes()
+{
+    return m_Cubes;
+}
+
+Cube* Level::GetCubeByPosition(int iX, int iY, int iZ)
+{
+    return GetCubeByPosition(glm::ivec3(iX, iY, iZ));
+}
+
+Cube* Level::GetCubeByPosition(glm::ivec3 iv3Position)
+{
+    Cube* cube;
+    for(unsigned int i = 0; i < m_Cubes.size(); i++)
+    {
+        cube = m_Cubes.at(i);
+        if(cube->GetCubePosition()==iv3Position)
+        {
+            return cube;
+        }
+    }
+    return NULL;
+}
+
 bool Level::RotateX(const int iFactor)
 {
     if(iFactor == 0)
@@ -53,29 +77,29 @@ bool Level::RotateX(const int iFactor)
     {
         for(unsigned int i = 0; i < m_Cubes.size(); i++)
         {
-            int iOldY = m_Cubes.at(i).GetY();
-            m_Cubes.at(i).SetY(-m_Cubes.at(i).GetZ());
-            m_Cubes.at(i).SetZ(iOldY);
-            m_Cubes.at(i).RotateX(iFactor);
+            int iOldY = m_Cubes.at(i)->GetY();
+            m_Cubes.at(i)->SetY(-m_Cubes.at(i)->GetZ());
+            m_Cubes.at(i)->SetZ(iOldY);
+            m_Cubes.at(i)->RotateX(iFactor);
         }
     }
     else if((iFactor-180)%360 == 0)
     {
         for(unsigned int i = 0; i < m_Cubes.size(); i++)
         {
-            m_Cubes.at(i).SetY(-m_Cubes.at(i).GetY());
-            m_Cubes.at(i).SetZ(-m_Cubes.at(i).GetZ());
-            m_Cubes.at(i).RotateX(iFactor);
+            m_Cubes.at(i)->SetY(-m_Cubes.at(i)->GetY());
+            m_Cubes.at(i)->SetZ(-m_Cubes.at(i)->GetZ());
+            m_Cubes.at(i)->RotateX(iFactor);
         }
     }
     else if((iFactor-270)%360 == 0)
     {
         for(unsigned int i = 0; i < m_Cubes.size(); i++)
         {
-            int iOldY = m_Cubes.at(i).GetY();
-            m_Cubes.at(i).SetY(m_Cubes.at(i).GetZ());
-            m_Cubes.at(i).SetZ(-iOldY);
-            m_Cubes.at(i).RotateX(iFactor);
+            int iOldY = m_Cubes.at(i)->GetY();
+            m_Cubes.at(i)->SetY(m_Cubes.at(i)->GetZ());
+            m_Cubes.at(i)->SetZ(-iOldY);
+            m_Cubes.at(i)->RotateX(iFactor);
         }
     }
     return true;
@@ -92,29 +116,29 @@ bool Level::RotateY(const int iFactor)
     {
         for(unsigned int i = 0; i < m_Cubes.size(); i++)
         {
-            int iOldZ = m_Cubes.at(i).GetZ();
-            m_Cubes.at(i).SetZ(-m_Cubes.at(i).GetX());
-            m_Cubes.at(i).SetX(iOldZ);
-            m_Cubes.at(i).RotateY(iFactor);
+            int iOldZ = m_Cubes.at(i)->GetZ();
+            m_Cubes.at(i)->SetZ(-m_Cubes.at(i)->GetX());
+            m_Cubes.at(i)->SetX(iOldZ);
+            m_Cubes.at(i)->RotateY(iFactor);
         }
     }
     else if((iFactor-180)%360 == 0)
     {
         for(unsigned int i = 0; i < m_Cubes.size(); i++)
         {
-            m_Cubes.at(i).SetX(-m_Cubes.at(i).GetX());
-            m_Cubes.at(i).SetZ(-m_Cubes.at(i).GetZ());
-            m_Cubes.at(i).RotateY(iFactor);
+            m_Cubes.at(i)->SetX(-m_Cubes.at(i)->GetX());
+            m_Cubes.at(i)->SetZ(-m_Cubes.at(i)->GetZ());
+            m_Cubes.at(i)->RotateY(iFactor);
         }
     }
     else if((iFactor-270)%360 == 0)
     {
         for(unsigned int i = 0; i < m_Cubes.size(); i++)
         {
-            int iOldZ = m_Cubes.at(i).GetZ();
-            m_Cubes.at(i).SetZ(m_Cubes.at(i).GetX());
-            m_Cubes.at(i).SetX(-iOldZ);
-            m_Cubes.at(i).RotateY(iFactor);
+            int iOldZ = m_Cubes.at(i)->GetZ();
+            m_Cubes.at(i)->SetZ(m_Cubes.at(i)->GetX());
+            m_Cubes.at(i)->SetX(-iOldZ);
+            m_Cubes.at(i)->RotateY(iFactor);
         }
     }
     return true;
@@ -131,29 +155,29 @@ bool Level::RotateZ(const int iFactor)
     {
         for(unsigned int i = 0; i < m_Cubes.size(); i++)
         {
-            int iOldX = m_Cubes.at(i).GetX();
-            m_Cubes.at(i).SetX(-m_Cubes.at(i).GetY());
-            m_Cubes.at(i).SetY(iOldX);
-            m_Cubes.at(i).RotateZ(iFactor);
+            int iOldX = m_Cubes.at(i)->GetX();
+            m_Cubes.at(i)->SetX(-m_Cubes.at(i)->GetY());
+            m_Cubes.at(i)->SetY(iOldX);
+            m_Cubes.at(i)->RotateZ(iFactor);
         }
     }
     else if((iFactor-180)%360 == 0)
     {
         for(unsigned int i = 0; i < m_Cubes.size(); i++)
         {
-            m_Cubes.at(i).SetX(-m_Cubes.at(i).GetX());
-            m_Cubes.at(i).SetY(-m_Cubes.at(i).GetY());
-            m_Cubes.at(i).RotateZ(iFactor);
+            m_Cubes.at(i)->SetX(-m_Cubes.at(i)->GetX());
+            m_Cubes.at(i)->SetY(-m_Cubes.at(i)->GetY());
+            m_Cubes.at(i)->RotateZ(iFactor);
         }
     }
     else if((iFactor-270)%360 == 0)
     {
         for(unsigned int i = 0; i < m_Cubes.size(); i++)
         {
-            int iOldX = m_Cubes.at(i).GetX();
-            m_Cubes.at(i).SetX(m_Cubes.at(i).GetY());
-            m_Cubes.at(i).SetY(-iOldX);
-            m_Cubes.at(i).RotateZ(iFactor);
+            int iOldX = m_Cubes.at(i)->GetX();
+            m_Cubes.at(i)->SetX(m_Cubes.at(i)->GetY());
+            m_Cubes.at(i)->SetY(-iOldX);
+            m_Cubes.at(i)->RotateZ(iFactor);
         }
     }
     return true;
@@ -228,8 +252,8 @@ bool Level::WriteToXMLString(std::string &sString)
 
         rssStream << "<group name=\"cubes\">";
 
-	Cube cube;
-	Grid grid;
+        Cube* cube;
+        Grid grid;
 	glm::ivec2 door;
 	std::vector<glm::ivec2> doors;
 
@@ -237,14 +261,14 @@ bool Level::WriteToXMLString(std::string &sString)
 	{
 		cube = m_Cubes.at(i);
                 rssStream << "<cube ";
-                rssStream << "id=\"" << cube.GetCubeID() << "\" ";
-                rssStream << "x=\"" << cube.GetCubePosition().x << "\" ";
-                rssStream << "y=\"" << cube.GetCubePosition().y << "\" ";
-                rssStream << "z=\"" << cube.GetCubePosition().z << "\">";
+                rssStream << "id=\"" << cube->GetCubeID() << "\" ";
+                rssStream << "x=\"" << cube->GetCubePosition().x << "\" ";
+                rssStream << "y=\"" << cube->GetCubePosition().y << "\" ";
+                rssStream << "z=\"" << cube->GetCubePosition().z << "\">";
 		
 		for(int j = 1; j <= 6; j++)
 		{
-			grid = cube.GetGrid(j);
+                        grid = cube->GetGrid(j);
                         rssStream << "<grid pos=\"" << grid.getPosition() << "\">";
 			
 			doors = grid.GetDoorPositions();
@@ -451,7 +475,7 @@ bool Level::itlLoadCubesFromXML(TiXmlElement *pCubeGroup)
 		pCubeElement->QueryIntAttribute("y", &iY);
 		pCubeElement->QueryIntAttribute("z", &iZ);
 
-		Cube cube(iCubeID, iX, iY, iZ);
+                Cube* cube = new Cube(iCubeID, iX, iY, iZ);
 
 		TiXmlElement* pGridElement = pCubeElement->FirstChildElement();
 
@@ -475,32 +499,32 @@ bool Level::itlLoadCubesFromXML(TiXmlElement *pCubeGroup)
 				if(sGridPos.compare("Xplus")==0)
 				{
 					bOk = itlLoadGridFromXML(pGridElement, grid);
-					cube.SetXplus(grid);
+                                        cube->SetXplus(grid);
 				}
 				else if(sGridPos.compare("Xminus")==0)
 				{
 					bOk = itlLoadGridFromXML(pGridElement, grid);
-					cube.SetXminus(grid);
+                                        cube->SetXminus(grid);
 				}
 				else if(sGridPos.compare("Yplus")==0)
 				{
 					bOk = itlLoadGridFromXML(pGridElement, grid);
-					cube.SetYplus(grid);
+                                        cube->SetYplus(grid);
 				}
 				else if(sGridPos.compare("Yminus")==0)
 				{
 					bOk = itlLoadGridFromXML(pGridElement, grid);
-					cube.SetYminus(grid);
+                                        cube->SetYminus(grid);
 				}
 				else if(sGridPos.compare("Zplus")==0)
 				{
 					bOk = itlLoadGridFromXML(pGridElement, grid);
-					cube.SetZplus(grid);
+                                        cube->SetZplus(grid);
 				}
 				else if(sGridPos.compare("Zminus")==0)
 				{
 					bOk = itlLoadGridFromXML(pGridElement, grid);
-					cube.SetZminus(grid);
+                                        cube->SetZminus(grid);
 				}
 				else
 				{
@@ -565,9 +589,9 @@ bool Level::itlLoadGridFromXML(TiXmlElement* pGridElement, Grid& grid)
 	return bOk;
 }
 
-void Level::itlAddCube(Cube& cube)
+void Level::itlAddCube(Cube* cube)
 {
-        Logger::debug() << "Add cube with id: " << cube.GetCubeID() << Logger::endl;
+        Logger::debug() << "Add cube with id: " << cube->GetCubeID() << Logger::endl;
 	m_Cubes.push_back(cube);
 	m_iNumCubes++;
 }

@@ -57,6 +57,11 @@ public:
 
                 /// Loads the level from the given file
                 bool LoadLevelFromXMLFile(std::string sFilename);
+
+                std::vector<Cube*> GetCubes();
+
+                Cube* GetCubeByPosition(glm::ivec3 iv3Position);
+                Cube* GetCubeByPosition(int iX, int iY, int iZ);
 	//@}
 private:
 	/* \name Private members */
@@ -65,7 +70,7 @@ private:
 		std::string m_sLevelName;
 
                 /// Contains all cubes inside the level
-		std::vector<Cube> m_Cubes;
+                std::vector<Cube*> m_Cubes;
 
 		int m_iNumCubes;
 	//@}
@@ -78,7 +83,7 @@ private:
 		bool itlLoadCubesFromXML(TiXmlElement *pCubeGroup);
 		bool itlLoadGridFromXML(TiXmlElement *pGrid, Grid& grid);
 
-		void itlAddCube(Cube& cube);
+                void itlAddCube(Cube* cube);
 		
 
 	//@}

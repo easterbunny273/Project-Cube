@@ -241,6 +241,7 @@ Grid Cube::GetGrid(const unsigned int nID)
 	case 4: return m_Yminus;
 	case 5: return m_Zplus;
 	case 6: return m_Zminus;
+        default: return Grid();
 	}
 }
 
