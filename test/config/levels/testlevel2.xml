@@ -1,0 +1,17 @@
+<level>
+	<group name="attributes">
+		<id>2</id>
+		<name>testlevel2</name>
+	</group>
+	<group name="cubes">
+		<cube id="1" x="0" y="0" z="0"/>
+		<cube id="2" x="-1" y="2" z="0"/>
+		<cube id="3" x="-1" y="3" z="0"/>
+		<cube id="4" x="-1" y="3" z="-1"/>
+		<cube id="5" x="0" y="2" z="0"/>
+		<cube id="6" x="0" y="1" z="0"/>
+		<cube id="7" x="-2" y="3" z="-1"/>
+		<cube id="8" x="-2" y="3" z="-2"/>
+		<cube id="9" x="2" y="4" z="-5"/>
+	</group>
+</level>

@@ -479,61 +479,62 @@ bool Level::itlLoadCubesFromXML(TiXmlElement *pCubeGroup)
 
 		TiXmlElement* pGridElement = pCubeElement->FirstChildElement();
 
-		do
-		{
-			assert(pGridElement != NULL);
-
-			std::string sTagName(pGridElement->Value());
+                if(pGridElement!=NULL)
+                {
+                    do
+                    {
+                        std::string sTagName(pGridElement->Value());
 			if(sTagName.compare("grid")!=0)
 			{
-                                Logger::error() << "Line " << pGridElement->Row() << ": Tagname should be \"grid\", instead is: " << sTagName << Logger::endl;
-				bOk = false;
+                            Logger::error() << "Line " << pGridElement->Row() << ": Tagname should be \"grid\", instead is: " << sTagName << Logger::endl;
+                            bOk = false;
 			}
 			else
 			{
-				std::string sGridPos;
-				pGridElement->QueryStringAttribute("pos", &sGridPos);
+                            std::string sGridPos;
+                            pGridElement->QueryStringAttribute("pos", &sGridPos);
 
-				Grid grid;
+                            Grid grid;
 
-				if(sGridPos.compare("Xplus")==0)
-				{
-					bOk = itlLoadGridFromXML(pGridElement, grid);
-                                        cube->SetXplus(grid);
-				}
-				else if(sGridPos.compare("Xminus")==0)
-				{
-					bOk = itlLoadGridFromXML(pGridElement, grid);
-                                        cube->SetXminus(grid);
-				}
-				else if(sGridPos.compare("Yplus")==0)
-				{
-					bOk = itlLoadGridFromXML(pGridElement, grid);
-                                        cube->SetYplus(grid);
-				}
-				else if(sGridPos.compare("Yminus")==0)
-				{
-					bOk = itlLoadGridFromXML(pGridElement, grid);
-                                        cube->SetYminus(grid);
-				}
-				else if(sGridPos.compare("Zplus")==0)
-				{
-					bOk = itlLoadGridFromXML(pGridElement, grid);
-                                        cube->SetZplus(grid);
-				}
-				else if(sGridPos.compare("Zminus")==0)
-				{
-					bOk = itlLoadGridFromXML(pGridElement, grid);
-                                        cube->SetZminus(grid);
-				}
-				else
-				{
-                                        Logger::error() << "Line " << pGridElement->Column() << " Gridpos is not valid: " << sGridPos << Logger::endl;
-					bOk = false;
-				}
+                            if(sGridPos.compare("Xplus")==0)
+                            {
+                                bOk = itlLoadGridFromXML(pGridElement, grid);
+                                cube->SetXplus(grid);
+                            }
+                            else if(sGridPos.compare("Xminus")==0)
+                            {
+                                bOk = itlLoadGridFromXML(pGridElement, grid);
+                                cube->SetXminus(grid);
+                            }
+                            else if(sGridPos.compare("Yplus")==0)
+                            {
+                                bOk = itlLoadGridFromXML(pGridElement, grid);
+                                cube->SetYplus(grid);
+                            }
+                            else if(sGridPos.compare("Yminus")==0)
+                            {
+                                bOk = itlLoadGridFromXML(pGridElement, grid);
+                                cube->SetYminus(grid);
+                            }
+                            else if(sGridPos.compare("Zplus")==0)
+                            {
+                                bOk = itlLoadGridFromXML(pGridElement, grid);
+                                cube->SetZplus(grid);
+                            }
+                            else if(sGridPos.compare("Zminus")==0)
+                            {
+                                bOk = itlLoadGridFromXML(pGridElement, grid);
+                                cube->SetZminus(grid);
+                            }
+                            else
+                            {
+                                Logger::error() << "Line " << pGridElement->Column() << " Gridpos is not valid: " << sGridPos << Logger::endl;
+                                bOk = false;
+                            }
 			}
-		}
-		while(bOk && (pGridElement = pGridElement->NextSiblingElement()));
+                    }
+                    while(bOk && (pGridElement = pGridElement->NextSiblingElement()));
+                }
 		
 		if(bOk)
 		{

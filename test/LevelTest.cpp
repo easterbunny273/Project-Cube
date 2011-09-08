@@ -91,6 +91,250 @@ void LevelTest::Test_loadXML_Cubes()
     TEST_ASSERT(cube2->GetGrid(6).GetDoorPositions().at(0).y==9);
 }
 
+void LevelTest::Test_RotateLevelX90()
+{
+    bool bRead = testlevel.LoadLevelFromXMLFile("test/config/levels/testlevel2.xml");
+    bool bOk = testlevel.RotateX(90);
+
+    Cube* cube1 = testlevel.GetCubeByPosition(0,0,0);
+    Cube* cube2 = testlevel.GetCubeByPosition(-1,0,2);
+    Cube* cube3 = testlevel.GetCubeByPosition(-1,0,3);
+    Cube* cube4 = testlevel.GetCubeByPosition(-1,1,3);
+    Cube* cube5 = testlevel.GetCubeByPosition(0,0,2);
+    Cube* cube6 = testlevel.GetCubeByPosition(0,0,1);
+    Cube* cube7 = testlevel.GetCubeByPosition(-2,1,3);
+    Cube* cube8 = testlevel.GetCubeByPosition(-2,2,3);
+    Cube* cube9 = testlevel.GetCubeByPosition(2,5,4);
+
+    TEST_ASSERT(bRead);
+    TEST_ASSERT(bOk);
+    TEST_ASSERT(cube1!=NULL);
+    TEST_ASSERT(cube2!=NULL);
+    TEST_ASSERT(cube3!=NULL);
+    TEST_ASSERT(cube4!=NULL);
+    TEST_ASSERT(cube5!=NULL);
+    TEST_ASSERT(cube6!=NULL);
+    TEST_ASSERT(cube7!=NULL);
+    TEST_ASSERT(cube8!=NULL);
+    TEST_ASSERT(cube9!=NULL);
+}
+
+void LevelTest::Test_RotateLevelX180()
+{
+    bool bRead = testlevel.LoadLevelFromXMLFile("test/config/levels/testlevel2.xml");
+    bool bOk = testlevel.RotateX(180);
+    Cube* cube1 = testlevel.GetCubeByPosition(0,0,0);
+    Cube* cube2 = testlevel.GetCubeByPosition(-1,-2,0);
+    Cube* cube3 = testlevel.GetCubeByPosition(-1,-3,0);
+    Cube* cube4 = testlevel.GetCubeByPosition(-1,-3,1);
+    Cube* cube5 = testlevel.GetCubeByPosition(0,-2,0);
+    Cube* cube6 = testlevel.GetCubeByPosition(0,-1,0);
+    Cube* cube7 = testlevel.GetCubeByPosition(-2,-3,1);
+    Cube* cube8 = testlevel.GetCubeByPosition(-2,-3,2);
+    Cube* cube9 = testlevel.GetCubeByPosition(2,-4,5);
+
+    TEST_ASSERT(bRead);
+    TEST_ASSERT(bOk);
+    TEST_ASSERT(cube1!=NULL);
+    TEST_ASSERT(cube2!=NULL);
+    TEST_ASSERT(cube3!=NULL);
+    TEST_ASSERT(cube4!=NULL);
+    TEST_ASSERT(cube5!=NULL);
+    TEST_ASSERT(cube6!=NULL);
+    TEST_ASSERT(cube7!=NULL);
+    TEST_ASSERT(cube8!=NULL);
+    TEST_ASSERT(cube9!=NULL);
+}
+
+void LevelTest::Test_RotateLevelX270()
+{
+    bool bRead = testlevel.LoadLevelFromXMLFile("test/config/levels/testlevel2.xml");
+    bool bOk = testlevel.RotateX(270);
+    Cube* cube1 = testlevel.GetCubeByPosition(0,0,0);
+    Cube* cube2 = testlevel.GetCubeByPosition(-1,0,-2);
+    Cube* cube3 = testlevel.GetCubeByPosition(-1,0,-3);
+    Cube* cube4 = testlevel.GetCubeByPosition(-1,-1,-3);
+    Cube* cube5 = testlevel.GetCubeByPosition(0,0,-2);
+    Cube* cube6 = testlevel.GetCubeByPosition(0,0,-1);
+    Cube* cube7 = testlevel.GetCubeByPosition(-2,-1,-3);
+    Cube* cube8 = testlevel.GetCubeByPosition(-2,-2,-3);
+    Cube* cube9 = testlevel.GetCubeByPosition(2,-5,-4);
+
+    TEST_ASSERT(bRead);
+    TEST_ASSERT(bOk);
+    TEST_ASSERT(cube1!=NULL);
+    TEST_ASSERT(cube2!=NULL);
+    TEST_ASSERT(cube3!=NULL);
+    TEST_ASSERT(cube4!=NULL);
+    TEST_ASSERT(cube5!=NULL);
+    TEST_ASSERT(cube6!=NULL);
+    TEST_ASSERT(cube7!=NULL);
+    TEST_ASSERT(cube8!=NULL);
+    TEST_ASSERT(cube9!=NULL);
+}
+
+void LevelTest::Test_RotateLevelY90()
+{
+    bool bRead = testlevel.LoadLevelFromXMLFile("test/config/levels/testlevel2.xml");
+    bool bOk = testlevel.RotateY(90);
+    Cube* cube1 = testlevel.GetCubeByPosition(0,0,0);
+    Cube* cube2 = testlevel.GetCubeByPosition(0,2,1);
+    Cube* cube3 = testlevel.GetCubeByPosition(0,3,1);
+    Cube* cube4 = testlevel.GetCubeByPosition(-1,3,1);
+    Cube* cube5 = testlevel.GetCubeByPosition(0,2,0);
+    Cube* cube6 = testlevel.GetCubeByPosition(0,1,0);
+    Cube* cube7 = testlevel.GetCubeByPosition(-1,3,2);
+    Cube* cube8 = testlevel.GetCubeByPosition(-2,3,2);
+    Cube* cube9 = testlevel.GetCubeByPosition(-5,4,-2);
+
+    TEST_ASSERT(bRead);
+    TEST_ASSERT(bOk);
+    TEST_ASSERT(cube1!=NULL);
+    TEST_ASSERT(cube2!=NULL);
+    TEST_ASSERT(cube3!=NULL);
+    TEST_ASSERT(cube4!=NULL);
+    TEST_ASSERT(cube5!=NULL);
+    TEST_ASSERT(cube6!=NULL);
+    TEST_ASSERT(cube7!=NULL);
+    TEST_ASSERT(cube8!=NULL);
+    TEST_ASSERT(cube9!=NULL);
+}
+
+void LevelTest::Test_RotateLevelY180()
+{
+    bool bRead = testlevel.LoadLevelFromXMLFile("test/config/levels/testlevel2.xml");
+    bool bOk = testlevel.RotateY(180);
+    Cube* cube1 = testlevel.GetCubeByPosition(0,0,0);
+    Cube* cube2 = testlevel.GetCubeByPosition(1,2,0);
+    Cube* cube3 = testlevel.GetCubeByPosition(1,3,0);
+    Cube* cube4 = testlevel.GetCubeByPosition(1,3,1);
+    Cube* cube5 = testlevel.GetCubeByPosition(0,2,0);
+    Cube* cube6 = testlevel.GetCubeByPosition(0,1,0);
+    Cube* cube7 = testlevel.GetCubeByPosition(2,3,1);
+    Cube* cube8 = testlevel.GetCubeByPosition(2,3,2);
+    Cube* cube9 = testlevel.GetCubeByPosition(-2,4,5);
+
+    TEST_ASSERT(bRead);
+    TEST_ASSERT(bOk);
+    TEST_ASSERT(cube1!=NULL);
+    TEST_ASSERT(cube2!=NULL);
+    TEST_ASSERT(cube3!=NULL);
+    TEST_ASSERT(cube4!=NULL);
+    TEST_ASSERT(cube5!=NULL);
+    TEST_ASSERT(cube6!=NULL);
+    TEST_ASSERT(cube7!=NULL);
+    TEST_ASSERT(cube8!=NULL);
+    TEST_ASSERT(cube9!=NULL);
+}
+
+void LevelTest::Test_RotateLevelY270()
+{
+    bool bRead = testlevel.LoadLevelFromXMLFile("test/config/levels/testlevel2.xml");
+    bool bOk = testlevel.RotateY(270);
+    Cube* cube1 = testlevel.GetCubeByPosition(0,0,0);
+    Cube* cube2 = testlevel.GetCubeByPosition(0,2,-1);
+    Cube* cube3 = testlevel.GetCubeByPosition(0,3,-1);
+    Cube* cube4 = testlevel.GetCubeByPosition(1,3,-1);
+    Cube* cube5 = testlevel.GetCubeByPosition(0,2,0);
+    Cube* cube6 = testlevel.GetCubeByPosition(0,1,0);
+    Cube* cube7 = testlevel.GetCubeByPosition(1,3,-2);
+    Cube* cube8 = testlevel.GetCubeByPosition(2,3,-2);
+    Cube* cube9 = testlevel.GetCubeByPosition(5,4,2);
+
+    TEST_ASSERT(bRead);
+    TEST_ASSERT(bOk);
+    TEST_ASSERT(cube1!=NULL);
+    TEST_ASSERT(cube2!=NULL);
+    TEST_ASSERT(cube3!=NULL);
+    TEST_ASSERT(cube4!=NULL);
+    TEST_ASSERT(cube5!=NULL);
+    TEST_ASSERT(cube6!=NULL);
+    TEST_ASSERT(cube7!=NULL);
+    TEST_ASSERT(cube8!=NULL);
+    TEST_ASSERT(cube9!=NULL);
+}
+
+void LevelTest::Test_RotateLevelZ90()
+{
+    bool bRead = testlevel.LoadLevelFromXMLFile("test/config/levels/testlevel2.xml");
+    bool bOk = testlevel.RotateZ(90);
+    Cube* cube1 = testlevel.GetCubeByPosition(0,0,0);
+    Cube* cube2 = testlevel.GetCubeByPosition(-2,-1,0);
+    Cube* cube3 = testlevel.GetCubeByPosition(-3,-1,0);
+    Cube* cube4 = testlevel.GetCubeByPosition(-3,-1,-1);
+    Cube* cube5 = testlevel.GetCubeByPosition(-2,0,0);
+    Cube* cube6 = testlevel.GetCubeByPosition(-1,0,0);
+    Cube* cube7 = testlevel.GetCubeByPosition(-3,-2,-1);
+    Cube* cube8 = testlevel.GetCubeByPosition(-3,-2,-2);
+    Cube* cube9 = testlevel.GetCubeByPosition(-4,2,-5);
+
+    TEST_ASSERT(bRead);
+    TEST_ASSERT(bOk);
+    TEST_ASSERT(cube1!=NULL);
+    TEST_ASSERT(cube2!=NULL);
+    TEST_ASSERT(cube3!=NULL);
+    TEST_ASSERT(cube4!=NULL);
+    TEST_ASSERT(cube5!=NULL);
+    TEST_ASSERT(cube6!=NULL);
+    TEST_ASSERT(cube7!=NULL);
+    TEST_ASSERT(cube8!=NULL);
+    TEST_ASSERT(cube9!=NULL);
+}
+
+void LevelTest::Test_RotateLevelZ180()
+{
+    bool bRead = testlevel.LoadLevelFromXMLFile("test/config/levels/testlevel2.xml");
+    bool bOk = testlevel.RotateZ(180);
+    Cube* cube1 = testlevel.GetCubeByPosition(0,0,0);
+    Cube* cube2 = testlevel.GetCubeByPosition(1,-2,0);
+    Cube* cube3 = testlevel.GetCubeByPosition(1,-3,0);
+    Cube* cube4 = testlevel.GetCubeByPosition(1,-3,-1);
+    Cube* cube5 = testlevel.GetCubeByPosition(0,-2,0);
+    Cube* cube6 = testlevel.GetCubeByPosition(0,-1,0);
+    Cube* cube7 = testlevel.GetCubeByPosition(2,-3,-1);
+    Cube* cube8 = testlevel.GetCubeByPosition(2,-3,-2);
+    Cube* cube9 = testlevel.GetCubeByPosition(-2,-4,-5);
+
+    TEST_ASSERT(bRead);
+    TEST_ASSERT(bOk);
+    TEST_ASSERT(cube1!=NULL);
+    TEST_ASSERT(cube2!=NULL);
+    TEST_ASSERT(cube3!=NULL);
+    TEST_ASSERT(cube4!=NULL);
+    TEST_ASSERT(cube5!=NULL);
+    TEST_ASSERT(cube6!=NULL);
+    TEST_ASSERT(cube7!=NULL);
+    TEST_ASSERT(cube8!=NULL);
+    TEST_ASSERT(cube9!=NULL);
+}
+
+void LevelTest::Test_RotateLevelZ270()
+{
+    bool bRead = testlevel.LoadLevelFromXMLFile("test/config/levels/testlevel2.xml");
+    bool bOk = testlevel.RotateZ(270);
+    Cube* cube1 = testlevel.GetCubeByPosition(0,0,0);
+    Cube* cube2 = testlevel.GetCubeByPosition(2,1,0);
+    Cube* cube3 = testlevel.GetCubeByPosition(3,1,0);
+    Cube* cube4 = testlevel.GetCubeByPosition(3,1,-1);
+    Cube* cube5 = testlevel.GetCubeByPosition(2,0,0);
+    Cube* cube6 = testlevel.GetCubeByPosition(1,0,0);
+    Cube* cube7 = testlevel.GetCubeByPosition(3,2,-1);
+    Cube* cube8 = testlevel.GetCubeByPosition(3,2,-2);
+    Cube* cube9 = testlevel.GetCubeByPosition(4,-2,-5);
+
+    TEST_ASSERT(bRead);
+    TEST_ASSERT(bOk);
+    TEST_ASSERT(cube1!=NULL);
+    TEST_ASSERT(cube2!=NULL);
+    TEST_ASSERT(cube3!=NULL);
+    TEST_ASSERT(cube4!=NULL);
+    TEST_ASSERT(cube5!=NULL);
+    TEST_ASSERT(cube6!=NULL);
+    TEST_ASSERT(cube7!=NULL);
+    TEST_ASSERT(cube8!=NULL);
+    TEST_ASSERT(cube9!=NULL);
+}
+
 void LevelTest::Test_writeXML()
 {
         bool bRead = testlevel.LoadLevelFromXMLFile("test/config/levels/testlevel1.xml");
@@ -135,4 +379,13 @@ void LevelTest::Test_loadXML_WrongDoorRange()
 {
         bool bRead = testlevel.LoadLevelFromXMLFile("test/config/levels/LevelWrongDoorRange.xml");
 	TEST_ASSERT(bRead==false)
+}
+
+void LevelTest::Test_NotExistingCubeInLevel()
+{
+    bool bRead = testlevel.LoadLevelFromXMLFile("test/config/levels/testlevel1.xml");
+    Cube* cube = testlevel.GetCubeByPosition(5,5,5);
+
+    TEST_ASSERT(bRead==true);
+    TEST_ASSERT(cube==NULL);
 }
