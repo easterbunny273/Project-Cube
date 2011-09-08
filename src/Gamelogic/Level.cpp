@@ -51,7 +51,7 @@ bool Level::RotateX(const int iFactor)
 
     if((iFactor-90)%360 == 0)
     {
-        for(int i = 0; i < m_Cubes.size(); i++)
+        for(unsigned int i = 0; i < m_Cubes.size(); i++)
         {
             int iOldY = m_Cubes.at(i).GetY();
             m_Cubes.at(i).SetY(-m_Cubes.at(i).GetZ());
@@ -61,7 +61,7 @@ bool Level::RotateX(const int iFactor)
     }
     else if((iFactor-180)%360 == 0)
     {
-        for(int i = 0; i < m_Cubes.size(); i++)
+        for(unsigned int i = 0; i < m_Cubes.size(); i++)
         {
             m_Cubes.at(i).SetY(-m_Cubes.at(i).GetY());
             m_Cubes.at(i).SetZ(-m_Cubes.at(i).GetZ());
@@ -70,7 +70,7 @@ bool Level::RotateX(const int iFactor)
     }
     else if((iFactor-270)%360 == 0)
     {
-        for(int i = 0; i < m_Cubes.size(); i++)
+        for(unsigned int i = 0; i < m_Cubes.size(); i++)
         {
             int iOldY = m_Cubes.at(i).GetY();
             m_Cubes.at(i).SetY(m_Cubes.at(i).GetZ());
@@ -78,6 +78,7 @@ bool Level::RotateX(const int iFactor)
             m_Cubes.at(i).RotateX(iFactor);
         }
     }
+    return true;
 }
 
 bool Level::RotateY(const int iFactor)
@@ -89,7 +90,7 @@ bool Level::RotateY(const int iFactor)
 
     if((iFactor-90)%360 == 0)
     {
-        for(int i = 0; i < m_Cubes.size(); i++)
+        for(unsigned int i = 0; i < m_Cubes.size(); i++)
         {
             int iOldZ = m_Cubes.at(i).GetZ();
             m_Cubes.at(i).SetZ(-m_Cubes.at(i).GetX());
@@ -99,7 +100,7 @@ bool Level::RotateY(const int iFactor)
     }
     else if((iFactor-180)%360 == 0)
     {
-        for(int i = 0; i < m_Cubes.size(); i++)
+        for(unsigned int i = 0; i < m_Cubes.size(); i++)
         {
             m_Cubes.at(i).SetX(-m_Cubes.at(i).GetX());
             m_Cubes.at(i).SetZ(-m_Cubes.at(i).GetZ());
@@ -108,7 +109,7 @@ bool Level::RotateY(const int iFactor)
     }
     else if((iFactor-270)%360 == 0)
     {
-        for(int i = 0; i < m_Cubes.size(); i++)
+        for(unsigned int i = 0; i < m_Cubes.size(); i++)
         {
             int iOldZ = m_Cubes.at(i).GetZ();
             m_Cubes.at(i).SetZ(m_Cubes.at(i).GetX());
@@ -116,6 +117,7 @@ bool Level::RotateY(const int iFactor)
             m_Cubes.at(i).RotateY(iFactor);
         }
     }
+    return true;
 }
 
 bool Level::RotateZ(const int iFactor)
@@ -127,7 +129,7 @@ bool Level::RotateZ(const int iFactor)
 
     if((iFactor-90)%360 == 0)
     {
-        for(int i = 0; i < m_Cubes.size(); i++)
+        for(unsigned int i = 0; i < m_Cubes.size(); i++)
         {
             int iOldX = m_Cubes.at(i).GetX();
             m_Cubes.at(i).SetX(-m_Cubes.at(i).GetY());
@@ -137,7 +139,7 @@ bool Level::RotateZ(const int iFactor)
     }
     else if((iFactor-180)%360 == 0)
     {
-        for(int i = 0; i < m_Cubes.size(); i++)
+        for(unsigned int i = 0; i < m_Cubes.size(); i++)
         {
             m_Cubes.at(i).SetX(-m_Cubes.at(i).GetX());
             m_Cubes.at(i).SetY(-m_Cubes.at(i).GetY());
@@ -146,7 +148,7 @@ bool Level::RotateZ(const int iFactor)
     }
     else if((iFactor-270)%360 == 0)
     {
-        for(int i = 0; i < m_Cubes.size(); i++)
+        for(unsigned int i = 0; i < m_Cubes.size(); i++)
         {
             int iOldX = m_Cubes.at(i).GetX();
             m_Cubes.at(i).SetX(m_Cubes.at(i).GetY());
@@ -154,6 +156,7 @@ bool Level::RotateZ(const int iFactor)
             m_Cubes.at(i).RotateZ(iFactor);
         }
     }
+    return true;
 }
 
 bool Level::ReadFromXMLString(std::string sFile)
@@ -230,7 +233,7 @@ bool Level::WriteToXMLString(std::string &sString)
 	glm::ivec2 door;
 	std::vector<glm::ivec2> doors;
 
-	for(int i = 0; i < m_Cubes.size(); i++)
+        for(unsigned int i = 0; i < m_Cubes.size(); i++)
 	{
 		cube = m_Cubes.at(i);
                 rssStream << "<cube ";
