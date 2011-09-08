@@ -78,6 +78,36 @@ void Cube::SetZminus(Grid& zminus)
 	m_Zminus.setPosition("Zminus");
 }
 
+int Cube::GetX()
+{
+    return m_CubePosition.x;
+}
+
+int Cube::GetY()
+{
+    return m_CubePosition.y;
+}
+
+int Cube::GetZ()
+{
+    return m_CubePosition.z;
+}
+
+void Cube::SetX(int iX)
+{
+    m_CubePosition.x = iX;
+}
+
+void Cube::SetY(int iY)
+{
+    m_CubePosition.y = iY;
+}
+
+void Cube::SetZ(int iZ)
+{
+    m_CubePosition.z = iZ;
+}
+
 bool Cube::RotateX(const int iFactor)
 {
 	if(iFactor == 0)

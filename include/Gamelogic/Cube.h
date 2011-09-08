@@ -61,6 +61,14 @@ public:
 		///1 = Xplus, 2 = Xminus, 3 = Yplus, 4 = Yminus, 5 = Zplus, 6 = Zminus
 		///TODO: find a better solution
 		Grid GetGrid(const unsigned int nID);
+
+                int GetX();
+                int GetY();
+                int GetZ();
+
+                void SetX(int iX);
+                void SetY(int iY);
+                void SetZ(int iZ);
 	//@}
 
 private:
