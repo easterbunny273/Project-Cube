@@ -248,11 +248,9 @@ bool Level::WriteToXMLString(std::string &sString)
                         rssStream << "<grid pos=\"" << grid.getPosition() << "\">";
 			
 			doors = grid.GetDoorPositions();
-			while(doors.size()>0)
+                        for(unsigned int k = 0; k < doors.size(); k++)
 			{
-				door = doors.back();
-				doors.pop_back();
-
+                                door = doors.at(k);
                                 rssStream << "<door x=\"" << door.x << "\" y=\"" << door.y << "\"/>";
 			}
                         rssStream << "</grid>";
