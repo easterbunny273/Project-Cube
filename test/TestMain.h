@@ -1,5 +1,6 @@
-#ifndef TESTMAIN_H
-#define TESTMAIN_H
+#pragma once
+#ifndef __TESTMAIN_PROJECTCUBE_TEST_HEADER
+#define __TESTMAIN_PROJECTCUBE_TEST_HEADER
 
 #include "cpptest.h"
 
@@ -33,4 +34,4 @@ private:
     //@}
 };
 
-#endif // TESTMAIN_H
+#endif // __TESTMAIN_PROJECTCUBE_TEST_HEADER
