@@ -1,3 +1,8 @@
+#pragma once
+#ifndef __LEVELTEST_PROJECTCUBE_TEST_HEADER
+#define __LEVELTEST_PROJECTCUBE_TEST_HEADER
+
+
 #include "cpptest.h"
 using namespace std;
 
@@ -6,6 +11,8 @@ using namespace std;
 class LevelTest: public Test::Suite
 {
 public:
+    /*! \name Constructor */
+    //@{
 	LevelTest()
 	{
 		//Tests for normal functionality
@@ -31,16 +38,26 @@ public:
 		TEST_ADD(LevelTest::Test_loadXML_WrongDoorRange)
                 TEST_ADD(LevelTest::Test_NotExistingCubeInLevel)
 	}
+    //@}
 
 protected:
+    /*! \name Setup and tear_down */
+    //@{
+        /// Setup before every test
 	virtual void setup();
+        /// Tear down after every test
 	virtual void tear_down();
+    //@}
 
 private:
+    /*! \name Test members */
+    //@{
 	Level testlevel;
+    //@}
 	
-	//Tests for normal functionality
-	void Test_loadXML_LevelAttributes();
+    /*! \name Tests for normal functionality */
+    //@{
+        void Test_loadXML_LevelAttributes();
         void Test_loadXML_Cubes();
 	void Test_writeXML();
         void Test_RotateLevelX90();
@@ -52,8 +69,10 @@ private:
         void Test_RotateLevelZ90();
         void Test_RotateLevelZ180();
         void Test_RotateLevelZ270();
+    //@}
 
-	//Tests for error handling
+    /*! \name Tests for failures */
+    //@{
 	void Test_loadXML_NotExistingLevel();
 	void Test_loadXML_WrongGroupTag();
 	void Test_loadXML_WrongCubeTag();
@@ -61,4 +80,7 @@ private:
 	void Test_loadXML_WrongDoorTag();
 	void Test_loadXML_WrongDoorRange();
         void Test_NotExistingCubeInLevel();
+    //@}
 };
+
+#endif // __LEVELTEST_PROJECTCUBE_TEST_HEADER
