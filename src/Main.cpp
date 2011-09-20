@@ -9,12 +9,32 @@ extern "C"
 }
 
 #include <luabind/luabind.hpp>
-
 #include <iostream>
+
+class TestClassUsedFromLua
+{
+public:
+    TestClassUsedFromLua(int a) : m_a(a) {}
+    void DoSomething() { std::cout << "testclass-dosomething called with " << m_a << std::endl; }
+private:
+    int m_a;
+};
 
 void TestMethodCalledFromLua(int a)
 {
     std::cout << "c++ method called with a=" << a << std::endl;
+}
+
+void TestMethodClass(TestClassUsedFromLua &b)
+{
+    b.DoSomething();
+}
+
+TestClassUsedFromLua &TestMethodReturnClass()
+{
+    static TestClassUsedFromLua test_instance(10);
+
+    return test_instance;
 }
 
 extern "C"
@@ -46,6 +66,20 @@ extern "C"
 
 	luabind::module(myLuaState) [
 	    luabind::def("TestMethodCalledFromLua", TestMethodCalledFromLua)
+	];
+
+	luabind::module(myLuaState) [
+	    luabind::def("TestMethodClass", TestMethodClass)
+	];
+
+	luabind::module(myLuaState) [
+	    luabind::def("TestMethodReturnClass", TestMethodReturnClass)
+	];
+
+	luabind::module(myLuaState) [
+	    luabind::class_<TestClassUsedFromLua>("TestClass")
+	    .def(luabind::constructor<int>())
+	    .def("DoSomething", &TestClassUsedFromLua::DoSomething)
 	];
 
 	std::cout << "Result: "
