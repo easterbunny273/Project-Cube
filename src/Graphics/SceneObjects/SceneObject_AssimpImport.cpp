@@ -142,11 +142,11 @@ SceneObject_AssimpImport::SceneObject_AssimpImport(std::string sFilename)
 	    bool bOk5 = (AI_SUCCESS == mat->Get(AI_MATKEY_SHININESS_STRENGTH, material_data->fShininess_Strength));
 
 
-            assert (bOk1);
+	 /*   assert (bOk1);
             assert (bOk2);
             assert (bOk3);
             assert (bOk4);
-            assert (bOk5);
+	    assert (bOk5);*/
 
 	    //get texture
 	    //first, find texture. we allow only one texture per material

@@ -40,12 +40,6 @@ public:
 	virtual ~SceneObject();
     //@}
 
-    /*! \name  Physics::TransformationChangeListener Interface */
-    //@{
-	/// sets the transformation matrix of the sphere
-	virtual void setTransformMatrix(float *pfMatrix);
-    //@}
-
     /*! \name Manipulate SceneGraph (Tree structure of SceneObjects) */
     //@{
 	/*! adds a child to the node */

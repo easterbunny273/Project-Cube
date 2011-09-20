@@ -10,18 +10,6 @@
 #include "Graphics/SceneObject.h"
 #include "Graphics/SceneObjects/SceneObject_BoundingBox.h"
 
-
-void SceneObject::setTransformMatrix(float *transformMatrix)
-{
-    glm::mat4 puffer;
-
-    for (int i=0; i < 4; i++)
-	for (int ii=0; ii < 4; ii++)
-	    puffer[i][ii] = transformMatrix[i*4+ii];
-
-    SetTransformMatrix(puffer);
-}
-
 void SceneObject::ItlSendTransformMatrices()
 {
     //first, get the positions

@@ -53,3 +53,8 @@ DummyGame * MainApp::GetGame()
 {
     return &m_Game;
 }
+
+void MainApp::ItlCreateSceneGraphs()
+{
+
+}

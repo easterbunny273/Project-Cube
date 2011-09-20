@@ -49,6 +49,11 @@ private:
         ~MainApp();
     //@}
 
+    /*! \name Internal helper methods */
+    //@{
+	void ItlCreateSceneGraphs();
+    //@}
+
     /*! \name Private members */
     //@{
         Graphic m_Graphic;

@@ -726,10 +726,12 @@ void Graphic::ItlCreateBaseRenderPath()
     std::shared_ptr<SceneObject> spCameraNode (new SceneObject_Camera(GetCamera()));
 
     std::shared_ptr<SceneObject> spCubeNode (new SceneObject_Cube());
+    std::shared_ptr<SceneObject> spTreppe (new SceneObject_AssimpImport("models/bunte-treppe.dae"));
 
 
     spRootNode->AddChild(spCameraNode);
     spCameraNode->AddChild(spCubeNode);
+    spCubeNode->AddChild(spTreppe);
 
     AddRenderPath(spRootNode, "default");
 }

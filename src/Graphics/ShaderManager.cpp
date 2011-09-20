@@ -21,7 +21,7 @@ ShaderManager::ShaderManager()
 ShaderManager::~ShaderManager()
 {
     // destroy all used Shader instances
-    // C++0x construct with lambda function :)
+    // C++11 construct with lambda function :)
     for_each(m_vpShaders.begin(), m_vpShaders.end(), [](Shader *pShader) { delete pShader; });
 }
 
