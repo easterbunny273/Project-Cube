@@ -52,7 +52,9 @@ public:
 class EventManager
 {
 public:
-    std::shared_ptr<IEvent> CreateEvent(std::string sCreateString);
+    EventManager();
+    std::shared_ptr<IEvent> CreateEvent(const char * szCreateString);
+    void CreateEvent2(const char * szCreateString);
 
     void RegisterEventType(std::shared_ptr<IEvent> spEventPrototype);
 

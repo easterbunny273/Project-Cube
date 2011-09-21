@@ -1,7 +1,7 @@
 #CMakeLists.txt for src-Folder
 
 #define libraries which should be linked additionally
-link_libraries(glfw GLEW IL assimp pthread cpptest)
+link_libraries(glfw GLEW IL assimp pthread cpptest lua luabind)
 
 #add include directories
 include_directories(../include/)
