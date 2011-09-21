@@ -2,8 +2,13 @@
 #include "TestMain.h"
 #include "Gamelogic/Level.h"
 
+#include "EventManager2.h"
+
 int main()
 {
-    TestMain::GetInstance()->Run();
-    MainApp::GetInstance()->Run();
+    EventManager test;
+    test.Test();
+
+    //TestMain::GetInstance()->Run();
+    //MainApp::GetInstance()->Run();
 }
