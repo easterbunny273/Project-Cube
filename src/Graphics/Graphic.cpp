@@ -30,7 +30,7 @@
 
 #include "Graphics/Graphic.h"
 
-#include "IInputEventListener.h"
+#include "Events.h"
 
 #include "MainApp.h"
 
@@ -49,7 +49,6 @@ Graphic::Graphic()
       m_iFramesPerSecond(0),
       m_fTimeOfLastRenderCall(0),
       m_bIsMouseLocked(false),
-      m_pInputEventListener(NULL),
       m_pSettings(NULL),
       m_bUseOpenGL_4_1(false)
 {
@@ -272,63 +271,60 @@ void Graphic::ItlStaticHandleMouseButton(int iButton, int iAction)
   *************************************************************** */
 void Graphic::ItlHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState)
 {
-    if (m_pInputEventListener != NULL)
+    InputKeyEvent::TKey eKey = InputKeyEvent::KEY_UNKNOWN;
+    bool bKeyRecognized = true;
+
+    // first, map ranges KEY_A .. KEY_Z
+    if (iKeyIdentifier >= 'A' && iKeyIdentifier <= 'Z')
     {
-        IInputEventListener::TKey eKey = IInputEventListener::KEY_UNKNOWN;
-        bool bKeyRecognized = true;
+	eKey = static_cast<InputKeyEvent::TKey>(InputKeyEvent::KEY_A + (iKeyIdentifier - 'A'));
+    }
+    // map range KEY_0 .. KEY_9
+    else if (iKeyIdentifier >= '0' && iKeyIdentifier <= '9')
+    {
+	eKey = static_cast<InputKeyEvent::TKey>(InputKeyEvent::KEY_0 + (iKeyIdentifier - '0'));
+    }
+    // map range KEY_KP_0 .. KEY_KP_9
+    else if (iKeyIdentifier >= GLFW_KEY_KP_0 && iKeyIdentifier <= GLFW_KEY_KP_9)
+    {
+	eKey = static_cast<InputKeyEvent::TKey>(InputKeyEvent::KEY_KP_0 + (iKeyIdentifier - GLFW_KEY_KP_0));
+    }
+    // map range KEY_F1 .. KEY_F12
+    else if (iKeyIdentifier >= GLFW_KEY_F1 && iKeyIdentifier <= GLFW_KEY_F12)
+    {
+	eKey = static_cast<InputKeyEvent::TKey>(InputKeyEvent::KEY_F1 + (iKeyIdentifier - GLFW_KEY_F1));
+    }
+    else // map other single keys
+	switch (iKeyIdentifier)
+	{
+	case GLFW_KEY_LSHIFT: eKey = InputKeyEvent::KEY_LSHIFT; break;
+	case GLFW_KEY_RSHIFT: eKey = InputKeyEvent::KEY_RSHIFT; break;
+	case GLFW_KEY_LCTRL: eKey = InputKeyEvent::KEY_LCTRL; break;
+	case GLFW_KEY_RCTRL: eKey = InputKeyEvent::KEY_RCTRL; break;
+	case GLFW_KEY_LALT: eKey = InputKeyEvent::KEY_LALT; break;
+	case GLFW_KEY_RALT: eKey = InputKeyEvent::KEY_RALT; break;
+	case GLFW_KEY_UP: eKey = InputKeyEvent::KEY_UP; break;
+	case GLFW_KEY_DOWN: eKey = InputKeyEvent::KEY_DOWN; break;
+	case GLFW_KEY_LEFT: eKey = InputKeyEvent::KEY_LEFT; break;
+	case GLFW_KEY_RIGHT: eKey = InputKeyEvent::KEY_RIGHT; break;
+	case GLFW_KEY_SPACE: eKey = InputKeyEvent::KEY_SPACE; break;
+	case GLFW_KEY_ESC: eKey = InputKeyEvent::KEY_ESC; break;
+	case GLFW_KEY_TAB: eKey = InputKeyEvent::KEY_TAB; break;
+	case GLFW_KEY_ENTER: eKey = InputKeyEvent::KEY_ENTER; break;
+	case GLFW_KEY_BACKSPACE: eKey = InputKeyEvent::KEY_BACKSPACE; break;
 
-        // first, map ranges KEY_A .. KEY_Z
-        if (iKeyIdentifier >= 'A' && iKeyIdentifier <= 'Z')
-        {
-            eKey = static_cast<IInputEventListener::TKey>(IInputEventListener::KEY_A + (iKeyIdentifier - 'A'));
-        }
-        // map range KEY_0 .. KEY_9
-        else if (iKeyIdentifier >= '0' && iKeyIdentifier <= '9')
-        {
-            eKey = static_cast<IInputEventListener::TKey>(IInputEventListener::KEY_0 + (iKeyIdentifier - '0'));
-        }
-        // map range KEY_KP_0 .. KEY_KP_9
-        else if (iKeyIdentifier >= GLFW_KEY_KP_0 && iKeyIdentifier <= GLFW_KEY_KP_9)
-        {
-            eKey = static_cast<IInputEventListener::TKey>(IInputEventListener::KEY_KP_0 + (iKeyIdentifier - GLFW_KEY_KP_0));
-        }
-        // map range KEY_F1 .. KEY_F12
-        else if (iKeyIdentifier >= GLFW_KEY_F1 && iKeyIdentifier <= GLFW_KEY_F12)
-        {
-            eKey = static_cast<IInputEventListener::TKey>(IInputEventListener::KEY_F1 + (iKeyIdentifier - GLFW_KEY_F1));
-        }
-        else // map other single keys
-            switch (iKeyIdentifier)
-            {
-            case GLFW_KEY_LSHIFT: eKey = IInputEventListener::KEY_LSHIFT; break;
-            case GLFW_KEY_RSHIFT: eKey = IInputEventListener::KEY_RSHIFT; break;
-            case GLFW_KEY_LCTRL: eKey = IInputEventListener::KEY_LCTRL; break;
-            case GLFW_KEY_RCTRL: eKey = IInputEventListener::KEY_RCTRL; break;
-            case GLFW_KEY_LALT: eKey = IInputEventListener::KEY_LALT; break;
-            case GLFW_KEY_RALT: eKey = IInputEventListener::KEY_RALT; break;
-            case GLFW_KEY_UP: eKey = IInputEventListener::KEY_UP; break;
-            case GLFW_KEY_DOWN: eKey = IInputEventListener::KEY_DOWN; break;
-            case GLFW_KEY_LEFT: eKey = IInputEventListener::KEY_LEFT; break;
-            case GLFW_KEY_RIGHT: eKey = IInputEventListener::KEY_RIGHT; break;
-            case GLFW_KEY_SPACE: eKey = IInputEventListener::KEY_SPACE; break;
-            case GLFW_KEY_ESC: eKey = IInputEventListener::KEY_ESC; break;
-            case GLFW_KEY_TAB: eKey = IInputEventListener::KEY_TAB; break;
-            case GLFW_KEY_ENTER: eKey = IInputEventListener::KEY_ENTER; break;
-            case GLFW_KEY_BACKSPACE: eKey = IInputEventListener::KEY_BACKSPACE; break;
+	default:
+	    Logger::error() << "keycode " << iKeyIdentifier << " not recognized" << Logger::endl;
+	    bKeyRecognized = false;
+	}
 
-            default:
-                Logger::error() << "keycode " << iKeyIdentifier << " not recognized" << Logger::endl;
-                bKeyRecognized = false;
-            }
-
-        // call methods of listener if key was recognized
-        if (bKeyRecognized)
-        {
-            if (iNewKeyState == GLFW_PRESS)
-                m_pInputEventListener->OnKeyDown(eKey);
-            else
-                m_pInputEventListener->OnKeyUp(eKey);
-        }
+    // call methods of listener if key was recognized
+    if (bKeyRecognized)
+    {
+	if (iNewKeyState == GLFW_PRESS)
+	    MainApp::GetInstance()->GetEventManager()->QueueEvent(InputKeyEvent::Create(eKey,InputKeyEvent::EVENT_DOWN));
+	else
+	    MainApp::GetInstance()->GetEventManager()->QueueEvent(InputKeyEvent::Create(eKey,InputKeyEvent::EVENT_UP));
     }
 }
 
@@ -336,18 +332,18 @@ void Graphic::ItlHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState)
   *************************************************************** */
 void Graphic::ItlHandleMousePos(int iX, int iY)
 {
-    if (m_pInputEventListener != NULL)
-    {
-	// only deliver relative mouse position to center
-	int iRelX = iX - m_iWidth / 2;
-	int iRelY = iY - m_iHeight / 2;
+    // only deliver relative mouse position to center
+    int iRelX = iX - m_iWidth / 2;
+    int iRelY = iY - m_iHeight / 2;
 
-	// issue 7 - workaround
-	iRelX = -iRelX;
-	iRelY = -iRelY;
+    // issue 7 - workaround
+    iRelX = -iRelX;
+    iRelY = -iRelY;
 
-	m_pInputEventListener->OnMouseMove(iRelX, iRelY);
-    }
+    EventManager *pEventManager = MainApp::GetInstance()->GetEventManager();
+    assert (pEventManager != NULL);
+
+    pEventManager->QueueEvent(InputMouseMoveEvent::Create(iRelX, iRelY));
 
     if (m_bIsMouseLocked)
 	glfwSetMousePos(m_iWidth / 2, m_iHeight / 2);
@@ -365,29 +361,28 @@ void Graphic::ItlHandleMouseWheel(int iPosition)
   *************************************************************** */
 void Graphic::ItlHandleMouseButton(int iButton, int iAction)
 {
-    if (m_pInputEventListener != NULL)
+    InputMouseButtonEvent::TMouseButton eMouseButton;
+    bool bButtonRecognized = true;
+
+    switch (iButton)
     {
-        IInputEventListener::TMouseButton eMouseButton;
-        bool bButtonRecognized = true;
+    case GLFW_MOUSE_BUTTON_LEFT: eMouseButton = InputMouseButtonEvent::BUTTON_LEFT; break;
+    case GLFW_MOUSE_BUTTON_MIDDLE: eMouseButton = InputMouseButtonEvent::BUTTON_MIDDLE; break;
+    case GLFW_MOUSE_BUTTON_RIGHT: eMouseButton = InputMouseButtonEvent::BUTTON_RIGHT; break;
+    default:
+	Logger::error() << "mouse button " << iButton << " not recognized" << Logger::endl;
+	bButtonRecognized = false;
+    }
 
-        switch (iButton)
-        {
-        case GLFW_MOUSE_BUTTON_LEFT: eMouseButton = IInputEventListener::BUTTON_LEFT; break;
-        case GLFW_MOUSE_BUTTON_MIDDLE: eMouseButton = IInputEventListener::BUTTON_MIDDLE; break;
-        case GLFW_MOUSE_BUTTON_RIGHT: eMouseButton = IInputEventListener::BUTTON_RIGHT; break;
-        default:
-            Logger::error() << "mouse button " << iButton << " not recognized" << Logger::endl;
-            bButtonRecognized = false;
-        }
+    if (bButtonRecognized)
+    {
+	EventManager *pEventManager = MainApp::GetInstance()->GetEventManager();
+	assert (pEventManager != NULL);
 
-        if (bButtonRecognized)
-        {
-            if (iAction == GLFW_PRESS)
-                m_pInputEventListener->OnMouseButtonPressed(eMouseButton);
-            else
-                m_pInputEventListener->OnMouseButtonReleased(eMouseButton);
-        }
-
+	if (iAction == GLFW_PRESS)
+	    pEventManager->QueueEvent(InputMouseButtonEvent::Create(eMouseButton, InputMouseButtonEvent::EVENT_DOWN));
+	else
+	    pEventManager->QueueEvent(InputMouseButtonEvent::Create(eMouseButton, InputMouseButtonEvent::EVENT_UP));
     }
 }
 
@@ -665,15 +660,6 @@ bool Graphic::ShutDown()
 
 /****************************************************************
   *************************************************************** */
-void Graphic::RegisterInputHandler(IInputEventListener *pListener)
-{
-    assert (pListener != NULL);
-
-    m_pInputEventListener = pListener;
-}
-
-/****************************************************************
-  *************************************************************** */
 void Graphic::Camera::AddToMoveVector(glm::vec3 vVector)
 {
     m_v3MoveVector += vVector;
@@ -726,12 +712,12 @@ void Graphic::ItlCreateBaseRenderPath()
     std::shared_ptr<SceneObject> spCameraNode (new SceneObject_Camera(GetCamera()));
 
     std::shared_ptr<SceneObject> spCubeNode (new SceneObject_Cube());
-    std::shared_ptr<SceneObject> spTreppe (new SceneObject_AssimpImport("models/bunte-treppe.dae"));
+    //std::shared_ptr<SceneObject> spTreppe (new SceneObject_AssimpImport("models/bunte-treppe.dae"));
 
 
     spRootNode->AddChild(spCameraNode);
     spCameraNode->AddChild(spCubeNode);
-    spCubeNode->AddChild(spTreppe);
+    //spCubeNode->AddChild(spTreppe);
 
     AddRenderPath(spRootNode, "default");
 }
@@ -758,6 +744,11 @@ TextureManager * Graphic::GetTextureManager()
 void Graphic::ItlLoadSettings()
 {
     m_pSettings = MainApp::GetInstance()->GetCoreSettings()->GetGroup("graphics");
+}
+
+bool Graphic::OnEvent(std::shared_ptr<EventManager::IEvent> spEvent)
+{
+    assert(!"not implemented yet, should not registered for any event");
 }
 
 

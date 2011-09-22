@@ -20,6 +20,9 @@
 // settings class
 #include "Settings.h"
 
+// eventmanager
+#include "EventManager.h"
+
 // forward declarations
 class SceneObject;
 class SceneObject_RenderTarget;
@@ -27,9 +30,7 @@ class Camera;
 class ShaderManager;
 class TextureManager;
 
-class IInputEventListener;
-
-class Graphic
+class Graphic : EventManager::IEventListener
 {
 public:
     /*! \name Nested classes */
@@ -117,17 +118,14 @@ public:
 
     /*! \name Methods for input event handling */
     //@{
-        /// registers an input handler to the graphic engine, which
-        /// will redirect all input events of the opengl window to this handler
-        /// (observer-pattern, methods of IInputEventListener will be called)
-        void RegisterInputHandler(IInputEventListener *pListener);
-
-        /// returns wheter an input event handler is registered
-        bool IsInputHandlerRegistered();
-
 	void HideAndLockMouseToWindowCenter();
 
 	void UnHideAndUnLockMouse();
+    //@}
+
+    /*! \name EventManager::IEventListener interface */
+    //@{
+	virtual bool OnEvent(std::shared_ptr<EventManager::IEvent> spEvent);
     //@}
 
     /*! \name Methods for render paths */
@@ -229,7 +227,6 @@ private:
 	static int	    s_iInstances;		///< how many instances are created ?
 	static Graphic *    s_pInstance;
 
-	IInputEventListener * m_pInputEventListener;
 	Settings::TSettingsGroup * m_pSettings;		///< the settings group used for the graphics engine
     //@}
 };

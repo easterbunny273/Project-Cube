@@ -7,12 +7,38 @@ MainApp::MainApp()
 
     // load core settings
     m_CoreSettings.RestoreSettingsFromXMLFile("config/core-settings.xml");
+
+    // set lua state to NULL, lazy evaluation
+    m_pLuaState = NULL;
+
+    m_pGraphic = NULL;
+    m_pGame = NULL;
+
 }
 
 MainApp::~MainApp()
 {
     // save core settings
     m_CoreSettings.StoreSettingsAsXMLFile("config/core-settings.xml");
+
+    // close lua state, if open
+    if (m_pLuaState != NULL)
+    {
+	lua_close(m_pLuaState);
+	m_pLuaState = NULL;
+    }
+
+    if (m_pGraphic != NULL)
+    {
+	delete m_pGraphic;
+	m_pGraphic = NULL;
+    }
+
+    if (m_pGame != NULL)
+    {
+	delete m_pGame;
+	m_pGame = NULL;
+    }
 }
 
 MainApp * MainApp::GetInstance()
@@ -27,17 +53,24 @@ Settings * MainApp::GetCoreSettings()
     return &m_CoreSettings;
 }
 
+EventManager * MainApp::GetEventManager()
+{
+    return &m_EventManager;
+}
+
 void MainApp::Run()
 {
     // init game logic, graphics, do main loop, all this nasty stuff.
     Logger::debug() << "hello!" << Logger::endl;
 
     GetGraphic()->InitializeOpenGL();
-    GetGraphic()->RegisterInputHandler(GetGame());
+    //GetGraphic()->RegisterInputHandler(GetGame());
     GetGraphic()->SetActiveRenderPath("default");
 
     while(GetGame()->GetStop() == false)
     {
+	m_EventManager.ProcessEvents();
+
         GetGraphic()->Render();
     }
 
@@ -46,15 +79,40 @@ void MainApp::Run()
 
 Graphic * MainApp::GetGraphic()
 {
-    return &m_Graphic;
+    if (m_pGraphic == NULL)
+	m_pGraphic = new Graphic();
+
+    assert (m_pGraphic != NULL);
+    return m_pGraphic;
 }
 
 DummyGame * MainApp::GetGame()
 {
-    return &m_Game;
+    if (m_pGame == NULL)
+	m_pGame = new DummyGame();
+
+    assert (m_pGame != NULL);
+    return m_pGame;
 }
 
 void MainApp::ItlCreateSceneGraphs()
 {
 
+}
+
+lua_State * MainApp::GetLuaState()
+{
+    // lazy evaluation
+    if (m_pLuaState == NULL)
+    {
+	// open lua state
+	m_pLuaState = lua_open();
+
+	// load lua libs
+	luaL_openlibs(m_pLuaState);
+    }
+
+    assert (m_pLuaState != NULL);
+
+    return m_pLuaState;
 }

@@ -9,7 +9,8 @@
 
 #include "Gamelogic/IGameState.h"
 #include "Gamelogic/IObject.h"
-#include "IInputEventListener.h"
+#include "EventManager.h"
+#include "Events.h"
 
 
 #include <list>
@@ -24,7 +25,7 @@
   *
   */
 
-class DummyGame : public IGameState, public IInputEventListener
+class DummyGame : public IGameState, /*public IInputEventListener, */public EventManager::IEventListener
 {
 public:
     /*! \name Construction / Destruction */
@@ -49,11 +50,7 @@ public:
 
     /*! \name Public signals for key handling */
     //@{
-	/// fired when a key is down
-	virtual void OnKeyDown(TKey eKey);
-
-	/// fired when a key goes up
-	virtual void OnKeyUp(TKey eKey);
+	virtual bool OnEvent(std::shared_ptr<EventManager::IEvent> spEvent);
     //@}
 
     /*! \name Public signals for mouse handling */
@@ -62,14 +59,23 @@ public:
 	virtual void OnMouseMove(int iX, int iY);
 
 	/// fired when a mouse button is pressed
-	virtual void OnMouseButtonPressed(TMouseButton eButton);
+	virtual void OnMouseButtonPressed(InputMouseButtonEvent::TMouseButton eButton);
 
 	/// fired when a mouse button is released
-	virtual void OnMouseButtonReleased(TMouseButton eButton);
+	virtual void OnMouseButtonReleased(InputMouseButtonEvent::TMouseButton eButton);
     //@}
 
     inline bool GetStop() { return m_bStop; }
 private:
+    /*! \name Private helper methods for event handling */
+    //@{
+	/// fired when a key is down
+	virtual void ItlOnKeyDown(InputKeyEvent::TKey eKey);
+
+	/// fired when a key goes up
+	virtual void ItlOnKeyUp(InputKeyEvent::TKey eKey);
+    //@}
+
     /*! \name Private members */
     //@{
 	bool m_bLeftMouseButtonDown;

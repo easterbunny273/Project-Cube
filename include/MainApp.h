@@ -11,22 +11,39 @@
 
 #include "Settings.h"
 #include "Logger.h"
+#include "EventManager.h"
 #include "Graphics/Graphic.h"
 #include "DummyGame/Game.h"
+
+// include lua libs as explicit C-functions, because
+// the lib is compiled as C-lib (-> other naming conventions)
+extern "C"
+{
+#include <lua.h>
+#include <lualib.h>
+}
+
+#include <luabind/luabind.hpp>
 
 class MainApp
 {
 public:
     /*! \name Access to the subsystems */
     //@{
-        // returns ptr to the graphic subsystem
+	/// returns ptr to the graphic subsystem
         Graphic * GetGraphic();
 
-        // returns ptr to the core settings
+	/// returns ptr to the core settings
         Settings * GetCoreSettings();
+
+	/// returns ptr to the event manager
+	EventManager * GetEventManager();
 
         // dummy
 	DummyGame * GetGame();
+
+	// get app wide lua state
+	lua_State * GetLuaState();
     //@}
 
     /*! \name Run methods */
@@ -56,11 +73,12 @@ private:
 
     /*! \name Private members */
     //@{
-        Graphic m_Graphic;
+	EventManager m_EventManager;
+	Settings m_CoreSettings;
 
-        Settings m_CoreSettings;
-
-	DummyGame m_Game;
+	Graphic *m_pGraphic;
+	DummyGame *m_pGame;
+	lua_State * m_pLuaState;
     //@}
 };
 
