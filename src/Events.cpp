@@ -21,11 +21,6 @@ std::shared_ptr<EventManager::IEvent> InputKeyEvent::GetPrototype()
     return spPrototype;
 }
 
-std::shared_ptr<EventManager::IEvent> InputKeyEvent::CreateNewEventFromString(std::string sCreateString)
-{
-
-}
-
 std::shared_ptr<EventManager::IEvent> InputKeyEvent::Create(TKey eKey, TEvent eEvent)
 {
     InputKeyEvent *pEvent = new InputKeyEvent();
@@ -56,10 +51,7 @@ void InputKeyEvent::RegisterLua()
 
 std::shared_ptr<InputKeyEvent> InputKeyEvent::Cast(std::shared_ptr<EventManager::IEvent> spEvent)
 {
-    //if (spEvent->IsEventType(InputKeyEvent::EventType()))
-	return std::dynamic_pointer_cast<InputKeyEvent>(spEvent);
-    //else
-	//return std::shared_ptr<InputKeyEvent>();
+    return std::dynamic_pointer_cast<InputKeyEvent>(spEvent);
 }
 
 /*
@@ -85,18 +77,15 @@ std::shared_ptr<EventManager::IEvent> InputMouseButtonEvent::GetPrototype()
     return spPrototype;
 }
 
-std::shared_ptr<EventManager::IEvent> InputMouseButtonEvent::CreateNewEventFromString(std::string sCreateString)
-{
-    assert (!"not implemented yet");
-}
-
 std::shared_ptr<InputMouseButtonEvent> InputMouseButtonEvent::Cast(std::shared_ptr<EventManager::IEvent> spEvent)
 {
-    //if (spEvent->IsEventType(InputKeyEvent::EventType()))
-	return std::dynamic_pointer_cast<InputMouseButtonEvent>(spEvent);
-    //else
-	//return std::shared_ptr<InputKeyEvent>();
+    return std::dynamic_pointer_cast<InputMouseButtonEvent>(spEvent);
 }
+
+void InputMouseButtonEvent::RegisterLua()
+{
+}
+
 
 /*
  * *************************************
@@ -120,15 +109,12 @@ std::shared_ptr<EventManager::IEvent> InputMouseMoveEvent::Create(int iX, int iY
     return std::shared_ptr<EventManager::IEvent>(pEvent);
 }
 
-std::shared_ptr<EventManager::IEvent> InputMouseMoveEvent::CreateNewEventFromString(std::string sCreateString)
-{
-    assert (!"not implemented yet");
-}
-
 std::shared_ptr<InputMouseMoveEvent> InputMouseMoveEvent::Cast(std::shared_ptr<EventManager::IEvent> spEvent)
 {
-    //if (spEvent->IsEventType(InputKeyEvent::EventType()))
-	return std::dynamic_pointer_cast<InputMouseMoveEvent>(spEvent);
-    //else
-	//return std::shared_ptr<InputKeyEvent>();
+    return std::dynamic_pointer_cast<InputMouseMoveEvent>(spEvent);
 }
+
+void InputMouseMoveEvent::RegisterLua()
+{
+}
+

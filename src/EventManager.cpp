@@ -137,7 +137,8 @@ void EventManager::Test()
   *************************************************************** */
 std::shared_ptr<EventManager::IEvent> EventManager::CreateEvent(const char * szCreateString)
 {
-    std::string sCreateString(szCreateString);
+    assert(!"not implemented yet");
+  /*  std::string sCreateString(szCreateString);
     std::string sEventType;
     std::stringstream ssBuffer;
 
@@ -151,7 +152,7 @@ std::shared_ptr<EventManager::IEvent> EventManager::CreateEvent(const char * szC
 	return (*iter)->CreateNewEventFromString(sRestOfString);
     }
 
-    return std::shared_ptr<EventManager::IEvent>();
+    return std::shared_ptr<EventManager::IEvent>();*/
 }
 
 /****************************************************************

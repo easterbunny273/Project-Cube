@@ -37,19 +37,46 @@ class EventManager
 public:
     /*! \name Public interfaces */
     //@{
-
-
 	class IEvent
 	{
 	public:
-	    typedef const char * TEventType;
+	    /*! \name Public types */
+	    //@{
+		typedef const char * TEventType;
+	    //@}
 
-	    virtual TEventType GetEventType() const = 0;
+	    /*  ***
+	     *  *** The class should also have some static methods,
+	     *  *** which cannot be defined through the interface (because they are static :-) ):
+	    //@{
+		/// returns the prototype of this event
+		static std::shared_ptr<IEvent> GetPrototype();
 
-	    virtual std::shared_ptr<IEvent> CreateNewEventFromString(std::string sCreateString) = 0;
+		/// creates and returns a new instance of this event
+		static std::shared_ptr<IEvent> Create(parameters);
 
-	    virtual bool IsEventType(TEventType tEventType) = 0;
+		/// creates a new instance of this event and reads the parameter from the given string
+		static std::shared_ptr<IEvent> CreateFromString(std::string sParameters);
 
+		/// registers the event in the LUA environment
+		static void RegisterLua();
+
+		/// casts the given shared_ptr<IEvent> to a shared_ptr of this class, if possible
+		static std::shared_ptr<DerivedClassOfIEvent> Cast(std::shared_ptr<IEvent> spEvent);
+
+		/// returns the event type of this event
+		static TEventType EventType() { return s_szEventType; }
+	    //@}
+	    */
+
+	    /*! \name Public methods */
+	    //@{
+		/// returns the event type of the concrete instance
+		virtual TEventType GetEventType() const = 0;
+
+		/// returns true if this event has the given type
+		bool IsEventType(TEventType tEventType) { return (GetEventType()==tEventType); }
+	    //@}
 	protected:
 	    /*! \name Construction / Destruction */
 	    //@{

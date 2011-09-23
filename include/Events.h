@@ -5,142 +5,228 @@
 
 class InputKeyEvent : public EventManager::IEvent
 {
-
 public:
-    enum TKey
-    {
-	KEY_UNKNOWN = 0,
+    /*! \name Public types */
+    //@{
+	/// enumeration for different keys
+	enum TKey
+	{
+	    KEY_UNKNOWN = 0,
 
-	// key modifiers
-	KEY_LSHIFT, KEY_RSHIFT, KEY_LCTRL, KEY_RCTRL, KEY_LALT, KEY_RALT,
+	    // key modifiers
+	    KEY_LSHIFT, KEY_RSHIFT, KEY_LCTRL, KEY_RCTRL, KEY_LALT, KEY_RALT,
 
-	// F1..F12
-	KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12,
+	    // F1..F12
+	    KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12,
 
-	// cursor keys
-	KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT,
+	    // cursor keys
+	    KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT,
 
-	// special keys like SPACE and ESC
-	KEY_ESC, KEY_SPACE, KEY_TAB, KEY_ENTER, KEY_BACKSPACE,
+	    // special keys like SPACE and ESC
+	    KEY_ESC, KEY_SPACE, KEY_TAB, KEY_ENTER, KEY_BACKSPACE,
 
-	// numbers 0..9 (mapped to ascii-conform values 48..57)
-	KEY_0 = 48, KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9,
+	    // numbers 0..9 (mapped to ascii-conform values 48..57)
+	    KEY_0 = 48, KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9,
 
-	// chars A..Z (mapped to ascii-conform values 65..90
-	KEY_A = 65, KEY_B, KEY_C, KEY_D, KEY_E,
-	KEY_F, KEY_G, KEY_H, KEY_I, KEY_J,
-	KEY_K, KEY_L, KEY_M, KEY_N, KEY_O,
-	KEY_P, KEY_Q, KEY_R, KEY_S, KEY_T,
-	KEY_U, KEY_V, KEY_W, KEY_X, KEY_Y, KEY_Z,
+	    // chars A..Z (mapped to ascii-conform values 65..90
+	    KEY_A = 65, KEY_B, KEY_C, KEY_D, KEY_E,
+	    KEY_F, KEY_G, KEY_H, KEY_I, KEY_J,
+	    KEY_K, KEY_L, KEY_M, KEY_N, KEY_O,
+	    KEY_P, KEY_Q, KEY_R, KEY_S, KEY_T,
+	    KEY_U, KEY_V, KEY_W, KEY_X, KEY_Y, KEY_Z,
 
-	// numbers on numpad
-	KEY_KP_0, KEY_KP_1, KEY_KP_2, KEY_KP_3, KEY_KP_4,
-	KEY_KP_5, KEY_KP_6, KEY_KP_7, KEY_KP_8, KEY_KP_9
+	    // numbers on numpad
+	    KEY_KP_0, KEY_KP_1, KEY_KP_2, KEY_KP_3, KEY_KP_4,
+	    KEY_KP_5, KEY_KP_6, KEY_KP_7, KEY_KP_8, KEY_KP_9
 
-	// blabla. not finished yet, but you got the idea :)
-    };
+	    // blabla. not finished yet, but you got the idea :)
+	};
 
-    enum TEvent
-    {
-	EVENT_UP,
-	EVENT_DOWN
-    };
+	/// enumeration for events
+	enum TEvent
+	{
+	    EVENT_UP,
+	    EVENT_DOWN
+	};
+    //@}
 
-    static std::shared_ptr<IEvent> GetPrototype();
+    /*! \name Static methods*/
+    //@{
+	/// returns the prototype of this event
+	static std::shared_ptr<IEvent> GetPrototype();
 
-    static std::shared_ptr<IEvent> Create(TKey eKey, TEvent eEvent);
-    static std::shared_ptr<IEvent> CreateFromString(std::string sParameters);
+	/// creates and returns a new instance of this event
+	static std::shared_ptr<IEvent> Create(TKey eKey, TEvent eEvent);
 
-    virtual std::shared_ptr<IEvent> CreateNewEventFromString(std::string sCreateString);
+	/// creates a new instance of this event and reads the parameter from the given string
+	static std::shared_ptr<IEvent> CreateFromString(std::string sParameters);
 
-    static void RegisterLua();
+	/// registers the event in the LUA environment
+	static void RegisterLua();
 
-    virtual bool IsEventType(TEventType tEventType) { return (s_szEventType==tEventType); }
-    virtual TEventType GetEventType() const { return s_szEventType; }
-    static TEventType EventType() { return s_szEventType; }
+	/// casts the given shared_ptr<IEvent> to a shared_ptr of this class, if possible
+	static std::shared_ptr<InputKeyEvent> Cast(std::shared_ptr<IEvent> spEvent);
 
-    static std::shared_ptr<InputKeyEvent> Cast(std::shared_ptr<IEvent> spEvent);
+	/// returns the event type of this event
+	static TEventType EventType() { return s_szEventType; }
+    //@}
 
-    TKey GetKey() const { return m_eKey; }
-    TEvent GetEvent() const { return m_eEvent; }
+    /*! \name Public methods */
+    //@{
+	/// returns the event type
+	virtual TEventType GetEventType() const { return s_szEventType; }
+    //@}
+
+    /*! \name Public attributes */
+    //@{
+	TKey GetKey() const { return m_eKey; }
+	TEvent GetEvent() const { return m_eEvent; }
+    //@}
 
 private:
-    InputKeyEvent() {}
+    /*! \name Private methods */
+    //@{
+	/// constructor, a new instance of this class must be created through Create()
+	InputKeyEvent() {}
+    //@}
 
-    TKey    m_eKey;
-    TEvent  m_eEvent;
+    /*! \name Private members */
+    //@{
+	TKey    m_eKey;
+	TEvent  m_eEvent;
+    //@}
 
-    static TEventType s_szEventType;
+    /*! \name Static members */
+    //@{
+	static TEventType s_szEventType;
+    //@}
 
 };
 
 class InputMouseButtonEvent : public EventManager::IEvent
 {
 public:
-    enum TMouseButton
-    {
-	BUTTON_LEFT,
-	BUTTON_MIDDLE,
-	BUTTON_RIGHT
-    };
+    /*! \name Public types */
+    //@{
+	enum TMouseButton
+	{
+	    BUTTON_LEFT,
+	    BUTTON_MIDDLE,
+	    BUTTON_RIGHT
+	};
 
-    enum TEvent
-    {
-	EVENT_UP,
-	EVENT_DOWN
-    };
+	enum TEvent
+	{
+	    EVENT_UP,
+	    EVENT_DOWN
+	};
+    //@}
 
-    static std::shared_ptr<IEvent> GetPrototype();
+    /*! \name Static methods*/
+    //@{
+	/// returns the prototype of this event
+	static std::shared_ptr<IEvent> GetPrototype();
 
-    static std::shared_ptr<IEvent> Create(TMouseButton eButton, TEvent eEvent);
-    virtual std::shared_ptr<IEvent> CreateNewEventFromString(std::string sCreateString);
+	/// creates and returns a new instance of this event
+	static std::shared_ptr<IEvent> Create(TMouseButton eButton, TEvent eEvent);
 
-    static void RegisterLua() {};
+	/// creates a new instance of this event and reads the parameter from the given string
+	static std::shared_ptr<IEvent> CreateFromString(std::string sParameters);
 
-    virtual bool IsEventType(TEventType tEventType) { return (s_szEventType==tEventType); }
-    virtual TEventType GetEventType() const { return s_szEventType; }
-    static TEventType EventType() { return s_szEventType; }
+	/// registers the event in the LUA environment
+	static void RegisterLua();
 
-    static std::shared_ptr<InputMouseButtonEvent> Cast(std::shared_ptr<IEvent> spEvent);
+	/// casts the given shared_ptr<IEvent> to a shared_ptr of this class, if possible
+	static std::shared_ptr<InputMouseButtonEvent> Cast(std::shared_ptr<IEvent> spEvent);
 
-    TEvent GetEvent() const { return m_eEvent; }
-    TMouseButton GetMouseButton() const { return m_eButton; }
+	/// returns the event type of this event
+	static TEventType EventType() { return s_szEventType; }
+    //@}
+
+    /*! \name Public methods */
+    //@{
+	/// returns the event type
+	virtual TEventType GetEventType() const { return s_szEventType; }
+    //@}
+
+    /*! \name Public attributes */
+    //@{
+	TEvent GetEvent() const { return m_eEvent; }
+	TMouseButton GetMouseButton() const { return m_eButton; }
+    //@}
+
 private:
-    InputMouseButtonEvent() {}
+    /*! \name Private methods */
+    //@{
+	/// constructor, a new instance of this class must be created through Create()
+	InputMouseButtonEvent() {}
+    //@}
 
-    TEvent	    m_eEvent;
-    TMouseButton    m_eButton;
+    /*! \name Private members */
+    //@{
+	TEvent		m_eEvent;
+	TMouseButton    m_eButton;
+    //@}
 
-    static TEventType s_szEventType;
+    /*! \name Static members */
+    //@{
+	static TEventType s_szEventType;
+    //@}
 };
 
 class InputMouseMoveEvent : public EventManager::IEvent
 {
 public:
+    /*! \name Static methods*/
+    //@{
+	/// returns the prototype of this event
+	static std::shared_ptr<IEvent> GetPrototype();
 
-    static std::shared_ptr<IEvent> GetPrototype();
+	/// creates and returns a new instance of this event
+	static std::shared_ptr<IEvent> Create(int iX, int iY);
 
-    static std::shared_ptr<IEvent> Create(int iX, int iY);
-    virtual std::shared_ptr<IEvent> CreateNewEventFromString(std::string sCreateString);
+	/// creates a new instance of this event and reads the parameter from the given string
+	static std::shared_ptr<IEvent> CreateFromString(std::string sParameters);
 
-    static void RegisterLua() {};
+	/// registers the event in the LUA environment
+	static void RegisterLua();
 
-    virtual bool IsEventType(TEventType tEventType) { return (s_szEventType==tEventType); }
-    virtual TEventType GetEventType() const { return s_szEventType; }
-    static TEventType EventType() { return s_szEventType; }
+	/// casts the given shared_ptr<IEvent> to a shared_ptr of this class, if possible
+	static std::shared_ptr<InputMouseMoveEvent> Cast(std::shared_ptr<IEvent> spEvent);
 
-    static std::shared_ptr<InputMouseMoveEvent> Cast(std::shared_ptr<IEvent> spEvent);
+	/// returns the event type of this event
+	static TEventType EventType() { return s_szEventType; }
+    //@}
 
+    /*! \name Public methods */
+    //@{
+	/// returns the event type
+	virtual TEventType GetEventType() const { return s_szEventType; }
+    //@}
 
-    int GetX() const { return m_iX; }
-    int GetY() const { return m_iY; }
+    /*! \name Public attributes */
+    //@{
+	int GetX() const { return m_iX; }
+	int GetY() const { return m_iY; }
+    //@}
+
 private:
-    InputMouseMoveEvent() {}
+    /*! \name Private methods */
+    //@{
+	/// constructor, a new instance of this class must be created through Create()
+	InputMouseMoveEvent() {}
+    //@}
 
-    int m_iX;
-    int m_iY;
+    /*! \name Private members */
+    //@{
+	int m_iX;
+	int m_iY;
+    //@}
 
-    static TEventType s_szEventType;
+    /*! \name Static members */
+    //@{
+	static TEventType s_szEventType;
+    //@}
 };
 
 #endif
