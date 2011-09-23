@@ -7,6 +7,7 @@
 EventManager::IEvent::TEventType InputKeyEvent::s_szEventType		    = "input.key";
 EventManager::IEvent::TEventType InputMouseButtonEvent::s_szEventType	    = "input.mouse.button";
 EventManager::IEvent::TEventType InputMouseMoveEvent::s_szEventType	    = "input.mouse.move";
+EventManager::IEvent::TEventType CameraMovementEvent::s_szEventType	    = "camera.move";
 
 /*
  * *************************************
@@ -117,4 +118,36 @@ std::shared_ptr<InputMouseMoveEvent> InputMouseMoveEvent::Cast(std::shared_ptr<E
 void InputMouseMoveEvent::RegisterLua()
 {
 }
+
+/*
+ * *************************************
+ * CameraMovementEvent
+ * *************************************
+ */
+std::shared_ptr<EventManager::IEvent> CameraMovementEvent::GetPrototype()
+{
+    std::shared_ptr<EventManager::IEvent> spPrototype(new CameraMovementEvent());
+
+    return spPrototype;
+}
+
+std::shared_ptr<EventManager::IEvent> CameraMovementEvent::Create(TMovementType tMovementType, float fValue)
+{
+    CameraMovementEvent *pEvent = new CameraMovementEvent();
+
+    pEvent->m_eMovementType = tMovementType;
+    pEvent->m_fValue = fValue;
+
+    return std::shared_ptr<EventManager::IEvent>(pEvent);
+}
+
+std::shared_ptr<CameraMovementEvent> CameraMovementEvent::Cast(std::shared_ptr<EventManager::IEvent> spEvent)
+{
+    return std::dynamic_pointer_cast<CameraMovementEvent>(spEvent);
+}
+
+void CameraMovementEvent::RegisterLua()
+{
+}
+
 

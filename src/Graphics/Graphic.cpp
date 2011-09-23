@@ -516,6 +516,12 @@ Graphic::Camera::Camera()
 
     m_fRotationHorizontal = 180;
     m_fRotationVertical = 0;
+
+    // register for camera movement events
+    EventManager *pEventManager = MainApp::GetInstance()->GetEventManager();
+    assert (pEventManager != NULL);
+
+    pEventManager->RegisterEventListener(this, CameraMovementEvent::EventType());
 }
 
 /****************************************************************
@@ -746,9 +752,38 @@ void Graphic::ItlLoadSettings()
     m_pSettings = MainApp::GetInstance()->GetCoreSettings()->GetGroup("graphics");
 }
 
+/****************************************************************
+  *************************************************************** */
 bool Graphic::OnEvent(std::shared_ptr<EventManager::IEvent> spEvent)
 {
     assert(!"not implemented yet, should not registered for any event");
+}
+
+/****************************************************************
+  *************************************************************** */
+bool Graphic::Camera::OnEvent(std::shared_ptr<EventManager::IEvent> spEvent)
+{
+    // only accept CameraMovementEvent atm
+    assert (spEvent->GetEventType() == CameraMovementEvent::EventType());
+
+    std::shared_ptr<CameraMovementEvent> spMovementEvent = CameraMovementEvent::Cast(spEvent);
+    assert(spMovementEvent);
+
+    CameraMovementEvent::TMovementType eMovementType = spMovementEvent->GetMovementType();
+    float fValue = spMovementEvent->GetValue();
+
+    if (eMovementType == CameraMovementEvent::CAMERA_MOVE_X)
+	AddToMoveVector(glm::vec3(fValue, 0.0f, 0.0f));
+    else if (eMovementType == CameraMovementEvent::CAMERA_MOVE_Y)
+	AddToMoveVector(glm::vec3(0.0f, fValue, 0.0f));
+    else if (eMovementType == CameraMovementEvent::CAMERA_MOVE_Z)
+	AddToMoveVector(glm::vec3(0.0f, 0.0f, fValue));
+    else if (eMovementType == CameraMovementEvent::CAMERA_ROTATE_X)
+	RotateHorizontal(fValue);
+    else if (eMovementType == CameraMovementEvent::CAMERA_ROTATE_Y)
+	RotateVertical(fValue);
+    else
+	assert (!"no if condition fired");
 }
 
 

@@ -229,4 +229,68 @@ private:
     //@}
 };
 
+class CameraMovementEvent : public EventManager::IEvent
+{
+public:
+    enum TMovementType
+    {
+	CAMERA_MOVE_X,
+	CAMERA_MOVE_Y,
+	CAMERA_MOVE_Z,
+	CAMERA_ROTATE_X,
+	CAMERA_ROTATE_Y
+    };
+
+    /*! \name Static methods*/
+    //@{
+	/// returns the prototype of this event
+	static std::shared_ptr<IEvent> GetPrototype();
+
+	/// creates and returns a new instance of this event
+	static std::shared_ptr<IEvent> Create(TMovementType tMovementType, float fValue);
+
+	/// creates a new instance of this event and reads the parameter from the given string
+	static std::shared_ptr<IEvent> CreateFromString(std::string sParameters);
+
+	/// registers the event in the LUA environment
+	static void RegisterLua();
+
+	/// casts the given shared_ptr<IEvent> to a shared_ptr of this class, if possible
+	static std::shared_ptr<CameraMovementEvent> Cast(std::shared_ptr<IEvent> spEvent);
+
+	/// returns the event type of this event
+	static TEventType EventType() { return s_szEventType; }
+    //@}
+
+    /*! \name Public methods */
+    //@{
+	/// returns the event type
+	virtual TEventType GetEventType() const { return s_szEventType; }
+    //@}
+
+    /*! \name Public attributes */
+    //@{
+	TMovementType GetMovementType() const { return m_eMovementType; }
+	float GetValue() const { return m_fValue; }
+    //@}
+
+private:
+    /*! \name Private methods */
+    //@{
+	/// constructor, a new instance of this class must be created through Create()
+	CameraMovementEvent() {}
+    //@}
+
+    /*! \name Private members */
+    //@{
+	TMovementType	m_eMovementType;
+	float		m_fValue;
+    //@}
+
+    /*! \name Static members */
+    //@{
+	static TEventType s_szEventType;
+    //@}
+};
+
 #endif

@@ -38,6 +38,7 @@ EventManager::EventManager()
     ItlRegisterEvent<InputKeyEvent>();
     ItlRegisterEvent<InputMouseButtonEvent>();
     ItlRegisterEvent<InputMouseMoveEvent>();
+    ItlRegisterEvent<CameraMovementEvent>();
 }
 
 /****************************************************************
@@ -178,6 +179,21 @@ void EventManager::RegisterEventListener(EventManager::IEventListener *pListener
 void EventManager::RegisterEventListener(IEventListener *pListener,
 					 std::string sEventName)
 {
+    // check if this concrete listener has already registered for that event type
+
+    std::list<IEventListener*> *plListenerForEvent = &(m_mEventListener[sEventName]);
+
+    for (auto iter : *plListenerForEvent)
+    {
+	IEventListener *pIterListener = &(*iter);
+
+	if (pIterListener == pListener)
+	{
+	    Logger::fatal() << "The listener has already registered for that event type" << Logger::endl;
+	}
+    }
+
+
     m_mEventListener[sEventName].push_back(pListener);
 }
 
@@ -203,12 +219,7 @@ void EventManager::QueueEvent(std::shared_ptr<IEvent> spEvent)
 {
     assert(m_nActiveQueue < 2);
 
-    unsigned int nInactiveQueue = (m_nActiveQueue==1) ? 0 : 1;
-
-    assert (m_nActiveQueue != nInactiveQueue);
-    assert (nInactiveQueue < 2);
-
-    m_lEventQueue[nInactiveQueue].push_back(spEvent);
+    m_lEventQueue[m_nActiveQueue].push_back(spEvent);
 }
 
 /****************************************************************
@@ -217,20 +228,23 @@ void EventManager::ProcessEvents()
 {
     assert (m_nActiveQueue < 2);
 
-    for (auto iter=m_lEventQueue[m_nActiveQueue].begin(); iter != m_lEventQueue[m_nActiveQueue].end(); iter++)
+    unsigned int nLastActiveQueue = m_nActiveQueue;
+
+    // swap active queue
+    m_nActiveQueue = (m_nActiveQueue==1) ? 0 : 1;
+
+    assert (m_nActiveQueue != nLastActiveQueue);
+    assert (m_nActiveQueue < 2);
+
+    for (auto iter=m_lEventQueue[nLastActiveQueue].begin(); iter != m_lEventQueue[nLastActiveQueue].end(); iter++)
     {
 	std::shared_ptr<IEvent> *pspCurrentEvent = &(*iter);
 
 	TriggerEvent(*pspCurrentEvent);
     }
 
-    // clear queue
-    m_lEventQueue[m_nActiveQueue].clear();
-
-    // swap active queue
-    m_nActiveQueue = (m_nActiveQueue==1) ? 0 : 1;
-
-    assert (m_nActiveQueue < 2);
+    // clear processed queue
+    m_lEventQueue[nLastActiveQueue].clear();
 }
 
 /****************************************************************

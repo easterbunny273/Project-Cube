@@ -35,7 +35,7 @@ class Graphic : EventManager::IEventListener
 public:
     /*! \name Nested classes */
     //@{
-        class Camera
+	class Camera : public EventManager::IEventListener
         {
             friend class Graphic;
         public:
@@ -47,6 +47,12 @@ public:
                 /// returns the projection matrix
                 glm::mat4 GetProjectionMatrix() const;
             //@}
+
+	    /*! \name EventManager::IEventListener interface */
+	    //@{
+		virtual bool OnEvent(std::shared_ptr<EventManager::IEvent> spEvent);
+	    //@}
+
 
             /*! \name Methods to manipulate the camera view direction or position */
             //@{

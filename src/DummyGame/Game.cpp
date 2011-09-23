@@ -5,7 +5,6 @@
 #include "Logger.h"
 #include "EventManager.h"
 #include "Events.h"
-#include "Graphics/Graphic.h"
 
 std::list<IObject *> DummyGame::GetObjectsInCube()
 {
@@ -29,60 +28,48 @@ glm::vec3 DummyGame::GetPlayerPositionInCurrentCube()
 void DummyGame::ItlOnKeyDown(InputKeyEvent::TKey eKey)
 {
     MainApp *pApp = MainApp::GetInstance();
-
     assert (pApp != NULL);
 
-    Graphic *pGraphic = pApp->GetGraphic();
-
-    assert (pGraphic != NULL);
-
-    Graphic::Camera *pCamera = pGraphic->GetCamera();
-
-    assert (pCamera != NULL);
+    EventManager *pEventManager = pApp->GetEventManager();
+    assert(pEventManager != NULL);
 
     if (eKey == 'W')
-    {
-	pCamera->AddToMoveVector(glm::vec3(0.0, 0.0, 1.0));
-    }
+	pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_Z, 1.0f));
     else if (eKey == 'S')
-	pCamera->AddToMoveVector(glm::vec3(0.0, 0.0, -1.0));
+	pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_Z, -1.0f));
     else if (eKey == 'A')
-	pCamera->AddToMoveVector(glm::vec3(-1.0, 0.0, 0.0));
+	pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_X, -1.0f));
     else if (eKey == 'D')
-	pCamera->AddToMoveVector(glm::vec3(1.0, 0.0, 0.0));
+	pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_X, 1.0f));
     else if (eKey == InputKeyEvent::KEY_LCTRL)
-	pCamera->AddToMoveVector(glm::vec3(0.0, -1.0, 0.0));
+	pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_Y, -1.0f));
     else if (eKey == InputKeyEvent::KEY_SPACE)
-	pCamera->AddToMoveVector(glm::vec3(0.0, 1.0, 0.0));
+	pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_Y, 1.0f));
+    else if (eKey == InputKeyEvent::KEY_ESC)
+	m_bStop = true;
 
 }
 
 void DummyGame::ItlOnKeyUp(InputKeyEvent::TKey eKey)
 {
     MainApp *pApp = MainApp::GetInstance();
-
     assert (pApp != NULL);
 
-    Graphic *pGraphic = pApp->GetGraphic();
-
-    assert (pGraphic != NULL);
-
-    Graphic::Camera *pCamera = pGraphic->GetCamera();
-
-    assert (pCamera != NULL);
+    EventManager *pEventManager = pApp->GetEventManager();
+    assert(pEventManager != NULL);
 
     if (eKey == 'W')
-	pCamera->AddToMoveVector(glm::vec3(0.0, 0.0, -1.0));
+	pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_Z, -1.0f));
     else if (eKey == 'S')
-	pCamera->AddToMoveVector(glm::vec3(0.0, 0.0, 1.0));
+	pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_Z, 1.0f));
     else if (eKey == 'A')
-	pCamera->AddToMoveVector(glm::vec3(1.0, 0.0, 0.0));
+	pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_X, 1.0f));
     else if (eKey == 'D')
-	pCamera->AddToMoveVector(glm::vec3(-1.0, 0.0, 0.0));
+	pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_X, -1.0f));
     else if (eKey == InputKeyEvent::KEY_LCTRL)
-	pCamera->AddToMoveVector(glm::vec3(0.0, 1.0, 0.0));
+	pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_Y, 1.0f));
     else if (eKey == InputKeyEvent::KEY_SPACE)
-	pCamera->AddToMoveVector(glm::vec3(0.0, -1.0, 0.0));
+	pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_Y, -1.0f));
     else if (eKey == InputKeyEvent::KEY_ESC)
 	m_bStop = true;
 }
@@ -94,16 +81,11 @@ void DummyGame::OnMouseMove(int iX, int iY)
 	MainApp *pApp = MainApp::GetInstance();
 	assert (pApp != NULL);
 
-	Graphic *pGraphic = pApp->GetGraphic();
-	assert (pGraphic != NULL);
+	EventManager *pEventManager = pApp->GetEventManager();
+	assert(pEventManager != NULL);
 
-	Graphic::Camera *pCamera = pGraphic->GetCamera();
-	assert (pCamera != NULL);
-
-	//Logger::debug() << "input: " << iX << ":" << iY << Logger::endl;
-	// update camera
-	pCamera->RotateHorizontal(iX / 10.0f);
-	pCamera->RotateVertical(iY / 10.0f);
+	pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_ROTATE_X, iX / 10.0f));
+	pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_ROTATE_Y, iY / 10.0f));
     }
 }
 
