@@ -141,14 +141,13 @@ DummyGame::DummyGame()
 
 bool DummyGame::OnEvent(std::shared_ptr<EventManager::IEvent> spEvent)
 {
-    if (spEvent->GetName() == "input.key")
+    if (spEvent->IsEventType(InputKeyEvent::EventType()))
     {
-	InputKeyEvent *pInputKeyEvent = dynamic_cast<InputKeyEvent *>(&(*spEvent));
+	std::shared_ptr<InputKeyEvent> spInputKeyEvent = InputKeyEvent::Cast(spEvent);
+	assert (spInputKeyEvent);
 
-	assert (pInputKeyEvent != NULL);
-
-	InputKeyEvent::TKey eKey = pInputKeyEvent->GetKey();
-	InputKeyEvent::TEvent eEvent = pInputKeyEvent->GetEvent();
+	InputKeyEvent::TKey eKey = spInputKeyEvent->GetKey();
+	InputKeyEvent::TEvent eEvent = spInputKeyEvent->GetEvent();
 
 	if (eEvent == InputKeyEvent::EVENT_UP)
 	    ItlOnKeyUp(eKey);
@@ -157,28 +156,26 @@ bool DummyGame::OnEvent(std::shared_ptr<EventManager::IEvent> spEvent)
 	else
 	    assert (!"no if condition fired");
     }
-    else if (spEvent->GetName() == "input.mouse.button")
+    else if (spEvent->IsEventType(InputMouseButtonEvent::EventType()))
     {
-	InputMouseButtonEvent *pInputMouseButtonEvent = dynamic_cast<InputMouseButtonEvent *>(&(*spEvent));
+	std::shared_ptr<InputMouseButtonEvent> spInputMouseButtonEvent = InputMouseButtonEvent::Cast(spEvent);
+	assert (spInputMouseButtonEvent);
 
-	assert (pInputMouseButtonEvent != NULL);
-
-	InputMouseButtonEvent::TMouseButton eButton = pInputMouseButtonEvent->GetMouseButton();
-	InputMouseButtonEvent::TEvent eEvent = pInputMouseButtonEvent->GetEvent();
+	InputMouseButtonEvent::TMouseButton eButton = spInputMouseButtonEvent->GetMouseButton();
+	InputMouseButtonEvent::TEvent eEvent = spInputMouseButtonEvent->GetEvent();
 
 	if (eEvent == InputMouseButtonEvent::EVENT_UP)
 	    OnMouseButtonReleased(eButton);
 	else
 	    OnMouseButtonPressed(eButton);
     }
-    else if (spEvent->GetName() == "input.mouse.move")
+    else if (spEvent->IsEventType(InputMouseMoveEvent::EventType()))
     {
-	InputMouseMoveEvent *pInputMouseMoveEvent = dynamic_cast<InputMouseMoveEvent *>(&(*spEvent));
+	std::shared_ptr<InputMouseMoveEvent> spInputMouseMoveEvent = InputMouseMoveEvent::Cast(spEvent);
+	assert (spInputMouseMoveEvent);
 
-	assert (pInputMouseMoveEvent != NULL);
-
-	int iRelX = pInputMouseMoveEvent->GetX();
-	int iRelY = pInputMouseMoveEvent->GetY();
+	int iRelX = spInputMouseMoveEvent->GetX();
+	int iRelY = spInputMouseMoveEvent->GetY();
 
 	OnMouseMove(iRelX, iRelY);
     }

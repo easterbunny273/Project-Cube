@@ -1,13 +1,23 @@
+/*
+ * source file for EventManager class
+ * written by: christian moellinger <ch.moellinger@gmail.com>
+ * 09/2011
+ */
+
+// project includes
 #include "EventManager.h"
 #include "Events.h"
 #include "Logger.h"
 
+// stl includes
 #include <iostream>
 #include <sstream>
 #include <list>
 
+// use C-style assert
 #include <assert.h>
 
+// lua include, forcing C-mode
 extern "C"
 {
 #include <lua.h>
@@ -16,25 +26,52 @@ extern "C"
 
 #include <luabind/luabind.hpp>
 
+
+// static member initialisation
+int EventManager::IEvent::s_iCount = 0;
+
+/****************************************************************
+  *************************************************************** */
 EventManager::EventManager()
 {
     // register all known event prototypes
-    RegisterEvent<InputKeyEvent>();
-    RegisterEvent<InputMouseButtonEvent>();
-    RegisterEvent<InputMouseMoveEvent>();
+    ItlRegisterEvent<InputKeyEvent>();
+    ItlRegisterEvent<InputMouseButtonEvent>();
+    ItlRegisterEvent<InputMouseMoveEvent>();
 }
 
+/****************************************************************
+  *************************************************************** */
+EventManager::~EventManager()
+{
+    // clear prototypes
+    m_lPrototypes.clear();
+
+    // clear unprocessed events
+    m_lEventQueue[0].clear();
+    m_lEventQueue[1].clear();
+
+    // now, all created events should be deleted because we are using shared_ptr
+    // and no references exist any more
+    int iEventsLeft = EventManager::IEvent::s_iCount;
+    assert (iEventsLeft == 0);
+}
+
+/****************************************************************
+  *************************************************************** */
 void EventManager::ItlRegisterEventPrototype(std::shared_ptr<IEvent> spEventPrototype)
 {
     for (auto iter : m_lPrototypes)
     {
-	if ((*iter).GetName() == spEventPrototype->GetName())
+	if ((*iter).GetEventType() == spEventPrototype->GetEventType())
 	    Logger::fatal() << "You tried to register an already registered event type" << Logger::endl;
     }
 
     m_lPrototypes.push_back(spEventPrototype);
 }
 
+/****************************************************************
+  *************************************************************** */
 void EventManager::Test()
 {
   /*  std::shared_ptr<IEvent> spNewEvent = CreateEvent("input.key 3 2");
@@ -96,6 +133,8 @@ void EventManager::Test()
     lua_close(myLuaState);*/
 }
 
+/****************************************************************
+  *************************************************************** */
 std::shared_ptr<EventManager::IEvent> EventManager::CreateEvent(const char * szCreateString)
 {
     std::string sCreateString(szCreateString);
@@ -115,35 +154,39 @@ std::shared_ptr<EventManager::IEvent> EventManager::CreateEvent(const char * szC
     return std::shared_ptr<EventManager::IEvent>();
 }
 
-
-
-
-
+/****************************************************************
+  *************************************************************** */
 void EventManager::CreateEvent2(const char *szCreateString)
 {
     CreateEvent(szCreateString);
 }
 
+/****************************************************************
+  *************************************************************** */
 void EventManager::RegisterEventListener(EventManager::IEventListener *pListener,
 					 std::vector<std::string> vsEventNames)
 {
     for (auto iter = vsEventNames.begin(); iter != vsEventNames.end(); iter++)
     {
-	std::list<IEventListener*> *plListenerForEvent = &(m_mEventListener[*iter]);
-	plListenerForEvent->push_back(pListener);
+	RegisterEventListener(pListener, *iter);
     }
 }
 
-void EventManager::RegisterEventListener(IEventListener *pListener, std::string sEventName)
+/****************************************************************
+  *************************************************************** */
+void EventManager::RegisterEventListener(IEventListener *pListener,
+					 std::string sEventName)
 {
     m_mEventListener[sEventName].push_back(pListener);
 }
 
+/****************************************************************
+  *************************************************************** */
 void EventManager::TriggerEvent(std::shared_ptr<IEvent> spEvent)
 {
     assert (ItlCheckIfEventIsRegistered(spEvent));
 
-    std::list<IEventListener*> *plListenerForEvent = &(m_mEventListener[spEvent->GetName()]);
+    std::list<IEventListener*> *plListenerForEvent = &(m_mEventListener[spEvent->GetEventType()]);
 
     for (auto iter=plListenerForEvent->begin(); iter != plListenerForEvent->end(); iter++)
     {
@@ -153,6 +196,8 @@ void EventManager::TriggerEvent(std::shared_ptr<IEvent> spEvent)
     }
 }
 
+/****************************************************************
+  *************************************************************** */
 void EventManager::QueueEvent(std::shared_ptr<IEvent> spEvent)
 {
     assert(m_nActiveQueue < 2);
@@ -165,6 +210,8 @@ void EventManager::QueueEvent(std::shared_ptr<IEvent> spEvent)
     m_lEventQueue[nInactiveQueue].push_back(spEvent);
 }
 
+/****************************************************************
+  *************************************************************** */
 void EventManager::ProcessEvents()
 {
     assert (m_nActiveQueue < 2);
@@ -185,13 +232,15 @@ void EventManager::ProcessEvents()
     assert (m_nActiveQueue < 2);
 }
 
+/****************************************************************
+  *************************************************************** */
 bool EventManager::ItlCheckIfEventIsRegistered(std::shared_ptr<IEvent> spEvent)
 {
     bool bFound = false;
 
     for (auto iter=m_lPrototypes.begin(); iter != m_lPrototypes.end(); iter++)
     {
-	if ((*iter)->GetName() == spEvent->GetName())
+	if ((*iter)->GetEventType() == spEvent->GetEventType())
 	    bFound = true;
     }
 

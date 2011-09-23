@@ -69,7 +69,7 @@ void MainApp::Run()
 
     while(GetGame()->GetStop() == false)
     {
-	m_EventManager.ProcessEvents();
+	GetEventManager()->ProcessEvents();
 
         GetGraphic()->Render();
     }

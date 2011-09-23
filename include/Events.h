@@ -46,8 +46,6 @@ public:
 	EVENT_DOWN
     };
 
-    virtual std::string GetName() const { return std::string("input.key"); }
-
     static std::shared_ptr<IEvent> GetPrototype();
 
     static std::shared_ptr<IEvent> Create(TKey eKey, TEvent eEvent);
@@ -57,6 +55,12 @@ public:
 
     static void RegisterLua();
 
+    virtual bool IsEventType(TEventType tEventType) { return (s_szEventType==tEventType); }
+    virtual TEventType GetEventType() const { return s_szEventType; }
+    static TEventType EventType() { return s_szEventType; }
+
+    static std::shared_ptr<InputKeyEvent> Cast(std::shared_ptr<IEvent> spEvent);
+
     TKey GetKey() const { return m_eKey; }
     TEvent GetEvent() const { return m_eEvent; }
 
@@ -65,6 +69,8 @@ private:
 
     TKey    m_eKey;
     TEvent  m_eEvent;
+
+    static TEventType s_szEventType;
 
 };
 
@@ -84,14 +90,18 @@ public:
 	EVENT_DOWN
     };
 
-    virtual std::string GetName() const { return std::string("input.mouse.button"); }
-
     static std::shared_ptr<IEvent> GetPrototype();
 
     static std::shared_ptr<IEvent> Create(TMouseButton eButton, TEvent eEvent);
     virtual std::shared_ptr<IEvent> CreateNewEventFromString(std::string sCreateString);
 
     static void RegisterLua() {};
+
+    virtual bool IsEventType(TEventType tEventType) { return (s_szEventType==tEventType); }
+    virtual TEventType GetEventType() const { return s_szEventType; }
+    static TEventType EventType() { return s_szEventType; }
+
+    static std::shared_ptr<InputMouseButtonEvent> Cast(std::shared_ptr<IEvent> spEvent);
 
     TEvent GetEvent() const { return m_eEvent; }
     TMouseButton GetMouseButton() const { return m_eButton; }
@@ -100,13 +110,13 @@ private:
 
     TEvent	    m_eEvent;
     TMouseButton    m_eButton;
+
+    static TEventType s_szEventType;
 };
 
 class InputMouseMoveEvent : public EventManager::IEvent
 {
 public:
-
-    virtual std::string GetName() const { return std::string("input.mouse.move"); }
 
     static std::shared_ptr<IEvent> GetPrototype();
 
@@ -115,6 +125,13 @@ public:
 
     static void RegisterLua() {};
 
+    virtual bool IsEventType(TEventType tEventType) { return (s_szEventType==tEventType); }
+    virtual TEventType GetEventType() const { return s_szEventType; }
+    static TEventType EventType() { return s_szEventType; }
+
+    static std::shared_ptr<InputMouseMoveEvent> Cast(std::shared_ptr<IEvent> spEvent);
+
+
     int GetX() const { return m_iX; }
     int GetY() const { return m_iY; }
 private:
@@ -122,6 +139,8 @@ private:
 
     int m_iX;
     int m_iY;
+
+    static TEventType s_szEventType;
 };
 
 #endif

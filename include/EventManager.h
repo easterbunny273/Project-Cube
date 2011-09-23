@@ -4,8 +4,8 @@
  * 09/2011, Project Cube
  */
 
-#ifndef __EVENT_MANAGER2_HEADER
-#define __EVENT_MANAGER2_HEADER
+#ifndef __PROJECT_CUBE_EVENT_MANAGER_HEADER
+#define __PROJECT_CUBE_EVENT_MANAGER_HEADER
 
 #include <string>
 #include <memory>
@@ -35,57 +35,109 @@
 class EventManager
 {
 public:
-    class IEvent
-    {
-    public:
-	virtual std::string GetName() const = 0;
-
-	virtual std::shared_ptr<IEvent> CreateNewEventFromString(std::string sCreateString) = 0;
-    };
-
-    class IEventListener
-    {
-    public:
-	virtual bool OnEvent(std::shared_ptr<EventManager::IEvent> spEvent) = 0;
-    };
+    /*! \name Public interfaces */
+    //@{
 
 
+	class IEvent
+	{
+	public:
+	    typedef const char * TEventType;
 
-    EventManager();
-    std::shared_ptr<IEvent> CreateEvent(const char * szCreateString);
-    void CreateEvent2(const char * szCreateString);
+	    virtual TEventType GetEventType() const = 0;
+
+	    virtual std::shared_ptr<IEvent> CreateNewEventFromString(std::string sCreateString) = 0;
+
+	    virtual bool IsEventType(TEventType tEventType) = 0;
+
+	protected:
+	    /*! \name Construction / Destruction */
+	    //@{
+		/// constructor, counts the instances of IEvents
+		IEvent() { s_iCount++; }
+
+		/// destructor
+		virtual ~IEvent() { s_iCount--; }
+	    //@}
+
+	public:
+	    /*! \name Private members */
+	    //@{
+		static int s_iCount;
+	    //@}
+	};
+
+	/*! \class IEventListener */
+	//@{
+	    /// this interface must be used to handle events
+	    class IEventListener
+	    {
+	    public:
+		virtual bool OnEvent(std::shared_ptr<EventManager::IEvent> spEvent) = 0;
+	    };
+	//@}
+    //@}
+
+    /*! \name Construction / Destruction */
+    //@{
+	/// constructor, registers all known event types
+	EventManager();
+
+	/// destructor, checks if all events were deleted
+	~EventManager();
+    //@}
+
+    /*! \name Public methods */
+    //@{
+	/// triggers an event immediately
+	void TriggerEvent(std::shared_ptr<IEvent> spEvent);
+
+	/// queues an event and triggers it as soon as ProcessEvents() is called
+	void QueueEvent(std::shared_ptr<IEvent> spEvent);
+
+	/// processes all queued events.
+	/// events which are created while processing the queue are
+	/// processed the next time
+	void ProcessEvents();
+
+	/// registers an event listener for the given event types
+	void RegisterEventListener(IEventListener *pListener, std::vector<std::string> vsEventNames);
+
+	/// registers an event listener for the given event type
+	void RegisterEventListener(IEventListener *pListener, std::string sEventName);
+    //@}
 
 
-
-    void RegisterEventListener(IEventListener *pListener, std::vector<std::string> vsEventNames);
-    void RegisterEventListener(IEventListener *pListener, std::string sEventName);
-
-    void TriggerEvent(std::shared_ptr<IEvent> spEvent);
-
-    void QueueEvent(std::shared_ptr<IEvent> spEvent);
-
-    void ProcessEvents();
-
-    void Test();
-
-
+    /*! \name Some testing stuff (lua) */
+    //@{
+	std::shared_ptr<IEvent> CreateEvent(const char * szCreateString);
+	void CreateEvent2(const char * szCreateString);
+	void Test();
+    //@}
 private:
+    /*! \name Private helper methods */
+    //@{
+	/// registers an event T in the event manager (template method!)
+	template<class T> void ItlRegisterEvent();
 
-    template<class T> void RegisterEvent();
-    void ItlRegisterEventPrototype(std::shared_ptr<IEvent> spEventPrototype);
+	/// registers the prototype of an event in the event manager
+	void ItlRegisterEventPrototype(std::shared_ptr<IEvent> spEventPrototype);
 
-    bool ItlCheckIfEventIsRegistered(std::shared_ptr<IEvent> spEvent);
+	/// checks if the prototype of an given event type is known to the event manager
+	bool ItlCheckIfEventIsRegistered(std::shared_ptr<IEvent> spEvent);
+    //@}
 
-    std::list<std::shared_ptr<IEvent> > m_lPrototypes;
+    /*! \name Private members */
+    //@{
+	std::list<std::shared_ptr<IEvent> >		    m_lPrototypes;	    ///< a list of all known event types (prototypes), each registered event type is stored in this list
+	std::map<std::string, std::list<IEventListener *> > m_mEventListener;	    ///< a map which holds a list for each event type, and in this list are all listeners
+	std::list<std::shared_ptr<IEvent> >		    m_lEventQueue[2];	    ///< doublebuffered list of queued events
 
-    std::map<std::string, std::list<IEventListener *> > m_mEventListener;
-
-    std::list<std::shared_ptr<IEvent> > m_lEventQueue[2];
-
-    unsigned int m_nActiveQueue;
+	unsigned int m_nActiveQueue;						    ///< the currently active list in the doublebuffered list m_lEventQueue[]
+    //@}
 };
 
-template<class T> void EventManager::RegisterEvent()
+template<class T> void EventManager::ItlRegisterEvent()
 {
     // register the event type
     // if the compiler fails at this line, it means that
@@ -98,4 +150,4 @@ template<class T> void EventManager::RegisterEvent()
     T::RegisterLua();
 }
 
-#endif
+#endif // __PROJECT_CUBE_EVENT_MANAGER_HEADER
