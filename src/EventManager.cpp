@@ -8,6 +8,7 @@
 #include "EventManager.h"
 #include "Events.h"
 #include "Logger.h"
+#include "MainApp.h"
 
 // stl includes
 #include <iostream>
@@ -18,13 +19,7 @@
 #include <assert.h>
 
 // lua include, forcing C-mode
-extern "C"
-{
-#include <lua.h>
-#include <lualib.h>
-}
-
-#include <luabind/luabind.hpp>
+#include "lua_include.h"
 
 
 // static member initialisation
@@ -34,11 +29,7 @@ int EventManager::IEvent::s_iCount = 0;
   *************************************************************** */
 EventManager::EventManager()
 {
-    // register all known event prototypes
-    ItlRegisterEvent<InputKeyEvent>();
-    ItlRegisterEvent<InputMouseButtonEvent>();
-    ItlRegisterEvent<InputMouseMoveEvent>();
-    ItlRegisterEvent<CameraMovementEvent>();
+
 }
 
 /****************************************************************
@@ -260,4 +251,34 @@ bool EventManager::ItlCheckIfEventIsRegistered(std::shared_ptr<IEvent> spEvent)
     }
 
     return bFound;
+}
+
+/****************************************************************
+  *************************************************************** */
+lua_State * EventManager::RegisterLua()
+{
+    lua_State *pLuaState = MainApp::GetInstance()->GetLuaState();
+    assert (pLuaState != NULL);
+
+    luabind::module(pLuaState)
+    [
+	luabind::class_<EventManager>("EventManager")
+	    .def("QueueEvent", &EventManager::QueueEvent)
+    ];
+
+    luabind::globals(pLuaState)["eventmanager"] = this;
+
+    return pLuaState;
+}
+
+void EventManager::Initialize()
+{
+    // register all known event prototypes
+    ItlRegisterEvent<InputKeyEvent>();
+    ItlRegisterEvent<InputMouseButtonEvent>();
+    ItlRegisterEvent<InputMouseMoveEvent>();
+    ItlRegisterEvent<CameraMovementEvent>();
+
+    // register itself in lua environment
+    RegisterLua();
 }

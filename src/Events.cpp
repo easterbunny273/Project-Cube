@@ -4,6 +4,9 @@
 #include <sstream>
 #include <assert.h>
 
+#include "MainApp.h"
+#include "lua_include.h"
+
 EventManager::IEvent::TEventType InputKeyEvent::s_szEventType		    = "input.key";
 EventManager::IEvent::TEventType InputMouseButtonEvent::s_szEventType	    = "input.mouse.button";
 EventManager::IEvent::TEventType InputMouseMoveEvent::s_szEventType	    = "input.mouse.move";
@@ -48,6 +51,17 @@ std::shared_ptr<EventManager::IEvent> InputKeyEvent::CreateFromString(std::strin
 
 void InputKeyEvent::RegisterLua()
 {
+    lua_State *pLuaState = MainApp::GetInstance()->GetLuaState();
+
+    luabind::module(pLuaState)
+    [
+	luabind::class_<IEvent>("IEvent"),
+	luabind::class_<InputKeyEvent, std::shared_ptr<IEvent> >("InputKeyEvent")
+	    .def("Create", &InputKeyEvent::Create)
+	    .def("GetKey", &InputKeyEvent::GetKey)
+	    .def("GetEvent", &InputKeyEvent::GetEvent)
+
+    ];
 }
 
 std::shared_ptr<InputKeyEvent> InputKeyEvent::Cast(std::shared_ptr<EventManager::IEvent> spEvent)
@@ -85,6 +99,15 @@ std::shared_ptr<InputMouseButtonEvent> InputMouseButtonEvent::Cast(std::shared_p
 
 void InputMouseButtonEvent::RegisterLua()
 {
+    lua_State *pLuaState = MainApp::GetInstance()->GetLuaState();
+
+    luabind::module(pLuaState)
+    [
+	//luabind::class_<IEvent>("IEvent"),
+	luabind::class_<InputMouseButtonEvent, luabind::bases<IEvent> >("InputMouseButtonEvent")
+	    .def("Create", &InputMouseButtonEvent::Create)
+	    .def("GetMouseButton", &InputMouseButtonEvent::GetMouseButton)
+    ];
 }
 
 
@@ -117,6 +140,16 @@ std::shared_ptr<InputMouseMoveEvent> InputMouseMoveEvent::Cast(std::shared_ptr<E
 
 void InputMouseMoveEvent::RegisterLua()
 {
+    lua_State *pLuaState = MainApp::GetInstance()->GetLuaState();
+
+    luabind::module(pLuaState)
+    [
+	//luabind::class_<IEvent>("IEvent"),
+	luabind::class_<InputMouseMoveEvent, luabind::bases<IEvent> >("InputMouseMoveEvent")
+	    .def("Create", &InputMouseMoveEvent::Create)
+	    .def("GetX", &InputMouseMoveEvent::GetX)
+	    .def("GetY", &InputMouseMoveEvent::GetY)
+    ];
 }
 
 /*
@@ -148,6 +181,16 @@ std::shared_ptr<CameraMovementEvent> CameraMovementEvent::Cast(std::shared_ptr<E
 
 void CameraMovementEvent::RegisterLua()
 {
+    lua_State *pLuaState = MainApp::GetInstance()->GetLuaState();
+
+    luabind::module(pLuaState)
+    [
+	//luabind::class_<IEvent>("IEvent"),
+	luabind::class_<CameraMovementEvent, luabind::bases<IEvent> >("CameraMovementEvent")
+	    .def("Create", &CameraMovementEvent::Create)
+	    .def("GetMovementType", &CameraMovementEvent::GetMovementType)
+	    .def("GetValue", &CameraMovementEvent::GetValue)
+    ];
 }
 
 

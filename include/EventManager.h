@@ -31,6 +31,8 @@
  *  which creates a prototype of the event
  */
 
+class lua_State;
+
 class EventManager
 {
 public:
@@ -131,6 +133,12 @@ public:
 
 	/// registers an event listener for the given event type
 	void RegisterEventListener(IEventListener *pListener, IEvent::TEventType tEventName);
+
+	/// registers itself in the lua environment
+	lua_State * RegisterLua();
+
+	/// register all known EventTypes in the EventManager and in the Lua-environment
+	void Initialize();
     //@}
 
 

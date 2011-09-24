@@ -51,6 +51,11 @@ public:
         void Run();
     //@}
 
+    /*! \name Testing stuff */
+    //@{
+	void LuaTest();
+    //@}
+
     /*! \name Get singelton instance */
     //@{
         static MainApp *GetInstance();
@@ -79,6 +84,11 @@ private:
 	Graphic *m_pGraphic;
 	DummyGame *m_pGame;
 	lua_State * m_pLuaState;
+    //@}
+
+    /*! \name Static members */
+    //@{
+	static MainApp *s_pInstance;
     //@}
 };
 

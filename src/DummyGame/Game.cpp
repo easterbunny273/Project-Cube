@@ -116,9 +116,9 @@ DummyGame::DummyGame()
     m_bStop = false;
     m_bLeftMouseButtonDown = false;
 
-    MainApp::GetInstance()->GetEventManager()->RegisterEventListener(this, "input.key");
-    MainApp::GetInstance()->GetEventManager()->RegisterEventListener(this, "input.mouse.button");
-    MainApp::GetInstance()->GetEventManager()->RegisterEventListener(this, "input.mouse.move");
+    MainApp::GetInstance()->GetEventManager()->RegisterEventListener(this, InputKeyEvent::EventType());
+    MainApp::GetInstance()->GetEventManager()->RegisterEventListener(this, InputMouseButtonEvent::EventType());
+    MainApp::GetInstance()->GetEventManager()->RegisterEventListener(this, InputMouseMoveEvent::EventType());
 }
 
 bool DummyGame::OnEvent(std::shared_ptr<EventManager::IEvent> spEvent)

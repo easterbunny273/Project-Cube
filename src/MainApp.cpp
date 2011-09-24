@@ -1,6 +1,9 @@
 #include "MainApp.h"
 #include "Logger.h"
 
+// initialize singelton ptr to NULL
+MainApp * MainApp::s_pInstance = NULL;
+
 MainApp::MainApp()
 {
     // todo: move in an own init method, because in constructor error handling is shitty
@@ -8,9 +11,8 @@ MainApp::MainApp()
     // load core settings
     m_CoreSettings.RestoreSettingsFromXMLFile("config/core-settings.xml");
 
-    // set lua state to NULL, lazy evaluation
+    // set subsystems to NULL, lazy initialisation
     m_pLuaState = NULL;
-
     m_pGraphic = NULL;
     m_pGame = NULL;
 
@@ -43,9 +45,23 @@ MainApp::~MainApp()
 
 MainApp * MainApp::GetInstance()
 {
-    static MainApp instance;
+    static bool bInitializing = false;
 
-    return &instance;
+    if (s_pInstance == NULL)
+    {
+	// when this assertion fails, it means the following:
+	// --
+	// MainApp is just initializing and a subsystem is created by the constructor of MainApp. Now,
+	// the subsystem accesses the instance of MainApp, but the instance is not initialized yet.
+	// It's a infinite loop which causes serious problems.
+	assert(bInitializing == false);
+
+	bInitializing = true;
+	s_pInstance = new MainApp();
+    }
+
+    assert (s_pInstance != NULL);
+    return s_pInstance;
 }
 
 Settings * MainApp::GetCoreSettings()
@@ -64,12 +80,15 @@ void MainApp::Run()
     Logger::debug() << "hello!" << Logger::endl;
 
     GetGraphic()->InitializeOpenGL();
-    //GetGraphic()->RegisterInputHandler(GetGame());
     GetGraphic()->SetActiveRenderPath("default");
+    GetEventManager()->Initialize();
+
 
     while(GetGame()->GetStop() == false)
     {
 	GetEventManager()->ProcessEvents();
+
+	LuaTest();
 
         GetGraphic()->Render();
     }
@@ -110,9 +129,19 @@ lua_State * MainApp::GetLuaState()
 
 	// load lua libs
 	luaL_openlibs(m_pLuaState);
+
+	luabind::open(m_pLuaState);
     }
 
     assert (m_pLuaState != NULL);
-
     return m_pLuaState;
+}
+
+void MainApp::LuaTest()
+{
+    luaL_dostring(
+    m_pLuaState,
+    "new_event = InputKeyEvent::Create(87, 1)\n"
+    "eventmanager::QueueEvent(new_event)\n"
+    );
 }
