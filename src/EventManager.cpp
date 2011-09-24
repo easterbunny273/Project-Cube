@@ -166,9 +166,9 @@ void EventManager::CreateEvent2(const char *szCreateString)
 /****************************************************************
   *************************************************************** */
 void EventManager::RegisterEventListener(EventManager::IEventListener *pListener,
-					 std::vector<std::string> vsEventNames)
+					 std::vector<IEvent::TEventType> vtEventTypes)
 {
-    for (auto iter = vsEventNames.begin(); iter != vsEventNames.end(); iter++)
+    for (auto iter = vtEventTypes.begin(); iter != vtEventTypes.end(); iter++)
     {
 	RegisterEventListener(pListener, *iter);
     }
@@ -177,11 +177,11 @@ void EventManager::RegisterEventListener(EventManager::IEventListener *pListener
 /****************************************************************
   *************************************************************** */
 void EventManager::RegisterEventListener(IEventListener *pListener,
-					 std::string sEventName)
+					 IEvent::TEventType tEventType)
 {
     // check if this concrete listener has already registered for that event type
 
-    std::list<IEventListener*> *plListenerForEvent = &(m_mEventListener[sEventName]);
+    std::list<IEventListener*> *plListenerForEvent = &(m_mEventListener[tEventType]);
 
     for (auto iter : *plListenerForEvent)
     {
@@ -194,7 +194,7 @@ void EventManager::RegisterEventListener(IEventListener *pListener,
     }
 
 
-    m_mEventListener[sEventName].push_back(pListener);
+    m_mEventListener[tEventType].push_back(pListener);
 }
 
 /****************************************************************

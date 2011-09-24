@@ -7,7 +7,6 @@
 #ifndef __PROJECT_CUBE_EVENT_MANAGER_HEADER
 #define __PROJECT_CUBE_EVENT_MANAGER_HEADER
 
-#include <string>
 #include <memory>
 #include <map>
 #include <vector>
@@ -128,10 +127,10 @@ public:
 	void ProcessEvents();
 
 	/// registers an event listener for the given event types
-	void RegisterEventListener(IEventListener *pListener, std::vector<std::string> vsEventNames);
+	void RegisterEventListener(IEventListener *pListener, std::vector<IEvent::TEventType> vtEventNames);
 
 	/// registers an event listener for the given event type
-	void RegisterEventListener(IEventListener *pListener, std::string sEventName);
+	void RegisterEventListener(IEventListener *pListener, IEvent::TEventType tEventName);
     //@}
 
 
@@ -156,9 +155,9 @@ private:
 
     /*! \name Private members */
     //@{
-	std::list<std::shared_ptr<IEvent> >		    m_lPrototypes;	    ///< a list of all known event types (prototypes), each registered event type is stored in this list
-	std::map<std::string, std::list<IEventListener *> > m_mEventListener;	    ///< a map which holds a list for each event type, and in this list are all listeners
-	std::list<std::shared_ptr<IEvent> >		    m_lEventQueue[2];	    ///< doublebuffered list of queued events
+	std::list<std::shared_ptr<IEvent> >			    m_lPrototypes;	    ///< a list of all known event types (prototypes), each registered event type is stored in this list
+	std::map<IEvent::TEventType, std::list<IEventListener *> >  m_mEventListener;	    ///< a map which holds a list for each event type, and in this list are all listeners
+	std::list<std::shared_ptr<IEvent> >			    m_lEventQueue[2];	    ///< doublebuffered list of queued events
 
 	unsigned int m_nActiveQueue;						    ///< the currently active list in the doublebuffered list m_lEventQueue[]
     //@}
