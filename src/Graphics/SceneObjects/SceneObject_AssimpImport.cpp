@@ -468,13 +468,13 @@ void SceneObject_AssimpImport::ItlPreRender()
 {
     ShaderManager::instance()->PushActiveShader();
     if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_SHADOWMAP)
-	ShaderManager::instance()->ActivateShader("simple_shader");
+	ShaderManager::instance()->ActivateShader("simple_shading");
     else if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_DEEP_OPACITY_MAP1)
 	ShaderManager::instance()->ActivateShader("assimp_deep_step1_shader");
     else if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_DEEP_OPACITY_MAP2)
 	ShaderManager::instance()->ActivateShader("assimp_deep_step2_shader");
     else
-	ShaderManager::instance()->ActivateShader("test-shader");
+	ShaderManager::instance()->ActivateShader("test-shading");
 }
 
 void SceneObject_AssimpImport::ItlRender()
@@ -498,7 +498,7 @@ void SceneObject_AssimpImport::ItlRender()
     }
 
 
-    GLint l_opacity_depth_texture = ShaderManager::instance()->GetUniform("opacity_depth");
+ /*   GLint l_opacity_depth_texture = ShaderManager::instance()->GetUniform("opacity_depth");
     if (l_opacity_depth_texture != -1)
     {
 	    GLuint texture_unit_opacity_depth = TextureManager::instance()->UseTexture("fbo_deep_opacity_map_depth");	    //load texture in texture unit
@@ -510,7 +510,7 @@ void SceneObject_AssimpImport::ItlRender()
     {
 	    GLuint texture_unit_opacity_opacity = TextureManager::instance()->UseTexture("fbo_deep_opacity_map_opacities");	    //load texture in texture unit
 	    glUniform1i(l_opacity_opacity_texture, texture_unit_opacity_opacity);   //tell the shader which texture unit was used
-    }
+    }*/
 
     for (unsigned int nMesh=0; nMesh < m_nNumMeshes; nMesh++)
     {
@@ -611,12 +611,12 @@ void SceneObject_AssimpImport::ItlRender()
     if (l_shadow_texture != -1)
 	TextureManager::instance()->UnuseTexture("fbo_light_color");	    //load texture in texture unit
 
-    if (l_opacity_depth_texture != -1)
+    /*if (l_opacity_depth_texture != -1)
 	TextureManager::instance()->UnuseTexture("fbo_deep_opacity_map_depth");	    //load texture in texture unit
 
     if (l_opacity_opacity_texture != -1)
 	TextureManager::instance()->UnuseTexture("fbo_deep_opacity_map_opacities");	    //load texture in texture unit
-
+*/
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }

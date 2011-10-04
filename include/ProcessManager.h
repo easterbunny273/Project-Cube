@@ -1,3 +1,6 @@
+/* this class is copied from "Game Coding Complete" and should be used later to organize the subsystems as processes,
+   as well as specific types of events (in general, not in the meaning of the coded Events+EventManager)*/
+
 #ifndef __PROCESS_MANAGER_HEADER
 #define __PROCESS_MANAGER_HEADER
 

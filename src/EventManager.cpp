@@ -192,6 +192,13 @@ void EventManager::RegisterEventListener(IEventListener *pListener,
   *************************************************************** */
 void EventManager::TriggerEvent(std::shared_ptr<IEvent> spEvent)
 {
+    static int iNestedCalls = 0;
+    bool bIsOuterLoop = (iNestedCalls == 0);
+
+    iNestedCalls++;
+
+    assert(iNestedCalls < 100);
+
     assert (ItlCheckIfEventIsRegistered(spEvent));
 
     std::list<IEventListener*> *plListenerForEvent = &(m_mEventListener[spEvent->GetEventType()]);
@@ -202,6 +209,10 @@ void EventManager::TriggerEvent(std::shared_ptr<IEvent> spEvent)
 
 	pListener->OnEvent(spEvent);
     }
+
+    iNestedCalls--;
+
+    assert (!bIsOuterLoop || iNestedCalls==0);
 }
 
 /****************************************************************

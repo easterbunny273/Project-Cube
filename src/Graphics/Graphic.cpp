@@ -49,8 +49,8 @@ Graphic::Graphic()
       m_iFramesPerSecond(0),
       m_fTimeOfLastRenderCall(0),
       m_bIsMouseLocked(false),
-      m_pSettings(NULL),
-      m_bUseOpenGL_4_1(false)
+      m_bUseOpenGL_4_1(false),
+      m_pSettings(NULL)
 {
     // check if this is the first instance
     assert (s_iInstances == 0);
@@ -705,6 +705,10 @@ void Graphic::ItlLoadShaderPrograms()
 
     pShaderManager->AddShader("basic_shading", new Shader("shaders/basic_shading.vs", "shaders/basic_shading.fs"));
     pShaderManager->AddShader("camera-debug", new Shader("shaders/camera-debug.vs", "shaders/camera-debug.fs"));
+    pShaderManager->AddShader("test-shading", new Shader("shaders/test-shading.vs", "shaders/test-shading.fs"));
+    pShaderManager->AddShader("bounding_shader", new Shader("shaders/bounding-box.vs", "shaders/bounding-box.fs"));
+    pShaderManager->AddShader("simple_shading", new Shader("shaders/simple-shading.vs", "shaders/simple-shading.fs"));
+
 }
 
 /****************************************************************
@@ -718,12 +722,12 @@ void Graphic::ItlCreateBaseRenderPath()
     std::shared_ptr<SceneObject> spCameraNode (new SceneObject_Camera(GetCamera()));
 
     std::shared_ptr<SceneObject> spCubeNode (new SceneObject_Cube());
-    //std::shared_ptr<SceneObject> spTreppe (new SceneObject_AssimpImport("models/bunte-treppe.dae"));
+    std::shared_ptr<SceneObject> spTreppe (new SceneObject_AssimpImport("models/freepool-ng-table.3ds"));
 
 
     spRootNode->AddChild(spCameraNode);
     spCameraNode->AddChild(spCubeNode);
-    //spCubeNode->AddChild(spTreppe);
+    spCubeNode->AddChild(spTreppe);
 
     AddRenderPath(spRootNode, "default");
 }
