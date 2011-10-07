@@ -377,7 +377,5 @@ bool SceneObject_BoundingBoxed::ItlTestIfVisible()
 				if (vBackRightTop_SS.z > fFarClippingPlane)
 				    return false;
 
-
-
     return true;
 }

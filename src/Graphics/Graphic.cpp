@@ -110,10 +110,13 @@ bool Graphic::InitializeOpenGL()
     Settings::TSettingsGroup *pCameraSettings = m_pSettings->GetGroup("camera");
     float fFieldOfView = pCameraSettings->GetValueOrDefault("fov", 45.0f);
     float fRatio = pCameraSettings->GetValueOrDefault("ratio", 1.33f);
-    float fNearPlane = pCameraSettings->GetValueOrDefault("near-plane", 0.1f);
+    float fNearPlane = pCameraSettings->GetValueOrDefault("near-plane", 0.02f);
     float fFarPlane = pCameraSettings->GetValueOrDefault("far-plane", 100.0f);
 
     GetCamera()->SetPerspectiveProjection(fFieldOfView, fRatio, fNearPlane, fFarPlane);
+    GetDebugCamera()->SetPerspectiveProjection(45.0f, 1.33f, 0.02f, 500.0f);
+
+    GetCamera()->SetActive(true);
 
     return true;
 }
@@ -150,7 +153,7 @@ void Graphic::Render()
     //clear buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    m_Camera.Move(0.01f);
+    m_Camera.Move(0.0001f);
 
     // draw the scene
     if (m_vRenderPaths.find(m_sActiveRenderPath) != m_vRenderPaths.end())
@@ -497,12 +500,6 @@ void Graphic::ItlInitializeOpenGLStates()
     //clear error status
     glGetError();
 
-    /*
-    m_spMainCamera = shared_ptr<Camera> (new Camera(glm::vec3(4,3,6), 210, -15, 45.0, 1.33, 0.1, 100.0));
-    m_spDebugCamera = shared_ptr<Camera> (new Camera(glm::vec3(0,5,10), 180, 0, 45.0, 1.33, 0.1, 100.0));
-    m_spLightCamera = shared_ptr<Camera> (new Camera(glm::vec3(0,6,0), 180, -90, 50.0, 1.0, 2.5, 10.0));
-    */
-
     Logger::debug() << "graphic initialized" << Logger::endl;
 }
 
@@ -512,6 +509,7 @@ void Graphic::ItlInitializeOpenGLStates()
 Graphic::Camera::Camera()
 {
     m_bInitialized = false;
+    m_bActive = false;
     m_m4ProjectionMatrix = glm::mat4();
 
     m_fRotationHorizontal = 180;
@@ -705,7 +703,6 @@ void Graphic::ItlLoadShaderPrograms()
 
     pShaderManager->AddShader("basic_shading", new Shader("shaders/basic_shading.vs", "shaders/basic_shading.fs"));
     pShaderManager->AddShader("camera-debug", new Shader("shaders/camera-debug.vs", "shaders/camera-debug.fs"));
-    pShaderManager->AddShader("test-shading", new Shader("shaders/test-shading.vs", "shaders/test-shading.fs"));
     pShaderManager->AddShader("bounding_shader", new Shader("shaders/bounding-box.vs", "shaders/bounding-box.fs"));
     pShaderManager->AddShader("simple_shading", new Shader("shaders/simple-shading.vs", "shaders/simple-shading.fs"));
 
@@ -719,6 +716,7 @@ void Graphic::ItlCreateBaseRenderPath()
 
     std::shared_ptr<SceneObject> spRootNode (new SceneObject_EmptyNode());
 
+    std::shared_ptr<SceneObject> spDebugCameraNode (new SceneObject_Camera(GetDebugCamera(), false));
     std::shared_ptr<SceneObject> spCameraNode (new SceneObject_Camera(GetCamera()));
 
     std::shared_ptr<SceneObject> spCubeNode (new SceneObject_Cube());
@@ -726,8 +724,11 @@ void Graphic::ItlCreateBaseRenderPath()
 
 
     spRootNode->AddChild(spCameraNode);
-    spCameraNode->AddChild(spCubeNode);
-    spCubeNode->AddChild(spTreppe);
+    spCameraNode->AddChild(spDebugCameraNode);
+    spDebugCameraNode->AddChild(spTreppe);
+    //spCubeNode->AddChild(spTreppe);
+
+    spTreppe->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01f)));
 
     AddRenderPath(spRootNode, "default");
 }
@@ -773,21 +774,22 @@ bool Graphic::Camera::OnEvent(std::shared_ptr<EventManager::IEvent> spEvent)
     std::shared_ptr<CameraMovementEvent> spMovementEvent = CameraMovementEvent::Cast(spEvent);
     assert(spMovementEvent);
 
-    CameraMovementEvent::TMovementType eMovementType = spMovementEvent->GetMovementType();
-    float fValue = spMovementEvent->GetValue();
+    if (m_bActive)
+    {
+	CameraMovementEvent::TMovementType eMovementType = spMovementEvent->GetMovementType();
+	float fValue = spMovementEvent->GetValue();
 
-    if (eMovementType == CameraMovementEvent::CAMERA_MOVE_X)
-	AddToMoveVector(glm::vec3(fValue, 0.0f, 0.0f));
-    else if (eMovementType == CameraMovementEvent::CAMERA_MOVE_Y)
-	AddToMoveVector(glm::vec3(0.0f, fValue, 0.0f));
-    else if (eMovementType == CameraMovementEvent::CAMERA_MOVE_Z)
-	AddToMoveVector(glm::vec3(0.0f, 0.0f, fValue));
-    else if (eMovementType == CameraMovementEvent::CAMERA_ROTATE_X)
-	RotateHorizontal(fValue);
-    else if (eMovementType == CameraMovementEvent::CAMERA_ROTATE_Y)
-	RotateVertical(fValue);
-    else
-	assert (!"no if condition fired");
+	if (eMovementType == CameraMovementEvent::CAMERA_MOVE_X)
+	    AddToMoveVector(glm::vec3(fValue, 0.0f, 0.0f));
+	else if (eMovementType == CameraMovementEvent::CAMERA_MOVE_Y)
+	    AddToMoveVector(glm::vec3(0.0f, fValue, 0.0f));
+	else if (eMovementType == CameraMovementEvent::CAMERA_MOVE_Z)
+	    AddToMoveVector(glm::vec3(0.0f, 0.0f, fValue));
+	else if (eMovementType == CameraMovementEvent::CAMERA_ROTATE_X)
+	    RotateHorizontal(fValue);
+	else if (eMovementType == CameraMovementEvent::CAMERA_ROTATE_Y)
+	    RotateVertical(fValue);
+	else
+	    assert (!"no if condition fired");
+    }
 }
-
-

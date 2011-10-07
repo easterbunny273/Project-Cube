@@ -86,6 +86,11 @@ private:
 
     /*! \name Internal helper methods */
     //@{
+	static void ItlLoadGeneralRessources();
+    //@}
+
+    /*! \name Internal helper methods */
+    //@{
 	void ItlCreateVertexBufferObject(std::vector<GLfloat> &data);
 	void ItlCreateIndexBufferObject(std::vector<GLuint> &data);
 
@@ -110,6 +115,12 @@ private:
 	int m_iNumVertices;
 	int m_iNumIndices;
     //@}
+
+    /*! \name Static members */
+    //@{
+	static bool s_bGeneralRessourcesInitialized;	    ///< whether the general ressources like shaders are already loaded
+    //@}
+
 
 };
 

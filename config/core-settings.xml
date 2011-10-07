@@ -7,7 +7,7 @@
             <group name="camera">
                 <value name="far-plane" type="float">100</value>
                 <value name="fov" type="float">45</value>
-                <value name="near-plane" type="float">0.1</value>
+                <value name="near-plane" type="float">0.01</value>
                 <value name="ratio" type="float">1.33</value>
             </group>
             <group name="window">

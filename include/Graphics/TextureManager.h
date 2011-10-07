@@ -16,7 +16,7 @@
  * a texture if a texture is still bound to an unit but the unit is marked as "free for used".
  * In this case, the texturemanager just marks the unit as "used" and prevents rebinding - but
  * I think that the overhead to do this beats the benefit, so its disabled by default */
-#define PREVENT_REBINDING_TEXTURE
+//#define PREVENT_REBINDING_TEXTURE
 
 /*! \brief A class for loading textures and manage the use of the texture units.
  *

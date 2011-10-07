@@ -81,6 +81,11 @@ public:
                 void SetOrthoProjection (float fLeft, float fRight, float fTop, float fBottom, float fNear, float fFar);
             //@}
 
+	    /*! \name Other Methods */
+	    //@{
+		void SetActive(bool bActive) { m_bActive = true; }
+	    //@}
+
         private:
             /*! \name Construction / Destruction */
             //@{
@@ -88,9 +93,10 @@ public:
                 Camera();
             //@}
 
-            /*! \name Construction / Destruction */
+	    /*! \name Private members */
             //@{
-                bool        m_bInitialized;         ///< wheter the projection matrix was set up
+		bool        m_bActive;		    ///< whether this camera is the currently active one
+		bool        m_bInitialized;         ///< whether the projection matrix was set up
                 glm::mat4   m_m4ProjectionMatrix;
                 glm::mat4   m_m4ViewMatrix;
                 glm::vec3   m_v3MoveVector;

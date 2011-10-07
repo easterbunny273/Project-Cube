@@ -53,8 +53,13 @@ struct SceneObject_AssimpImport::TItlMaterialData
     std::string sInternalLoadedBumpTexture;
 };
 
+// static member initialization
+bool SceneObject_AssimpImport::s_bGeneralRessourcesInitialized = false;
+
 SceneObject_AssimpImport::SceneObject_AssimpImport(std::string sFilename)
 {
+    ItlLoadGeneralRessources();
+
     Assimp::Importer importer;
     std::vector<GLfloat> vVertexBufferData;
     std::vector<GLuint> vIndexBufferData;
@@ -469,12 +474,12 @@ void SceneObject_AssimpImport::ItlPreRender()
     ShaderManager::instance()->PushActiveShader();
     if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_SHADOWMAP)
 	ShaderManager::instance()->ActivateShader("simple_shading");
-    else if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_DEEP_OPACITY_MAP1)
+    /*else if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_DEEP_OPACITY_MAP1)
 	ShaderManager::instance()->ActivateShader("assimp_deep_step1_shader");
     else if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_DEEP_OPACITY_MAP2)
-	ShaderManager::instance()->ActivateShader("assimp_deep_step2_shader");
+	ShaderManager::instance()->ActivateShader("assimp_deep_step2_shader");*/
     else
-	ShaderManager::instance()->ActivateShader("test-shading");
+	ShaderManager::instance()->ActivateShader("sceneobject-assimpimport");
 }
 
 void SceneObject_AssimpImport::ItlRender()
@@ -663,11 +668,22 @@ int SceneObject_AssimpImport::NumVertices()
 
 bool SceneObject_AssimpImport::ItlTestSkipRendering()
 {
-    if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_DEEP_OPACITY_MAP1)
+    /*if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_DEEP_OPACITY_MAP1)
 	return true;
 
     if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_DEEP_OPACITY_MAP2)
-	return true;
+	return true;*/
 
     return false;
+}
+
+void SceneObject_AssimpImport::ItlLoadGeneralRessources()
+{
+    if (s_bGeneralRessourcesInitialized == false)
+    {
+	// load shaders
+	ShaderManager::instance()->AddShader("sceneobject-assimpimport", new Shader("shaders/sceneobject-assimpimport.vs", "shaders/sceneobject-assimpimport.fs"));
+
+	s_bGeneralRessourcesInitialized = true;
+    }
 }
