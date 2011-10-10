@@ -6,9 +6,6 @@
 
 int main()
 {
-    //EventManager test;
-    //test.Test();
-
     TestMain::GetInstance()->Run();
     MainApp::GetInstance()->Run();
 }

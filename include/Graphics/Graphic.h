@@ -35,6 +35,80 @@ class Graphic : EventManager::IEventListener
 public:
     /*! \name Nested classes */
     //@{
+        class IRenderTarget
+        {
+        public:
+            virtual void ClearBuffers() = 0;
+            virtual void SwapBuffers() = 0;
+
+        protected:
+            IRenderTarget() {}
+            virtual ~IRenderTarget() {}
+        };
+
+        class IInputEventListener
+        {
+        public:
+            /// handles keyboard events and sends signals to listener
+            virtual void ItlHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState) = 0;
+
+            /// handles mouse movements and sends signals to the listener
+            virtual void ItlHandleMousePos(int iX, int iY) = 0;
+
+            /// handles mouse wheel input events and sends signals to the listener
+            virtual void ItlHandleMouseWheel(int iPosition) = 0;
+
+            /// handles mouse button events and sends signals to the listener
+            virtual void ItlHandleMouseButton(int iButton, int iAction) = 0;
+        };
+
+        class QtWidgetWrapper : public IRenderTarget
+        {
+            // to be done ...
+            // this class is supposed to use an existing QT widget as the render target
+        };
+
+        class GlfwWindow;
+
+        class Scene
+        {
+        public:
+            static std::shared_ptr<Scene> Create(std::shared_ptr<SceneObject> spRenderPath);
+
+            void CallRenderPath();
+
+        private:
+            std::shared_ptr<SceneObject> m_spRenderPath;
+        };
+
+       /* class ISceneObject
+        {
+
+        };
+
+        class LoadedModel : public ISceneObject
+        {
+
+        };
+
+        class Cube : public ISceneObject
+        {
+
+        };
+
+        class BasicLight : public ISceneObject
+        {
+
+        };
+
+        class Node : public ISceneObject
+        {
+
+        };*/
+    //@}
+
+    /*! \name Nested classes */
+    //@{
 	class Camera : public EventManager::IEventListener
         {
             friend class Graphic;
@@ -128,12 +202,6 @@ public:
         bool ShutDown();
     //@}
 
-    /*! \name Methods for input event handling */
-    //@{
-	void HideAndLockMouseToWindowCenter();
-
-	void UnHideAndUnLockMouse();
-    //@}
 
     /*! \name EventManager::IEventListener interface */
     //@{
@@ -169,17 +237,31 @@ public:
         void Render();
     //@}
 
-private:
-    /*! \name Static helper methods */
+    /*! \name new methods - refactoring - comments tbd */
     //@{
-        /// handles keyboard events and sends signals to listener
-        static void ItlStaticHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState);
+        void SingleRenderCall(std::shared_ptr<IRenderTarget> spRenderTarget, std::shared_ptr<Camera> spCamera, std::shared_ptr<Scene> spScene);
 
-        static void ItlStaticHandleMousePos(int iX, int iY);
+        int AddRenderLoop(std::shared_ptr<IRenderTarget> spRenderTarget, std::shared_ptr<Camera> spCamera, std::shared_ptr<Scene> spScene);
 
-        static void ItlStaticHandleMouseWheel(int iPosition);
+        void RemoveRenderLoop(int iLoopID);
+    //@}
 
-        static void ItlStaticHandleMouseButton(int iButton, int iAction);
+    /*! \name methods to make refactoring easier - will be removed when refactoring is finished */
+    //@{
+        std::shared_ptr<SceneObject> CreateOldRenderPath();
+    //@}
+
+private:
+    /*! \name new methods - refactoring - comments tbd */
+    //@{
+        struct TItlRenderLoop
+        {
+            std::shared_ptr<IRenderTarget> spRenderTarget;
+            std::shared_ptr<Camera> spCamera;
+            std::shared_ptr<Scene> spScene;
+        };
+
+        std::map<int, TItlRenderLoop>   m_mRenderLoops;
     //@}
 
     /*! \name Internal helper methods */
@@ -187,17 +269,7 @@ private:
 	/// load basic settings
 	void ItlLoadSettings();
 
-        /// handles keyboard events and sends signals to listener
-        void ItlHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState);
 
-	/// handles mouse movements and sends signals to the listener
-        void ItlHandleMousePos(int iX, int iY);
-
-	/// handles mouse wheel input events and sends signals to the listener
-        void ItlHandleMouseWheel(int iPosition);
-
-	/// handles mouse button events and sends signals to the listener
-        void ItlHandleMouseButton(int iButton, int iAction);
 
 	/// creates the opengl context and window
         void ItlCreateOpenGLWindow();
@@ -229,7 +301,7 @@ private:
 	int		    m_iFramesPerSecond;
 	float		    m_fTimeOfLastRenderCall;
 
-	bool		    m_bIsMouseLocked;		///< whether the mouse is currently locked to the center
+
 
 	std::string	    m_sActiveRenderPath;
 

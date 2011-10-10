@@ -41,6 +41,8 @@ using namespace std;
 int Graphic::s_iInstances = 0;
 Graphic *Graphic::s_pInstance = NULL;
 
+
+
 /****************************************************************
   *************************************************************** */
 Graphic::Graphic()
@@ -48,7 +50,6 @@ Graphic::Graphic()
       m_iFramesInThisSecondYet(0),
       m_iFramesPerSecond(0),
       m_fTimeOfLastRenderCall(0),
-      m_bIsMouseLocked(false),
       m_bUseOpenGL_4_1(false),
       m_pSettings(NULL)
 {
@@ -91,10 +92,9 @@ bool Graphic::InitializeOpenGL()
     ItlLoadSettings();
 
     // create window
-    ItlCreateOpenGLWindow();
+   // ItlCreateOpenGLWindow();
 
     m_bWindowOpenened = true;
-    m_bIsMouseLocked = false;
 
     // initialize opengl state variables
     ItlInitializeOpenGLStates();
@@ -103,7 +103,7 @@ bool Graphic::InitializeOpenGL()
     ItlLoadShaderPrograms();
 
     // create basic render path
-    ItlCreateBaseRenderPath();
+   // ItlCreateBaseRenderPath();
 
     // set main camera values
     assert (m_pSettings != NULL);
@@ -147,6 +147,7 @@ void Graphic::AddRenderPath(std::shared_ptr<SceneObject> spRoot, std::string sRe
   *************************************************************** */
 void Graphic::Render()
 {
+    m_sActiveRenderPath = std::string("default");
     // check if any render path is set to active
     assert (m_sActiveRenderPath.empty() == false);
 
@@ -188,206 +189,32 @@ void Graphic::Render()
 
 /****************************************************************
   *************************************************************** */
-void Graphic::ItlStaticHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState)
-{
-    // this method is a static method (glfw cannot call class methods)
-    // which redirects the event to the member-method of the Graphic class
-    // therefore, we need a pointer to the instance. Thus, only one instance
-    // of Graphic can exist without having problems with the input events
-    // (because with more instances, this method would not know which instance
-    // should receive the events).
+//void Graphic::GlfwWindow::ItlHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState)
+//{
 
-    // make sure we know the address of the instance
-    assert (s_pInstance != NULL);
+//}
 
-    // get "this" to call member methods
-    Graphic *pThis = s_pInstance;
+///****************************************************************
+//  *************************************************************** */
+//void Graphic::GlfwWindow::ItlHandleMousePos(int iX, int iY)
+//{
 
-    // call member method
-    pThis->ItlHandleKeyboardEvent(iKeyIdentifier, iNewKeyState);
-}
+//}
 
-/****************************************************************
-  *************************************************************** */
-void Graphic::ItlStaticHandleMousePos(int iX, int iY)
-{
-    // this method is a static method (glfw cannot call class methods)
-    // which redirects the event to the member-method of the Graphic class
-    // therefore, we need a pointer to the instance. Thus, only one instance
-    // of Graphic can exist without having problems with the input events
-    // (because with more instances, this method would not know which instance
-    // should receive the events).
-
-    // make sure we know the address of the instance
-    assert (s_pInstance != NULL);
-
-    // get "this" to call member methods
-    Graphic *pThis = s_pInstance;
-
-    // call member method
-    pThis->ItlHandleMousePos(iX, iY);
-}
-
-/****************************************************************
-  *************************************************************** */
-void Graphic::ItlStaticHandleMouseWheel(int iPosition)
-{
-    // this method is a static method (glfw cannot call class methods)
-    // which redirects the event to the member-method of the Graphic class
-    // therefore, we need a pointer to the instance. Thus, only one instance
-    // of Graphic can exist without having problems with the input events
-    // (because with more instances, this method would not know which instance
-    // should receive the events).
-
-    // make sure we know the address of the instance
-    assert (s_pInstance != NULL);
-
-    // get "this" to call member methods
-    Graphic *pThis = s_pInstance;
-
-    // call member method
-    pThis->ItlHandleMouseWheel(iPosition);
-}
-
-/****************************************************************
-  *************************************************************** */
-void Graphic::ItlStaticHandleMouseButton(int iButton, int iAction)
-{
-    // this method is a static method (glfw cannot call class methods)
-    // which redirects the event to the member-method of the Graphic class
-    // therefore, we need a pointer to the instance. Thus, only one instance
-    // of Graphic can exist without having problems with the input events
-    // (because with more instances, this method would not know which instance
-    // should receive the events).
-
-    // make sure we know the address of the instance
-    assert (s_pInstance != NULL);
-
-    // get "this" to call member methods
-    Graphic *pThis = s_pInstance;
-
-    // call member method
-    pThis->ItlHandleMouseButton(iButton, iAction);
-}
-
-/****************************************************************
-  *************************************************************** */
-void Graphic::ItlHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState)
-{
-    InputKeyEvent::TKey eKey = InputKeyEvent::KEY_UNKNOWN;
-    bool bKeyRecognized = true;
-
-    // first, map ranges KEY_A .. KEY_Z
-    if (iKeyIdentifier >= 'A' && iKeyIdentifier <= 'Z')
-    {
-	eKey = static_cast<InputKeyEvent::TKey>(InputKeyEvent::KEY_A + (iKeyIdentifier - 'A'));
-    }
-    // map range KEY_0 .. KEY_9
-    else if (iKeyIdentifier >= '0' && iKeyIdentifier <= '9')
-    {
-	eKey = static_cast<InputKeyEvent::TKey>(InputKeyEvent::KEY_0 + (iKeyIdentifier - '0'));
-    }
-    // map range KEY_KP_0 .. KEY_KP_9
-    else if (iKeyIdentifier >= GLFW_KEY_KP_0 && iKeyIdentifier <= GLFW_KEY_KP_9)
-    {
-	eKey = static_cast<InputKeyEvent::TKey>(InputKeyEvent::KEY_KP_0 + (iKeyIdentifier - GLFW_KEY_KP_0));
-    }
-    // map range KEY_F1 .. KEY_F12
-    else if (iKeyIdentifier >= GLFW_KEY_F1 && iKeyIdentifier <= GLFW_KEY_F12)
-    {
-	eKey = static_cast<InputKeyEvent::TKey>(InputKeyEvent::KEY_F1 + (iKeyIdentifier - GLFW_KEY_F1));
-    }
-    else // map other single keys
-	switch (iKeyIdentifier)
-	{
-	case GLFW_KEY_LSHIFT: eKey = InputKeyEvent::KEY_LSHIFT; break;
-	case GLFW_KEY_RSHIFT: eKey = InputKeyEvent::KEY_RSHIFT; break;
-	case GLFW_KEY_LCTRL: eKey = InputKeyEvent::KEY_LCTRL; break;
-	case GLFW_KEY_RCTRL: eKey = InputKeyEvent::KEY_RCTRL; break;
-	case GLFW_KEY_LALT: eKey = InputKeyEvent::KEY_LALT; break;
-	case GLFW_KEY_RALT: eKey = InputKeyEvent::KEY_RALT; break;
-	case GLFW_KEY_UP: eKey = InputKeyEvent::KEY_UP; break;
-	case GLFW_KEY_DOWN: eKey = InputKeyEvent::KEY_DOWN; break;
-	case GLFW_KEY_LEFT: eKey = InputKeyEvent::KEY_LEFT; break;
-	case GLFW_KEY_RIGHT: eKey = InputKeyEvent::KEY_RIGHT; break;
-	case GLFW_KEY_SPACE: eKey = InputKeyEvent::KEY_SPACE; break;
-	case GLFW_KEY_ESC: eKey = InputKeyEvent::KEY_ESC; break;
-	case GLFW_KEY_TAB: eKey = InputKeyEvent::KEY_TAB; break;
-	case GLFW_KEY_ENTER: eKey = InputKeyEvent::KEY_ENTER; break;
-	case GLFW_KEY_BACKSPACE: eKey = InputKeyEvent::KEY_BACKSPACE; break;
-
-	default:
-	    Logger::error() << "keycode " << iKeyIdentifier << " not recognized" << Logger::endl;
-	    bKeyRecognized = false;
-	}
-
-    // call methods of listener if key was recognized
-    if (bKeyRecognized)
-    {
-	if (iNewKeyState == GLFW_PRESS)
-	    MainApp::GetInstance()->GetEventManager()->QueueEvent(InputKeyEvent::Create(eKey,InputKeyEvent::EVENT_DOWN));
-	else
-	    MainApp::GetInstance()->GetEventManager()->QueueEvent(InputKeyEvent::Create(eKey,InputKeyEvent::EVENT_UP));
-    }
-}
-
-/****************************************************************
-  *************************************************************** */
-void Graphic::ItlHandleMousePos(int iX, int iY)
-{
-    // only deliver relative mouse position to center
-    int iRelX = iX - m_iWidth / 2;
-    int iRelY = iY - m_iHeight / 2;
-
-    // issue 7 - workaround
-    iRelX = -iRelX;
-    iRelY = -iRelY;
-
-    EventManager *pEventManager = MainApp::GetInstance()->GetEventManager();
-    assert (pEventManager != NULL);
-
-    pEventManager->QueueEvent(InputMouseMoveEvent::Create(iRelX, iRelY));
-
-    if (m_bIsMouseLocked)
-	glfwSetMousePos(m_iWidth / 2, m_iHeight / 2);
-}
-
-/****************************************************************
-  *************************************************************** */
-void Graphic::ItlHandleMouseWheel(int iPosition)
-{
-    Logger::error() << "mouse wheel handling not implemented yet" << Logger::endl;
-}
+///****************************************************************
+//  *************************************************************** */
+//void Graphic::GlfwWindow::ItlHandleMouseWheel(int iPosition)
+//{
+//
+//}
 
 
-/****************************************************************
-  *************************************************************** */
-void Graphic::ItlHandleMouseButton(int iButton, int iAction)
-{
-    InputMouseButtonEvent::TMouseButton eMouseButton;
-    bool bButtonRecognized = true;
+///****************************************************************
+//  *************************************************************** */
+//void Graphic::GlfwWindow::ItlHandleMouseButton(int iButton, int iAction)
+//{
 
-    switch (iButton)
-    {
-    case GLFW_MOUSE_BUTTON_LEFT: eMouseButton = InputMouseButtonEvent::BUTTON_LEFT; break;
-    case GLFW_MOUSE_BUTTON_MIDDLE: eMouseButton = InputMouseButtonEvent::BUTTON_MIDDLE; break;
-    case GLFW_MOUSE_BUTTON_RIGHT: eMouseButton = InputMouseButtonEvent::BUTTON_RIGHT; break;
-    default:
-	Logger::error() << "mouse button " << iButton << " not recognized" << Logger::endl;
-	bButtonRecognized = false;
-    }
-
-    if (bButtonRecognized)
-    {
-	EventManager *pEventManager = MainApp::GetInstance()->GetEventManager();
-	assert (pEventManager != NULL);
-
-	if (iAction == GLFW_PRESS)
-	    pEventManager->QueueEvent(InputMouseButtonEvent::Create(eMouseButton, InputMouseButtonEvent::EVENT_DOWN));
-	else
-	    pEventManager->QueueEvent(InputMouseButtonEvent::Create(eMouseButton, InputMouseButtonEvent::EVENT_UP));
-    }
-}
+//}
 
 /****************************************************************
   *************************************************************** */
@@ -432,11 +259,11 @@ void Graphic::ItlCreateOpenGLWindow()
             Logger::debug() << "OpenGL window initialized" << Logger::endl;
 
     // set input handling callback methods
-    glfwSetKeyCallback(Graphic::ItlStaticHandleKeyboardEvent);
-    glfwSetMousePosCallback(Graphic::ItlStaticHandleMousePos);
-    glfwSetMouseWheelCallback(Graphic::ItlStaticHandleMouseWheel);
-    glfwSetMouseButtonCallback(Graphic::ItlStaticHandleMouseButton);
-
+    /*glfwSetKeyCallback(Graphic::GlfwWindow::ItlStaticHandleKeyboardEvent);
+    glfwSetMousePosCallback(Graphic::GlfwWindow::ItlStaticHandleMousePos);
+    glfwSetMouseWheelCallback(Graphic::GlfwWindow::ItlStaticHandleMouseWheel);
+    glfwSetMouseButtonCallback(Graphic::GlfwWindow::ItlStaticHandleMouseButton);
+*/
     // set window title
     glfwSetWindowTitle("Project CUBE");
 
@@ -671,30 +498,6 @@ void Graphic::Camera::AddToMoveVector(glm::vec3 vVector)
 
 /****************************************************************
   *************************************************************** */
-void Graphic::HideAndLockMouseToWindowCenter()
-{
-    assert (m_bWindowOpenened);
-
-    glfwDisable(GLFW_MOUSE_CURSOR);
-
-    m_bIsMouseLocked = true;
-
-    glfwSetMousePos(m_iWidth / 2, m_iHeight / 2);
-}
-
-/****************************************************************
-  *************************************************************** */
-void Graphic::UnHideAndUnLockMouse()
-{
-    assert (m_bWindowOpenened);
-
-    glfwEnable(GLFW_MOUSE_CURSOR);
-
-    m_bIsMouseLocked = false;
-}
-
-/****************************************************************
-  *************************************************************** */
 void Graphic::ItlLoadShaderPrograms()
 {
     ShaderManager *pShaderManager = ShaderManager::instance();
@@ -793,3 +596,45 @@ bool Graphic::Camera::OnEvent(std::shared_ptr<EventManager::IEvent> spEvent)
 	    assert (!"no if condition fired");
     }
 }
+
+int Graphic::AddRenderLoop(std::shared_ptr<Graphic::IRenderTarget> spRenderTarget,
+                             std::shared_ptr<Graphic::Camera> spCamera,
+                             std::shared_ptr<Graphic::Scene> spScene)
+{
+    static int iID = 0;
+
+    TItlRenderLoop NewLoop;
+
+    NewLoop.spRenderTarget = spRenderTarget;
+    NewLoop.spCamera = spCamera;
+    NewLoop.spScene = spScene;
+
+    m_mRenderLoops[iID++] = NewLoop;
+}
+
+void Graphic::RemoveRenderLoop(int iLoopID)
+{
+    assert (m_mRenderLoops.find(iLoopID) != m_mRenderLoops.end());
+
+    m_mRenderLoops.erase(iLoopID);
+}
+
+void Graphic::Scene::CallRenderPath()
+{
+    m_spRenderPath->Render();
+}
+
+std::shared_ptr<Graphic::Scene> Graphic::Scene::Create(std::shared_ptr<SceneObject> spRenderPath)
+{
+    std::shared_ptr<Graphic::Scene> spNewScene(new Graphic::Scene());
+    spNewScene->m_spRenderPath = spRenderPath;
+
+    return spNewScene;
+}
+
+std::shared_ptr<SceneObject> Graphic::CreateOldRenderPath()
+{
+    ItlCreateBaseRenderPath();
+    return m_vRenderPaths["default"];
+}
+

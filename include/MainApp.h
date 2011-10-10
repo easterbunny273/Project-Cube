@@ -62,6 +62,25 @@ public:
     //@}
 
 private:
+    /*! \name InputEventListener for the Graphic engine */
+    //@{
+        class InputEventListener : public Graphic::IInputEventListener
+        {
+        public:
+            /// handles keyboard events and sends signals to listener
+            virtual void ItlHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState);
+
+            /// handles mouse movements and sends signals to the listener
+            virtual void ItlHandleMousePos(int iX, int iY);
+
+            /// handles mouse wheel input events and sends signals to the listener
+            virtual void ItlHandleMouseWheel(int iPosition);
+
+            /// handles mouse button events and sends signals to the listener
+            virtual void ItlHandleMouseButton(int iButton, int iAction);
+        };
+    //@}
+
     /*! \name Construction / Destruction */
     //@{
         /// constructor
@@ -84,6 +103,7 @@ private:
 	Graphic *m_pGraphic;
 	DummyGame *m_pGame;
 	lua_State * m_pLuaState;
+        std::shared_ptr<InputEventListener> m_spInputEventListener;
     //@}
 
     /*! \name Static members */

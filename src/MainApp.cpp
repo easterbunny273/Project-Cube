@@ -1,5 +1,7 @@
 #include "MainApp.h"
 #include "Logger.h"
+#include "Graphics/Graphic-GlfwWindow.h"
+#include "GL/glfw.h"
 
 // initialize singelton ptr to NULL
 MainApp * MainApp::s_pInstance = NULL;
@@ -16,6 +18,8 @@ MainApp::MainApp()
     m_pGraphic = NULL;
     m_pGame = NULL;
 
+    // create an input event listener
+    m_spInputEventListener = std::shared_ptr<InputEventListener>(new InputEventListener());
 }
 
 MainApp::~MainApp()
@@ -79,10 +83,20 @@ void MainApp::Run()
     // init game logic, graphics, do main loop, all this nasty stuff.
     Logger::debug() << "hello!" << Logger::endl;
 
-    GetGraphic()->InitializeOpenGL();
-    GetGraphic()->SetActiveRenderPath("default");
+    //GetGraphic()->InitializeOpenGL();
+    //GetGraphic()->SetActiveRenderPath("default");
+
     GetEventManager()->Initialize();
 
+
+    std::shared_ptr<Graphic::GlfwWindow> spWindow = Graphic::GlfwWindow::Create(1024, 768, "Test");
+    std::shared_ptr<Graphic::Scene> spScene = Graphic::Scene::Create(GetGraphic()->CreateOldRenderPath());
+
+    spWindow->SetInputEventListener(m_spInputEventListener);
+
+    GetGraphic()->InitializeOpenGL();
+
+    GetGraphic()->AddRenderLoop(spWindow, std::shared_ptr<Graphic::Camera>(), spScene);
 
     while(GetGame()->GetStop() == false)
     {
@@ -143,5 +157,118 @@ void MainApp::LuaTest()
     m_pLuaState,
     "new_event = InputKeyEvent::Create(87, 1)\n"
     "eventmanager::QueueEvent(new_event)\n"
-    );
+                );
+}
+
+void MainApp::InputEventListener::ItlHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState)
+{
+    InputKeyEvent::TKey eKey = InputKeyEvent::KEY_UNKNOWN;
+    bool bKeyRecognized = true;
+
+    // first, map ranges KEY_A .. KEY_Z
+    if (iKeyIdentifier >= 'A' && iKeyIdentifier <= 'Z')
+    {
+    eKey = static_cast<InputKeyEvent::TKey>(InputKeyEvent::KEY_A + (iKeyIdentifier - 'A'));
+    }
+    // map range KEY_0 .. KEY_9
+    else if (iKeyIdentifier >= '0' && iKeyIdentifier <= '9')
+    {
+    eKey = static_cast<InputKeyEvent::TKey>(InputKeyEvent::KEY_0 + (iKeyIdentifier - '0'));
+    }
+    // map range KEY_KP_0 .. KEY_KP_9
+    else if (iKeyIdentifier >= GLFW_KEY_KP_0 && iKeyIdentifier <= GLFW_KEY_KP_9)
+    {
+    eKey = static_cast<InputKeyEvent::TKey>(InputKeyEvent::KEY_KP_0 + (iKeyIdentifier - GLFW_KEY_KP_0));
+    }
+    // map range KEY_F1 .. KEY_F12
+    else if (iKeyIdentifier >= GLFW_KEY_F1 && iKeyIdentifier <= GLFW_KEY_F12)
+    {
+    eKey = static_cast<InputKeyEvent::TKey>(InputKeyEvent::KEY_F1 + (iKeyIdentifier - GLFW_KEY_F1));
+    }
+    else // map other single keys
+    switch (iKeyIdentifier)
+    {
+    case GLFW_KEY_LSHIFT: eKey = InputKeyEvent::KEY_LSHIFT; break;
+    case GLFW_KEY_RSHIFT: eKey = InputKeyEvent::KEY_RSHIFT; break;
+    case GLFW_KEY_LCTRL: eKey = InputKeyEvent::KEY_LCTRL; break;
+    case GLFW_KEY_RCTRL: eKey = InputKeyEvent::KEY_RCTRL; break;
+    case GLFW_KEY_LALT: eKey = InputKeyEvent::KEY_LALT; break;
+    case GLFW_KEY_RALT: eKey = InputKeyEvent::KEY_RALT; break;
+    case GLFW_KEY_UP: eKey = InputKeyEvent::KEY_UP; break;
+    case GLFW_KEY_DOWN: eKey = InputKeyEvent::KEY_DOWN; break;
+    case GLFW_KEY_LEFT: eKey = InputKeyEvent::KEY_LEFT; break;
+    case GLFW_KEY_RIGHT: eKey = InputKeyEvent::KEY_RIGHT; break;
+    case GLFW_KEY_SPACE: eKey = InputKeyEvent::KEY_SPACE; break;
+    case GLFW_KEY_ESC: eKey = InputKeyEvent::KEY_ESC; break;
+    case GLFW_KEY_TAB: eKey = InputKeyEvent::KEY_TAB; break;
+    case GLFW_KEY_ENTER: eKey = InputKeyEvent::KEY_ENTER; break;
+    case GLFW_KEY_BACKSPACE: eKey = InputKeyEvent::KEY_BACKSPACE; break;
+
+    default:
+        Logger::error() << "keycode " << iKeyIdentifier << " not recognized" << Logger::endl;
+        bKeyRecognized = false;
+    }
+
+    // call methods of listener if key was recognized
+    if (bKeyRecognized)
+    {
+    if (iNewKeyState == GLFW_PRESS)
+        MainApp::GetInstance()->GetEventManager()->QueueEvent(InputKeyEvent::Create(eKey,InputKeyEvent::EVENT_DOWN));
+    else
+        MainApp::GetInstance()->GetEventManager()->QueueEvent(InputKeyEvent::Create(eKey,InputKeyEvent::EVENT_UP));
+    }
+}
+
+void MainApp::InputEventListener::ItlHandleMousePos(int iX, int iY)
+{
+    //TODO
+    int m_iWidth = 1024;
+    int m_iHeight = 768;
+
+    // only deliver relative mouse position to center
+    int iRelX = iX - m_iWidth / 2;
+    int iRelY = iY - m_iHeight / 2;
+
+    // issue 7 - workaround
+    iRelX = -iRelX;
+    iRelY = -iRelY;
+
+    EventManager *pEventManager = MainApp::GetInstance()->GetEventManager();
+    assert (pEventManager != NULL);
+
+    pEventManager->QueueEvent(InputMouseMoveEvent::Create(iRelX, iRelY));
+
+    glfwSetMousePos(m_iWidth / 2, m_iHeight / 2);
+}
+
+void MainApp::InputEventListener::ItlHandleMouseWheel(int iPosition)
+{
+    Logger::error() << "mouse wheel handling not implemented yet" << Logger::endl;
+}
+
+void MainApp::InputEventListener::ItlHandleMouseButton(int iButton, int iAction)
+{
+    InputMouseButtonEvent::TMouseButton eMouseButton;
+    bool bButtonRecognized = true;
+
+    switch (iButton)
+    {
+    case GLFW_MOUSE_BUTTON_LEFT: eMouseButton = InputMouseButtonEvent::BUTTON_LEFT; break;
+    case GLFW_MOUSE_BUTTON_MIDDLE: eMouseButton = InputMouseButtonEvent::BUTTON_MIDDLE; break;
+    case GLFW_MOUSE_BUTTON_RIGHT: eMouseButton = InputMouseButtonEvent::BUTTON_RIGHT; break;
+    default:
+    Logger::error() << "mouse button " << iButton << " not recognized" << Logger::endl;
+    bButtonRecognized = false;
+    }
+
+    if (bButtonRecognized)
+    {
+    EventManager *pEventManager = MainApp::GetInstance()->GetEventManager();
+    assert (pEventManager != NULL);
+
+    if (iAction == GLFW_PRESS)
+        pEventManager->QueueEvent(InputMouseButtonEvent::Create(eMouseButton, InputMouseButtonEvent::EVENT_DOWN));
+    else
+        pEventManager->QueueEvent(InputMouseButtonEvent::Create(eMouseButton, InputMouseButtonEvent::EVENT_UP));
+    }
 }

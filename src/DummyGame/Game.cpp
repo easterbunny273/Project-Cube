@@ -97,7 +97,7 @@ void DummyGame::OnMouseButtonPressed(InputMouseButtonEvent::TMouseButton eButton
 
 	// hide mouse and lock it to window center
 	// input events will now report the relative position to the window center
-	MainApp::GetInstance()->GetGraphic()->HideAndLockMouseToWindowCenter();
+        //MainApp::GetInstance()->GetGraphic()->HideAndLockMouseToWindowCenter();
     }
 }
 
@@ -107,7 +107,7 @@ void DummyGame::OnMouseButtonReleased(InputMouseButtonEvent::TMouseButton eButto
     {
 	m_bLeftMouseButtonDown = false;
 
-	MainApp::GetInstance()->GetGraphic()->UnHideAndUnLockMouse();
+        //MainApp::GetInstance()->GetGraphic()->UnHideAndUnLockMouse();
     }
 }
 
