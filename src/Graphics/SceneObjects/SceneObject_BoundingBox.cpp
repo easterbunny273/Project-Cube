@@ -136,24 +136,24 @@ SceneObject_BoundingBox::~SceneObject_BoundingBox()
 
 void SceneObject_BoundingBox::ItlPreRender()
 {
-    glBindVertexArray(m_nVertexArrayObject);
+  /*  glBindVertexArray(m_nVertexArrayObject);
     glBindBuffer(GL_ARRAY_BUFFER, m_nVertexBufferObject);
 
     ShaderManager::instance()->PushActiveShader();
     if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_SHADOWMAP)
 	ShaderManager::instance()->ActivateShader("bounding_shader");
     else
-	ShaderManager::instance()->ActivateShader("bounding_shader");
+        ShaderManager::instance()->ActivateShader("bounding_shader");*/
 }
 
 void SceneObject_BoundingBox::ItlPostRender()
 {
-    ShaderManager::instance()->PopActiveShader();
+  //  ShaderManager::instance()->PopActiveShader();
 }
 
 void SceneObject_BoundingBox::ItlRender()
 {
-    const GLint l_in_Position(ShaderManager::instance()->GetAttribute("in_Position"));
+  /*  const GLint l_in_Position(ShaderManager::instance()->GetAttribute("in_Position"));
 
     if (l_in_Position != -1)
     {
@@ -170,5 +170,5 @@ void SceneObject_BoundingBox::ItlRender()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_nIndexBufferObject);
   //  glDrawElements(GL_LINES, m_iIndexArraySize, GL_UNSIGNED_INT, NULL);
 
-    //glLineWidth(fPreviousLineWidth);
+    //glLineWidth(fPreviousLineWidth);*/
 }

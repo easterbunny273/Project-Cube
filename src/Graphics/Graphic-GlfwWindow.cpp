@@ -226,5 +226,24 @@ void Graphic::GlfwWindow::SwapBuffers()
   *************************************************************** */
 void Graphic::GlfwWindow::ClearBuffers()
 {
+    // Enable sRGB gamma correction for framebuffer output.
+    glEnable(GL_FRAMEBUFFER_SRGB);
+
+    //Enable depth test
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+
+    //Enable face culling (default: backface culling)
+    //glDisable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
+
+    glPolygonOffset(1.1f, 4.0f);
+
+    //set viewport
+    glViewport(0,0, m_iWidth, m_iHeight);
+
+    //clear error status
+    glGetError();
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }

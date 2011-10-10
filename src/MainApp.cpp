@@ -81,23 +81,18 @@ EventManager * MainApp::GetEventManager()
 void MainApp::Run()
 {
     // init game logic, graphics, do main loop, all this nasty stuff.
-    Logger::debug() << "hello!" << Logger::endl;
-
-    //GetGraphic()->InitializeOpenGL();
-    //GetGraphic()->SetActiveRenderPath("default");
 
     GetEventManager()->Initialize();
 
-
+    // initialize graphic - testing stuff
+    std::shared_ptr<Graphic::Camera> spCamera(new Graphic::Camera());
+    spCamera->SetPerspectiveProjection(45.0f, 1.33f, 0.01f, 100.0f);
     std::shared_ptr<Graphic::GlfwWindow> spWindow = Graphic::GlfwWindow::Create(1024, 768, "Test");
-    std::shared_ptr<Graphic::Scene> spScene = Graphic::Scene::Create(GetGraphic()->CreateOldRenderPath());
-
+    std::shared_ptr<Graphic::Scene> spScene = Graphic::Scene::Create(spCamera);
     spWindow->SetInputEventListener(m_spInputEventListener);
+    GetGraphic()->AddRenderLoop(spWindow, spCamera, spScene);
 
-    GetGraphic()->InitializeOpenGL();
-
-    GetGraphic()->AddRenderLoop(spWindow, std::shared_ptr<Graphic::Camera>(), spScene);
-
+    // main loop
     while(GetGame()->GetStop() == false)
     {
 	GetEventManager()->ProcessEvents();
@@ -106,8 +101,6 @@ void MainApp::Run()
 
         GetGraphic()->Render();
     }
-
-    GetGraphic()->ShutDown();
 }
 
 Graphic * MainApp::GetGraphic()

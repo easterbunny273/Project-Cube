@@ -35,6 +35,10 @@ class Graphic : EventManager::IEventListener
 public:
     /*! \name Nested classes */
     //@{
+        /// forward declarations
+        class GlfwWindow;
+        class Camera;
+
         class IRenderTarget
         {
         public:
@@ -68,12 +72,12 @@ public:
             // this class is supposed to use an existing QT widget as the render target
         };
 
-        class GlfwWindow;
+
 
         class Scene
         {
         public:
-            static std::shared_ptr<Scene> Create(std::shared_ptr<SceneObject> spRenderPath);
+            static std::shared_ptr<Scene> Create(std::shared_ptr<Graphic::Camera> spCamera);
 
             void CallRenderPath();
 
@@ -111,8 +115,13 @@ public:
     //@{
 	class Camera : public EventManager::IEventListener
         {
-            friend class Graphic;
         public:
+            /*! \name Construction / Destruction */
+            //@{
+                /// constructor
+                Camera();
+            //@}
+
             /*! \name Public attributes */
             //@{
                 /// returns the ModelviewMatrix
@@ -157,15 +166,11 @@ public:
 
 	    /*! \name Other Methods */
 	    //@{
-		void SetActive(bool bActive) { m_bActive = true; }
+                void SetActive(bool bActive) { m_bActive = bActive; }
 	    //@}
 
         private:
-            /*! \name Construction / Destruction */
-            //@{
-                /// constructor
-                Camera();
-            //@}
+
 
 	    /*! \name Private members */
             //@{
@@ -198,8 +203,6 @@ public:
         /// initializes the open gl stuff and creates the window + context.
         bool InitializeOpenGL();
 
-        /// shuts down the context + window
-        bool ShutDown();
     //@}
 
 
@@ -208,23 +211,8 @@ public:
 	virtual bool OnEvent(std::shared_ptr<EventManager::IEvent> spEvent);
     //@}
 
-    /*! \name Methods for render paths */
-    //@{
-        /// registers a new render path with the given root node and given name
-        void AddRenderPath(std::shared_ptr<SceneObject> spRoot, std::string sRenderPath);
-
-        /// draws the given render path
-        void SetActiveRenderPath(std::string sRenderPath);
-    //@}
-
     /*! \name Public Attributes */
     //@{
-	/// returns the main camera
-	Camera * GetCamera() { return &m_Camera; }
-
-	/// returns the debug camera
-        Camera * GetDebugCamera() { return &m_DebugCamera; }
-
 	/// returns the responsible shader manager for this graphics instance
 	ShaderManager * GetShaderManager();
 
@@ -246,11 +234,6 @@ public:
         void RemoveRenderLoop(int iLoopID);
     //@}
 
-    /*! \name methods to make refactoring easier - will be removed when refactoring is finished */
-    //@{
-        std::shared_ptr<SceneObject> CreateOldRenderPath();
-    //@}
-
 private:
     /*! \name new methods - refactoring - comments tbd */
     //@{
@@ -268,45 +251,11 @@ private:
     //@{
 	/// load basic settings
 	void ItlLoadSettings();
-
-
-
-	/// creates the opengl context and window
-        void ItlCreateOpenGLWindow();
-
-	/// initializes some basic opengl state variables
-        void ItlInitializeOpenGLStates();
-
-	/// loads some shader programs
-	void ItlLoadShaderPrograms();
-
-	/// creates a base render path
-	void ItlCreateBaseRenderPath();
     //@}
 
     /*! \name Private members */
     //@{
 	std::map<std::string, std::shared_ptr<SceneObject> >    m_vRenderPaths;
-
-	std::list<std::shared_ptr<SceneObject> >                m_vSceneGraphs;
-
-
-	int		    m_iWidth;			///< width of the created opengl window
-	int		    m_iHeight;			///< height of the created opengl window
-	bool		    m_bFullscreen;		///< whether the window is in fullscreen mode or not
-	bool		    m_bWindowOpenened;		///< whether an output window is currently open
-	bool		    m_bUseOpenGL_4_1;		///< whether a opengl 4.1 context should be created
-
-	int		    m_iFramesInThisSecondYet;
-	int		    m_iFramesPerSecond;
-	float		    m_fTimeOfLastRenderCall;
-
-
-
-	std::string	    m_sActiveRenderPath;
-
-	Camera		    m_Camera;			///< the main camera, also used for culling
-	Camera		    m_DebugCamera;		///< the debug camera, used to debug things like culling process
 
 	static int	    s_iInstances;		///< how many instances are created ?
 	static Graphic *    s_pInstance;

@@ -683,6 +683,7 @@ void SceneObject_AssimpImport::ItlLoadGeneralRessources()
     {
 	// load shaders
 	ShaderManager::instance()->AddShader("sceneobject-assimpimport", new Shader("shaders/sceneobject-assimpimport.vs", "shaders/sceneobject-assimpimport.fs"));
+        ShaderManager::instance()->AddShader("simple_shading", new Shader("shaders/simple-shading.vs", "shaders/simple-shading.fs"));
 
 	s_bGeneralRessourcesInitialized = true;
     }
