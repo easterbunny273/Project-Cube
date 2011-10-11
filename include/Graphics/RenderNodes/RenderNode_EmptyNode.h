@@ -14,7 +14,7 @@
   * but it does nothing - it's only a dummy node.
 */
 
-class SceneObject_EmptyNode : public RenderNode
+class RenderNode_EmptyNode : public RenderNode
 {
 public:
     /*! \name Access to Vertices / Indices */

@@ -11,7 +11,7 @@
 #include "Graphics/ShaderManager.h"
 #include "Graphics/RenderNodes/RenderNode_PostEffect.h"
 
-SceneObject_PostEffect::SceneObject_PostEffect(std::string sShaderToUse)
+RenderNode_PostEffect::RenderNode_PostEffect(std::string sShaderToUse)
     : m_sShaderName(sShaderToUse)
 {
     const GLdouble vertices3f[]= {
@@ -50,12 +50,12 @@ SceneObject_PostEffect::SceneObject_PostEffect(std::string sShaderToUse)
     Logger::debug() << "SceneObject_PostEffect created" << Logger::endl;
 }
 
-SceneObject_PostEffect::~SceneObject_PostEffect()
+RenderNode_PostEffect::~RenderNode_PostEffect()
 {
 
 }
 
-void SceneObject_PostEffect::ItlPreRender()
+void RenderNode_PostEffect::ItlPreRender()
 {
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, this->buffer_vertices3f);
@@ -64,7 +64,7 @@ void SceneObject_PostEffect::ItlPreRender()
     ShaderManager::instance()->ActivateShader(m_sShaderName);
 }
 
-void SceneObject_PostEffect::ItlRender()
+void RenderNode_PostEffect::ItlRender()
 {
     const GLint l_in_Position(ShaderManager::instance()->GetAttribute("in_Position"));
     const GLint l_texcoords(ShaderManager::instance()->GetAttribute("in_Texcoord"));
@@ -146,22 +146,22 @@ void SceneObject_PostEffect::ItlRender()
     }
 }
 
-void SceneObject_PostEffect::ItlPostRender()
+void RenderNode_PostEffect::ItlPostRender()
 {
     ShaderManager::instance()->PopActiveShader();
 }
 
-void SceneObject_PostEffect::SetUniform(std::string sUniform, float fValue)
+void RenderNode_PostEffect::SetUniform(std::string sUniform, float fValue)
 {
     m_mUniforms_Floats[sUniform] = fValue;
 }
 
-void SceneObject_PostEffect::SetUniform(std::string sUniform, glm::vec2 v2Vector)
+void RenderNode_PostEffect::SetUniform(std::string sUniform, glm::vec2 v2Vector)
 {
     m_mUniforms_Vec2[sUniform] = v2Vector;
 }
 
-void SceneObject_PostEffect::SetUniform(std::string sUniform, glm::vec3 v3Vector)
+void RenderNode_PostEffect::SetUniform(std::string sUniform, glm::vec3 v3Vector)
 {
     m_mUniforms_Vec3[sUniform] = v3Vector;
 }

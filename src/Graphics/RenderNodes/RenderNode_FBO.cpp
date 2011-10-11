@@ -7,7 +7,7 @@
 
 std::stack<GLuint> bound_fbos;
 
-SceneObject_FBO::SceneObject_FBO(bool bDummy, int iWidth, int iHeight, const char * szColorTexture)
+RenderNode_FBO::RenderNode_FBO(bool bDummy, int iWidth, int iHeight, const char * szColorTexture)
     : m_bMipMapped(false),
       m_iWidth(iWidth),
       m_iHeight(iHeight),
@@ -76,7 +76,7 @@ SceneObject_FBO::SceneObject_FBO(bool bDummy, int iWidth, int iHeight, const cha
  *  \param bFloating16 If true, the generated color texture used 16bit floating precision.
  *  \param bMipMapped If true, mipmaps for the color texture are generated after each update of the color texture
  */
-SceneObject_FBO::SceneObject_FBO(int iWidth,
+RenderNode_FBO::RenderNode_FBO(int iWidth,
                                  int iHeight,
                                  const char *szColorTextureName,
                                  bool bFloating16, bool bMipMapped)
@@ -191,7 +191,7 @@ SceneObject_FBO::SceneObject_FBO(int iWidth,
  *  \param szDepthTextureName The texture name which is used to register the depth texture at the TextureManager
  *  \param bMipMapped If true, mipmaps for the color texture are generated after each update of the color texture
  */
-SceneObject_FBO::SceneObject_FBO(int iWidth,
+RenderNode_FBO::RenderNode_FBO(int iWidth,
                                  int iHeight,
                                  const char *szColorTextureName,
                                  const char *szDepthTextureName,
@@ -287,7 +287,7 @@ SceneObject_FBO::SceneObject_FBO(int iWidth,
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-SceneObject_FBO::~SceneObject_FBO()
+RenderNode_FBO::~RenderNode_FBO()
 {
 #pragma warn "todo: correct this"
     //delete color texture, if used
@@ -310,7 +310,7 @@ SceneObject_FBO::~SceneObject_FBO()
  *  This method is called internally BEFORE rendering the children,
  *  and binds and clears the fbo as needed.
  */
-void SceneObject_FBO::ItlPreRenderChildren()
+void RenderNode_FBO::ItlPreRenderChildren()
 {
     assert (TextureManager::instance()->IsTextureInUse(m_nColorTexture) == false);
 
@@ -338,7 +338,7 @@ void SceneObject_FBO::ItlPreRenderChildren()
  *  This method is called internally AFTER rendering the children,
  *  and unbinds the fbo.
  */
-void SceneObject_FBO::ItlPostRenderChildren()
+void RenderNode_FBO::ItlPostRenderChildren()
 {
     //if mipmapping is activated, update mipmaps
     if (m_bMipMapped)
@@ -366,17 +366,17 @@ void SceneObject_FBO::ItlPostRenderChildren()
     TextureManager::instance()->UnlockTextureID(m_nColorTexture);
 }
 
-void SceneObject_FBO::ItlPreRender()
+void RenderNode_FBO::ItlPreRender()
 {
 
 }
 
-void SceneObject_FBO::ItlRender()
+void RenderNode_FBO::ItlRender()
 {
 
 }
 
-void SceneObject_FBO::ItlPostRender()
+void RenderNode_FBO::ItlPostRender()
 {
 
 }

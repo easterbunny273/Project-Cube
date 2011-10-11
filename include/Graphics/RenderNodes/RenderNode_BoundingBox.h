@@ -14,13 +14,13 @@
   This SceneObject renders only a red sphere in wireframe mode, used for visualizing the bounding spheres.
 */
 
-class SceneObject_BoundingBox : public RenderNode
+class RenderNode_BoundingBox : public RenderNode
 {
 public:
     /*! \name Constructor / Destructor */
     //@{
-    SceneObject_BoundingBox(float fMinX, float fMaxX, float fMinY, float fMaxY, float fMinZ, float fMaxZ);
-    ~SceneObject_BoundingBox();
+    RenderNode_BoundingBox(float fMinX, float fMaxX, float fMinY, float fMaxY, float fMinZ, float fMaxZ);
+    ~RenderNode_BoundingBox();
     //@}
 
 protected:

@@ -7,7 +7,7 @@
 
 extern bool bUseCamera1;
 
-SceneObject_Camera::SceneObject_Camera(Graphic::Camera * pCamera, bool bSetMatrices)
+RenderNode_Camera::RenderNode_Camera(Graphic::Camera * pCamera, bool bSetMatrices)
     : m_pCamera(pCamera), m_bSetMatrices(bSetMatrices)
 {
     GLdouble *vertexArray;
@@ -113,7 +113,7 @@ SceneObject_Camera::SceneObject_Camera(Graphic::Camera * pCamera, bool bSetMatri
     Logger::debug() << "SceneObject_Camera created" << Logger::endl;
 }
 
-void SceneObject_Camera::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderInfo)
+void RenderNode_Camera::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderInfo)
 {
     //store old matrices
     if (m_bSetMatrices)// || !bUseCamera1)
@@ -142,7 +142,7 @@ void SceneObject_Camera::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderIn
     }
 }
 
-void SceneObject_Camera::ItlRender()
+void RenderNode_Camera::ItlRender()
 {
    /* const GLint l_in_Position(ShaderManager::instance()->GetAttribute("in_Position"));
     const GLint l_cameraInverse_Position = ShaderManager::instance()->GetUniform("Camera_InverseMatrix");
@@ -175,7 +175,7 @@ void SceneObject_Camera::ItlRender()
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);*/
 }
 
-void SceneObject_Camera::ItlPreRender()
+void RenderNode_Camera::ItlPreRender()
 {
    /* glBindVertexArray(m_nVertexArrayObject);
     glBindBuffer(GL_ARRAY_BUFFER, m_nVertexBufferObject);
@@ -187,7 +187,7 @@ void SceneObject_Camera::ItlPreRender()
         ShaderManager::instance()->ActivateShader("camera-debug");*/
 }
 
-void SceneObject_Camera::ItlPostRender()
+void RenderNode_Camera::ItlPostRender()
 {
    // ShaderManager::instance()->PopActiveShader();
 }

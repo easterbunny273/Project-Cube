@@ -271,7 +271,7 @@ bool SceneObject_BoundingBoxed::ItlTestIfVisible()
     {
 	ItlInitializeBoundingBox();
 
-	std::shared_ptr<RenderNode> pBoundingBox(new SceneObject_BoundingBox(m_fMinX, m_fMaxX, m_fMinY, m_fMaxY, m_fMinZ, m_fMaxZ));
+        std::shared_ptr<RenderNode> pBoundingBox(new RenderNode_BoundingBox(m_fMinX, m_fMaxX, m_fMinY, m_fMaxY, m_fMinZ, m_fMaxZ));
 	AddChild(pBoundingBox);
 
 	m_bInitialized = true;

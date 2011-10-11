@@ -316,7 +316,7 @@ void Graphic::Scene::AttachObject(std::shared_ptr<Graphic::ISceneObject> spScene
 
 void Graphic::Scene::CreateRenderGraph()
 {
-    m_spRenderGraphRoot = std::shared_ptr<RenderNode>(new SceneObject_Camera(m_spCamera.get()));
+    m_spRenderGraphRoot = std::shared_ptr<RenderNode>(new RenderNode_Camera(m_spCamera.get()));
 
     for (auto iter=m_lSceneObjects.begin(); iter != m_lSceneObjects.end(); iter++)
     {
@@ -331,7 +331,7 @@ std::shared_ptr<RenderNode> Graphic::LoadedModel::CreateRenderNode()
 {
     assert (m_sFilename.size() > 0);
 
-    std::shared_ptr<RenderNode> spRenderNode(new SceneObject_AssimpImport(m_sFilename));
+    std::shared_ptr<RenderNode> spRenderNode(new RenderNode_AssimpImport(m_sFilename));
 
     return spRenderNode;
 }
@@ -354,7 +354,7 @@ std::shared_ptr<Graphic::Cube> Graphic::Cube::Create()
 
 std::shared_ptr<RenderNode> Graphic::Cube::CreateRenderNode()
 {
-    std::shared_ptr<RenderNode> spRenderNode(new SceneObject_Cube());
+    std::shared_ptr<RenderNode> spRenderNode(new RenderNode_Cube());
 
     return spRenderNode;
 }

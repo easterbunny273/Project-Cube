@@ -23,14 +23,14 @@
   This is useful for applying post screen effects (rendering scene in a fbo, and drawing resulting color texture fullscreened with a given shader).
 */
 
-class SceneObject_PostEffect : public RenderNode
+class RenderNode_PostEffect : public RenderNode
 {
 public:
     /*! \name Constructors / Destructor */
     //@{
 	/// This constructor takes the name of shader to use, and the name of one or two textures to pass it on the shader
-        SceneObject_PostEffect(std::string sShaderToUse);
-	~SceneObject_PostEffect();	
+        RenderNode_PostEffect(std::string sShaderToUse);
+        ~RenderNode_PostEffect();
     //@}
 
     /*! \name Public methods */

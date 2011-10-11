@@ -12,10 +12,10 @@
 #include "Graphics/Graphic.h"
 
 
-class SceneObject_Camera : public RenderNode
+class RenderNode_Camera : public RenderNode
 {
 public:
-    SceneObject_Camera(Graphic::Camera *pCamera, bool bSetMatrices=true);
+    RenderNode_Camera(Graphic::Camera *pCamera, bool bSetMatrices=true);
 
     /*! \name Operations */
     //@{

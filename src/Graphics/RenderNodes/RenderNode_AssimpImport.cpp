@@ -15,7 +15,7 @@
 #include <vector>
 #include <iostream>
 
-struct SceneObject_AssimpImport::TItlMeshData
+struct RenderNode_AssimpImport::TItlMeshData
 {
     unsigned int nNumFaces;
     unsigned int nNumVertices;
@@ -30,7 +30,7 @@ struct SceneObject_AssimpImport::TItlMeshData
 
 };
 
-struct SceneObject_AssimpImport::TItlMaterialData
+struct RenderNode_AssimpImport::TItlMaterialData
 {
     float fColorDiffuse[4];
     float fColorSpecular[4];
@@ -54,9 +54,9 @@ struct SceneObject_AssimpImport::TItlMaterialData
 };
 
 // static member initialization
-bool SceneObject_AssimpImport::s_bGeneralRessourcesInitialized = false;
+bool RenderNode_AssimpImport::s_bGeneralRessourcesInitialized = false;
 
-SceneObject_AssimpImport::SceneObject_AssimpImport(std::string sFilename)
+RenderNode_AssimpImport::RenderNode_AssimpImport(std::string sFilename)
 {
     ItlLoadGeneralRessources();
 
@@ -332,7 +332,7 @@ SceneObject_AssimpImport::SceneObject_AssimpImport(std::string sFilename)
       this->AddChild(pBoundingBox);*/
 }
 
-void SceneObject_AssimpImport::ItlCreateVertexBufferObject(std::vector<GLfloat> &data)
+void RenderNode_AssimpImport::ItlCreateVertexBufferObject(std::vector<GLfloat> &data)
 {
     // Vertexbuffer, Indexbuffer, Normalbuffer, texcoordbuffer generieren
     glGenBuffers(1, &m_nVBO);
@@ -353,7 +353,7 @@ void SceneObject_AssimpImport::ItlCreateVertexBufferObject(std::vector<GLfloat> 
     delete[] packed_vertex_buffer_data;
 }
 
-void SceneObject_AssimpImport::ItlCreateVerticesArray(std::vector<GLfloat> &data)
+void RenderNode_AssimpImport::ItlCreateVerticesArray(std::vector<GLfloat> &data)
 {
     unsigned int nNumVertices = 0;
 
@@ -404,7 +404,7 @@ void SceneObject_AssimpImport::ItlCreateVerticesArray(std::vector<GLfloat> &data
     m_iNumVertices = 4;*/
 }
 
-void SceneObject_AssimpImport::ItlCreateIndicesArray(std::vector<GLuint> &data)
+void RenderNode_AssimpImport::ItlCreateIndicesArray(std::vector<GLuint> &data)
 {
     unsigned int nNumIndices = 0;
 
@@ -448,7 +448,7 @@ void SceneObject_AssimpImport::ItlCreateIndicesArray(std::vector<GLuint> &data)
     m_iNumIndices = 6;*/
 }
 
-void SceneObject_AssimpImport::ItlCreateIndexBufferObject(std::vector<GLuint> &data)
+void RenderNode_AssimpImport::ItlCreateIndexBufferObject(std::vector<GLuint> &data)
 {
     // Vertexbuffer, Indexbuffer, Normalbuffer, texcoordbuffer generieren
     glGenBuffers(1, &m_nIBO);
@@ -469,10 +469,10 @@ void SceneObject_AssimpImport::ItlCreateIndexBufferObject(std::vector<GLuint> &d
     delete[] packed_index_buffer_data;
 }
 
-void SceneObject_AssimpImport::ItlPreRender()
+void RenderNode_AssimpImport::ItlPreRender()
 {
     ShaderManager::instance()->PushActiveShader();
-    if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_SHADOWMAP)
+    if (m_pCurrentRenderInfo->tCurrentRenderPass == RenderNode_RenderPass::RENDERPASS_SHADOWMAP)
 	ShaderManager::instance()->ActivateShader("simple_shading");
     /*else if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_DEEP_OPACITY_MAP1)
 	ShaderManager::instance()->ActivateShader("assimp_deep_step1_shader");
@@ -482,7 +482,7 @@ void SceneObject_AssimpImport::ItlPreRender()
 	ShaderManager::instance()->ActivateShader("sceneobject-assimpimport");
 }
 
-void SceneObject_AssimpImport::ItlRender()
+void RenderNode_AssimpImport::ItlRender()
 {
     glBindVertexArray(m_nVAO);
     glBindBuffer(GL_ARRAY_BUFFER, m_nVBO);
@@ -626,22 +626,22 @@ void SceneObject_AssimpImport::ItlRender()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void SceneObject_AssimpImport::ItlPostRender()
+void RenderNode_AssimpImport::ItlPostRender()
 {
     ShaderManager::instance()->PopActiveShader();
 }
 
-void SceneObject_AssimpImport::ItlPreRenderChildren()
+void RenderNode_AssimpImport::ItlPreRenderChildren()
 {
 
 }
 
-void SceneObject_AssimpImport::ItlPostRenderChildren()
+void RenderNode_AssimpImport::ItlPostRenderChildren()
 {
 
 }
 
-float *SceneObject_AssimpImport::GetVertices()
+float *RenderNode_AssimpImport::GetVertices()
 {
     assert (m_pfVertices != NULL);
 
@@ -649,24 +649,24 @@ float *SceneObject_AssimpImport::GetVertices()
 }
 
 
-int *SceneObject_AssimpImport::GetIndices()
+int *RenderNode_AssimpImport::GetIndices()
 {
     assert (m_piIndices != NULL);
 
     return m_piIndices;
 }
 
-int SceneObject_AssimpImport::NumIndices()
+int RenderNode_AssimpImport::NumIndices()
 {
     return m_iNumIndices;
 }
 
-int SceneObject_AssimpImport::NumVertices()
+int RenderNode_AssimpImport::NumVertices()
 {
     return m_iNumVertices;
 }
 
-bool SceneObject_AssimpImport::ItlTestSkipRendering()
+bool RenderNode_AssimpImport::ItlTestSkipRendering()
 {
     /*if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_DEEP_OPACITY_MAP1)
 	return true;
@@ -677,7 +677,7 @@ bool SceneObject_AssimpImport::ItlTestSkipRendering()
     return false;
 }
 
-void SceneObject_AssimpImport::ItlLoadGeneralRessources()
+void RenderNode_AssimpImport::ItlLoadGeneralRessources()
 {
     if (s_bGeneralRessourcesInitialized == false)
     {

@@ -15,13 +15,13 @@
   This SceneObject renders a cube from the inside.
 */
 
-class SceneObject_Cube : public RenderNode
+class RenderNode_Cube : public RenderNode
 {
 public:
     /*! \name Constructor / Destructor */
     //@{
-    SceneObject_Cube();
-    ~SceneObject_Cube();
+    RenderNode_Cube();
+    ~RenderNode_Cube();
     //@}
 
 protected:

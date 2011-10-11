@@ -21,7 +21,7 @@
   *
 */
 
-class SceneObject_RenderPass : public RenderNode
+class RenderNode_RenderPass : public RenderNode
 {
 public:
     enum TRenderPass
@@ -34,8 +34,8 @@ public:
 	NUM_RENDERPASSES
     };
 
-    SceneObject_RenderPass(TRenderPass state);
-    virtual ~SceneObject_RenderPass();
+    RenderNode_RenderPass(TRenderPass state);
+    virtual ~RenderNode_RenderPass();
 
     TRenderPass getRenderState();
 

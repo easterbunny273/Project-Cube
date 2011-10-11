@@ -19,13 +19,13 @@
     but in practice, a 3ds-file exported from blender works best at the moment.
 */
 
-class SceneObject_AssimpImport : public SceneObject_BoundingBoxed
+class RenderNode_AssimpImport : public SceneObject_BoundingBoxed
 {
 public:
     /*! \name Constructor / Destructor */
     //@{
 	/// constructor, creates scene object and imports model from given file
-	SceneObject_AssimpImport(std::string sFilename);
+        RenderNode_AssimpImport(std::string sFilename);
     //@}
 
     /*! \name SceneObject::IHasVertices interface */

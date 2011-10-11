@@ -20,7 +20,7 @@
   The name for the textures must be set in the used constructor.
 */
 
-class SceneObject_FBO : public RenderNode
+class RenderNode_FBO : public RenderNode
 {
 private:
     bool m_bColorTexture;		///<shows if this fbo uses a color texture
@@ -70,17 +70,17 @@ public:
 //    SceneObject_FBO(int iWidth, int iHeight, const char *szColorTextureName, int iDummy);
 
     ///Constructor for a SceneObject_FBO, creates a color texture and a renderbuffer for the depth.
-    SceneObject_FBO(int iWidth, int iHeight, const char *szColorTextureName, bool bFloating16 = false, bool bMipMapped = false);
+    RenderNode_FBO(int iWidth, int iHeight, const char *szColorTextureName, bool bFloating16 = false, bool bMipMapped = false);
 
     ///Constructor for a SceneObject_FBO, creates a color texture and a depth texture.
-    SceneObject_FBO(int iWidth, int iHeight, const char *szColorTextureName, const char *szDepthTextureName, bool bMipMapped = false);
+    RenderNode_FBO(int iWidth, int iHeight, const char *szColorTextureName, const char *szDepthTextureName, bool bMipMapped = false);
 
 
     /// Constructor for a SceneObject_FBO with a color texture and renderbuffer for depth, where the color texture is created seperately
-    SceneObject_FBO(bool bDummy, int iWidth, int iHeight, const char * szColorTexture);
+    RenderNode_FBO(bool bDummy, int iWidth, int iHeight, const char * szColorTexture);
 
     ///Destructor of the fbo, releases ressources
-    ~SceneObject_FBO();
+    ~RenderNode_FBO();
 };
 
 #endif
