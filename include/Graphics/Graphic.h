@@ -24,7 +24,7 @@
 #include "EventManager.h"
 
 // forward declarations
-class SceneObject;
+class RenderNode;
 class SceneObject_RenderTarget;
 class Camera;
 class ShaderManager;
@@ -86,11 +86,11 @@ public:
 
             void CreateRenderGraph();
         private:
-            std::shared_ptr<SceneObject> m_spRenderPath;
+            std::shared_ptr<RenderNode> m_spRenderPath;
 
             std::list<std::shared_ptr<ISceneObject> >     m_lSceneObjects;
             std::shared_ptr<Graphic::Camera>        m_spCamera;
-            std::shared_ptr<SceneObject>            m_spRenderGraphRoot;
+            std::shared_ptr<RenderNode>            m_spRenderGraphRoot;
         };
 
         class ISceneObject
@@ -103,13 +103,13 @@ public:
 
             virtual ~ISceneObject() {}
 
-            std::shared_ptr<SceneObject> GetRenderNode();
-            virtual std::shared_ptr<SceneObject> CreateRenderNode() = 0;
+            std::shared_ptr<RenderNode> GetRenderNode();
+            virtual std::shared_ptr<RenderNode> CreateRenderNode() = 0;
         protected:
             void SetScene(std::weak_ptr<Scene> wpScene);
             ISceneObject() {}
 
-            std::shared_ptr<SceneObject>    m_spRenderNode;
+            std::shared_ptr<RenderNode>    m_spRenderNode;
             std::weak_ptr<Scene> m_wpScene;
         };
 
@@ -121,14 +121,14 @@ public:
         public:
             static std::shared_ptr<LoadedModel> Create(std::string sFilename);
 
-            virtual std::shared_ptr<SceneObject> CreateRenderNode();
+            virtual std::shared_ptr<RenderNode> CreateRenderNode();
         };
 
         class Cube : public ISceneObject
         {
         public:
             static std::shared_ptr<Cube> Create();
-            virtual std::shared_ptr<SceneObject> CreateRenderNode();
+            virtual std::shared_ptr<RenderNode> CreateRenderNode();
         };
 
         class BasicLight : public ISceneObject
@@ -263,7 +263,7 @@ private:
 
     /*! \name Private members */
     //@{
-	std::map<std::string, std::shared_ptr<SceneObject> >    m_vRenderPaths;
+        std::map<std::string, std::shared_ptr<RenderNode> >    m_vRenderPaths;
 
     //@}
 };

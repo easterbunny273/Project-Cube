@@ -98,7 +98,7 @@ void MainApp::StartGraphic_Test()
     std::shared_ptr<Graphic::ISceneObject> spTable = Graphic::LoadedModel::Create("models/freepool-ng-table.3ds");
     spTable->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
 
-    // add objects
+    // add objects to scene
     spScene->AttachObject(spCube);
     spScene->AttachObject(spTable);
 
