@@ -6,6 +6,6 @@
 
 int main()
 {
-    TestMain::GetInstance()->Run();
+    //TestMain::GetInstance()->Run();
     MainApp::GetInstance()->Run();
 }

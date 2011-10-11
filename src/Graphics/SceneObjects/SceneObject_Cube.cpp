@@ -250,5 +250,6 @@ void SceneObject_Cube::ItlRender()
 
 void SceneObject_Cube::ItlLoadRessources()
 {
+    ShaderManager::instance()->AddShader("basic_shading", new Shader("shaders/basic_shading.vs", "shaders/basic_shading.fs"));
     TextureManager::instance()->LoadTexture("cube_texture", "textures/cube_texture.jpg", false);
 }

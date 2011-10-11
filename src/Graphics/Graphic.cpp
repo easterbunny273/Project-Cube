@@ -38,33 +38,11 @@ using namespace std;
 
 #define PI 3.14159265f
 
-int Graphic::s_iInstances = 0;
-Graphic *Graphic::s_pInstance = NULL;
-
-
-
 /****************************************************************
   *************************************************************** */
 Graphic::Graphic()
-    : m_pSettings(NULL)
 {
-    // check if this is the first instance
-    assert (s_iInstances == 0);
 
-    // if not (and we are in release mode, so that the assertion did not fire),
-    // print an error message
-    if (s_iInstances > 0)
-    {
-        Logger::error() << "It seems that more than 1 instance of the Graphics engine was created." << Logger::endl;
-        Logger::error() << "Please note that only one instance is supported by the event handling of glfw" << Logger::endl;
-        Logger::error() << "Contact the developers or reinstall if you have any problems with event handling" << Logger::endl;
-    }
-
-    // inc counter
-    s_iInstances ++;
-
-    // set instance ptr
-    s_pInstance = this;
 
 }
 
@@ -72,8 +50,7 @@ Graphic::Graphic()
   *************************************************************** */
 Graphic::~Graphic()
 {
-    // dec instances counter
-    s_iInstances--;
+
 }
 
 /****************************************************************
@@ -264,20 +241,6 @@ TextureManager * Graphic::GetTextureManager()
 
 /****************************************************************
   *************************************************************** */
-void Graphic::ItlLoadSettings()
-{
-    m_pSettings = MainApp::GetInstance()->GetCoreSettings()->GetGroup("graphics");
-}
-
-/****************************************************************
-  *************************************************************** */
-bool Graphic::OnEvent(std::shared_ptr<EventManager::IEvent> spEvent)
-{
-    assert(!"not implemented yet, should not registered for any event");
-}
-
-/****************************************************************
-  *************************************************************** */
 bool Graphic::Camera::OnEvent(std::shared_ptr<EventManager::IEvent> spEvent)
 {
     // only accept CameraMovementEvent atm
@@ -330,27 +293,84 @@ void Graphic::RemoveRenderLoop(int iLoopID)
 
 void Graphic::Scene::CallRenderPath()
 {
-    m_spRenderPath->Render();
+    if (m_spRenderGraphRoot)
+        m_spRenderGraphRoot->Render();
+    else
+    {
+        CreateRenderGraph();
+        m_spRenderGraphRoot->Render();
+    }
 }
 
 std::shared_ptr<Graphic::Scene> Graphic::Scene::Create(std::shared_ptr<Graphic::Camera> spCamera)
 {
-    std::shared_ptr<SceneObject> spRootNode (new SceneObject_EmptyNode());
-
-    std::shared_ptr<SceneObject> spCameraNode (new SceneObject_Camera(spCamera.get()));
-
-    std::shared_ptr<SceneObject> spCubeNode (new SceneObject_Cube());
-    std::shared_ptr<SceneObject> spTreppe (new SceneObject_AssimpImport("models/freepool-ng-table.3ds"));
-
-
-    spRootNode->AddChild(spCameraNode);
-    spCameraNode->AddChild(spTreppe);
-    //spCubeNode->AddChild(spTreppe);
-
-    spTreppe->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01f)));
-
     std::shared_ptr<Graphic::Scene> spNewScene(new Graphic::Scene());
-    spNewScene->m_spRenderPath = spRootNode;
+    spNewScene->m_spCamera = spCamera;
 
     return spNewScene;
+}
+
+void Graphic::Scene::AttachObject(std::shared_ptr<Graphic::ISceneObject> spSceneObject)
+{
+    m_lSceneObjects.push_back(spSceneObject);
+}
+
+void Graphic::Scene::CreateRenderGraph()
+{
+    m_spRenderGraphRoot = std::shared_ptr<SceneObject>(new SceneObject_Camera(m_spCamera.get()));
+
+    for (auto iter=m_lSceneObjects.begin(); iter != m_lSceneObjects.end(); iter++)
+    {
+        std::shared_ptr<Graphic::ISceneObject> spSceneObject = *iter;
+        std::shared_ptr<SceneObject> spRenderNode = spSceneObject->GetRenderNode();
+
+        m_spRenderGraphRoot->AddChild(spRenderNode);
+    }
+}
+
+std::shared_ptr<SceneObject> Graphic::LoadedModel::CreateRenderNode()
+{
+    assert (m_sFilename.size() > 0);
+
+    std::shared_ptr<SceneObject> spRenderNode(new SceneObject_AssimpImport(m_sFilename));
+
+    return spRenderNode;
+}
+
+std::shared_ptr<Graphic::LoadedModel> Graphic::LoadedModel::Create(std::string sFilename)
+{
+    std::shared_ptr<Graphic::LoadedModel> spNewNode(new LoadedModel());
+
+    spNewNode->m_sFilename = sFilename;
+
+    return spNewNode;
+}
+
+std::shared_ptr<Graphic::Cube> Graphic::Cube::Create()
+{
+    std::shared_ptr<Graphic::Cube> spNewNode(new Cube());
+
+    return spNewNode;
+}
+
+std::shared_ptr<SceneObject> Graphic::Cube::CreateRenderNode()
+{
+    std::shared_ptr<SceneObject> spRenderNode(new SceneObject_Cube());
+
+    return spRenderNode;
+}
+
+void Graphic::ISceneObject::SetTransformMatrix(glm::mat4 mNewMatrix)
+{
+    GetRenderNode()->SetTransformMatrix(mNewMatrix);
+}
+
+std::shared_ptr<SceneObject> Graphic::ISceneObject::GetRenderNode()
+{
+    if (!m_spRenderNode)
+        m_spRenderNode = CreateRenderNode();
+
+    assert(m_spRenderNode);
+
+    return m_spRenderNode;
 }

@@ -35,6 +35,14 @@ std::shared_ptr<Graphic::GlfwWindow> Graphic::GlfwWindow::Create(int iWidth, int
 
     // assert that only one instance of a glfw window is created (glfw does not support multiple windows)
     assert(GlfwWindow::s_pInstance == NULL);
+
+    if (s_pInstance != NULL)
+    {
+        Logger::error() << "It seems that more than 1 instance of the Graphics engine was created." << Logger::endl;
+        Logger::error() << "Please note that only one instance is supported by the event handling of glfw" << Logger::endl;
+        Logger::error() << "Contact the developers or reinstall if you have any problems with event handling" << Logger::endl;
+    }
+
     GlfwWindow::s_pInstance = spNewWindow.get();
 
     // initialize glfw

@@ -78,19 +78,41 @@ EventManager * MainApp::GetEventManager()
     return &m_EventManager;
 }
 
+void MainApp::StartGraphic_Test()
+{
+    // create glfw window
+    std::shared_ptr<Graphic::GlfwWindow> spWindow = Graphic::GlfwWindow::Create(1024, 768, "Test");
+    // set input event listener
+    spWindow->SetInputEventListener(m_spInputEventListener);
+
+    // create camera
+    std::shared_ptr<Graphic::Camera> spCamera(new Graphic::Camera());
+    // set perspective projection
+    spCamera->SetPerspectiveProjection(45.0f, 1.33f, 0.01f, 100.0f);
+
+    // create scene
+    std::shared_ptr<Graphic::Scene> spScene = Graphic::Scene::Create(spCamera);
+
+    // create objects
+    std::shared_ptr<Graphic::ISceneObject> spCube = Graphic::Cube::Create();
+    std::shared_ptr<Graphic::ISceneObject> spTable = Graphic::LoadedModel::Create("models/freepool-ng-table.3ds");
+    spTable->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
+
+    // add objects
+    spScene->AttachObject(spCube);
+    spScene->AttachObject(spTable);
+
+    // add render loop
+    GetGraphic()->AddRenderLoop(spWindow, spCamera, spScene);
+}
+
 void MainApp::Run()
 {
     // init game logic, graphics, do main loop, all this nasty stuff.
 
     GetEventManager()->Initialize();
 
-    // initialize graphic - testing stuff
-    std::shared_ptr<Graphic::Camera> spCamera(new Graphic::Camera());
-    spCamera->SetPerspectiveProjection(45.0f, 1.33f, 0.01f, 100.0f);
-    std::shared_ptr<Graphic::GlfwWindow> spWindow = Graphic::GlfwWindow::Create(1024, 768, "Test");
-    std::shared_ptr<Graphic::Scene> spScene = Graphic::Scene::Create(spCamera);
-    spWindow->SetInputEventListener(m_spInputEventListener);
-    GetGraphic()->AddRenderLoop(spWindow, spCamera, spScene);
+    StartGraphic_Test();
 
     // main loop
     while(GetGame()->GetStop() == false)

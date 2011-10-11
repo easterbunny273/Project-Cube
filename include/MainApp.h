@@ -54,6 +54,7 @@ public:
     /*! \name Testing stuff */
     //@{
 	void LuaTest();
+        void StartGraphic_Test();
     //@}
 
     /*! \name Get singelton instance */

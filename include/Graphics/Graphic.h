@@ -30,7 +30,7 @@ class Camera;
 class ShaderManager;
 class TextureManager;
 
-class Graphic : EventManager::IEventListener
+class Graphic
 {
 public:
     /*! \name Nested classes */
@@ -38,6 +38,7 @@ public:
         /// forward declarations
         class GlfwWindow;
         class Camera;
+        class ISceneObject;
 
         class IRenderTarget
         {
@@ -72,8 +73,6 @@ public:
             // this class is supposed to use an existing QT widget as the render target
         };
 
-
-
         class Scene
         {
         public:
@@ -81,34 +80,63 @@ public:
 
             void CallRenderPath();
 
+            void AttachObject(std::shared_ptr<ISceneObject> spSceneObject);
+
+            void InvalidateObjectData(std::shared_ptr<ISceneObject> spSceneObject) {}
+
+            void CreateRenderGraph();
         private:
             std::shared_ptr<SceneObject> m_spRenderPath;
+
+            std::list<std::shared_ptr<ISceneObject> >     m_lSceneObjects;
+            std::shared_ptr<Graphic::Camera>        m_spCamera;
+            std::shared_ptr<SceneObject>            m_spRenderGraphRoot;
         };
 
-       /* class ISceneObject
+        class ISceneObject
         {
+            friend class Scene;
 
+        public:
+            void SetTransformMatrix(glm::mat4 mNewMatrix);
+            glm::mat4 GetTransformMatrix() const;
+
+            virtual ~ISceneObject() {}
+
+            std::shared_ptr<SceneObject> GetRenderNode();
+            virtual std::shared_ptr<SceneObject> CreateRenderNode() = 0;
+        protected:
+            void SetScene(std::weak_ptr<Scene> wpScene);
+            ISceneObject() {}
+
+            std::shared_ptr<SceneObject>    m_spRenderNode;
+            std::weak_ptr<Scene> m_wpScene;
         };
 
         class LoadedModel : public ISceneObject
         {
+        private:
+            std::string m_sFilename;
 
+        public:
+            static std::shared_ptr<LoadedModel> Create(std::string sFilename);
+
+            virtual std::shared_ptr<SceneObject> CreateRenderNode();
         };
 
         class Cube : public ISceneObject
         {
-
+        public:
+            static std::shared_ptr<Cube> Create();
+            virtual std::shared_ptr<SceneObject> CreateRenderNode();
         };
 
         class BasicLight : public ISceneObject
         {
+        public:
+            static std::shared_ptr<BasicLight> Create(glm::vec3 vPosition);
 
         };
-
-        class Node : public ISceneObject
-        {
-
-        };*/
     //@}
 
     /*! \name Nested classes */
@@ -197,20 +225,6 @@ public:
         ~Graphic();
     //@}
 
-    /*! \name Initialization / Cleanup */
-    //@{
-
-        /// initializes the open gl stuff and creates the window + context.
-        bool InitializeOpenGL();
-
-    //@}
-
-
-    /*! \name EventManager::IEventListener interface */
-    //@{
-	virtual bool OnEvent(std::shared_ptr<EventManager::IEvent> spEvent);
-    //@}
-
     /*! \name Public Attributes */
     //@{
 	/// returns the responsible shader manager for this graphics instance
@@ -227,9 +241,9 @@ public:
 
     /*! \name new methods - refactoring - comments tbd */
     //@{
-        void SingleRenderCall(std::shared_ptr<IRenderTarget> spRenderTarget, std::shared_ptr<Camera> spCamera, std::shared_ptr<Scene> spScene);
-
-        int AddRenderLoop(std::shared_ptr<IRenderTarget> spRenderTarget, std::shared_ptr<Camera> spCamera, std::shared_ptr<Scene> spScene);
+        int AddRenderLoop(std::shared_ptr<IRenderTarget> spRenderTarget,
+                          std::shared_ptr<Camera> spCamera,
+                          std::shared_ptr<Scene> spScene);
 
         void RemoveRenderLoop(int iLoopID);
     //@}
@@ -239,28 +253,18 @@ private:
     //@{
         struct TItlRenderLoop
         {
-            std::shared_ptr<IRenderTarget> spRenderTarget;
-            std::shared_ptr<Camera> spCamera;
-            std::shared_ptr<Scene> spScene;
+            std::shared_ptr<IRenderTarget>      spRenderTarget;
+            std::shared_ptr<Camera>             spCamera;
+            std::shared_ptr<Scene>              spScene;
         };
 
         std::map<int, TItlRenderLoop>   m_mRenderLoops;
-    //@}
-
-    /*! \name Internal helper methods */
-    //@{
-	/// load basic settings
-	void ItlLoadSettings();
     //@}
 
     /*! \name Private members */
     //@{
 	std::map<std::string, std::shared_ptr<SceneObject> >    m_vRenderPaths;
 
-	static int	    s_iInstances;		///< how many instances are created ?
-	static Graphic *    s_pInstance;
-
-	Settings::TSettingsGroup * m_pSettings;		///< the settings group used for the graphics engine
     //@}
 };
 
