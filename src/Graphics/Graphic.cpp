@@ -18,15 +18,14 @@
 #include "Graphics/ShaderManager.h"
 #include "Graphics/TextureManager.h"
 #include "Logger.h"
-#include "Graphics/RenderNode.h"
+#include "Graphics/RenderNodes/IRenderNode.h"
 #include "Graphics/RenderNodes/RenderNode_PostEffect.h"
 #include "Graphics/RenderNodes/RenderNode_RenderPass.h"
-#include "Graphics/RenderNodes/RenderNode_EmptyNode.h"
 #include "Graphics/RenderNodes/RenderNode_Camera.h"
 #include "Graphics/RenderNodes/RenderNode_FBO.h"
 #include "Graphics/RenderNodes/RenderNode_Cube.h"
 #include "Graphics/RenderNodes/RenderNode_AssimpImport.h"
-
+#include "Graphics/SceneObjects/ISceneObject.h"
 #include "Graphics/Graphic.h"
 
 #include "Events.h"
@@ -316,55 +315,25 @@ void Graphic::Scene::AttachObject(std::shared_ptr<Graphic::ISceneObject> spScene
 
 void Graphic::Scene::CreateRenderGraph()
 {
-    m_spRenderGraphRoot = std::shared_ptr<RenderNode>(new RenderNode_Camera(m_spCamera.get()));
+    m_spRenderGraphRoot = std::shared_ptr<Graphic::IRenderNode>(new Graphic::RN_Camera(m_spCamera.get()));
 
     for (auto iter=m_lSceneObjects.begin(); iter != m_lSceneObjects.end(); iter++)
     {
         std::shared_ptr<Graphic::ISceneObject> spSceneObject = *iter;
-        std::shared_ptr<RenderNode> spRenderNode = spSceneObject->GetRenderNode();
+        std::shared_ptr<Graphic::IRenderNode> spRenderNode = spSceneObject->GetRenderNode();
 
         m_spRenderGraphRoot->AddChild(spRenderNode);
     }
 }
 
-std::shared_ptr<RenderNode> Graphic::LoadedModel::CreateRenderNode()
-{
-    assert (m_sFilename.size() > 0);
 
-    std::shared_ptr<RenderNode> spRenderNode(new RenderNode_AssimpImport(m_sFilename));
-
-    return spRenderNode;
-}
-
-std::shared_ptr<Graphic::LoadedModel> Graphic::LoadedModel::Create(std::string sFilename)
-{
-    std::shared_ptr<Graphic::LoadedModel> spNewNode(new LoadedModel());
-
-    spNewNode->m_sFilename = sFilename;
-
-    return spNewNode;
-}
-
-std::shared_ptr<Graphic::Cube> Graphic::Cube::Create()
-{
-    std::shared_ptr<Graphic::Cube> spNewNode(new Cube());
-
-    return spNewNode;
-}
-
-std::shared_ptr<RenderNode> Graphic::Cube::CreateRenderNode()
-{
-    std::shared_ptr<RenderNode> spRenderNode(new RenderNode_Cube());
-
-    return spRenderNode;
-}
 
 void Graphic::ISceneObject::SetTransformMatrix(glm::mat4 mNewMatrix)
 {
     GetRenderNode()->SetTransformMatrix(mNewMatrix);
 }
 
-std::shared_ptr<RenderNode> Graphic::ISceneObject::GetRenderNode()
+std::shared_ptr<Graphic::IRenderNode> Graphic::ISceneObject::GetRenderNode()
 {
     if (!m_spRenderNode)
         m_spRenderNode = CreateRenderNode();

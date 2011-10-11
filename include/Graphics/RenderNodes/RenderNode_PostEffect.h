@@ -14,7 +14,7 @@
 #include <string>
 #include <map>
 #include <glm/glm.hpp>
-#include "Graphics/RenderNode.h"
+#include "Graphics/RenderNodes/IRenderNode.h"
 
 //!  A SceneObject which draws a texture full screen.
 /*!
@@ -23,14 +23,14 @@
   This is useful for applying post screen effects (rendering scene in a fbo, and drawing resulting color texture fullscreened with a given shader).
 */
 
-class RenderNode_PostEffect : public RenderNode
+class Graphic::RN_PostEffect : public Graphic::IRenderNode
 {
 public:
     /*! \name Constructors / Destructor */
     //@{
 	/// This constructor takes the name of shader to use, and the name of one or two textures to pass it on the shader
-        RenderNode_PostEffect(std::string sShaderToUse);
-        ~RenderNode_PostEffect();
+        RN_PostEffect(std::string sShaderToUse);
+        ~RN_PostEffect();
     //@}
 
     /*! \name Public methods */

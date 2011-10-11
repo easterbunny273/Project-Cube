@@ -8,20 +8,20 @@
 #ifndef __bambooengine_sceneobject_boundingbox_header
 #define __bambooengine_sceneobject_boundingbox_header
 
-#include "Graphics/RenderNode.h"
+#include "Graphics/RenderNodes/IRenderNode.h"
 
 //!  A SceneObject which renders a magic cube (from the inside)
 /*!
   This SceneObject renders a cube from the inside.
 */
 
-class RenderNode_Cube : public RenderNode
+class Graphic::RN_Cube : public Graphic::IRenderNode
 {
 public:
     /*! \name Constructor / Destructor */
     //@{
-    RenderNode_Cube();
-    ~RenderNode_Cube();
+    RN_Cube();
+    ~RN_Cube();
     //@}
 
 protected:

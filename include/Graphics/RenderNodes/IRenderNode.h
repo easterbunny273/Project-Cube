@@ -13,7 +13,7 @@
 #include <memory>
 
 #include "Graphics/Graphic.h"
-#include "common_gl.h"
+#include "Graphics/common_gl.h"
 
 
 /**
@@ -23,8 +23,10 @@
 
 class TRenderPass;
 
-class RenderNode
+class Graphic::IRenderNode
 {
+    friend class Graphic::Scene;
+
 public:
     /*! \name Public types */
     //@{
@@ -34,19 +36,19 @@ public:
     /*! \name Constructor / Destructor */
     //@{
 	/// Constructor
-        RenderNode();
+        IRenderNode();
 
 	/// Destructor
-        virtual ~RenderNode();
+        virtual ~IRenderNode();
     //@}
 
     /*! \name Manipulate SceneGraph (Tree structure of SceneObjects) */
     //@{
 	/*! adds a child to the node */
-        void AddChild(std::shared_ptr<RenderNode> spNode);
+        void AddChild(std::shared_ptr<IRenderNode> spNode);
 
 	/*! removes the given child if found and returns true, else it returns false */
-        bool RemoveChild(std::shared_ptr<RenderNode> spNode);
+        bool RemoveChild(std::shared_ptr<IRenderNode> spNode);
 
 	void ClearChilds();
     //@}
@@ -168,7 +170,7 @@ protected:
 
 	std::shared_ptr<TItlRenderInfo> m_pCurrentRenderInfo;
 
-        std::vector<std::shared_ptr<RenderNode> > m_vChildren;
+        std::vector<std::shared_ptr<Graphic::IRenderNode> > m_vChildren;
 
         std::shared_ptr<Graphic::Camera> m_spShadowCaster;
 
@@ -177,9 +179,9 @@ protected:
 
 };
 
-class SceneObject_BoundingBoxed : public RenderNode, public RenderNode::IHasVertices
+class Graphic::IRenderNode_Cullable : public Graphic::IRenderNode, public Graphic::IRenderNode::IHasVertices
 {
-    friend class RenderNode;
+    friend class Graphic::IRenderNode;
 
 protected:
     float m_fMinX, m_fMaxX;
@@ -192,7 +194,7 @@ protected:
     /*! \name Constructor */
     //@{
 	//BoundingBox(SceneObject::IHasVertices *pSceneObject) : m_pSceneObject(pSceneObject), m_bInitialized(false) {};
-	SceneObject_BoundingBoxed() : m_bInitialized(false) {};
+        IRenderNode_Cullable() : m_bInitialized(false) {};
     //@}
 
     /*! \name Methods */

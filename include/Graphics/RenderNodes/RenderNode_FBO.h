@@ -8,7 +8,7 @@
 #ifndef __realtime_sceneobject_fbo_header
 #define __realtime_sceneobject_fbo_header
 
-#include "Graphics/RenderNode.h"
+#include "Graphics/RenderNodes/IRenderNode.h"
 
 //!  A SceneObject which renders all children in a fbo.
 /*!
@@ -20,7 +20,7 @@
   The name for the textures must be set in the used constructor.
 */
 
-class RenderNode_FBO : public RenderNode
+class Graphic::RN_FBO : public Graphic::IRenderNode
 {
 private:
     bool m_bColorTexture;		///<shows if this fbo uses a color texture
@@ -70,17 +70,17 @@ public:
 //    SceneObject_FBO(int iWidth, int iHeight, const char *szColorTextureName, int iDummy);
 
     ///Constructor for a SceneObject_FBO, creates a color texture and a renderbuffer for the depth.
-    RenderNode_FBO(int iWidth, int iHeight, const char *szColorTextureName, bool bFloating16 = false, bool bMipMapped = false);
+    RN_FBO(int iWidth, int iHeight, const char *szColorTextureName, bool bFloating16 = false, bool bMipMapped = false);
 
     ///Constructor for a SceneObject_FBO, creates a color texture and a depth texture.
-    RenderNode_FBO(int iWidth, int iHeight, const char *szColorTextureName, const char *szDepthTextureName, bool bMipMapped = false);
+    RN_FBO(int iWidth, int iHeight, const char *szColorTextureName, const char *szDepthTextureName, bool bMipMapped = false);
 
 
     /// Constructor for a SceneObject_FBO with a color texture and renderbuffer for depth, where the color texture is created seperately
-    RenderNode_FBO(bool bDummy, int iWidth, int iHeight, const char * szColorTexture);
+    RN_FBO(bool bDummy, int iWidth, int iHeight, const char * szColorTexture);
 
     ///Destructor of the fbo, releases ressources
-    ~RenderNode_FBO();
+    ~RN_FBO();
 };
 
 #endif

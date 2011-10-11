@@ -1,6 +1,8 @@
 #include "MainApp.h"
 #include "Logger.h"
 #include "Graphics/Graphic-GlfwWindow.h"
+#include "Graphics/SceneObjects/LoadedModel.h"
+#include "Graphics/SceneObjects/Cube.h"
 #include "GL/glfw.h"
 
 // initialize singelton ptr to NULL
@@ -94,8 +96,8 @@ void MainApp::StartGraphic_Test()
     std::shared_ptr<Graphic::Scene> spScene = Graphic::Scene::Create(spCamera);
 
     // create objects
-    std::shared_ptr<Graphic::ISceneObject> spCube = Graphic::Cube::Create();
-    std::shared_ptr<Graphic::ISceneObject> spTable = Graphic::LoadedModel::Create("models/freepool-ng-table.3ds");
+    std::shared_ptr<Graphic::ISceneObject> spCube = Graphic::SO_Cube::Create();
+    std::shared_ptr<Graphic::ISceneObject> spTable = Graphic::SO_LoadedModel::Create("models/freepool-ng-table.3ds");
     spTable->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
 
     // add objects to scene

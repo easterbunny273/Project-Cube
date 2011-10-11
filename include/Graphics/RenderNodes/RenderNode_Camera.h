@@ -8,14 +8,14 @@
 #define __BambooEngine_Header_SceneObject_Camera
 
 #include <memory>
-#include "Graphics/RenderNode.h"
+#include "Graphics/RenderNodes/IRenderNode.h"
 #include "Graphics/Graphic.h"
 
 
-class RenderNode_Camera : public RenderNode
+class Graphic::RN_Camera : public Graphic::IRenderNode
 {
 public:
-    RenderNode_Camera(Graphic::Camera *pCamera, bool bSetMatrices=true);
+    RN_Camera(Graphic::Camera *pCamera, bool bSetMatrices=true);
 
     /*! \name Operations */
     //@{

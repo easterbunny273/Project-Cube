@@ -13,15 +13,14 @@
 #include <vector>
 
 #include "Graphics/common_gl.h"
-#include "Graphics/RenderNode.h"
-#include "Graphics/RenderNodes/RenderNode_EmptyNode.h"
+#include "Graphics/RenderNodes/IRenderNode.h"
 
 /**
   * A SceneObject is a object to be placed in a tree-based Scene-Structure
   *
 */
 
-class RenderNode_RenderPass : public RenderNode
+class Graphic::RN_RenderPass : public Graphic::IRenderNode
 {
 public:
     enum TRenderPass
@@ -34,8 +33,8 @@ public:
 	NUM_RENDERPASSES
     };
 
-    RenderNode_RenderPass(TRenderPass state);
-    virtual ~RenderNode_RenderPass();
+    RN_RenderPass(TRenderPass state);
+    virtual ~RN_RenderPass();
 
     TRenderPass getRenderState();
 

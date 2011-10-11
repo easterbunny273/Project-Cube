@@ -7,20 +7,20 @@
 #ifndef __bambooengine_sceneobject_boundingbox_header
 #define __bambooengine_sceneobject_boundingbox_header
 
-#include "Graphics/RenderNode.h"
+#include "Graphics/RenderNodes/IRenderNode.h"
 
 //!  A SceneObject which renders a bounding sphere.
 /*!
   This SceneObject renders only a red sphere in wireframe mode, used for visualizing the bounding spheres.
 */
 
-class RenderNode_BoundingBox : public RenderNode
+class Graphic::RN_BoundingBox : public Graphic::IRenderNode
 {
 public:
     /*! \name Constructor / Destructor */
     //@{
-    RenderNode_BoundingBox(float fMinX, float fMaxX, float fMinY, float fMaxY, float fMinZ, float fMaxZ);
-    ~RenderNode_BoundingBox();
+    RN_BoundingBox(float fMinX, float fMaxX, float fMinY, float fMaxY, float fMinZ, float fMaxZ);
+    ~RN_BoundingBox();
     //@}
 
 protected:

@@ -15,7 +15,8 @@
 #include <map>
 
 // glm includes
-#include <glm/core/type_mat4x4.hpp>
+//#include <glm/core/type_mat4x4.hpp>
+#include <glm/glm.hpp>
 
 // settings class
 #include "Settings.h"
@@ -24,7 +25,6 @@
 #include "EventManager.h"
 
 // forward declarations
-class RenderNode;
 class SceneObject_RenderTarget;
 class Camera;
 class ShaderManager;
@@ -32,13 +32,31 @@ class TextureManager;
 
 class Graphic
 {
+private:
+    /*! \name Internal classes */
+    //@{
+        class IRenderNode;
+        class IRenderNode_Cullable;
+
+        class RN_PostEffect;
+        class RN_Camera;
+        class RN_Cube;
+        class RN_FBO;
+        class RN_RenderPass;
+        class RN_BoundingBox;
+        class RN_AssimpImport;
+    //@}
+
 public:
     /*! \name Nested classes */
     //@{
         /// forward declarations
         class GlfwWindow;
         class Camera;
+
         class ISceneObject;
+        class SO_Cube;
+        class SO_LoadedModel;
 
         class IRenderTarget
         {
@@ -86,56 +104,9 @@ public:
 
             void CreateRenderGraph();
         private:
-            std::shared_ptr<RenderNode> m_spRenderPath;
-
             std::list<std::shared_ptr<ISceneObject> >     m_lSceneObjects;
             std::shared_ptr<Graphic::Camera>        m_spCamera;
-            std::shared_ptr<RenderNode>            m_spRenderGraphRoot;
-        };
-
-        class ISceneObject
-        {
-            friend class Scene;
-
-        public:
-            void SetTransformMatrix(glm::mat4 mNewMatrix);
-            glm::mat4 GetTransformMatrix() const;
-
-            virtual ~ISceneObject() {}
-
-            std::shared_ptr<RenderNode> GetRenderNode();
-            virtual std::shared_ptr<RenderNode> CreateRenderNode() = 0;
-        protected:
-            void SetScene(std::weak_ptr<Scene> wpScene);
-            ISceneObject() {}
-
-            std::shared_ptr<RenderNode>    m_spRenderNode;
-            std::weak_ptr<Scene> m_wpScene;
-        };
-
-        class LoadedModel : public ISceneObject
-        {
-        private:
-            std::string m_sFilename;
-
-        public:
-            static std::shared_ptr<LoadedModel> Create(std::string sFilename);
-
-            virtual std::shared_ptr<RenderNode> CreateRenderNode();
-        };
-
-        class Cube : public ISceneObject
-        {
-        public:
-            static std::shared_ptr<Cube> Create();
-            virtual std::shared_ptr<RenderNode> CreateRenderNode();
-        };
-
-        class BasicLight : public ISceneObject
-        {
-        public:
-            static std::shared_ptr<BasicLight> Create(glm::vec3 vPosition);
-
+            std::shared_ptr<IRenderNode>            m_spRenderGraphRoot;
         };
     //@}
 
@@ -263,7 +234,7 @@ private:
 
     /*! \name Private members */
     //@{
-        std::map<std::string, std::shared_ptr<RenderNode> >    m_vRenderPaths;
+        std::map<std::string, std::shared_ptr<Graphic::IRenderNode> >    m_vRenderPaths;
 
     //@}
 };

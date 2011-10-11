@@ -23,8 +23,8 @@ using namespace std;
 
 const double PI = 3.141516;
 
-RenderNode_Cube::RenderNode_Cube()
-    : RenderNode()
+Graphic::RN_Cube::RN_Cube()
+    : Graphic::IRenderNode()
 {
     //GLdouble *vertexArray;
     //GLuint *indexArray;
@@ -172,12 +172,12 @@ RenderNode_Cube::RenderNode_Cube()
     Logger::debug() << "SceneObject_Cube created" << Logger::endl;
 }
 
-RenderNode_Cube::~RenderNode_Cube()
+Graphic::RN_Cube::~RN_Cube()
 {
 
 }
 
-void RenderNode_Cube::ItlPreRender()
+void Graphic::RN_Cube::ItlPreRender()
 {
     glBindVertexArray(m_nVertexArrayObject);
     glBindBuffer(GL_ARRAY_BUFFER, m_nVertexBufferObject);
@@ -189,12 +189,12 @@ void RenderNode_Cube::ItlPreRender()
 	ShaderManager::instance()->ActivateShader("basic_shading");
 }
 
-void RenderNode_Cube::ItlPostRender()
+void Graphic::RN_Cube::ItlPostRender()
 {
     ShaderManager::instance()->PopActiveShader();
 }
 
-void RenderNode_Cube::ItlRender()
+void Graphic::RN_Cube::ItlRender()
 {
     GLenum eError = glGetError();
 
@@ -248,7 +248,7 @@ void RenderNode_Cube::ItlRender()
     TextureManager::instance()->UnuseTexture("cube_texture");
 }
 
-void RenderNode_Cube::ItlLoadRessources()
+void Graphic::RN_Cube::ItlLoadRessources()
 {
     ShaderManager::instance()->AddShader("basic_shading", new Shader("shaders/basic_shading.vs", "shaders/basic_shading.fs"));
     TextureManager::instance()->LoadTexture("cube_texture", "textures/cube_texture.jpg", false);

@@ -7,10 +7,10 @@
 
 #include "Graphics/Graphic.h"
 #include "Graphics/ShaderManager.h"
-#include "Graphics/RenderNode.h"
+#include "Graphics/RenderNodes/IRenderNode.h"
 #include "Graphics/RenderNodes/RenderNode_BoundingBox.h"
 
-void RenderNode::ItlSendTransformMatrices()
+void Graphic::IRenderNode::ItlSendTransformMatrices()
 {
     //first, get the positions
     const GLint l_projection_matrix = ShaderManager::instance()->GetUniform("ProjectionMatrix");
@@ -57,7 +57,7 @@ void RenderNode::ItlSendTransformMatrices()
     ItlSendLightPosition();
 }
 
-void RenderNode::ItlSendLightPosition()
+void Graphic::IRenderNode::ItlSendLightPosition()
 {
     GLint l_Light0Position = ShaderManager::instance()->GetUniform("Light0Position");
 
@@ -71,7 +71,7 @@ void RenderNode::ItlSendLightPosition()
 }
 
 
-void RenderNode::SetLightSourceForShadowMapping(std::shared_ptr<Graphic::Camera> spShadowCaster, bool bRecursivelySetForChildren)
+void Graphic::IRenderNode::SetLightSourceForShadowMapping(std::shared_ptr<Graphic::Camera> spShadowCaster, bool bRecursivelySetForChildren)
 {
     m_spShadowCaster = spShadowCaster;
 
@@ -80,14 +80,14 @@ void RenderNode::SetLightSourceForShadowMapping(std::shared_ptr<Graphic::Camera>
 	    m_vChildren[a]->SetLightSourceForShadowMapping(spShadowCaster, true);
 }
 
-void RenderNode::Render()
+void Graphic::IRenderNode::Render()
 {
     std::shared_ptr<TItlRenderInfo> pRenderInfo (new TItlRenderInfo);
 
     this->Render(pRenderInfo);
 }
 
-void RenderNode::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderInfo)
+void Graphic::IRenderNode::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderInfo)
 {
     m_pCurrentRenderInfo = pCurrentRenderInfo;
 
@@ -136,29 +136,29 @@ void RenderNode::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderInfo)
     m_pCurrentRenderInfo = std::shared_ptr<TItlRenderInfo>();
 }
 
-RenderNode::RenderNode()
+Graphic::IRenderNode::IRenderNode()
     : m_bHasChildren(false)
 {
 
 }
 
-RenderNode::~RenderNode()
+Graphic::IRenderNode::~IRenderNode()
 {
 
 }
 
 
-bool RenderNode::ItlTestIfVisible()
+bool Graphic::IRenderNode::ItlTestIfVisible()
 {
     return true;
 }
 
-bool RenderNode::ItlTestSkipRendering()
+bool Graphic::IRenderNode::ItlTestSkipRendering()
 {
     return false;
 }
 
-void RenderNode::AddChild(std::shared_ptr<RenderNode> spNode)
+void Graphic::IRenderNode::AddChild(std::shared_ptr<Graphic::IRenderNode> spNode)
 {
     m_vChildren.push_back(spNode);
 
@@ -166,7 +166,7 @@ void RenderNode::AddChild(std::shared_ptr<RenderNode> spNode)
 
 }
 
-bool RenderNode::RemoveChild(std::shared_ptr<RenderNode> spNode)
+bool Graphic::IRenderNode::RemoveChild(std::shared_ptr<Graphic::IRenderNode> spNode)
 {
     bool bFound = false;
     auto iterator = m_vChildren.begin();
@@ -190,24 +190,24 @@ bool RenderNode::RemoveChild(std::shared_ptr<RenderNode> spNode)
     return bFound;
 }
 
-void RenderNode::ClearChilds()
+void Graphic::IRenderNode::ClearChilds()
 {
     m_vChildren.clear();
 }
 
-void RenderNode::GetTransformMatrix(glm::mat4 &rToWorld, glm::mat4 &rFromWorld) const
+void Graphic::IRenderNode::GetTransformMatrix(glm::mat4 &rToWorld, glm::mat4 &rFromWorld) const
 {
     rToWorld = m_mTransformMatrixToWorld;
     rFromWorld = m_mTransformMatrixFromWorld;
 }
 
-void RenderNode::SetTransformMatrix(glm::mat4 rToWorld, glm::mat4 rFromWorld)
+void Graphic::IRenderNode::SetTransformMatrix(glm::mat4 rToWorld, glm::mat4 rFromWorld)
 {
     m_mTransformMatrixToWorld = rToWorld;
     m_mTransformMatrixFromWorld = rFromWorld;
 }
 
-void RenderNode::SetTransformMatrix(glm::mat4 rToWorld)
+void Graphic::IRenderNode::SetTransformMatrix(glm::mat4 rToWorld)
 {
     glm::mat4 mFromWorld;
 
@@ -216,7 +216,7 @@ void RenderNode::SetTransformMatrix(glm::mat4 rToWorld)
     SetTransformMatrix(rToWorld, mFromWorld);
 }
 
-bool SceneObject_BoundingBoxed::ItlInitializeBoundingBox()
+bool Graphic::IRenderNode_Cullable::ItlInitializeBoundingBox()
 {
     float *fVertices = GetVertices();
     int iNumVertices = NumVertices();
@@ -265,13 +265,13 @@ bool SceneObject_BoundingBoxed::ItlInitializeBoundingBox()
 	return true;
 }
 
-bool SceneObject_BoundingBoxed::ItlTestIfVisible()
+bool Graphic::IRenderNode_Cullable::ItlTestIfVisible()
 {
     if (m_bInitialized == false)
     {
 	ItlInitializeBoundingBox();
 
-        std::shared_ptr<RenderNode> pBoundingBox(new RenderNode_BoundingBox(m_fMinX, m_fMaxX, m_fMinY, m_fMaxY, m_fMinZ, m_fMaxZ));
+        std::shared_ptr<Graphic::IRenderNode> pBoundingBox(new Graphic::RN_BoundingBox(m_fMinX, m_fMaxX, m_fMinY, m_fMaxY, m_fMinZ, m_fMaxZ));
 	AddChild(pBoundingBox);
 
 	m_bInitialized = true;

@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-#include "Graphics/RenderNode.h"
+#include "Graphics/RenderNodes/IRenderNode.h"
 
 //!  A SceneObject which renders a model which is loaded from file with Assimp.
 /*!
@@ -19,13 +19,13 @@
     but in practice, a 3ds-file exported from blender works best at the moment.
 */
 
-class RenderNode_AssimpImport : public SceneObject_BoundingBoxed
+class Graphic::RN_AssimpImport : public Graphic::IRenderNode_Cullable
 {
 public:
     /*! \name Constructor / Destructor */
     //@{
 	/// constructor, creates scene object and imports model from given file
-        RenderNode_AssimpImport(std::string sFilename);
+        RN_AssimpImport(std::string sFilename);
     //@}
 
     /*! \name SceneObject::IHasVertices interface */

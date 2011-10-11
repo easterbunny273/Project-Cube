@@ -23,8 +23,8 @@ using namespace std;
 
 const double PI = 3.141516;
 
-RenderNode_BoundingBox::RenderNode_BoundingBox(float fMinX, float fMaxX, float fMinY, float fMaxY, float fMinZ, float fMaxZ)
-    : RenderNode()
+Graphic::RN_BoundingBox::RN_BoundingBox(float fMinX, float fMaxX, float fMinY, float fMaxY, float fMinZ, float fMaxZ)
+    : IRenderNode()
 {
     GLdouble *vertexArray;
     GLuint *indexArray;
@@ -129,12 +129,12 @@ RenderNode_BoundingBox::RenderNode_BoundingBox(float fMinX, float fMaxX, float f
     Logger::debug() << "SceneObject_BoundingBox created" << Logger::endl;
 }
 
-RenderNode_BoundingBox::~RenderNode_BoundingBox()
+Graphic::RN_BoundingBox::~RN_BoundingBox()
 {
 
 }
 
-void RenderNode_BoundingBox::ItlPreRender()
+void Graphic::RN_BoundingBox::ItlPreRender()
 {
   /*  glBindVertexArray(m_nVertexArrayObject);
     glBindBuffer(GL_ARRAY_BUFFER, m_nVertexBufferObject);
@@ -146,12 +146,12 @@ void RenderNode_BoundingBox::ItlPreRender()
         ShaderManager::instance()->ActivateShader("bounding_shader");*/
 }
 
-void RenderNode_BoundingBox::ItlPostRender()
+void Graphic::RN_BoundingBox::ItlPostRender()
 {
   //  ShaderManager::instance()->PopActiveShader();
 }
 
-void RenderNode_BoundingBox::ItlRender()
+void Graphic::RN_BoundingBox::ItlRender()
 {
   /*  const GLint l_in_Position(ShaderManager::instance()->GetAttribute("in_Position"));
 
