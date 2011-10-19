@@ -83,23 +83,23 @@ EventManager * MainApp::GetEventManager()
 void MainApp::StartGraphic_Test()
 {
     // create glfw window
-    std::shared_ptr<Graphic::GlfwWindow> spWindow = Graphic::GlfwWindow::Create(1024, 768, "Test");
+    std::shared_ptr<Bamboo::GlfwWindow> spWindow = Bamboo::GlfwWindow::Create(1024, 768, "Test");
     // set input event listener
     spWindow->SetInputEventListener(m_spInputEventListener);
 
     // create camera
-    std::shared_ptr<Graphic::Camera> spCamera(new Graphic::Camera());
+    std::shared_ptr<Bamboo::Camera> spCamera(new Bamboo::Camera());
     // set perspective projection
     spCamera->SetPerspectiveProjection(45.0f, 1.33f, 0.01f, 100.0f);
 
     // create scene
-    std::shared_ptr<Graphic::Scene> spScene = Graphic::Scene::Create(spCamera);
+    std::shared_ptr<Bamboo::Scene> spScene = Bamboo::Scene::Create(spCamera);
 
     GetGraphic();
 
     // create objects
-    std::shared_ptr<Graphic::ISceneObject> spCube = Graphic::SO_Cube::Create();
-    std::shared_ptr<Graphic::ISceneObject> spTable = Graphic::SO_LoadedModel::Create("models/freepool-ng-table.3ds");
+    std::shared_ptr<Bamboo::ISceneObject> spCube = Bamboo::SO_Cube::Create();
+    std::shared_ptr<Bamboo::ISceneObject> spTable = Bamboo::SO_LoadedModel::Create("models/freepool-ng-table.3ds");
     spTable->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
 
     // add objects to scene
@@ -129,10 +129,10 @@ void MainApp::Run()
     }
 }
 
-Graphic * MainApp::GetGraphic()
+Bamboo * MainApp::GetGraphic()
 {
     if (m_pGraphic == NULL)
-	m_pGraphic = new Graphic();
+        m_pGraphic = new Bamboo();
 
     assert (m_pGraphic != NULL);
     return m_pGraphic;

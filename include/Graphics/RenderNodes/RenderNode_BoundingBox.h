@@ -14,7 +14,7 @@
   This SceneObject renders only a red sphere in wireframe mode, used for visualizing the bounding spheres.
 */
 
-class Graphic::RN_BoundingBox : public Graphic::IRenderNode
+class Bamboo::RN_BoundingBox : public Bamboo::IRenderNode
 {
 public:
     /*! \name Constructor / Destructor */

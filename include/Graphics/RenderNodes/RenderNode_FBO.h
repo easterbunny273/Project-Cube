@@ -20,7 +20,7 @@
   The name for the textures must be set in the used constructor.
 */
 
-class Graphic::RN_FBO : public Graphic::IRenderNode
+class Bamboo::RN_FBO : public Bamboo::IRenderNode
 {
 private:
     bool m_bColorTexture;		///<shows if this fbo uses a color texture

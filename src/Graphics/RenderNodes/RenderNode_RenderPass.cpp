@@ -1,23 +1,23 @@
 #include "Graphics/RenderNodes/RenderNode_RenderPass.h"
 #include <iostream>
 
-Graphic::RN_RenderPass::RN_RenderPass(TRenderPass pass)
+Bamboo::RN_RenderPass::RN_RenderPass(TRenderPass pass)
     : m_tRenderPass(pass)
 {
     //nothing todo, only initializer list
 }
 
-Graphic::RN_RenderPass::TRenderPass Graphic::RN_RenderPass::getRenderState()
+Bamboo::RN_RenderPass::TRenderPass Bamboo::RN_RenderPass::getRenderState()
 {
     return m_tRenderPass;
 }
 
-Graphic::RN_RenderPass::~RN_RenderPass()
+Bamboo::RN_RenderPass::~RN_RenderPass()
 {
 
 }
 
-void Graphic::RN_RenderPass::Render(std::shared_ptr<TItlRenderInfo> pRenderInfo)
+void Bamboo::RN_RenderPass::Render(std::shared_ptr<TItlRenderInfo> pRenderInfo)
 {
     //first, save current render state
     TRenderPass old_state =  static_cast<TRenderPass>(pRenderInfo->tCurrentRenderPass);
@@ -26,7 +26,7 @@ void Graphic::RN_RenderPass::Render(std::shared_ptr<TItlRenderInfo> pRenderInfo)
     pRenderInfo->tCurrentRenderPass = m_tRenderPass;
 
     //render children
-    Graphic::IRenderNode::Render(pRenderInfo);
+    Bamboo::IRenderNode::Render(pRenderInfo);
 
     //restore old renderstate
     pRenderInfo->tCurrentRenderPass = old_state;

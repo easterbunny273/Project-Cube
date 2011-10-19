@@ -15,7 +15,7 @@
 #include <vector>
 #include <iostream>
 
-struct Graphic::RN_AssimpImport::TItlMeshData
+struct Bamboo::RN_AssimpImport::TItlMeshData
 {
     unsigned int nNumFaces;
     unsigned int nNumVertices;
@@ -30,7 +30,7 @@ struct Graphic::RN_AssimpImport::TItlMeshData
 
 };
 
-struct Graphic::RN_AssimpImport::TItlMaterialData
+struct Bamboo::RN_AssimpImport::TItlMaterialData
 {
     float fColorDiffuse[4];
     float fColorSpecular[4];
@@ -54,9 +54,9 @@ struct Graphic::RN_AssimpImport::TItlMaterialData
 };
 
 // static member initialization
-bool Graphic::RN_AssimpImport::s_bGeneralRessourcesInitialized = false;
+bool Bamboo::RN_AssimpImport::s_bGeneralRessourcesInitialized = false;
 
-Graphic::RN_AssimpImport::RN_AssimpImport(std::string sFilename)
+Bamboo::RN_AssimpImport::RN_AssimpImport(std::string sFilename)
 {
     ItlLoadGeneralRessources();
 
@@ -332,7 +332,7 @@ Graphic::RN_AssimpImport::RN_AssimpImport(std::string sFilename)
       this->AddChild(pBoundingBox);*/
 }
 
-void Graphic::RN_AssimpImport::ItlCreateVertexBufferObject(std::vector<GLfloat> &data)
+void Bamboo::RN_AssimpImport::ItlCreateVertexBufferObject(std::vector<GLfloat> &data)
 {
     // Vertexbuffer, Indexbuffer, Normalbuffer, texcoordbuffer generieren
     glGenBuffers(1, &m_nVBO);
@@ -353,7 +353,7 @@ void Graphic::RN_AssimpImport::ItlCreateVertexBufferObject(std::vector<GLfloat> 
     delete[] packed_vertex_buffer_data;
 }
 
-void Graphic::RN_AssimpImport::ItlCreateVerticesArray(std::vector<GLfloat> &data)
+void Bamboo::RN_AssimpImport::ItlCreateVerticesArray(std::vector<GLfloat> &data)
 {
     unsigned int nNumVertices = 0;
 
@@ -404,7 +404,7 @@ void Graphic::RN_AssimpImport::ItlCreateVerticesArray(std::vector<GLfloat> &data
     m_iNumVertices = 4;*/
 }
 
-void Graphic::RN_AssimpImport::ItlCreateIndicesArray(std::vector<GLuint> &data)
+void Bamboo::RN_AssimpImport::ItlCreateIndicesArray(std::vector<GLuint> &data)
 {
     unsigned int nNumIndices = 0;
 
@@ -448,7 +448,7 @@ void Graphic::RN_AssimpImport::ItlCreateIndicesArray(std::vector<GLuint> &data)
     m_iNumIndices = 6;*/
 }
 
-void Graphic::RN_AssimpImport::ItlCreateIndexBufferObject(std::vector<GLuint> &data)
+void Bamboo::RN_AssimpImport::ItlCreateIndexBufferObject(std::vector<GLuint> &data)
 {
     // Vertexbuffer, Indexbuffer, Normalbuffer, texcoordbuffer generieren
     glGenBuffers(1, &m_nIBO);
@@ -469,10 +469,10 @@ void Graphic::RN_AssimpImport::ItlCreateIndexBufferObject(std::vector<GLuint> &d
     delete[] packed_index_buffer_data;
 }
 
-void Graphic::RN_AssimpImport::ItlPreRender()
+void Bamboo::RN_AssimpImport::ItlPreRender()
 {
     ItlGetGraphicCore()->GetShaderManager()->PushActiveShader();
-    if (m_pCurrentRenderInfo->tCurrentRenderPass == Graphic::RN_RenderPass::RENDERPASS_SHADOWMAP)
+    if (m_pCurrentRenderInfo->tCurrentRenderPass == Bamboo::RN_RenderPass::RENDERPASS_SHADOWMAP)
         ItlGetGraphicCore()->GetShaderManager()->ActivateShader("simple_shading");
     /*else if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_DEEP_OPACITY_MAP1)
         ItlGetGraphicCore()->GetShaderManager()->ActivateShader("assimp_deep_step1_shader");
@@ -482,7 +482,7 @@ void Graphic::RN_AssimpImport::ItlPreRender()
         ItlGetGraphicCore()->GetShaderManager()->ActivateShader("sceneobject-assimpimport");
 }
 
-void Graphic::RN_AssimpImport::ItlRender()
+void Bamboo::RN_AssimpImport::ItlRender()
 {
     glBindVertexArray(m_nVAO);
     glBindBuffer(GL_ARRAY_BUFFER, m_nVBO);
@@ -626,22 +626,22 @@ void Graphic::RN_AssimpImport::ItlRender()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void Graphic::RN_AssimpImport::ItlPostRender()
+void Bamboo::RN_AssimpImport::ItlPostRender()
 {
     ItlGetGraphicCore()->GetShaderManager()->PopActiveShader();
 }
 
-void Graphic::RN_AssimpImport::ItlPreRenderChildren()
+void Bamboo::RN_AssimpImport::ItlPreRenderChildren()
 {
 
 }
 
-void Graphic::RN_AssimpImport::ItlPostRenderChildren()
+void Bamboo::RN_AssimpImport::ItlPostRenderChildren()
 {
 
 }
 
-float *Graphic::RN_AssimpImport::GetVertices()
+float *Bamboo::RN_AssimpImport::GetVertices()
 {
     assert (m_pfVertices != NULL);
 
@@ -649,24 +649,24 @@ float *Graphic::RN_AssimpImport::GetVertices()
 }
 
 
-int *Graphic::RN_AssimpImport::GetIndices()
+int *Bamboo::RN_AssimpImport::GetIndices()
 {
     assert (m_piIndices != NULL);
 
     return m_piIndices;
 }
 
-int Graphic::RN_AssimpImport::NumIndices()
+int Bamboo::RN_AssimpImport::NumIndices()
 {
     return m_iNumIndices;
 }
 
-int Graphic::RN_AssimpImport::NumVertices()
+int Bamboo::RN_AssimpImport::NumVertices()
 {
     return m_iNumVertices;
 }
 
-bool Graphic::RN_AssimpImport::ItlTestSkipRendering()
+bool Bamboo::RN_AssimpImport::ItlTestSkipRendering()
 {
     /*if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_DEEP_OPACITY_MAP1)
 	return true;
@@ -677,7 +677,7 @@ bool Graphic::RN_AssimpImport::ItlTestSkipRendering()
     return false;
 }
 
-void Graphic::RN_AssimpImport::ItlLoadGeneralRessources()
+void Bamboo::RN_AssimpImport::ItlLoadGeneralRessources()
 {
     if (s_bGeneralRessourcesInitialized == false && (ItlGetGraphicCore() != NULL))
     {

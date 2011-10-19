@@ -26,9 +26,9 @@
   which can be used for things like enforcing a simple shader program when rendering the shadowmap or reflected objects.
 */
 
-class Graphic::ShaderManager
+class Bamboo::ShaderManager
 {
-    friend class Graphic;
+    friend class Bamboo;
 
 public:
     /*! \name Singelton getter */

@@ -6,11 +6,11 @@
 #include "Graphics/Graphic.h"
 #include "Graphics/SceneObjects/ISceneObject.h"
 
-class Graphic::SO_Cube : public Graphic::ISceneObject
+class Bamboo::SO_Cube : public Bamboo::ISceneObject
 {
 public:
     static std::shared_ptr<SO_Cube> Create();
-    virtual std::shared_ptr<Graphic::IRenderNode> CreateRenderNode();
+    virtual std::shared_ptr<Bamboo::IRenderNode> CreateRenderNode();
 };
 
 #endif

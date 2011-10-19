@@ -13,18 +13,18 @@
 #include "Graphics/common_gl.h"
 #include "Logger.h"
 
-Graphic::GlfwWindow *Graphic::GlfwWindow::s_pInstance = NULL;
+Bamboo::GlfwWindow *Bamboo::GlfwWindow::s_pInstance = NULL;
 
 /****************************************************************
   *************************************************************** */
-Graphic::GlfwWindow::GlfwWindow()
+Bamboo::GlfwWindow::GlfwWindow()
 {
     // construction is done in Create()
 }
 
 /****************************************************************
   *************************************************************** */
-std::shared_ptr<Graphic::GlfwWindow> Graphic::GlfwWindow::Create(int iWidth, int iHeight, std::string sWindowTitle)
+std::shared_ptr<Bamboo::GlfwWindow> Bamboo::GlfwWindow::Create(int iWidth, int iHeight, std::string sWindowTitle)
 {
     bool m_bUseOpenGL_4_1 = false; //TODO: remove
 
@@ -78,10 +78,10 @@ std::shared_ptr<Graphic::GlfwWindow> Graphic::GlfwWindow::Create(int iWidth, int
             Logger::debug() << "OpenGL window initialized" << Logger::endl;
 
     // set input handling callback methods
-    glfwSetKeyCallback(Graphic::GlfwWindow::ItlStaticHandleKeyboardEvent);
-    glfwSetMousePosCallback(Graphic::GlfwWindow::ItlStaticHandleMousePos);
-    glfwSetMouseWheelCallback(Graphic::GlfwWindow::ItlStaticHandleMouseWheel);
-    glfwSetMouseButtonCallback(Graphic::GlfwWindow::ItlStaticHandleMouseButton);
+    glfwSetKeyCallback(Bamboo::GlfwWindow::ItlStaticHandleKeyboardEvent);
+    glfwSetMousePosCallback(Bamboo::GlfwWindow::ItlStaticHandleMousePos);
+    glfwSetMouseWheelCallback(Bamboo::GlfwWindow::ItlStaticHandleMouseWheel);
+    glfwSetMouseButtonCallback(Bamboo::GlfwWindow::ItlStaticHandleMouseButton);
 
     // set window title
     glfwSetWindowTitle(sWindowTitle.c_str());
@@ -127,7 +127,7 @@ std::shared_ptr<Graphic::GlfwWindow> Graphic::GlfwWindow::Create(int iWidth, int
 
 /****************************************************************
   *************************************************************** */
-Graphic::GlfwWindow::~GlfwWindow()
+Bamboo::GlfwWindow::~GlfwWindow()
 {
     glfwCloseWindow();
     glfwTerminate();
@@ -137,7 +137,7 @@ Graphic::GlfwWindow::~GlfwWindow()
 
 /****************************************************************
   *************************************************************** */
-void Graphic::GlfwWindow::ItlStaticHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState)
+void Bamboo::GlfwWindow::ItlStaticHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState)
 {
     // this method is a static method (glfw cannot call class methods)
     // which redirects the event to the member-method of the Graphic class
@@ -150,7 +150,7 @@ void Graphic::GlfwWindow::ItlStaticHandleKeyboardEvent(int iKeyIdentifier, int i
     assert (s_pInstance != NULL);
 
     // get "this" to call member methods
-    Graphic::GlfwWindow *pThis = s_pInstance;
+    Bamboo::GlfwWindow *pThis = s_pInstance;
 
     // call method of listener
     if (pThis->m_spInputEventListener)
@@ -159,7 +159,7 @@ void Graphic::GlfwWindow::ItlStaticHandleKeyboardEvent(int iKeyIdentifier, int i
 
 /****************************************************************
   *************************************************************** */
-void Graphic::GlfwWindow::ItlStaticHandleMousePos(int iX, int iY)
+void Bamboo::GlfwWindow::ItlStaticHandleMousePos(int iX, int iY)
 {
     // this method is a static method (glfw cannot call class methods)
     // which redirects the event to the member-method of the Graphic class
@@ -172,7 +172,7 @@ void Graphic::GlfwWindow::ItlStaticHandleMousePos(int iX, int iY)
     assert (s_pInstance != NULL);
 
     // get "this" to call member methods
-    Graphic::GlfwWindow *pThis = s_pInstance;
+    Bamboo::GlfwWindow *pThis = s_pInstance;
 
     // call member method
     if (pThis->m_spInputEventListener)
@@ -181,7 +181,7 @@ void Graphic::GlfwWindow::ItlStaticHandleMousePos(int iX, int iY)
 
 /****************************************************************
   *************************************************************** */
-void Graphic::GlfwWindow::ItlStaticHandleMouseWheel(int iPosition)
+void Bamboo::GlfwWindow::ItlStaticHandleMouseWheel(int iPosition)
 {
     // this method is a static method (glfw cannot call class methods)
     // which redirects the event to the member-method of the Graphic class
@@ -194,7 +194,7 @@ void Graphic::GlfwWindow::ItlStaticHandleMouseWheel(int iPosition)
     assert (s_pInstance != NULL);
 
     // get "this" to call member methods
-    Graphic::GlfwWindow *pThis = s_pInstance;
+    Bamboo::GlfwWindow *pThis = s_pInstance;
 
     // call member method
     if (pThis->m_spInputEventListener)
@@ -203,7 +203,7 @@ void Graphic::GlfwWindow::ItlStaticHandleMouseWheel(int iPosition)
 
 /****************************************************************
   *************************************************************** */
-void Graphic::GlfwWindow::ItlStaticHandleMouseButton(int iButton, int iAction)
+void Bamboo::GlfwWindow::ItlStaticHandleMouseButton(int iButton, int iAction)
 {
     // this method is a static method (glfw cannot call class methods)
     // which redirects the event to the member-method of the Graphic class
@@ -216,7 +216,7 @@ void Graphic::GlfwWindow::ItlStaticHandleMouseButton(int iButton, int iAction)
     assert (s_pInstance != NULL);
 
     // get "this" to call member methods
-    Graphic::GlfwWindow *pThis = s_pInstance;
+    Bamboo::GlfwWindow *pThis = s_pInstance;
 
     // call member method
     if (pThis->m_spInputEventListener)
@@ -225,14 +225,14 @@ void Graphic::GlfwWindow::ItlStaticHandleMouseButton(int iButton, int iAction)
 
 /****************************************************************
   *************************************************************** */
-void Graphic::GlfwWindow::SwapBuffers()
+void Bamboo::GlfwWindow::SwapBuffers()
 {
     glfwSwapBuffers();
 }
 
 /****************************************************************
   *************************************************************** */
-void Graphic::GlfwWindow::ClearBuffers()
+void Bamboo::GlfwWindow::ClearBuffers()
 {
     // Enable sRGB gamma correction for framebuffer output.
     glEnable(GL_FRAMEBUFFER_SRGB);

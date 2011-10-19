@@ -15,7 +15,7 @@
   This SceneObject renders a cube from the inside.
 */
 
-class Graphic::RN_Cube : public Graphic::IRenderNode
+class Bamboo::RN_Cube : public Bamboo::IRenderNode
 {
 public:
     /*! \name Constructor / Destructor */

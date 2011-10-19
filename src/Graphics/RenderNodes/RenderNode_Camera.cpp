@@ -7,7 +7,7 @@
 
 extern bool bUseCamera1;
 
-Graphic::RN_Camera::RN_Camera(Graphic::Camera * pCamera, bool bSetMatrices)
+Bamboo::RN_Camera::RN_Camera(Bamboo::Camera * pCamera, bool bSetMatrices)
     : m_pCamera(pCamera), m_bSetMatrices(bSetMatrices)
 {
     GLdouble *vertexArray;
@@ -113,7 +113,7 @@ Graphic::RN_Camera::RN_Camera(Graphic::Camera * pCamera, bool bSetMatrices)
     Logger::debug() << "SceneObject_Camera created" << Logger::endl;
 }
 
-void Graphic::RN_Camera::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderInfo)
+void Bamboo::RN_Camera::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderInfo)
 {
     //store old matrices
     if (m_bSetMatrices)// || !bUseCamera1)
@@ -127,7 +127,7 @@ void Graphic::RN_Camera::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderIn
 	pCurrentRenderInfo->ModelViewProjectionMatrix = m_pCamera->GetProjectionMatrix() * m_pCamera->GetViewMatrix();
 	pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = pCurrentRenderInfo->ModelViewProjectionMatrix;
 
-        Graphic::IRenderNode::Render(pCurrentRenderInfo);
+        Bamboo::IRenderNode::Render(pCurrentRenderInfo);
 
 	pCurrentRenderInfo->ProjectionMatrix = SavedProjectionMatrix;
 	pCurrentRenderInfo->ViewMatrix = SavedViewMatrix;
@@ -137,12 +137,12 @@ void Graphic::RN_Camera::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderIn
     else
     {
 	pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = m_pCamera->GetProjectionMatrix() * m_pCamera->GetViewMatrix();
-        Graphic::IRenderNode::Render(pCurrentRenderInfo);
+        Bamboo::IRenderNode::Render(pCurrentRenderInfo);
 	pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = pCurrentRenderInfo->ModelViewProjectionMatrix;
     }
 }
 
-void Graphic::RN_Camera::ItlRender()
+void Bamboo::RN_Camera::ItlRender()
 {
    /* const GLint l_in_Position(ShaderManager::instance()->GetAttribute("in_Position"));
     const GLint l_cameraInverse_Position = ShaderManager::instance()->GetUniform("Camera_InverseMatrix");
@@ -175,7 +175,7 @@ void Graphic::RN_Camera::ItlRender()
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);*/
 }
 
-void Graphic::RN_Camera::ItlPreRender()
+void Bamboo::RN_Camera::ItlPreRender()
 {
    /* glBindVertexArray(m_nVertexArrayObject);
     glBindBuffer(GL_ARRAY_BUFFER, m_nVertexBufferObject);
@@ -187,7 +187,7 @@ void Graphic::RN_Camera::ItlPreRender()
         ShaderManager::instance()->ActivateShader("camera-debug");*/
 }
 
-void Graphic::RN_Camera::ItlPostRender()
+void Bamboo::RN_Camera::ItlPostRender()
 {
    // ShaderManager::instance()->PopActiveShader();
 }

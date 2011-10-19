@@ -20,7 +20,7 @@
   *
 */
 
-class Graphic::RN_RenderPass : public Graphic::IRenderNode
+class Bamboo::RN_RenderPass : public Bamboo::IRenderNode
 {
 public:
     enum TRenderPass

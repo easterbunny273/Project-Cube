@@ -23,9 +23,9 @@
 
 class TRenderPass;
 
-class Graphic::IRenderNode
+class Bamboo::IRenderNode
 {
-    friend class Graphic::Scene;
+    friend class Bamboo::Scene;
 
 public:
     /*! \name Public types */
@@ -65,7 +65,7 @@ public:
 
     /*! \name Setting the graphic core (for using shader + texture manager */
     //@{
-        void SetGraphicCore(Graphic *pGraphicCore) { m_pGraphicCore = pGraphicCore; }
+        void SetGraphicCore(Bamboo *pGraphicCore) { m_pGraphicCore = pGraphicCore; }
     //@}
 
     /*! \name Operations */
@@ -77,7 +77,7 @@ public:
     //@}
 
 
-    void SetLightSourceForShadowMapping(std::shared_ptr<Graphic::Camera> spShadowCaster, bool bSetForChildren = true);
+    void SetLightSourceForShadowMapping(std::shared_ptr<Bamboo::Camera> spShadowCaster, bool bSetForChildren = true);
 
     /*! \name Interfaces */
     //@{
@@ -158,7 +158,7 @@ protected:
 	void ItlSendTransformMatrices();		///<internal helper function which sends the current transormation matrices to the shader
 	void ItlSendLightPosition();
 
-        Graphic * ItlGetGraphicCore();
+        Bamboo * ItlGetGraphicCore();
     //@}
 
     /*! \name Internal members */
@@ -177,20 +177,20 @@ protected:
 
 	std::shared_ptr<TItlRenderInfo> m_pCurrentRenderInfo;
 
-        std::vector<std::shared_ptr<Graphic::IRenderNode> > m_vChildren;
+        std::vector<std::shared_ptr<Bamboo::IRenderNode> > m_vChildren;
 
-        std::shared_ptr<Graphic::Camera> m_spShadowCaster;
+        std::shared_ptr<Bamboo::Camera> m_spShadowCaster;
 
 	bool m_bHasChildren;
 
-        Graphic         * m_pGraphicCore;
+        Bamboo         * m_pGraphicCore;
     //@}
 
 };
 
-class Graphic::IRenderNode_Cullable : public Graphic::IRenderNode, public Graphic::IRenderNode::IHasVertices
+class Bamboo::IRenderNode_Cullable : public Bamboo::IRenderNode, public Bamboo::IRenderNode::IHasVertices
 {
-    friend class Graphic::IRenderNode;
+    friend class Bamboo::IRenderNode;
 
 protected:
     float m_fMinX, m_fMaxX;

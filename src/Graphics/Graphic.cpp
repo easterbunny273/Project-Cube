@@ -37,11 +37,11 @@ using namespace std;
 #define PI 3.14159265f
 
 // initialize static members
-Graphic * Graphic::s_pInstance = NULL;
+Bamboo * Bamboo::s_pInstance = NULL;
 
 /****************************************************************
   *************************************************************** */
-Graphic::Graphic()
+Bamboo::Bamboo()
 {
     m_pShaderManager = new ShaderManager();
     m_pTextureManager = new TextureManager();
@@ -51,7 +51,7 @@ Graphic::Graphic()
 
 /****************************************************************
   *************************************************************** */
-Graphic::~Graphic()
+Bamboo::~Bamboo()
 {
     assert (m_pShaderManager != NULL);
     if (m_pShaderManager != NULL)
@@ -66,7 +66,7 @@ Graphic::~Graphic()
 
 /****************************************************************
   *************************************************************** */
-void Graphic::Render()
+void Bamboo::Render()
 {
     for (auto iter=m_mRenderLoops.begin(); iter != m_mRenderLoops.end(); iter++)
     {
@@ -82,7 +82,7 @@ void Graphic::Render()
 /****************************************************************
   ** Nestes class Graphic::Camera **
   *************************************************************** */
-Graphic::Camera::Camera()
+Bamboo::Camera::Camera()
 {
     m_bInitialized = false;
     m_bActive = false;
@@ -100,7 +100,7 @@ Graphic::Camera::Camera()
 
 /****************************************************************
   *************************************************************** */
-void Graphic::Camera::SetOrthoProjection(float fLeft,
+void Bamboo::Camera::SetOrthoProjection(float fLeft,
                                          float fRight,
                                          float fTop,
                                          float fBottom,
@@ -112,7 +112,7 @@ void Graphic::Camera::SetOrthoProjection(float fLeft,
 
 /****************************************************************
   *************************************************************** */
-void Graphic::Camera::SetPerspectiveProjection(float fFieldOfView,
+void Bamboo::Camera::SetPerspectiveProjection(float fFieldOfView,
                                                float fAspectRatio,
                                                float fNearPlane,
                                                float fFarPlane)
@@ -124,7 +124,7 @@ void Graphic::Camera::SetPerspectiveProjection(float fFieldOfView,
 
 /****************************************************************
   *************************************************************** */
-glm::mat4 Graphic::Camera::GetProjectionMatrix() const
+glm::mat4 Bamboo::Camera::GetProjectionMatrix() const
 {
     assert (m_bInitialized);
 
@@ -133,14 +133,14 @@ glm::mat4 Graphic::Camera::GetProjectionMatrix() const
 
 /****************************************************************
   *************************************************************** */
-glm::mat4 Graphic::Camera::GetViewMatrix() const
+glm::mat4 Bamboo::Camera::GetViewMatrix() const
 {
     return m_m4ViewMatrix;
 }
 
 /****************************************************************
   *************************************************************** */
-void Graphic::Camera::RotateVertical(float fValue)
+void Bamboo::Camera::RotateVertical(float fValue)
 {
     // lock vertical rotation to ]-90, 90[ because else
     // the view vector changes the direction if it exceeds 90 or -90
@@ -156,7 +156,7 @@ void Graphic::Camera::RotateVertical(float fValue)
 
 /****************************************************************
   *************************************************************** */
-void Graphic::Camera::RotateHorizontal(float fValue)
+void Bamboo::Camera::RotateHorizontal(float fValue)
 {
     m_fRotationHorizontal += fValue;
 
@@ -169,7 +169,7 @@ void Graphic::Camera::RotateHorizontal(float fValue)
 
 /****************************************************************
   *************************************************************** */
-void Graphic::Camera::Move(float fFactor)
+void Bamboo::Camera::Move(float fFactor)
 {
     //Logger::debug() << m_fRotationHorizontal << ":" << m_fRotationVertical << Logger::endl;
 
@@ -228,14 +228,14 @@ void Graphic::Camera::Move(float fFactor)
 
 /****************************************************************
   *************************************************************** */
-void Graphic::Camera::AddToMoveVector(glm::vec3 vVector)
+void Bamboo::Camera::AddToMoveVector(glm::vec3 vVector)
 {
     m_v3MoveVector += vVector;
 }
 
 /****************************************************************
   *************************************************************** */
-Graphic::ShaderManager * Graphic::GetShaderManager()
+Bamboo::ShaderManager * Bamboo::GetShaderManager()
 {
     // TODO: should we use the shader manager as a singelton or as a member of the graphics class?
 
@@ -244,7 +244,7 @@ Graphic::ShaderManager * Graphic::GetShaderManager()
 
 /****************************************************************
   *************************************************************** */
-Graphic::TextureManager * Graphic::GetTextureManager()
+Bamboo::TextureManager * Bamboo::GetTextureManager()
 {
     // TODO: should we use the texture manager as a singelton or as a member of the graphics class?
     return m_pTextureManager;
@@ -252,7 +252,7 @@ Graphic::TextureManager * Graphic::GetTextureManager()
 
 /****************************************************************
   *************************************************************** */
-bool Graphic::Camera::OnEvent(std::shared_ptr<EventManager::IEvent> spEvent)
+bool Bamboo::Camera::OnEvent(std::shared_ptr<EventManager::IEvent> spEvent)
 {
     // only accept CameraMovementEvent atm
     assert (spEvent->GetEventType() == CameraMovementEvent::EventType());
@@ -280,9 +280,9 @@ bool Graphic::Camera::OnEvent(std::shared_ptr<EventManager::IEvent> spEvent)
     }
 }
 
-int Graphic::AddRenderLoop(std::shared_ptr<Graphic::IRenderTarget> spRenderTarget,
-                             std::shared_ptr<Graphic::Camera> spCamera,
-                             std::shared_ptr<Graphic::Scene> spScene)
+int Bamboo::AddRenderLoop(std::shared_ptr<Bamboo::IRenderTarget> spRenderTarget,
+                             std::shared_ptr<Bamboo::Camera> spCamera,
+                             std::shared_ptr<Bamboo::Scene> spScene)
 {
     static int iID = 0;
 
@@ -295,14 +295,14 @@ int Graphic::AddRenderLoop(std::shared_ptr<Graphic::IRenderTarget> spRenderTarge
     m_mRenderLoops[iID++] = NewLoop;
 }
 
-void Graphic::RemoveRenderLoop(int iLoopID)
+void Bamboo::RemoveRenderLoop(int iLoopID)
 {
     assert (m_mRenderLoops.find(iLoopID) != m_mRenderLoops.end());
 
     m_mRenderLoops.erase(iLoopID);
 }
 
-void Graphic::Scene::CallRenderPath(Graphic *pGraphicCore)
+void Bamboo::Scene::CallRenderPath(Bamboo *pGraphicCore)
 {
     if (m_spRenderGraphRoot)
         m_spRenderGraphRoot->Render();
@@ -313,27 +313,27 @@ void Graphic::Scene::CallRenderPath(Graphic *pGraphicCore)
     }
 }
 
-std::shared_ptr<Graphic::Scene> Graphic::Scene::Create(std::shared_ptr<Graphic::Camera> spCamera)
+std::shared_ptr<Bamboo::Scene> Bamboo::Scene::Create(std::shared_ptr<Bamboo::Camera> spCamera)
 {
-    std::shared_ptr<Graphic::Scene> spNewScene(new Graphic::Scene());
+    std::shared_ptr<Bamboo::Scene> spNewScene(new Bamboo::Scene());
     spNewScene->m_spCamera = spCamera;
 
     return spNewScene;
 }
 
-void Graphic::Scene::AttachObject(std::shared_ptr<Graphic::ISceneObject> spSceneObject)
+void Bamboo::Scene::AttachObject(std::shared_ptr<Bamboo::ISceneObject> spSceneObject)
 {
     m_lSceneObjects.push_back(spSceneObject);
 }
 
-void Graphic::Scene::CreateRenderGraph(Graphic *pGraphicCore)
+void Bamboo::Scene::CreateRenderGraph(Bamboo *pGraphicCore)
 {
-    m_spRenderGraphRoot = std::shared_ptr<Graphic::IRenderNode>(new Graphic::RN_Camera(m_spCamera.get()));
+    m_spRenderGraphRoot = std::shared_ptr<Bamboo::IRenderNode>(new Bamboo::RN_Camera(m_spCamera.get()));
 
     for (auto iter=m_lSceneObjects.begin(); iter != m_lSceneObjects.end(); iter++)
     {
-        std::shared_ptr<Graphic::ISceneObject> spSceneObject = *iter;
-        std::shared_ptr<Graphic::IRenderNode> spRenderNode = spSceneObject->GetRenderNode();
+        std::shared_ptr<Bamboo::ISceneObject> spSceneObject = *iter;
+        std::shared_ptr<Bamboo::IRenderNode> spRenderNode = spSceneObject->GetRenderNode();
 
         spRenderNode->SetGraphicCore(pGraphicCore);
 
@@ -343,12 +343,12 @@ void Graphic::Scene::CreateRenderGraph(Graphic *pGraphicCore)
 
 
 
-void Graphic::ISceneObject::SetTransformMatrix(glm::mat4 mNewMatrix)
+void Bamboo::ISceneObject::SetTransformMatrix(glm::mat4 mNewMatrix)
 {
     GetRenderNode()->SetTransformMatrix(mNewMatrix);
 }
 
-std::shared_ptr<Graphic::IRenderNode> Graphic::ISceneObject::GetRenderNode()
+std::shared_ptr<Bamboo::IRenderNode> Bamboo::ISceneObject::GetRenderNode()
 {
     if (!m_spRenderNode)
         m_spRenderNode = CreateRenderNode();

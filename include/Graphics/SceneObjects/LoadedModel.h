@@ -6,7 +6,7 @@
 #include "Graphics/Graphic.h"
 #include "Graphics/SceneObjects/ISceneObject.h"
 
-class Graphic::SO_LoadedModel : public Graphic::ISceneObject
+class Bamboo::SO_LoadedModel : public Bamboo::ISceneObject
 {
 private:
     std::string m_sFilename;
@@ -14,7 +14,7 @@ private:
 public:
     static std::shared_ptr<SO_LoadedModel> Create(std::string sFilename);
 
-    virtual std::shared_ptr<Graphic::IRenderNode> CreateRenderNode();
+    virtual std::shared_ptr<Bamboo::IRenderNode> CreateRenderNode();
 };
 
 #endif

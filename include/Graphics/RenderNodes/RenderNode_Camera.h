@@ -12,10 +12,10 @@
 #include "Graphics/Graphic.h"
 
 
-class Graphic::RN_Camera : public Graphic::IRenderNode
+class Bamboo::RN_Camera : public Bamboo::IRenderNode
 {
 public:
-    RN_Camera(Graphic::Camera *pCamera, bool bSetMatrices=true);
+    RN_Camera(Bamboo::Camera *pCamera, bool bSetMatrices=true);
 
     /*! \name Operations */
     //@{
@@ -35,7 +35,7 @@ protected:
     //@}
 
 private:
-    Graphic::Camera * m_pCamera;
+    Bamboo::Camera * m_pCamera;
     bool m_bSetMatrices;
 
     GLuint m_nVertexArrayObject;	///< The opengl name (=unsigned int) of the vertex array object

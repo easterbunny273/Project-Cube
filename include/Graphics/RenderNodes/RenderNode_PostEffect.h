@@ -23,7 +23,7 @@
   This is useful for applying post screen effects (rendering scene in a fbo, and drawing resulting color texture fullscreened with a given shader).
 */
 
-class Graphic::RN_PostEffect : public Graphic::IRenderNode
+class Bamboo::RN_PostEffect : public Bamboo::IRenderNode
 {
 public:
     /*! \name Constructors / Destructor */

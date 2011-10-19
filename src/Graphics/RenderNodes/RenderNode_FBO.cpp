@@ -7,7 +7,7 @@
 
 std::stack<GLuint> bound_fbos;
 
-Graphic::RN_FBO::RN_FBO(bool bDummy, int iWidth, int iHeight, const char * szColorTexture)
+Bamboo::RN_FBO::RN_FBO(bool bDummy, int iWidth, int iHeight, const char * szColorTexture)
     : m_bMipMapped(false),
       m_iWidth(iWidth),
       m_iHeight(iHeight),
@@ -76,7 +76,7 @@ Graphic::RN_FBO::RN_FBO(bool bDummy, int iWidth, int iHeight, const char * szCol
  *  \param bFloating16 If true, the generated color texture used 16bit floating precision.
  *  \param bMipMapped If true, mipmaps for the color texture are generated after each update of the color texture
  */
-Graphic::RN_FBO::RN_FBO(int iWidth,
+Bamboo::RN_FBO::RN_FBO(int iWidth,
                                  int iHeight,
                                  const char *szColorTextureName,
                                  bool bFloating16, bool bMipMapped)
@@ -191,7 +191,7 @@ Graphic::RN_FBO::RN_FBO(int iWidth,
  *  \param szDepthTextureName The texture name which is used to register the depth texture at the TextureManager
  *  \param bMipMapped If true, mipmaps for the color texture are generated after each update of the color texture
  */
-Graphic::RN_FBO::RN_FBO(int iWidth,
+Bamboo::RN_FBO::RN_FBO(int iWidth,
                                  int iHeight,
                                  const char *szColorTextureName,
                                  const char *szDepthTextureName,
@@ -287,7 +287,7 @@ Graphic::RN_FBO::RN_FBO(int iWidth,
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-Graphic::RN_FBO::~RN_FBO()
+Bamboo::RN_FBO::~RN_FBO()
 {
 #pragma warn "todo: correct this"
     //delete color texture, if used
@@ -310,7 +310,7 @@ Graphic::RN_FBO::~RN_FBO()
  *  This method is called internally BEFORE rendering the children,
  *  and binds and clears the fbo as needed.
  */
-void Graphic::RN_FBO::ItlPreRenderChildren()
+void Bamboo::RN_FBO::ItlPreRenderChildren()
 {
     assert (TextureManager::instance()->IsTextureInUse(m_nColorTexture) == false);
 
@@ -338,7 +338,7 @@ void Graphic::RN_FBO::ItlPreRenderChildren()
  *  This method is called internally AFTER rendering the children,
  *  and unbinds the fbo.
  */
-void Graphic::RN_FBO::ItlPostRenderChildren()
+void Bamboo::RN_FBO::ItlPostRenderChildren()
 {
     //if mipmapping is activated, update mipmaps
     if (m_bMipMapped)
@@ -366,17 +366,17 @@ void Graphic::RN_FBO::ItlPostRenderChildren()
     TextureManager::instance()->UnlockTextureID(m_nColorTexture);
 }
 
-void Graphic::RN_FBO::ItlPreRender()
+void Bamboo::RN_FBO::ItlPreRender()
 {
 
 }
 
-void Graphic::RN_FBO::ItlRender()
+void Bamboo::RN_FBO::ItlRender()
 {
 
 }
 
-void Graphic::RN_FBO::ItlPostRender()
+void Bamboo::RN_FBO::ItlPostRender()
 {
 
 }

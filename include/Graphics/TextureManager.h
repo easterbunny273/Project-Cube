@@ -26,7 +26,7 @@
  *  where the caller must not think about the use of the texture units.
  */
 
-class Graphic::TextureManager
+class Bamboo::TextureManager
 {
 private:
     /*! This variable marks if devIL is initialized yet (because the opengl context must be initialized before) */

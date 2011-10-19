@@ -6,26 +6,26 @@
 
 using namespace std;
 
-Graphic::ShaderManager::ShaderManager()
+Bamboo::ShaderManager::ShaderManager()
 {
     //nothing to do so far
     m_nCurrentActiveShaderProgram = 0;
 }
 
-Graphic::ShaderManager::~ShaderManager()
+Bamboo::ShaderManager::~ShaderManager()
 {
     // destroy all used Shader instances
     // C++11 construct with lambda function :)
     for_each(m_vpShaders.begin(), m_vpShaders.end(), [](Shader *pShader) { delete pShader; });
 }
 
-void Graphic::ShaderManager::AddShader(std::string sName, Shader *pShader)
+void Bamboo::ShaderManager::AddShader(std::string sName, Shader *pShader)
 {
     m_vpShaders.push_back(pShader);
     m_vsShaderNames.push_back(sName);
 }
 
-bool Graphic::ShaderManager::ActivateShader(std::string sName)
+bool Bamboo::ShaderManager::ActivateShader(std::string sName)
 {
     bool bSuccess = false;
 
@@ -46,22 +46,22 @@ bool Graphic::ShaderManager::ActivateShader(std::string sName)
     return bSuccess;
 }
 
-GLint Graphic::ShaderManager::GetAttribute(std::string sAttributeName)
+GLint Bamboo::ShaderManager::GetAttribute(std::string sAttributeName)
 {
     return m_vpShaders[m_nCurrentActiveShaderProgram]->GetAttribLocation(sAttributeName.data());
 }
 
-GLint Graphic::ShaderManager::GetUniform(std::string sUniformName)
+GLint Bamboo::ShaderManager::GetUniform(std::string sUniformName)
 {
     return m_vpShaders[m_nCurrentActiveShaderProgram]->GetUniformLocation(sUniformName.data());
 }
 
-void Graphic::ShaderManager::PushActiveShader()
+void Bamboo::ShaderManager::PushActiveShader()
 {
     m_vActiveShaderStack.push(m_nCurrentActiveShaderProgram);
 }
 
-void Graphic::ShaderManager::PopActiveShader()
+void Bamboo::ShaderManager::PopActiveShader()
 {
     m_nCurrentActiveShaderProgram = m_vActiveShaderStack.top();
 

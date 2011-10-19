@@ -19,7 +19,7 @@
     but in practice, a 3ds-file exported from blender works best at the moment.
 */
 
-class Graphic::RN_AssimpImport : public Graphic::IRenderNode_Cullable
+class Bamboo::RN_AssimpImport : public Bamboo::IRenderNode_Cullable
 {
 public:
     /*! \name Constructor / Destructor */

@@ -21,7 +21,7 @@
   It loads, compiles and link a shader (at construction time),
   and provides methods to activate it and to get the position of uniforms or attributes.
 */
-class Graphic::Shader
+class Bamboo::Shader
 {
 public:
     /*! \name Constructors / Destructor */

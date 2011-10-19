@@ -3,7 +3,7 @@
 #ifndef __GRAPHIC_GLFWWINDOW_HEADER
 #define __GRAPHIC_GLFWWINDOW_HEADER
 
-class Graphic::GlfwWindow : public IRenderTarget
+class Bamboo::GlfwWindow : public IRenderTarget
 {
 
 public:
@@ -49,7 +49,7 @@ private:
 
     /*! \name Private members */
     //@{
-        std::shared_ptr<Graphic::IInputEventListener>   m_spInputEventListener;
+        std::shared_ptr<Bamboo::IInputEventListener>   m_spInputEventListener;
         int                                             m_iWidth;
         int                                             m_iHeight;
         std::string                                     m_sWindowTitle;

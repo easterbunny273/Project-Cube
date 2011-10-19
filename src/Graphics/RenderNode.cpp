@@ -10,12 +10,12 @@
 #include "Graphics/RenderNodes/IRenderNode.h"
 #include "Graphics/RenderNodes/RenderNode_BoundingBox.h"
 
-void Graphic::IRenderNode::ItlSendTransformMatrices()
+void Bamboo::IRenderNode::ItlSendTransformMatrices()
 {
-    Graphic *pGraphicCore = ItlGetGraphicCore();
+    Bamboo *pGraphicCore = ItlGetGraphicCore();
     assert (pGraphicCore != NULL);
 
-    Graphic::ShaderManager *pShaderManager = pGraphicCore->GetShaderManager();
+    Bamboo::ShaderManager *pShaderManager = pGraphicCore->GetShaderManager();
     assert (pShaderManager != NULL);
 
     //first, get the positions
@@ -63,12 +63,12 @@ void Graphic::IRenderNode::ItlSendTransformMatrices()
     ItlSendLightPosition();
 }
 
-void Graphic::IRenderNode::ItlSendLightPosition()
+void Bamboo::IRenderNode::ItlSendLightPosition()
 {
-    Graphic *pGraphicCore = ItlGetGraphicCore();
+    Bamboo *pGraphicCore = ItlGetGraphicCore();
     assert (pGraphicCore != NULL);
 
-    Graphic::ShaderManager *pShaderManager = pGraphicCore->GetShaderManager();
+    Bamboo::ShaderManager *pShaderManager = pGraphicCore->GetShaderManager();
     assert (pShaderManager != NULL);
 
     GLint l_Light0Position = pShaderManager->GetUniform("Light0Position");
@@ -83,7 +83,7 @@ void Graphic::IRenderNode::ItlSendLightPosition()
 }
 
 
-void Graphic::IRenderNode::SetLightSourceForShadowMapping(std::shared_ptr<Graphic::Camera> spShadowCaster, bool bRecursivelySetForChildren)
+void Bamboo::IRenderNode::SetLightSourceForShadowMapping(std::shared_ptr<Bamboo::Camera> spShadowCaster, bool bRecursivelySetForChildren)
 {
     m_spShadowCaster = spShadowCaster;
 
@@ -92,14 +92,14 @@ void Graphic::IRenderNode::SetLightSourceForShadowMapping(std::shared_ptr<Graphi
 	    m_vChildren[a]->SetLightSourceForShadowMapping(spShadowCaster, true);
 }
 
-void Graphic::IRenderNode::Render()
+void Bamboo::IRenderNode::Render()
 {
     std::shared_ptr<TItlRenderInfo> pRenderInfo (new TItlRenderInfo);
 
     this->Render(pRenderInfo);
 }
 
-void Graphic::IRenderNode::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderInfo)
+void Bamboo::IRenderNode::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderInfo)
 {
     m_pCurrentRenderInfo = pCurrentRenderInfo;
 
@@ -148,29 +148,29 @@ void Graphic::IRenderNode::Render(std::shared_ptr<TItlRenderInfo> pCurrentRender
     m_pCurrentRenderInfo = std::shared_ptr<TItlRenderInfo>();
 }
 
-Graphic::IRenderNode::IRenderNode()
+Bamboo::IRenderNode::IRenderNode()
     : m_bHasChildren(false), m_pGraphicCore(NULL)
 {
 
 }
 
-Graphic::IRenderNode::~IRenderNode()
+Bamboo::IRenderNode::~IRenderNode()
 {
 
 }
 
 
-bool Graphic::IRenderNode::ItlTestIfVisible()
+bool Bamboo::IRenderNode::ItlTestIfVisible()
 {
     return true;
 }
 
-bool Graphic::IRenderNode::ItlTestSkipRendering()
+bool Bamboo::IRenderNode::ItlTestSkipRendering()
 {
     return false;
 }
 
-void Graphic::IRenderNode::AddChild(std::shared_ptr<Graphic::IRenderNode> spNode)
+void Bamboo::IRenderNode::AddChild(std::shared_ptr<Bamboo::IRenderNode> spNode)
 {
     m_vChildren.push_back(spNode);
 
@@ -178,7 +178,7 @@ void Graphic::IRenderNode::AddChild(std::shared_ptr<Graphic::IRenderNode> spNode
 
 }
 
-bool Graphic::IRenderNode::RemoveChild(std::shared_ptr<Graphic::IRenderNode> spNode)
+bool Bamboo::IRenderNode::RemoveChild(std::shared_ptr<Bamboo::IRenderNode> spNode)
 {
     bool bFound = false;
     auto iterator = m_vChildren.begin();
@@ -202,24 +202,24 @@ bool Graphic::IRenderNode::RemoveChild(std::shared_ptr<Graphic::IRenderNode> spN
     return bFound;
 }
 
-void Graphic::IRenderNode::ClearChilds()
+void Bamboo::IRenderNode::ClearChilds()
 {
     m_vChildren.clear();
 }
 
-void Graphic::IRenderNode::GetTransformMatrix(glm::mat4 &rToWorld, glm::mat4 &rFromWorld) const
+void Bamboo::IRenderNode::GetTransformMatrix(glm::mat4 &rToWorld, glm::mat4 &rFromWorld) const
 {
     rToWorld = m_mTransformMatrixToWorld;
     rFromWorld = m_mTransformMatrixFromWorld;
 }
 
-void Graphic::IRenderNode::SetTransformMatrix(glm::mat4 rToWorld, glm::mat4 rFromWorld)
+void Bamboo::IRenderNode::SetTransformMatrix(glm::mat4 rToWorld, glm::mat4 rFromWorld)
 {
     m_mTransformMatrixToWorld = rToWorld;
     m_mTransformMatrixFromWorld = rFromWorld;
 }
 
-void Graphic::IRenderNode::SetTransformMatrix(glm::mat4 rToWorld)
+void Bamboo::IRenderNode::SetTransformMatrix(glm::mat4 rToWorld)
 {
     glm::mat4 mFromWorld;
 
@@ -228,7 +228,7 @@ void Graphic::IRenderNode::SetTransformMatrix(glm::mat4 rToWorld)
     SetTransformMatrix(rToWorld, mFromWorld);
 }
 
-bool Graphic::IRenderNode_Cullable::ItlInitializeBoundingBox()
+bool Bamboo::IRenderNode_Cullable::ItlInitializeBoundingBox()
 {
     float *fVertices = GetVertices();
     int iNumVertices = NumVertices();
@@ -277,13 +277,13 @@ bool Graphic::IRenderNode_Cullable::ItlInitializeBoundingBox()
 	return true;
 }
 
-bool Graphic::IRenderNode_Cullable::ItlTestIfVisible()
+bool Bamboo::IRenderNode_Cullable::ItlTestIfVisible()
 {
     if (m_bInitialized == false)
     {
 	ItlInitializeBoundingBox();
 
-        std::shared_ptr<Graphic::IRenderNode> pBoundingBox(new Graphic::RN_BoundingBox(m_fMinX, m_fMaxX, m_fMinY, m_fMaxY, m_fMinZ, m_fMaxZ));
+        std::shared_ptr<Bamboo::IRenderNode> pBoundingBox(new Bamboo::RN_BoundingBox(m_fMinX, m_fMaxX, m_fMinY, m_fMaxY, m_fMinZ, m_fMaxZ));
 	AddChild(pBoundingBox);
 
 	m_bInitialized = true;
@@ -393,9 +393,9 @@ bool Graphic::IRenderNode_Cullable::ItlTestIfVisible()
 }
 
 
-Graphic * Graphic::IRenderNode::ItlGetGraphicCore()
+Bamboo * Bamboo::IRenderNode::ItlGetGraphicCore()
 {
-    Graphic *pWorkaroundPointer = Graphic::GetSingleInstance();
+    Bamboo *pWorkaroundPointer = Bamboo::GetSingleInstance();
     assert (pWorkaroundPointer != NULL);
 
     return pWorkaroundPointer;

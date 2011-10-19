@@ -31,7 +31,7 @@ public:
     /*! \name Access to the subsystems */
     //@{
 	/// returns ptr to the graphic subsystem
-        Graphic * GetGraphic();
+        Bamboo * GetGraphic();
 
 	/// returns ptr to the core settings
         Settings * GetCoreSettings();
@@ -65,7 +65,7 @@ public:
 private:
     /*! \name InputEventListener for the Graphic engine */
     //@{
-        class InputEventListener : public Graphic::IInputEventListener
+        class InputEventListener : public Bamboo::IInputEventListener
         {
         public:
             /// handles keyboard events and sends signals to listener
@@ -101,7 +101,7 @@ private:
 	EventManager m_EventManager;
 	Settings m_CoreSettings;
 
-	Graphic *m_pGraphic;
+	Bamboo *m_pGraphic;
 	DummyGame *m_pGame;
 	lua_State * m_pLuaState;
         std::shared_ptr<InputEventListener> m_spInputEventListener;

@@ -21,7 +21,7 @@ int last_active;
 
 #define CHECK_FOR_GLERROR
 
-bool Graphic::Shader::ItlLoadFileToString(const char* szFilename, GLubyte** pszShaderSource, unsigned long* nLength)
+bool Bamboo::Shader::ItlLoadFileToString(const char* szFilename, GLubyte** pszShaderSource, unsigned long* nLength)
 {
     ifstream file;
     file.open(szFilename, ios::in); // opens as ASCII!
@@ -71,7 +71,7 @@ bool Graphic::Shader::ItlLoadFileToString(const char* szFilename, GLubyte** pszS
     return true;
 }
 
-void Graphic::Shader::ItlPrintShaderLog(GLuint obj)
+void Bamboo::Shader::ItlPrintShaderLog(GLuint obj)
 {
     int iLogLength = 0;
     int iMaximalLength=0;
@@ -95,7 +95,7 @@ void Graphic::Shader::ItlPrintShaderLog(GLuint obj)
 }
 
 
-void Graphic::Shader::ItlAddShader(GLenum tShaderType, const char *szFilename)
+void Bamboo::Shader::ItlAddShader(GLenum tShaderType, const char *szFilename)
 {
     Logger::debug() << "Loading shader source: " << szFilename << Logger::endl;
 
@@ -134,7 +134,7 @@ void Graphic::Shader::ItlAddShader(GLenum tShaderType, const char *szFilename)
         delete[] szShaderLog;
 }
 
-void Graphic::Shader::ItlLinkShader()
+void Bamboo::Shader::ItlLinkShader()
 {
     GLint iProgrammID = glCreateProgram();
 
@@ -160,7 +160,7 @@ void Graphic::Shader::ItlLinkShader()
     }
 }
 
-Graphic::Shader::Shader(const char *szVertexShaderFilename,
+Bamboo::Shader::Shader(const char *szVertexShaderFilename,
                        const char *szTesselationControlShaderFilename,
                        const char *szTesselationEvaluationShaderFilename,
                        const char *szGeometryShaderFilename,
@@ -174,7 +174,7 @@ Graphic::Shader::Shader(const char *szVertexShaderFilename,
     ItlLinkShader();
 }
 
-Graphic::Shader::Shader(const char *szVertexShaderFilename,
+Bamboo::Shader::Shader(const char *szVertexShaderFilename,
                        const char *szTesselationControlShaderFilename,
                        const char *szTesselationEvaluationShaderFilename,
                        const char *szFragmentShaderFilename)
@@ -186,7 +186,7 @@ Graphic::Shader::Shader(const char *szVertexShaderFilename,
     ItlLinkShader();
 }
 
-Graphic::Shader::Shader(const char *szVertexShaderFilename,
+Bamboo::Shader::Shader(const char *szVertexShaderFilename,
                const char *szFragmentShaderFilename)
     : m_bReadyForUse(false)
 {
@@ -195,7 +195,7 @@ Graphic::Shader::Shader(const char *szVertexShaderFilename,
     ItlLinkShader();
 }
 
-Graphic::Shader::Shader(const char *szVertexShaderFilename,
+Bamboo::Shader::Shader(const char *szVertexShaderFilename,
                const char *szGeometryShaderFilename,
                const char *szFragmentShaderFilename)
     : m_bReadyForUse(false)
@@ -207,7 +207,7 @@ Graphic::Shader::Shader(const char *szVertexShaderFilename,
 }
 
 
-Graphic::Shader::~Shader()
+Bamboo::Shader::~Shader()
 {
     //delete shader program
     glDeleteProgram(m_nShaderId);
@@ -216,7 +216,7 @@ Graphic::Shader::~Shader()
     for_each(m_glShaderObjects.begin(), m_glShaderObjects.end(), [](GLuint shader) { glDeleteShader(shader); });
 }
 
-void Graphic::Shader::Activate()
+void Bamboo::Shader::Activate()
 {
     //activate shader if it is ready for use, else log an error message
 
@@ -240,7 +240,7 @@ void Graphic::Shader::Activate()
 	Logger::error() << "Could not activate shader because it is not ready for use" << Logger::endl;
 }
 
-GLint Graphic::Shader::GetUniformLocation(const char *szName)
+GLint Bamboo::Shader::GetUniformLocation(const char *szName)
 {
     std::string sName(szName);
 
@@ -264,7 +264,7 @@ GLint Graphic::Shader::GetUniformLocation(const char *szName)
     return iLocation;
 }
 
-GLint Graphic::Shader::GetAttribLocation(const char *szName)
+GLint Bamboo::Shader::GetAttribLocation(const char *szName)
 {
     if (static_cast<GLuint>(last_active) != m_nShaderId)
 	Logger::error() << "While setting an attribute of an shader, the shader must be active!" << Logger::endl;

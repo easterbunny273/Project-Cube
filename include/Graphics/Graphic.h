@@ -28,7 +28,7 @@
 class SceneObject_RenderTarget;
 class Camera;
 
-class Graphic
+class Bamboo
 {
 private:
     /*! \name Internal classes */
@@ -96,18 +96,18 @@ public:
         class Scene
         {
         public:
-            static std::shared_ptr<Scene> Create(std::shared_ptr<Graphic::Camera> spCamera);
+            static std::shared_ptr<Scene> Create(std::shared_ptr<Bamboo::Camera> spCamera);
 
-            void CallRenderPath(Graphic *pGraphicCore);
+            void CallRenderPath(Bamboo *pGraphicCore);
 
             void AttachObject(std::shared_ptr<ISceneObject> spSceneObject);
 
             void InvalidateObjectData(std::shared_ptr<ISceneObject> spSceneObject) {}
 
-            void CreateRenderGraph(Graphic *pGraphicCore);
+            void CreateRenderGraph(Bamboo *pGraphicCore);
         private:
             std::list<std::shared_ptr<ISceneObject> >     m_lSceneObjects;
-            std::shared_ptr<Graphic::Camera>        m_spCamera;
+            std::shared_ptr<Bamboo::Camera>        m_spCamera;
             std::shared_ptr<IRenderNode>            m_spRenderGraphRoot;
         };
     //@}
@@ -192,10 +192,10 @@ public:
     /*! \name Construction / Destruction */
     //@{
         /// constructor
-        Graphic();
+        Bamboo();
 
         /// destructor
-        ~Graphic();
+        ~Bamboo();
     //@}
 
     /*! \name Public Attributes */
@@ -207,7 +207,7 @@ public:
 	TextureManager * GetTextureManager();
 
         /// workaround method, should be removed
-        static Graphic * GetSingleInstance() { return s_pInstance; }
+        static Bamboo * GetSingleInstance() { return s_pInstance; }
     //@}
 
     /*! \name Methods for render */
@@ -239,7 +239,7 @@ private:
 
     /*! \name Private members */
     //@{
-        std::map<std::string, std::shared_ptr<Graphic::IRenderNode> >    m_vRenderPaths;
+        std::map<std::string, std::shared_ptr<Bamboo::IRenderNode> >    m_vRenderPaths;
 
         ShaderManager       * m_pShaderManager;
         TextureManager      * m_pTextureManager;
@@ -247,7 +247,7 @@ private:
 
     /*! \name Static members */
     //@{
-        static Graphic * s_pInstance;
+        static Bamboo * s_pInstance;
     //@}
 };
 

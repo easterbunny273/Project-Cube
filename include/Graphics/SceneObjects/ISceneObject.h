@@ -3,7 +3,7 @@
 
 #include "Graphics/Graphic.h"
 
-class Graphic::ISceneObject
+class Bamboo::ISceneObject
 {
     friend class Scene;
 
@@ -13,13 +13,13 @@ public:
 
     virtual ~ISceneObject() {}
 
-    std::shared_ptr<Graphic::IRenderNode> GetRenderNode();
-    virtual std::shared_ptr<Graphic::IRenderNode> CreateRenderNode() = 0;
+    std::shared_ptr<Bamboo::IRenderNode> GetRenderNode();
+    virtual std::shared_ptr<Bamboo::IRenderNode> CreateRenderNode() = 0;
 protected:
     void SetScene(std::weak_ptr<Scene> wpScene);
     ISceneObject() {}
 
-    std::shared_ptr<Graphic::IRenderNode>    m_spRenderNode;
+    std::shared_ptr<Bamboo::IRenderNode>    m_spRenderNode;
     std::weak_ptr<Scene> m_wpScene;
 };
 

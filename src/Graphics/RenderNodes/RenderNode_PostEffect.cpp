@@ -11,7 +11,7 @@
 #include "Graphics/ShaderManager.h"
 #include "Graphics/RenderNodes/RenderNode_PostEffect.h"
 
-Graphic::RN_PostEffect::RN_PostEffect(std::string sShaderToUse)
+Bamboo::RN_PostEffect::RN_PostEffect(std::string sShaderToUse)
     : m_sShaderName(sShaderToUse)
 {
     const GLdouble vertices3f[]= {
@@ -50,12 +50,12 @@ Graphic::RN_PostEffect::RN_PostEffect(std::string sShaderToUse)
     Logger::debug() << "SceneObject_PostEffect created" << Logger::endl;
 }
 
-Graphic::RN_PostEffect::~RN_PostEffect()
+Bamboo::RN_PostEffect::~RN_PostEffect()
 {
 
 }
 
-void Graphic::RN_PostEffect::ItlPreRender()
+void Bamboo::RN_PostEffect::ItlPreRender()
 {
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, this->buffer_vertices3f);
@@ -64,7 +64,7 @@ void Graphic::RN_PostEffect::ItlPreRender()
     ItlGetGraphicCore()->GetShaderManager()->ActivateShader(m_sShaderName);
 }
 
-void Graphic::RN_PostEffect::ItlRender()
+void Bamboo::RN_PostEffect::ItlRender()
 {
     const GLint l_in_Position(ItlGetGraphicCore()->GetShaderManager()->GetAttribute("in_Position"));
     const GLint l_texcoords(ItlGetGraphicCore()->GetShaderManager()->GetAttribute("in_Texcoord"));
@@ -146,22 +146,22 @@ void Graphic::RN_PostEffect::ItlRender()
     }
 }
 
-void Graphic::RN_PostEffect::ItlPostRender()
+void Bamboo::RN_PostEffect::ItlPostRender()
 {
     ItlGetGraphicCore()->GetShaderManager()->PopActiveShader();
 }
 
-void Graphic::RN_PostEffect::SetUniform(std::string sUniform, float fValue)
+void Bamboo::RN_PostEffect::SetUniform(std::string sUniform, float fValue)
 {
     m_mUniforms_Floats[sUniform] = fValue;
 }
 
-void Graphic::RN_PostEffect::SetUniform(std::string sUniform, glm::vec2 v2Vector)
+void Bamboo::RN_PostEffect::SetUniform(std::string sUniform, glm::vec2 v2Vector)
 {
     m_mUniforms_Vec2[sUniform] = v2Vector;
 }
 
-void Graphic::RN_PostEffect::SetUniform(std::string sUniform, glm::vec3 v3Vector)
+void Bamboo::RN_PostEffect::SetUniform(std::string sUniform, glm::vec3 v3Vector)
 {
     m_mUniforms_Vec3[sUniform] = v3Vector;
 }
