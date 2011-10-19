@@ -21,7 +21,7 @@ int last_active;
 
 #define CHECK_FOR_GLERROR
 
-bool Shader::ItlLoadFileToString(const char* szFilename, GLubyte** pszShaderSource, unsigned long* nLength)
+bool Graphic::Shader::ItlLoadFileToString(const char* szFilename, GLubyte** pszShaderSource, unsigned long* nLength)
 {
     ifstream file;
     file.open(szFilename, ios::in); // opens as ASCII!
@@ -71,7 +71,7 @@ bool Shader::ItlLoadFileToString(const char* szFilename, GLubyte** pszShaderSour
     return true;
 }
 
-void Shader::ItlPrintShaderLog(GLuint obj)
+void Graphic::Shader::ItlPrintShaderLog(GLuint obj)
 {
     int iLogLength = 0;
     int iMaximalLength=0;
@@ -95,7 +95,7 @@ void Shader::ItlPrintShaderLog(GLuint obj)
 }
 
 
-void Shader::ItlAddShader(GLenum tShaderType, const char *szFilename)
+void Graphic::Shader::ItlAddShader(GLenum tShaderType, const char *szFilename)
 {
     Logger::debug() << "Loading shader source: " << szFilename << Logger::endl;
 
@@ -134,7 +134,7 @@ void Shader::ItlAddShader(GLenum tShaderType, const char *szFilename)
         delete[] szShaderLog;
 }
 
-void Shader::ItlLinkShader()
+void Graphic::Shader::ItlLinkShader()
 {
     GLint iProgrammID = glCreateProgram();
 
@@ -160,11 +160,11 @@ void Shader::ItlLinkShader()
     }
 }
 
-Shader::Shader(const char *szVertexShaderFilename,
-               const char *szTesselationControlShaderFilename,
-               const char *szTesselationEvaluationShaderFilename,
-               const char *szGeometryShaderFilename,
-               const char *szFragmentShaderFilename)
+Graphic::Shader::Shader(const char *szVertexShaderFilename,
+                       const char *szTesselationControlShaderFilename,
+                       const char *szTesselationEvaluationShaderFilename,
+                       const char *szGeometryShaderFilename,
+                       const char *szFragmentShaderFilename)
 {
     ItlAddShader(GL_VERTEX_SHADER, szVertexShaderFilename);
     ItlAddShader(GL_TESS_CONTROL_SHADER, szTesselationControlShaderFilename);
@@ -174,10 +174,10 @@ Shader::Shader(const char *szVertexShaderFilename,
     ItlLinkShader();
 }
 
-Shader::Shader(const char *szVertexShaderFilename,
-               const char *szTesselationControlShaderFilename,
-               const char *szTesselationEvaluationShaderFilename,
-               const char *szFragmentShaderFilename)
+Graphic::Shader::Shader(const char *szVertexShaderFilename,
+                       const char *szTesselationControlShaderFilename,
+                       const char *szTesselationEvaluationShaderFilename,
+                       const char *szFragmentShaderFilename)
 {
     ItlAddShader(GL_VERTEX_SHADER, szVertexShaderFilename);
     ItlAddShader(GL_TESS_CONTROL_SHADER, szTesselationControlShaderFilename);
@@ -186,7 +186,7 @@ Shader::Shader(const char *szVertexShaderFilename,
     ItlLinkShader();
 }
 
-Shader::Shader(const char *szVertexShaderFilename,
+Graphic::Shader::Shader(const char *szVertexShaderFilename,
                const char *szFragmentShaderFilename)
     : m_bReadyForUse(false)
 {
@@ -195,7 +195,7 @@ Shader::Shader(const char *szVertexShaderFilename,
     ItlLinkShader();
 }
 
-Shader::Shader(const char *szVertexShaderFilename,
+Graphic::Shader::Shader(const char *szVertexShaderFilename,
                const char *szGeometryShaderFilename,
                const char *szFragmentShaderFilename)
     : m_bReadyForUse(false)
@@ -207,7 +207,7 @@ Shader::Shader(const char *szVertexShaderFilename,
 }
 
 
-Shader::~Shader()
+Graphic::Shader::~Shader()
 {
     //delete shader program
     glDeleteProgram(m_nShaderId);
@@ -216,7 +216,7 @@ Shader::~Shader()
     for_each(m_glShaderObjects.begin(), m_glShaderObjects.end(), [](GLuint shader) { glDeleteShader(shader); });
 }
 
-void Shader::Activate()
+void Graphic::Shader::Activate()
 {
     //activate shader if it is ready for use, else log an error message
 
@@ -240,7 +240,7 @@ void Shader::Activate()
 	Logger::error() << "Could not activate shader because it is not ready for use" << Logger::endl;
 }
 
-GLint Shader::GetUniformLocation(const char *szName)
+GLint Graphic::Shader::GetUniformLocation(const char *szName)
 {
     std::string sName(szName);
 
@@ -264,7 +264,7 @@ GLint Shader::GetUniformLocation(const char *szName)
     return iLocation;
 }
 
-GLint Shader::GetAttribLocation(const char *szName)
+GLint Graphic::Shader::GetAttribLocation(const char *szName)
 {
     if (static_cast<GLuint>(last_active) != m_nShaderId)
 	Logger::error() << "While setting an attribute of an shader, the shader must be active!" << Logger::endl;

@@ -8,7 +8,12 @@
 #ifndef __realtime_lu_shader_class
 #define __realtime_lu_shader_class
 
-#include "common_gl.h"
+
+#include <vector>
+#include <map>
+#include <string>
+
+#include "Graphic.h"
 
 //!  A class which encapsulates the shader handling
 /*!
@@ -16,12 +21,7 @@
   It loads, compiles and link a shader (at construction time),
   and provides methods to activate it and to get the position of uniforms or attributes.
 */
-
-#include <vector>
-#include <map>
-#include <string>
-
-class Shader
+class Graphic::Shader
 {
 public:
     /*! \name Constructors / Destructor */

@@ -27,14 +27,16 @@
 // forward declarations
 class SceneObject_RenderTarget;
 class Camera;
-class ShaderManager;
-class TextureManager;
 
 class Graphic
 {
 private:
     /*! \name Internal classes */
     //@{
+        class Shader;
+        class ShaderManager;
+        class TextureManager;
+
         class IRenderNode;
         class IRenderNode_Cullable;
 
@@ -96,13 +98,13 @@ public:
         public:
             static std::shared_ptr<Scene> Create(std::shared_ptr<Graphic::Camera> spCamera);
 
-            void CallRenderPath();
+            void CallRenderPath(Graphic *pGraphicCore);
 
             void AttachObject(std::shared_ptr<ISceneObject> spSceneObject);
 
             void InvalidateObjectData(std::shared_ptr<ISceneObject> spSceneObject) {}
 
-            void CreateRenderGraph();
+            void CreateRenderGraph(Graphic *pGraphicCore);
         private:
             std::list<std::shared_ptr<ISceneObject> >     m_lSceneObjects;
             std::shared_ptr<Graphic::Camera>        m_spCamera;
@@ -203,6 +205,9 @@ public:
 
 	/// returns the responsible texture manager for this graphics instance
 	TextureManager * GetTextureManager();
+
+        /// workaround method, should be removed
+        static Graphic * GetSingleInstance() { return s_pInstance; }
     //@}
 
     /*! \name Methods for render */
@@ -236,6 +241,13 @@ private:
     //@{
         std::map<std::string, std::shared_ptr<Graphic::IRenderNode> >    m_vRenderPaths;
 
+        ShaderManager       * m_pShaderManager;
+        TextureManager      * m_pTextureManager;
+    //@}
+
+    /*! \name Static members */
+    //@{
+        static Graphic * s_pInstance;
     //@}
 };
 

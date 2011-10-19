@@ -6,32 +6,26 @@
 
 using namespace std;
 
-ShaderManager *ShaderManager::instance()
-{
-    static ShaderManager shadermanager_singleton_instance;
-
-    return &shadermanager_singleton_instance;
-}
-
-ShaderManager::ShaderManager()
+Graphic::ShaderManager::ShaderManager()
 {
     //nothing to do so far
+    m_nCurrentActiveShaderProgram = 0;
 }
 
-ShaderManager::~ShaderManager()
+Graphic::ShaderManager::~ShaderManager()
 {
     // destroy all used Shader instances
     // C++11 construct with lambda function :)
     for_each(m_vpShaders.begin(), m_vpShaders.end(), [](Shader *pShader) { delete pShader; });
 }
 
-void ShaderManager::AddShader(std::string sName, Shader *pShader)
+void Graphic::ShaderManager::AddShader(std::string sName, Shader *pShader)
 {
     m_vpShaders.push_back(pShader);
     m_vsShaderNames.push_back(sName);
 }
 
-bool ShaderManager::ActivateShader(std::string sName)
+bool Graphic::ShaderManager::ActivateShader(std::string sName)
 {
     bool bSuccess = false;
 
@@ -52,24 +46,25 @@ bool ShaderManager::ActivateShader(std::string sName)
     return bSuccess;
 }
 
-GLint ShaderManager::GetAttribute(std::string sAttributeName)
+GLint Graphic::ShaderManager::GetAttribute(std::string sAttributeName)
 {
     return m_vpShaders[m_nCurrentActiveShaderProgram]->GetAttribLocation(sAttributeName.data());
 }
 
-GLint ShaderManager::GetUniform(std::string sUniformName)
+GLint Graphic::ShaderManager::GetUniform(std::string sUniformName)
 {
     return m_vpShaders[m_nCurrentActiveShaderProgram]->GetUniformLocation(sUniformName.data());
 }
 
-void ShaderManager::PushActiveShader()
+void Graphic::ShaderManager::PushActiveShader()
 {
     m_vActiveShaderStack.push(m_nCurrentActiveShaderProgram);
 }
 
-void ShaderManager::PopActiveShader()
+void Graphic::ShaderManager::PopActiveShader()
 {
     m_nCurrentActiveShaderProgram = m_vActiveShaderStack.top();
+
     m_vActiveShaderStack.pop();
     m_vpShaders[m_nCurrentActiveShaderProgram]->Activate();
 }

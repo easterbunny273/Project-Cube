@@ -60,14 +60,14 @@ void Graphic::RN_PostEffect::ItlPreRender()
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, this->buffer_vertices3f);
 
-    ShaderManager::instance()->PushActiveShader();
-    ShaderManager::instance()->ActivateShader(m_sShaderName);
+    ItlGetGraphicCore()->GetShaderManager()->PushActiveShader();
+    ItlGetGraphicCore()->GetShaderManager()->ActivateShader(m_sShaderName);
 }
 
 void Graphic::RN_PostEffect::ItlRender()
 {
-    const GLint l_in_Position(ShaderManager::instance()->GetAttribute("in_Position"));
-    const GLint l_texcoords(ShaderManager::instance()->GetAttribute("in_Texcoord"));
+    const GLint l_in_Position(ItlGetGraphicCore()->GetShaderManager()->GetAttribute("in_Position"));
+    const GLint l_texcoords(ItlGetGraphicCore()->GetShaderManager()->GetAttribute("in_Texcoord"));
 
     glVertexAttribPointer(l_in_Position, 3, GL_DOUBLE, GL_FALSE, 6 * sizeof(GLdouble), NULL);
     glVertexAttribPointer(l_texcoords, 3, GL_DOUBLE, GL_FALSE, 6 * sizeof(GLdouble), (GLvoid *) (3 * sizeof(GLdouble)));
@@ -86,7 +86,7 @@ void Graphic::RN_PostEffect::ItlRender()
         GLuint nUsedTextureUnit = TextureManager::instance()->UseTexture(sTextureName);
 
         // get the uniform location
-        GLint iUniformLocation = ShaderManager::instance()->GetUniform(sUniformName);
+        GLint iUniformLocation = ItlGetGraphicCore()->GetShaderManager()->GetUniform(sUniformName);
 
         // check if the uniform exists
         assert (iUniformLocation != -1);
@@ -99,38 +99,38 @@ void Graphic::RN_PostEffect::ItlRender()
     // set the user defined uniforms
     for (auto iter=m_mUniforms_Floats.begin(); iter != m_mUniforms_Floats.end(); iter++)
     {
-	GLint iLocation = ShaderManager::instance()->GetUniform(iter->first);
+        GLint iLocation = ItlGetGraphicCore()->GetShaderManager()->GetUniform(iter->first);
 
 	std::string sDebug = iter->first;
 
 	assert (iLocation != -1);
 
 	if (iLocation != -1)
-	    glUniform1f(ShaderManager::instance()->GetUniform(iter->first), iter->second);
+            glUniform1f(ItlGetGraphicCore()->GetShaderManager()->GetUniform(iter->first), iter->second);
     }
 
     for (auto iter=m_mUniforms_Vec2.begin(); iter != m_mUniforms_Vec2.end(); iter++)
     {
-	GLint iLocation = ShaderManager::instance()->GetUniform(iter->first);
+        GLint iLocation = ItlGetGraphicCore()->GetShaderManager()->GetUniform(iter->first);
 
 	std::string sDebug = iter->first;
 
 	assert (iLocation != -1);
 
 	if (iLocation != -1)
-	    glUniform2f(ShaderManager::instance()->GetUniform(iter->first), iter->second.x, iter->second.y);
+            glUniform2f(ItlGetGraphicCore()->GetShaderManager()->GetUniform(iter->first), iter->second.x, iter->second.y);
     }
 
     for (auto iter=m_mUniforms_Vec3.begin(); iter != m_mUniforms_Vec3.end(); iter++)
     {
-	GLint iLocation = ShaderManager::instance()->GetUniform(iter->first);
+        GLint iLocation = ItlGetGraphicCore()->GetShaderManager()->GetUniform(iter->first);
 
 	std::string sDebug = iter->first;
 
 	assert (iLocation != -1);
 
 	if (iLocation != -1)
-	    glUniform3f(ShaderManager::instance()->GetUniform(iter->first), iter->second.x, iter->second.y, iter->second.z);
+            glUniform3f(ItlGetGraphicCore()->GetShaderManager()->GetUniform(iter->first), iter->second.x, iter->second.y, iter->second.z);
     }
 
     //draw data
@@ -148,7 +148,7 @@ void Graphic::RN_PostEffect::ItlRender()
 
 void Graphic::RN_PostEffect::ItlPostRender()
 {
-    ShaderManager::instance()->PopActiveShader();
+    ItlGetGraphicCore()->GetShaderManager()->PopActiveShader();
 }
 
 void Graphic::RN_PostEffect::SetUniform(std::string sUniform, float fValue)

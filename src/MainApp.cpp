@@ -95,6 +95,8 @@ void MainApp::StartGraphic_Test()
     // create scene
     std::shared_ptr<Graphic::Scene> spScene = Graphic::Scene::Create(spCamera);
 
+    GetGraphic();
+
     // create objects
     std::shared_ptr<Graphic::ISceneObject> spCube = Graphic::SO_Cube::Create();
     std::shared_ptr<Graphic::ISceneObject> spTable = Graphic::SO_LoadedModel::Create("models/freepool-ng-table.3ds");

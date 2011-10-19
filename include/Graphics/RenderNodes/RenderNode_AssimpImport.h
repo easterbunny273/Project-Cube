@@ -86,11 +86,7 @@ private:
 
     /*! \name Internal helper methods */
     //@{
-	static void ItlLoadGeneralRessources();
-    //@}
-
-    /*! \name Internal helper methods */
-    //@{
+        void ItlLoadGeneralRessources();
 	void ItlCreateVertexBufferObject(std::vector<GLfloat> &data);
 	void ItlCreateIndexBufferObject(std::vector<GLuint> &data);
 

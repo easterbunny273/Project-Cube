@@ -182,16 +182,16 @@ void Graphic::RN_Cube::ItlPreRender()
     glBindVertexArray(m_nVertexArrayObject);
     glBindBuffer(GL_ARRAY_BUFFER, m_nVertexBufferObject);
 
-    ShaderManager::instance()->PushActiveShader();
+    ItlGetGraphicCore()->GetShaderManager()->PushActiveShader();
    /* if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_SHADOWMAP)
-	ShaderManager::instance()->ActivateShader("bounding_shader");
+        ItlGetGraphicCore()->GetShaderManager()->ActivateShader("bounding_shader");
     else*/
-	ShaderManager::instance()->ActivateShader("basic_shading");
+        ItlGetGraphicCore()->GetShaderManager()->ActivateShader("basic_shading");
 }
 
 void Graphic::RN_Cube::ItlPostRender()
 {
-    ShaderManager::instance()->PopActiveShader();
+    ItlGetGraphicCore()->GetShaderManager()->PopActiveShader();
 }
 
 void Graphic::RN_Cube::ItlRender()
@@ -203,7 +203,7 @@ void Graphic::RN_Cube::ItlRender()
 
     glBindBuffer(GL_ARRAY_BUFFER, m_nVertexBufferObject);
 
-    const GLint l_in_Position(ShaderManager::instance()->GetAttribute("in_Position"));
+    const GLint l_in_Position(ItlGetGraphicCore()->GetShaderManager()->GetAttribute("in_Position"));
 
     if (l_in_Position != -1)
     {
@@ -211,7 +211,7 @@ void Graphic::RN_Cube::ItlRender()
 	glEnableVertexAttribArray(l_in_Position);
     }
 
-    const GLint l_in_Normal(ShaderManager::instance()->GetAttribute("in_Normal"));
+    const GLint l_in_Normal(ItlGetGraphicCore()->GetShaderManager()->GetAttribute("in_Normal"));
 
     if (l_in_Normal != -1)
     {
@@ -219,7 +219,7 @@ void Graphic::RN_Cube::ItlRender()
 	//glEnableVertexAttribArray(l_in_Normal);
     }
 
-    const GLint l_in_Texcoord(ShaderManager::instance()->GetAttribute("in_Texcoord"));
+    const GLint l_in_Texcoord(ItlGetGraphicCore()->GetShaderManager()->GetAttribute("in_Texcoord"));
 
     if (l_in_Texcoord != -1)
     {
@@ -235,7 +235,7 @@ void Graphic::RN_Cube::ItlRender()
     // load texture in texture unit
     GLuint nUsedUnit = TextureManager::instance()->UseTexture("cube_texture");
 
-    const GLint l_texture1(ShaderManager::instance()->GetUniform("texture1"));
+    const GLint l_texture1(ItlGetGraphicCore()->GetShaderManager()->GetUniform("texture1"));
 
     assert (l_texture1 != -1);
 
@@ -250,6 +250,6 @@ void Graphic::RN_Cube::ItlRender()
 
 void Graphic::RN_Cube::ItlLoadRessources()
 {
-    ShaderManager::instance()->AddShader("basic_shading", new Shader("shaders/basic_shading.vs", "shaders/basic_shading.fs"));
+    ItlGetGraphicCore()->GetShaderManager()->AddShader("basic_shading", new Shader("shaders/basic_shading.vs", "shaders/basic_shading.fs"));
     TextureManager::instance()->LoadTexture("cube_texture", "textures/cube_texture.jpg", false);
 }

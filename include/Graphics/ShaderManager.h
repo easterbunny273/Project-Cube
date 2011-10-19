@@ -14,6 +14,7 @@
 #include <string>
 #include <stack>
 #include "common_gl.h"
+#include "Graphic.h"
 #include "Shader.h"
 
 //!  A class which handles many Shader classes
@@ -25,14 +26,14 @@
   which can be used for things like enforcing a simple shader program when rendering the shadowmap or reflected objects.
 */
 
-class ShaderManager
+class Graphic::ShaderManager
 {
     friend class Graphic;
 
 public:
     /*! \name Singelton getter */
     //@{
-	static ShaderManager *instance();
+        //static ShaderManager *instance();
     //@}
 
     /*! \name Public methods */

@@ -36,19 +36,32 @@ using namespace std;
 
 #define PI 3.14159265f
 
+// initialize static members
+Graphic * Graphic::s_pInstance = NULL;
+
 /****************************************************************
   *************************************************************** */
 Graphic::Graphic()
 {
+    m_pShaderManager = new ShaderManager();
+    m_pTextureManager = new TextureManager();
 
-
+    s_pInstance = this;
 }
 
 /****************************************************************
   *************************************************************** */
 Graphic::~Graphic()
 {
+    assert (m_pShaderManager != NULL);
+    if (m_pShaderManager != NULL)
+        delete m_pShaderManager;
+    m_pShaderManager = NULL;
 
+    assert(m_pTextureManager != NULL);
+    if (m_pTextureManager != NULL)
+        delete m_pTextureManager;
+    m_pTextureManager = NULL;
 }
 
 /****************************************************************
@@ -61,7 +74,7 @@ void Graphic::Render()
 
         pRenderLoop->spRenderTarget->ClearBuffers();
         pRenderLoop->spCamera->Move(0.0001f);
-        pRenderLoop->spScene->CallRenderPath();
+        pRenderLoop->spScene->CallRenderPath(this);
         pRenderLoop->spRenderTarget->SwapBuffers();
     }
 }
@@ -222,19 +235,19 @@ void Graphic::Camera::AddToMoveVector(glm::vec3 vVector)
 
 /****************************************************************
   *************************************************************** */
-ShaderManager * Graphic::GetShaderManager()
+Graphic::ShaderManager * Graphic::GetShaderManager()
 {
     // TODO: should we use the shader manager as a singelton or as a member of the graphics class?
 
-    return ShaderManager::instance();
+    return m_pShaderManager;
 }
 
 /****************************************************************
   *************************************************************** */
-TextureManager * Graphic::GetTextureManager()
+Graphic::TextureManager * Graphic::GetTextureManager()
 {
     // TODO: should we use the texture manager as a singelton or as a member of the graphics class?
-    return TextureManager::instance();
+    return m_pTextureManager;
 }
 
 /****************************************************************
@@ -289,13 +302,13 @@ void Graphic::RemoveRenderLoop(int iLoopID)
     m_mRenderLoops.erase(iLoopID);
 }
 
-void Graphic::Scene::CallRenderPath()
+void Graphic::Scene::CallRenderPath(Graphic *pGraphicCore)
 {
     if (m_spRenderGraphRoot)
         m_spRenderGraphRoot->Render();
     else
     {
-        CreateRenderGraph();
+        CreateRenderGraph(pGraphicCore);
         m_spRenderGraphRoot->Render();
     }
 }
@@ -313,7 +326,7 @@ void Graphic::Scene::AttachObject(std::shared_ptr<Graphic::ISceneObject> spScene
     m_lSceneObjects.push_back(spSceneObject);
 }
 
-void Graphic::Scene::CreateRenderGraph()
+void Graphic::Scene::CreateRenderGraph(Graphic *pGraphicCore)
 {
     m_spRenderGraphRoot = std::shared_ptr<Graphic::IRenderNode>(new Graphic::RN_Camera(m_spCamera.get()));
 
@@ -321,6 +334,8 @@ void Graphic::Scene::CreateRenderGraph()
     {
         std::shared_ptr<Graphic::ISceneObject> spSceneObject = *iter;
         std::shared_ptr<Graphic::IRenderNode> spRenderNode = spSceneObject->GetRenderNode();
+
+        spRenderNode->SetGraphicCore(pGraphicCore);
 
         m_spRenderGraphRoot->AddChild(spRenderNode);
     }

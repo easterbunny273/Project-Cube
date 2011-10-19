@@ -8,21 +8,21 @@
 
 using namespace std;
 
-TextureManager::TextureManager()
+Graphic::TextureManager::TextureManager()
     : m_bDevIL_Initialized(false)
 {
     //initialization of free_units is done with first loadTexture call because we need to make sure that the opengl context is already created
 }
 
-TextureManager::~TextureManager()
+Graphic::TextureManager::~TextureManager()
 {
 
 }
 
-bool TextureManager::LoadTexture(std::string sTextureName,
-				 std::string sFilename,
-				 bool bAlreadyGammaCorrected,
-				 GLint iTarget /*= GL_TEXTURE_2D*/)
+bool Graphic::TextureManager::LoadTexture(std::string sTextureName,
+                                         std::string sFilename,
+                                         bool bAlreadyGammaCorrected,
+                                         GLint iTarget /*= GL_TEXTURE_2D*/)
 {
 	if (m_bDevIL_Initialized == false)
 	{
@@ -117,7 +117,7 @@ bool TextureManager::LoadTexture(std::string sTextureName,
 }
 
 
-GLuint TextureManager::UseTexture(std::string sTextureName)
+GLuint Graphic::TextureManager::UseTexture(std::string sTextureName)
 {
     unsigned int nPreviousSize = m_mTextureIDs.size();
     GLuint nTextureID = m_mTextureIDs[sTextureName];
@@ -183,7 +183,7 @@ GLuint TextureManager::UseTexture(std::string sTextureName)
     return 0;
 }
 
-void TextureManager::UnuseTexture(std::string sTextureName)
+void Graphic::TextureManager::UnuseTexture(std::string sTextureName)
 {
     GLint iUsedUnit = m_mTexturesInUnits[sTextureName];	//which unit was used by given texture
 
@@ -200,13 +200,13 @@ void TextureManager::UnuseTexture(std::string sTextureName)
 	Logger::error() << "not possible to release texture unit used by texture \"" << sTextureName << "\", texture was not loaded in any unit!" << Logger::endl;
 }
 
-TextureManager *TextureManager::instance()
+Graphic::TextureManager *Graphic::TextureManager::instance()
 {
     static TextureManager singelton_instance;
     return &singelton_instance;
 }
 
-GLuint TextureManager::GetFreeUnit()
+GLuint Graphic::TextureManager::GetFreeUnit()
 {
     GLuint nFreeUnit = m_lFreeUnits.front();	    //get first free unit
 
@@ -219,12 +219,12 @@ GLuint TextureManager::GetFreeUnit()
     return nFreeUnit;
 }
 
-void TextureManager::ReleaseUnit(GLuint nUnit)
+void Graphic::TextureManager::ReleaseUnit(GLuint nUnit)
 {
     m_lFreeUnits.push_back(nUnit);
 }
 
-void TextureManager::RegisterManualTexture(std::string sTextureName, GLuint nTextureID, GLenum eTarget /* = GL_TEXTURE_2D */)
+void Graphic::TextureManager::RegisterManualTexture(std::string sTextureName, GLuint nTextureID, GLenum eTarget /* = GL_TEXTURE_2D */)
 {
     Logger::debug() << "Registered manual texture \"" << sTextureName << "\" with id " << nTextureID << Logger::endl;
 
@@ -238,7 +238,7 @@ void TextureManager::RegisterManualTexture(std::string sTextureName, GLuint nTex
     assert (m_mTextureIDs.size() != nOldSize);
 }
 
-bool TextureManager::IsTextureRegistered(std::string sTextureName, GLuint &rnTextureID)
+bool Graphic::TextureManager::IsTextureRegistered(std::string sTextureName, GLuint &rnTextureID)
 {
     std::map<std::string, GLuint>::iterator iter = m_mTextureIDs.find(sTextureName);
     if (iter != m_mTextureIDs.end())
@@ -250,7 +250,7 @@ bool TextureManager::IsTextureRegistered(std::string sTextureName, GLuint &rnTex
 	return false;
 }
 
-bool TextureManager::IsTextureInUse(GLuint nTextureID)
+bool Graphic::TextureManager::IsTextureInUse(GLuint nTextureID)
 {
     std::string sTextureName;
 
@@ -267,17 +267,17 @@ bool TextureManager::IsTextureInUse(GLuint nTextureID)
     return (m_mTexturesInUnits[sTextureName] != -1);
 }
 
-void TextureManager::LockTextureID(GLuint nTextureID)
+void Graphic::TextureManager::LockTextureID(GLuint nTextureID)
 {
     m_mTextureLocks[nTextureID] = true;
 }
 
-void TextureManager::UnlockTextureID(GLuint nTextureID)
+void Graphic::TextureManager::UnlockTextureID(GLuint nTextureID)
 {
     m_mTextureLocks[nTextureID] = false;
 }
 
-GLuint TextureManager::CreateSampler(std::string sTextureName, GLenum eTarget, GLint iInternalTextureFormat, GLint iWidth, GLint iHeight, GLint iClampMode, GLint iFiltering)
+GLuint Graphic::TextureManager::CreateSampler(std::string sTextureName, GLenum eTarget, GLint iInternalTextureFormat, GLint iWidth, GLint iHeight, GLint iClampMode, GLint iFiltering)
 {
     GLuint nTextureID;
 
@@ -324,7 +324,7 @@ GLuint TextureManager::CreateSampler(std::string sTextureName, GLenum eTarget, G
     return nTextureID;
 }
 
-GLint TextureManager::GetTextureTarget(std::string sTextureName)
+GLint Graphic::TextureManager::GetTextureTarget(std::string sTextureName)
 {
     unsigned int nOldSize = m_mTextureTargets.size();
 
@@ -336,7 +336,7 @@ GLint TextureManager::GetTextureTarget(std::string sTextureName)
     return iTarget;
 }
 
-bool TextureManager::IsTextureLocked(GLuint texture_id)
+bool Graphic::TextureManager::IsTextureLocked(GLuint texture_id)
 {
     return !(m_mTextureLocks.find(texture_id) == m_mTextureLocks.end() || m_mTextureLocks[texture_id] == false);
 }

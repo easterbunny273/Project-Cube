@@ -63,6 +63,11 @@ public:
 	void GetTransformMatrix(glm::mat4 &rToWorld, glm::mat4 &rFromWorld) const;
     //@}
 
+    /*! \name Setting the graphic core (for using shader + texture manager */
+    //@{
+        void SetGraphicCore(Graphic *pGraphicCore) { m_pGraphicCore = pGraphicCore; }
+    //@}
+
     /*! \name Operations */
     //@{
 	//! renders the sceneobject and its children (first, it renders the children).
@@ -152,6 +157,8 @@ protected:
     //@{
 	void ItlSendTransformMatrices();		///<internal helper function which sends the current transormation matrices to the shader
 	void ItlSendLightPosition();
+
+        Graphic * ItlGetGraphicCore();
     //@}
 
     /*! \name Internal members */
@@ -175,6 +182,8 @@ protected:
         std::shared_ptr<Graphic::Camera> m_spShadowCaster;
 
 	bool m_bHasChildren;
+
+        Graphic         * m_pGraphicCore;
     //@}
 
 };
@@ -203,9 +212,8 @@ protected:
 
 	virtual bool ItlTestIfVisible();
 
-    //@}
+        //@}
 
 };
-
 
 #endif

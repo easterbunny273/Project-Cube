@@ -12,14 +12,20 @@
 
 void Graphic::IRenderNode::ItlSendTransformMatrices()
 {
+    Graphic *pGraphicCore = ItlGetGraphicCore();
+    assert (pGraphicCore != NULL);
+
+    Graphic::ShaderManager *pShaderManager = pGraphicCore->GetShaderManager();
+    assert (pShaderManager != NULL);
+
     //first, get the positions
-    const GLint l_projection_matrix = ShaderManager::instance()->GetUniform("ProjectionMatrix");
-    const GLint l_view_matrix = ShaderManager::instance()->GetUniform("ViewMatrix");
-    const GLint l_modelviewprojection_matrix = ShaderManager::instance()->GetUniform("ModelViewProjectionMatrix");
-    const GLint l_normal_matrix = ShaderManager::instance()->GetUniform("NormalMatrix");
-    const GLint l_model_matrix = ShaderManager::instance()->GetUniform("ModelMatrix");
+    const GLint l_projection_matrix = pShaderManager->GetUniform("ProjectionMatrix");
+    const GLint l_view_matrix = pShaderManager->GetUniform("ViewMatrix");
+    const GLint l_modelviewprojection_matrix = pShaderManager->GetUniform("ModelViewProjectionMatrix");
+    const GLint l_normal_matrix = pShaderManager->GetUniform("NormalMatrix");
+    const GLint l_model_matrix = pShaderManager->GetUniform("ModelMatrix");
     //const GLint l_lastFrameTransformMatrix = ShaderManager::instance()->getUniform("Camera_TransformMatrix_LastFrame");
-    const GLint l_tempTransformMatrix = ShaderManager::instance()->GetUniform("Camera_TempTransformMatrix");
+    const GLint l_tempTransformMatrix = pShaderManager->GetUniform("Camera_TempTransformMatrix");
 
     //if a position is -1, it was not found, so we write only in uniforms where we found a valid position
 
@@ -59,7 +65,13 @@ void Graphic::IRenderNode::ItlSendTransformMatrices()
 
 void Graphic::IRenderNode::ItlSendLightPosition()
 {
-    GLint l_Light0Position = ShaderManager::instance()->GetUniform("Light0Position");
+    Graphic *pGraphicCore = ItlGetGraphicCore();
+    assert (pGraphicCore != NULL);
+
+    Graphic::ShaderManager *pShaderManager = pGraphicCore->GetShaderManager();
+    assert (pShaderManager != NULL);
+
+    GLint l_Light0Position = pShaderManager->GetUniform("Light0Position");
 
     if (l_Light0Position != -1)
     {
@@ -137,7 +149,7 @@ void Graphic::IRenderNode::Render(std::shared_ptr<TItlRenderInfo> pCurrentRender
 }
 
 Graphic::IRenderNode::IRenderNode()
-    : m_bHasChildren(false)
+    : m_bHasChildren(false), m_pGraphicCore(NULL)
 {
 
 }
@@ -378,4 +390,13 @@ bool Graphic::IRenderNode_Cullable::ItlTestIfVisible()
 				    return false;
 
     return true;
+}
+
+
+Graphic * Graphic::IRenderNode::ItlGetGraphicCore()
+{
+    Graphic *pWorkaroundPointer = Graphic::GetSingleInstance();
+    assert (pWorkaroundPointer != NULL);
+
+    return pWorkaroundPointer;
 }

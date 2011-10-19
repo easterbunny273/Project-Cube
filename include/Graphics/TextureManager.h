@@ -11,6 +11,7 @@
 #include <map>
 #include <list>
 #include "common_gl.h"
+#include "Graphic.h"
 
 /* if PREVENT_REBINDING_TEXTURE is defined, the texturemanager tries to prevent rebinding
  * a texture if a texture is still bound to an unit but the unit is marked as "free for used".
@@ -25,7 +26,7 @@
  *  where the caller must not think about the use of the texture units.
  */
 
-class TextureManager
+class Graphic::TextureManager
 {
 private:
     /*! This variable marks if devIL is initialized yet (because the opengl context must be initialized before) */
@@ -51,10 +52,12 @@ private:
     std::map<GLint, GLuint> m_mUnitHasTexture;
 #endif
 
-    /*! \brief Constructor, only for internal use (singelton pattern) */
-    TextureManager();
+
 
 public:
+    /*! \brief Constructor */
+    TextureManager();
+
     /*! \brief Returns the singelton instance */
     static TextureManager *instance();
 
