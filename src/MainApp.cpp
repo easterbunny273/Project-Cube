@@ -95,6 +95,8 @@ void MainApp::StartGraphic_Test()
     // create scene
     std::shared_ptr<Bamboo::Scene> spScene = Bamboo::Scene::Create(spCamera);
 
+    // workaround - triggers initializing of graphic engine
+    // todo: fix this.
     GetGraphic();
 
     // create objects
