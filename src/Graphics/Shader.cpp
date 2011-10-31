@@ -19,7 +19,7 @@ using namespace std;
 
 int last_active;
 
-#define CHECK_FOR_GLERROR
+//#define CHECK_FOR_GLERROR
 
 bool Bamboo::Shader::ItlLoadFileToString(const char* szFilename, GLubyte** pszShaderSource, unsigned long* nLength)
 {

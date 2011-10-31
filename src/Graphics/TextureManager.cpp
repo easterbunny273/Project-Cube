@@ -37,7 +37,7 @@ bool Bamboo::TextureManager::LoadTexture(std::string sTextureName,
 		puffer >> puffer2;						    //for debugging output, transform integer to string, write stringstream to string
 
 
-		for (int a=0; a < m_iMaxTextureUnits; a++)			    //push them all in the free_units queue
+                for (int a=0; a < m_iMaxTextureUnits; a++)			    //push them all in the free_units queue
 			m_lFreeUnits.push_back(a);
 
 		Logger::debug() << puffer2 << " texture units available" << Logger::endl;

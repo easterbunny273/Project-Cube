@@ -80,11 +80,11 @@ Bamboo::RN_AssimpImport::RN_AssimpImport(std::string sFilename)
 						aiProcess_PreTransformVertices	|
 						aiProcess_JoinIdenticalVertices	|
 						aiProcess_GenNormals		|
-						//aiProcess_ImproveCacheLocality |
+                                                aiProcess_ImproveCacheLocality |
 						//aiProcess_FindInvalidData |
 						aiProcess_OptimizeMeshes |
 						aiProcess_OptimizeGraph  |
-						//aiProcess_FindDegenerates |
+                                                aiProcess_FindDegenerates |
 						aiProcess_SortByPType);
 
       // If the import failed, report it
@@ -362,7 +362,7 @@ void Bamboo::RN_AssimpImport::ItlCreateVerticesArray(std::vector<GLfloat> &data)
 	nNumVertices += m_vMeshData[i]->nNumVertices;
     }
 
-    m_pfVertices = new float[nNumVertices*3];
+    m_pfVertices = new GLfloat[nNumVertices*3];
     unsigned int iter=0;
 
     for (unsigned int i=0; i < m_nNumMeshes; i++)
@@ -382,26 +382,6 @@ void Bamboo::RN_AssimpImport::ItlCreateVerticesArray(std::vector<GLfloat> &data)
     assert (iter == nNumVertices*3);
 
     m_iNumVertices = (int) nNumVertices;
-
-    /*m_pfVertices = new float[12];
-
-    m_pfVertices[0] = -100.0f;
-    m_pfVertices[1] = 0.0f;
-    m_pfVertices[2] = -100.0f;
-
-    m_pfVertices[3] = 100.0f;
-    m_pfVertices[4] = 0.0f;
-    m_pfVertices[5] = -100.0f;
-
-    m_pfVertices[6] = 100.0f;
-    m_pfVertices[7] = 0.0f;
-    m_pfVertices[8] = 100.0f;
-
-    m_pfVertices[9] = -100.0f;
-    m_pfVertices[10] = 0.0f;
-    m_pfVertices[11] = 100.0f;
-
-    m_iNumVertices = 4;*/
 }
 
 void Bamboo::RN_AssimpImport::ItlCreateIndicesArray(std::vector<GLuint> &data)
@@ -434,18 +414,6 @@ void Bamboo::RN_AssimpImport::ItlCreateIndicesArray(std::vector<GLuint> &data)
     assert (iter == nNumIndices);
 
     m_iNumIndices = (int) nNumIndices;
-
-    /*m_piIndices = new int[6];
-
-    m_piIndices[0] = 0;
-    m_piIndices[1] = 1;
-    m_piIndices[2] = 2;
-
-    m_piIndices[3] = 1;
-    m_piIndices[4] = 2;
-    m_piIndices[5] = 3;
-
-    m_iNumIndices = 6;*/
 }
 
 void Bamboo::RN_AssimpImport::ItlCreateIndexBufferObject(std::vector<GLuint> &data)
@@ -472,13 +440,9 @@ void Bamboo::RN_AssimpImport::ItlCreateIndexBufferObject(std::vector<GLuint> &da
 void Bamboo::RN_AssimpImport::ItlPreRender()
 {
     ItlGetGraphicCore()->GetShaderManager()->PushActiveShader();
-    if (m_pCurrentRenderInfo->tCurrentRenderPass == Bamboo::RN_RenderPass::RENDERPASS_SHADOWMAP)
+    /*if (m_pCurrentRenderInfo->tCurrentRenderPass == Bamboo::RN_RenderPass::RENDERPASS_SHADOWMAP)
         ItlGetGraphicCore()->GetShaderManager()->ActivateShader("simple_shading");
-    /*else if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_DEEP_OPACITY_MAP1)
-        ItlGetGraphicCore()->GetShaderManager()->ActivateShader("assimp_deep_step1_shader");
-    else if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_DEEP_OPACITY_MAP2)
-        ItlGetGraphicCore()->GetShaderManager()->ActivateShader("assimp_deep_step2_shader");*/
-    else
+    else*/
         ItlGetGraphicCore()->GetShaderManager()->ActivateShader("sceneobject-assimpimport");
 }
 
@@ -579,7 +543,7 @@ void Bamboo::RN_AssimpImport::ItlRender()
 	    glEnableVertexAttribArray(l_normals);
 	}
 
-        GLint l_use_shadow = ItlGetGraphicCore()->GetShaderManager()->GetUniform("bUseShadow");
+        /*GLint l_use_shadow = ItlGetGraphicCore()->GetShaderManager()->GetUniform("bUseShadow");
 
 	if (l_use_shadow != -1)
 	{
@@ -587,13 +551,13 @@ void Bamboo::RN_AssimpImport::ItlRender()
 
             //Settings::instance()->GetGroup("shadow")->GetValueOrDefault("bUseShadow", false, bUseShadow);
 	    glUniform1i(l_use_shadow, (int)bUseShadow);   //tell the shader which texture unit was used
-	}
+        }*/
 
 	glDisable(GL_CULL_FACE);
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glLineWidth(3.0f);
-	glDrawElements(GL_TRIANGLES, pMeshData->nNumFaces * 3, GL_UNSIGNED_INT, (const GLvoid *) (pMeshData->nIboOffsetFaces * sizeof(GLuint)));
+        glDrawElements(GL_TRIANGLES, pMeshData->nNumFaces * 3, GL_UNSIGNED_INT, (const GLvoid *) (pMeshData->nIboOffsetFaces * sizeof(GLuint)));
 	//glDrawArrays(GL_TRIANGLES, pMeshData->nIboOffsetFaces, pMeshData->nNumFaces * 3);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 

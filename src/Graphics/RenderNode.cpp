@@ -95,6 +95,7 @@ void Bamboo::IRenderNode::SetLightSourceForShadowMapping(std::shared_ptr<Bamboo:
 void Bamboo::IRenderNode::Render()
 {
     std::shared_ptr<TItlRenderInfo> pRenderInfo (new TItlRenderInfo);
+    pRenderInfo->tCurrentRenderPass = 0;
 
     this->Render(pRenderInfo);
 }
@@ -279,6 +280,12 @@ bool Bamboo::IRenderNode_Cullable::ItlInitializeBoundingBox()
 
 bool Bamboo::IRenderNode_Cullable::ItlTestIfVisible()
 {
+    // disable culling because it is unstable at the moment
+    // todo: correct this
+    return true;
+
+    // -----------
+
     if (m_bInitialized == false)
     {
 	ItlInitializeBoundingBox();
