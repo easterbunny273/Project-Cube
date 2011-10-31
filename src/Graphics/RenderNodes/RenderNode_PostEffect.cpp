@@ -165,3 +165,8 @@ void Bamboo::RN_PostEffect::SetUniform(std::string sUniform, glm::vec3 v3Vector)
 {
     m_mUniforms_Vec3[sUniform] = v3Vector;
 }
+
+void Bamboo::RN_PostEffect::SetTexture(std::string sUniformName, std::string sTextureName)
+{
+    m_mTextures[sUniformName] = sTextureName;
+}

@@ -330,6 +330,15 @@ void Bamboo::Scene::CreateRenderGraph(Bamboo *pGraphicCore)
 {
     m_spRenderGraphRoot = std::shared_ptr<Bamboo::IRenderNode>(new Bamboo::RN_Camera(m_spCamera.get()));
 
+    // load shader, if not loaded
+    pGraphicCore->GetShaderManager()->AddShader("posteffect1", new Bamboo::Shader("shaders/posteffect1.vs", "shaders/posteffect1.fs"));
+
+    std::shared_ptr<Bamboo::IRenderNode> spAntiAliasFBO(new Bamboo::RN_FBO(2048, 768*2, "scene_color", "scene_depth"));
+    std::shared_ptr<Bamboo::RN_PostEffect> spAntiAliasPostEffect(new Bamboo::RN_PostEffect("posteffect1"));
+    spAntiAliasPostEffect->SetTexture("texture1", "scene_color");
+    spAntiAliasPostEffect->SetTexture("texture3", "scene_depth");
+    spAntiAliasPostEffect->AddChild(spAntiAliasFBO);
+
     for (auto iter=m_lSceneObjects.begin(); iter != m_lSceneObjects.end(); iter++)
     {
         std::shared_ptr<Bamboo::ISceneObject> spSceneObject = *iter;
@@ -337,8 +346,11 @@ void Bamboo::Scene::CreateRenderGraph(Bamboo *pGraphicCore)
 
         spRenderNode->SetGraphicCore(pGraphicCore);
 
-        m_spRenderGraphRoot->AddChild(spRenderNode);
+        spAntiAliasFBO->AddChild(spRenderNode);
+
     }
+
+    m_spRenderGraphRoot->AddChild(spAntiAliasPostEffect);
 }
 
 
