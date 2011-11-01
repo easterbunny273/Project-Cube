@@ -26,26 +26,34 @@ std::shared_ptr<Bamboo::QtWidgetWrapper> Bamboo::QtWidgetWrapper::Create(QWidget
     fmt.setProfile(QGLFormat::CoreProfile);
 
     QGLWidget *pGLWidget = new QGLWidget(fmt, pWidget);
+    pGLWidget->makeCurrent();
     pGLWidget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
-    pGLWidget->setFixedWidth(1024);
-    pGLWidget->setFixedHeight(768);
+    pGLWidget->setFixedWidth(512);
+    pGLWidget->setFixedHeight(384);
     spWrapper->m_pGLWidget = pGLWidget;
     spWrapper->m_iWidth = pGLWidget->width();
     spWrapper->m_iHeight = pGLWidget->height();
 
-    spWrapper->m_pGLWidget->makeCurrent();
-
     // start up GLEW
-    glewExperimental = GL_TRUE;
-    if (glewInit() != GLEW_OK)
-        assert(!"glew initialization failed");
+
+    static bool sbGlewInitialized = false;
+
+    if (sbGlewInitialized == false)
+    {
+        glewExperimental = GL_TRUE;
+        if (glewInit() != GLEW_OK)
+            assert(!"glew initialization failed");
+        sbGlewInitialized = true;
+    }
 
     return spWrapper;
 }
 
 void Bamboo::QtWidgetWrapper::ClearBuffers()
 {
+    m_pGLWidget->makeCurrent();
+
     // Enable sRGB gamma correction for framebuffer output.
     glEnable(GL_FRAMEBUFFER_SRGB);
 
@@ -76,6 +84,7 @@ void Bamboo::QtWidgetWrapper::SwapBuffers()
     m_iWidth = m_pGLWidget->width();
     m_iHeight = m_pGLWidget->height();
     m_pGLWidget->swapBuffers();
+    m_pGLWidget->makeCurrent();
 }
 
 #endif

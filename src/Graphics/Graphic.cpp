@@ -342,10 +342,20 @@ void Bamboo::Scene::CreateRenderGraph(Bamboo *pGraphicCore)
     // load shader, if not loaded
     pGraphicCore->GetShaderManager()->AddShader("posteffect1", new Bamboo::Shader("shaders/posteffect1.vs", "shaders/posteffect1.fs"));
 
-    std::shared_ptr<Bamboo::IRenderNode> spAntiAliasFBO(new Bamboo::RN_FBO(2048, 768*2, "scene_color", "scene_depth"));
+    static int a=0;
+
+    std::string psSceneColorTextures[] = { "scene_color1", "scene_color2" };
+    std::string psSceneDepthTextures[] = { "scene_depth1", "scene_depth2" };
+
+    std::shared_ptr<Bamboo::IRenderNode> spAntiAliasFBO(new Bamboo::RN_FBO(2048, 768*2, psSceneColorTextures[a].c_str(), psSceneDepthTextures[a].c_str()));
     std::shared_ptr<Bamboo::RN_PostEffect> spAntiAliasPostEffect(new Bamboo::RN_PostEffect("posteffect1"));
-    spAntiAliasPostEffect->SetTexture("texture1", "scene_color");
-    spAntiAliasPostEffect->SetTexture("texture3", "scene_depth");
+    spAntiAliasPostEffect->SetTexture("texture1", psSceneColorTextures[a].c_str());
+    spAntiAliasPostEffect->SetTexture("texture3",  psSceneDepthTextures[a].c_str());
+
+    a++;
+
+    assert (a <= 2);
+
     spAntiAliasPostEffect->AddChild(spAntiAliasFBO);
 
     for (auto iter=m_lSceneObjects.begin(); iter != m_lSceneObjects.end(); iter++)
