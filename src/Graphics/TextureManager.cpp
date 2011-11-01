@@ -19,6 +19,29 @@ Bamboo::TextureManager::~TextureManager()
 
 }
 
+void Bamboo::TextureManager::Initialize()
+{
+    ilInit();
+
+    stringstream puffer;	//for debugging output
+    string puffer2;		//for debugging output
+
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &m_iMaxTextureUnits);	    //ask opengl how many texture units are available
+
+    puffer << m_iMaxTextureUnits;					    //for debugging output, transform integer to string, read integer in stringstream
+    puffer >> puffer2;						    //for debugging output, transform integer to string, write stringstream to string
+
+
+    for (int a=0; a < m_iMaxTextureUnits; a++)			    //push them all in the free_units queue
+            m_lFreeUnits.push_back(a);
+
+    Logger::debug() << puffer2 << " texture units available" << Logger::endl;
+
+    m_bDevIL_Initialized = true;
+
+    Logger::debug() << "DevIL initialized" << Logger::endl;
+}
+
 bool Bamboo::TextureManager::LoadTexture(std::string sTextureName,
                                          std::string sFilename,
                                          bool bAlreadyGammaCorrected,
@@ -26,25 +49,7 @@ bool Bamboo::TextureManager::LoadTexture(std::string sTextureName,
 {
 	if (m_bDevIL_Initialized == false)
 	{
-		ilInit();
-
-		stringstream puffer;	//for debugging output
-		string puffer2;		//for debugging output
-
-		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &m_iMaxTextureUnits);	    //ask opengl how many texture units are available
-
-		puffer << m_iMaxTextureUnits;					    //for debugging output, transform integer to string, read integer in stringstream
-		puffer >> puffer2;						    //for debugging output, transform integer to string, write stringstream to string
-
-
-                for (int a=0; a < m_iMaxTextureUnits; a++)			    //push them all in the free_units queue
-			m_lFreeUnits.push_back(a);
-
-		Logger::debug() << puffer2 << " texture units available" << Logger::endl;
-
-		m_bDevIL_Initialized = true;
-
-		Logger::debug() << "DevIL initialized" << Logger::endl;
+            Initialize();
 	}
 
 	Logger::debug() << "try to load texture from \"" << sFilename << "\"" << Logger::endl;
@@ -208,6 +213,9 @@ Bamboo::TextureManager *Bamboo::TextureManager::instance()
 
 GLuint Bamboo::TextureManager::GetFreeUnit()
 {
+    if (m_bDevIL_Initialized == false)
+        Initialize();
+
     GLuint nFreeUnit = m_lFreeUnits.front();	    //get first free unit
 
     m_lFreeUnits.pop_front();			    //remove unit from free_units queue

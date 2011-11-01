@@ -62,7 +62,7 @@ void main()
     float Z = texture2D(texture3, my_Texcoord.st).r;    // depth found in Z-Buffer
 
     // compute a Circle of Confusion size based on the Depth
-    blurlevel = clamp(abs(Z*1.015*100-98), 0.0, 3.0) * 0.4;
+    blurlevel = clamp(abs(Z*1.015*100-98), 0.0, 3.0) * 1.0;
 
     vec4 sceneColor = PoissonFilter(texture1, my_Texcoord.st, blurlevel);
     //vec4 sceneColor = texture2D(texture1, my_Texcoord.st);

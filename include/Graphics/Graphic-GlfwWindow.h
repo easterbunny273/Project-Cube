@@ -1,5 +1,7 @@
 #include "Graphic.h"
 
+#ifdef GLFW
+
 #ifndef __GRAPHIC_GLFWWINDOW_HEADER
 #define __GRAPHIC_GLFWWINDOW_HEADER
 
@@ -61,4 +63,6 @@ private:
     //@}
 };
 
-#endif
+#endif //__GRAPHIC_GLFWWINDOW_HEADER
+
+#endif // GLFW

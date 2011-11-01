@@ -58,6 +58,8 @@ public:
     /*! \brief Constructor */
     TextureManager();
 
+    void Initialize();
+
     /*! \brief Returns the singelton instance */
     static TextureManager *instance();
 

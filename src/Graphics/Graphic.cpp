@@ -28,9 +28,9 @@
 #include "Graphics/SceneObjects/ISceneObject.h"
 #include "Graphics/Graphic.h"
 
-#include "Events.h"
+//#include "Events.h"
 
-#include "MainApp.h"
+//#include "MainApp.h"
 
 using namespace std;
 
@@ -44,7 +44,7 @@ Bamboo * Bamboo::s_pInstance = NULL;
 Bamboo::Bamboo()
 {
     m_pShaderManager = new ShaderManager();
-    m_pTextureManager = new TextureManager();
+    m_pTextureManager = NULL;
 
     s_pInstance = this;
 }
@@ -88,14 +88,17 @@ Bamboo::Camera::Camera()
     m_bActive = false;
     m_m4ProjectionMatrix = glm::mat4();
 
-    m_fRotationHorizontal = 180;
-    m_fRotationVertical = 0;
+    m_fRotationHorizontal = 160;
+    m_fRotationVertical = -45;
+    m_v3CameraPosition = glm::vec3(0.0f, 2.0f, 0.0f);
+    m_v3MoveVector = glm::vec3(50.0f, 100.0f, -100.1f);
+
 
     // register for camera movement events
-    EventManager *pEventManager = MainApp::GetInstance()->GetEventManager();
+    /*EventManager *pEventManager = MainApp::GetInstance()->GetEventManager();
     assert (pEventManager != NULL);
 
-    pEventManager->RegisterEventListener(this, CameraMovementEvent::EventType());
+    pEventManager->RegisterEventListener(this, CameraMovementEvent::EventType());*/
 }
 
 /****************************************************************
@@ -246,13 +249,19 @@ Bamboo::ShaderManager * Bamboo::GetShaderManager()
   *************************************************************** */
 Bamboo::TextureManager * Bamboo::GetTextureManager()
 {
+    if (m_pTextureManager == NULL)
+    {
+        m_pTextureManager = new TextureManager();
+        m_pTextureManager->Initialize();
+    }
+
     // TODO: should we use the texture manager as a singelton or as a member of the graphics class?
     return m_pTextureManager;
 }
 
 /****************************************************************
   *************************************************************** */
-bool Bamboo::Camera::OnEvent(std::shared_ptr<EventManager::IEvent> spEvent)
+/*bool Bamboo::Camera::OnEvent(std::shared_ptr<EventManager::IEvent> spEvent)
 {
     // only accept CameraMovementEvent atm
     assert (spEvent->GetEventType() == CameraMovementEvent::EventType());
@@ -278,7 +287,7 @@ bool Bamboo::Camera::OnEvent(std::shared_ptr<EventManager::IEvent> spEvent)
 	else
 	    assert (!"no if condition fired");
     }
-}
+}*/
 
 int Bamboo::AddRenderLoop(std::shared_ptr<Bamboo::IRenderTarget> spRenderTarget,
                              std::shared_ptr<Bamboo::Camera> spCamera,

@@ -19,10 +19,10 @@
 #include <glm/glm.hpp>
 
 // settings class
-#include "Settings.h"
+//#include "Settings.h"
 
 // eventmanager
-#include "EventManager.h"
+//#include "EventManager.h"
 
 // forward declarations
 class SceneObject_RenderTarget;
@@ -53,7 +53,12 @@ public:
     /*! \name Nested classes */
     //@{
         /// forward declarations
+#ifdef GLFW
         class GlfwWindow;
+#endif
+#ifdef QT_OPENGL_LIB
+        class QtWidgetWrapper;
+#endif
         class Camera;
 
         class ISceneObject;
@@ -87,12 +92,6 @@ public:
             virtual void ItlHandleMouseButton(int iButton, int iAction) = 0;
         };
 
-        class QtWidgetWrapper : public IRenderTarget
-        {
-            // to be done ...
-            // this class is supposed to use an existing QT widget as the render target
-        };
-
         class Scene
         {
         public:
@@ -114,7 +113,7 @@ public:
 
     /*! \name Nested classes */
     //@{
-	class Camera : public EventManager::IEventListener
+        class Camera //: public EventManager::IEventListener
         {
         public:
             /*! \name Construction / Destruction */
@@ -134,7 +133,7 @@ public:
 
 	    /*! \name EventManager::IEventListener interface */
 	    //@{
-		virtual bool OnEvent(std::shared_ptr<EventManager::IEvent> spEvent);
+                //virtual bool OnEvent(std::shared_ptr<EventManager::IEvent> spEvent);
 	    //@}
 
 

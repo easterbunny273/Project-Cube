@@ -7,7 +7,7 @@
 #include "Graphics/RenderNodes/RenderNode_AssimpImport.h"
 #include "Graphics/RenderNodes/RenderNode_RenderPass.h"
 #include "Graphics/RenderNodes/RenderNode_BoundingBox.h"
-#include "Settings.h"
+//#include "Settings.h"
 #include <assimp/assimp.hpp>
 #include <assimp/aiPostProcess.h>
 #include <assimp/aiScene.h>
