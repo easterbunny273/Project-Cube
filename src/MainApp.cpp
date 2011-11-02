@@ -1,8 +1,9 @@
 #include "MainApp.h"
 #include "Logger.h"
-#include "Graphics/Graphic-GlfwWindow.h"
-#include "Graphics/SceneObjects/LoadedModel.h"
-#include "Graphics/SceneObjects/Cube.h"
+#include "Graphic-GlfwWindow.h"
+#include "SceneObjects/LoadedModel.h"
+#include "SceneObjects/Cube.h"
+#include "Graphic.h"
 #include "GL/glfw.h"
 
 // initialize singelton ptr to NULL

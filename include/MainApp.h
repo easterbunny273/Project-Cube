@@ -12,7 +12,8 @@
 #include "Settings.h"
 #include "Logger.h"
 #include "EventManager.h"
-#include "Graphics/Graphic.h"
+#include "GL/glfw.h"
+#include "Graphic.h"
 #include "DummyGame/Game.h"
 
 // include lua libs as explicit C-functions, because
