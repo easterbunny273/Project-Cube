@@ -6,6 +6,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Graphic.h"
+#include "Camera.h"
 #include "ShaderManager.h"
 #include "RenderNodes/IRenderNode.h"
 #include "RenderNodes/RenderNode_BoundingBox.h"
@@ -83,7 +84,7 @@ void Bamboo::IRenderNode::ItlSendLightPosition()
 }
 
 
-void Bamboo::IRenderNode::SetLightSourceForShadowMapping(std::shared_ptr<Bamboo::Camera> spShadowCaster, bool bRecursivelySetForChildren)
+void Bamboo::IRenderNode::SetLightSourceForShadowMapping(std::shared_ptr<Bamboo::ICamera> spShadowCaster, bool bRecursivelySetForChildren)
 {
     m_spShadowCaster = spShadowCaster;
 

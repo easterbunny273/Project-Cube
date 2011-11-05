@@ -9,6 +9,26 @@ class Bamboo::GlfwWindow : public IRenderTarget
 {
 
 public:
+    /*! \name Public interfaces */
+    //@{
+        /// Interface for event listener, which receives the input events which happened in a glfw window
+        class IInputEventListener
+        {
+        public:
+            /// handles keyboard events and sends signals to listener
+            virtual void ItlHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState) = 0;
+
+            /// handles mouse movements and sends signals to the listener
+            virtual void ItlHandleMousePos(int iX, int iY) = 0;
+
+            /// handles mouse wheel input events and sends signals to the listener
+            virtual void ItlHandleMouseWheel(int iPosition) = 0;
+
+            /// handles mouse button events and sends signals to the listener
+            virtual void ItlHandleMouseButton(int iButton, int iAction) = 0;
+        };
+    //@}
+
     /*! \name Construction / Destruction */
     //@{
         static std::shared_ptr<GlfwWindow> Create(int iWidth, int iHeight, std::string sWindowTitle);
@@ -51,10 +71,10 @@ private:
 
     /*! \name Private members */
     //@{
-        std::shared_ptr<Bamboo::IInputEventListener>   m_spInputEventListener;
-        int                                             m_iWidth;
-        int                                             m_iHeight;
-        std::string                                     m_sWindowTitle;
+        std::shared_ptr<IInputEventListener>   m_spInputEventListener;
+        int                                    m_iWidth;
+        int                                    m_iHeight;
+        std::string                            m_sWindowTitle;
     //@}
 
     /*! \name Static members */

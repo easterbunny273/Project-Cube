@@ -77,7 +77,7 @@ public:
     //@}
 
 
-    void SetLightSourceForShadowMapping(std::shared_ptr<Bamboo::Camera> spShadowCaster, bool bSetForChildren = true);
+    void SetLightSourceForShadowMapping(std::shared_ptr<Bamboo::ICamera> spShadowCaster, bool bSetForChildren = true);
 
     /*! \name Interfaces */
     //@{
@@ -179,7 +179,7 @@ protected:
 
         std::vector<std::shared_ptr<Bamboo::IRenderNode> > m_vChildren;
 
-        std::shared_ptr<Bamboo::Camera> m_spShadowCaster;
+        std::shared_ptr<Bamboo::ICamera> m_spShadowCaster;
 
 	bool m_bHasChildren;
 

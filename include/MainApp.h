@@ -12,8 +12,8 @@
 #include "Settings.h"
 #include "Logger.h"
 #include "EventManager.h"
-#include "GL/glfw.h"
 #include "Graphic.h"
+#include "Graphic-GlfwWindow.h"
 #include "DummyGame/Game.h"
 
 // include lua libs as explicit C-functions, because
@@ -26,7 +26,7 @@ extern "C"
 
 #include <luabind/luabind.hpp>
 
-class MainApp
+class MainApp : public EventManager::IEventListener
 {
 public:
     /*! \name Access to the subsystems */
@@ -45,6 +45,11 @@ public:
 
 	// get app wide lua state
 	lua_State * GetLuaState();
+    //@}
+
+    /*! \name The MainApp gets the camera events and call the camera methods */
+    //@{
+        virtual bool OnEvent(std::shared_ptr<EventManager::IEvent> spEvent);
     //@}
 
     /*! \name Run methods */
@@ -66,7 +71,7 @@ public:
 private:
     /*! \name InputEventListener for the Graphic engine */
     //@{
-        class InputEventListener : public Bamboo::IInputEventListener
+        class InputEventListener : public Bamboo::GlfwWindow::IInputEventListener
         {
         public:
             /// handles keyboard events and sends signals to listener
@@ -106,6 +111,7 @@ private:
 	DummyGame *m_pGame;
 	lua_State * m_pLuaState;
         std::shared_ptr<InputEventListener> m_spInputEventListener;
+        std::shared_ptr<Bamboo::ICamera> m_spCamera;
     //@}
 
     /*! \name Static members */

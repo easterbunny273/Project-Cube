@@ -1,10 +1,13 @@
+#include "GL/glfw.h"
+
 #include "MainApp.h"
 #include "Logger.h"
 #include "Graphic-GlfwWindow.h"
 #include "SceneObjects/LoadedModel.h"
 #include "SceneObjects/Cube.h"
 #include "Graphic.h"
-#include "GL/glfw.h"
+#include "Camera.h"
+#include "Scene.h"
 
 // initialize singelton ptr to NULL
 MainApp * MainApp::s_pInstance = NULL;
@@ -89,12 +92,10 @@ void MainApp::StartGraphic_Test()
     spWindow->SetInputEventListener(m_spInputEventListener);
 
     // create camera
-    std::shared_ptr<Bamboo::Camera> spCamera(new Bamboo::Camera());
-    // set perspective projection
-    spCamera->SetPerspectiveProjection(45.0f, 1.33f, 0.01f, 100.0f);
+    m_spCamera = Bamboo::PerspectiveCamera::Create(45.0f, 1.33f, 0.01f, 100.0f, glm::vec3(), 0.0f, 0.0f);
 
     // create scene
-    std::shared_ptr<Bamboo::Scene> spScene = Bamboo::Scene::Create(spCamera);
+    std::shared_ptr<Bamboo::Scene> spScene = Bamboo::Scene::Create();
 
     // workaround - triggers initializing of graphic engine
     // todo: fix this.
@@ -110,7 +111,10 @@ void MainApp::StartGraphic_Test()
     spScene->AttachObject(spTable);
 
     // add render loop
-    GetGraphic()->AddRenderLoop(spWindow, spCamera, spScene);
+    GetGraphic()->AddRenderLoop(spWindow, m_spCamera, spScene);
+
+    // register itself as listener for camera events
+    GetEventManager()->RegisterEventListener(this, CameraMovementEvent::EventType());
 }
 
 void MainApp::Run()
@@ -292,5 +296,37 @@ void MainApp::InputEventListener::ItlHandleMouseButton(int iButton, int iAction)
         pEventManager->QueueEvent(InputMouseButtonEvent::Create(eMouseButton, InputMouseButtonEvent::EVENT_DOWN));
     else
         pEventManager->QueueEvent(InputMouseButtonEvent::Create(eMouseButton, InputMouseButtonEvent::EVENT_UP));
+    }
+}
+
+bool MainApp::OnEvent(std::shared_ptr<EventManager::IEvent> spEvent)
+{
+    std::shared_ptr<Bamboo::ICamera> spCamera = m_spCamera;
+
+    assert (spCamera);
+
+    // only accept CameraMovementEvent atm
+    assert (spEvent->GetEventType() == CameraMovementEvent::EventType());
+
+    std::shared_ptr<CameraMovementEvent> spMovementEvent = CameraMovementEvent::Cast(spEvent);
+    assert(spMovementEvent);
+
+    //if (m_bActive)
+    {
+        CameraMovementEvent::TMovementType eMovementType = spMovementEvent->GetMovementType();
+        float fValue = spMovementEvent->GetValue();
+
+        if (eMovementType == CameraMovementEvent::CAMERA_MOVE_X)
+            spCamera->AddToMoveVector(glm::vec3(fValue, 0.0f, 0.0f));
+        else if (eMovementType == CameraMovementEvent::CAMERA_MOVE_Y)
+            spCamera->AddToMoveVector(glm::vec3(0.0f, fValue, 0.0f));
+        else if (eMovementType == CameraMovementEvent::CAMERA_MOVE_Z)
+            spCamera->AddToMoveVector(glm::vec3(0.0f, 0.0f, fValue));
+        else if (eMovementType == CameraMovementEvent::CAMERA_ROTATE_X)
+            spCamera->RotateHorizontal(fValue);
+        else if (eMovementType == CameraMovementEvent::CAMERA_ROTATE_Y)
+            spCamera->RotateVertical(fValue);
+        else
+            assert (!"no if condition fired");
     }
 }
