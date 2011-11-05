@@ -11,10 +11,7 @@
 // stl includes
 #include <memory>
 #include <list>
-#include <string>
 #include <map>
-
-
 
 //#ifdef GLFW_VERSION_MAJOR
 #define GLFW
@@ -22,9 +19,6 @@
 
 // glm includes
 #include <glm/glm.hpp>
-
-// eventmanager
-#include "EventManager.h"
 
 // forward declarations
 class SceneObject_RenderTarget;

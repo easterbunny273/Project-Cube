@@ -5,6 +5,8 @@
 #ifndef __GRAPHIC_GLFWWINDOW_HEADER
 #define __GRAPHIC_GLFWWINDOW_HEADER
 
+#include <string>
+
 class Bamboo::GlfwWindow : public IRenderTarget
 {
 
