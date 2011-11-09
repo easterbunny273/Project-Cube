@@ -8,6 +8,8 @@
 #include "Graphic.h"
 #include "Camera.h"
 #include "Scene.h"
+#include "AssimpWrapper.h"
+#include "GeometryData.h"
 
 // initialize singelton ptr to NULL
 MainApp * MainApp::s_pInstance = NULL;
@@ -86,6 +88,18 @@ EventManager * MainApp::GetEventManager()
 
 void MainApp::StartGraphic_Test()
 {
+    std::shared_ptr<GeometryData::GenericObject> spObject = AssimpWrapper::LoadModel("models/freepool-ng-table.3ds");
+
+    for (int i=0; i < spObject->NumMeshes(); i++)
+    {
+        std::shared_ptr<GeometryData::GenericMesh> spMesh(spObject->GetMesh(i));
+
+        if (spMesh)
+        {
+            spMesh->Debug();
+        }
+    }
+
     // create glfw window
     std::shared_ptr<Bamboo::GlfwWindow> spWindow = Bamboo::GlfwWindow::Create(1024, 768, "Test");
     // set input event listener

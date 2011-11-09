@@ -75,16 +75,16 @@ Bamboo::RN_AssimpImport::RN_AssimpImport(std::string sFilename)
       // propably to request more postprocessing than we do in this example.
       const aiScene* scene = importer.ReadFile( sFilename,
 						aiProcess_CalcTangentSpace	|
-						aiProcess_ValidateDataStructure	|
-						aiProcess_Triangulate		|
-						aiProcess_PreTransformVertices	|
-						aiProcess_JoinIdenticalVertices	|
+                                                //aiProcess_ValidateDataStructure	|
+                                                //aiProcess_Triangulate		|
+                                                aiProcess_PreTransformVertices	|
+                                                //aiProcess_JoinIdenticalVertices	|
 						aiProcess_GenNormals		|
                                                 aiProcess_ImproveCacheLocality |
 						//aiProcess_FindInvalidData |
-						aiProcess_OptimizeMeshes |
-						aiProcess_OptimizeGraph  |
-                                                aiProcess_FindDegenerates |
+                                                //aiProcess_OptimizeMeshes |
+                                                //aiProcess_OptimizeGraph  |
+                                               // aiProcess_FindDegenerates |
 						aiProcess_SortByPType);
 
       // If the import failed, report it
@@ -142,16 +142,16 @@ Bamboo::RN_AssimpImport::RN_AssimpImport(std::string sFilename)
 	    material_data->fColorAmbient[3] = 1.0f;
 
 	    //get shininess and strength
-	    bool bOk4 = (AI_SUCCESS == mat->Get(AI_MATKEY_SHININESS, material_data->fShininess));
+           /* bool bOk4 = (AI_SUCCESS == mat->Get(AI_MATKEY_SHININESS, material_data->fShininess));
 
-	    bool bOk5 = (AI_SUCCESS == mat->Get(AI_MATKEY_SHININESS_STRENGTH, material_data->fShininess_Strength));
+            bool bOk5 = (AI_SUCCESS == mat->Get(AI_MATKEY_SHININESS_STRENGTH, material_data->fShininess_Strength));*/
 
 
-	 /*   assert (bOk1);
+            assert (bOk1);
             assert (bOk2);
             assert (bOk3);
-            assert (bOk4);
-	    assert (bOk5);*/
+      //      assert (bOk4);
+          //  assert (bOk5);
 
 	    //get texture
 	    //first, find texture. we allow only one texture per material

@@ -42,6 +42,7 @@ private:
         class RN_RenderPass;
         class RN_BoundingBox;
         class RN_AssimpImport;
+        class RN_Generic;
     //@}
 
 public:

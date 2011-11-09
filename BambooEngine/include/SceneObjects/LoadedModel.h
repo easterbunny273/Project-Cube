@@ -6,6 +6,8 @@
 #include "Graphic.h"
 #include "SceneObjects/ISceneObject.h"
 
+#include <string>
+
 class Bamboo::SO_LoadedModel : public Bamboo::ISceneObject
 {
 private:

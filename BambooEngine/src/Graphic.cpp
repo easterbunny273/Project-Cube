@@ -185,9 +185,10 @@ void Bamboo::ItlBuildRenderGraph(Bamboo::TItlRenderLoop &tRenderLoop)
 
         spRenderNode->SetGraphicCore(this);
 
-        spAntiAliasFBO->AddChild(spRenderNode);
+        //spAntiAliasFBO->AddChild(spRenderNode);
+        tRenderLoop.spRenderGraph->AddChild(spRenderNode);
 
     }
 
-    tRenderLoop.spRenderGraph->AddChild(spAntiAliasPostEffect);
+   // tRenderLoop.spRenderGraph->AddChild(spAntiAliasPostEffect);
 }
