@@ -24,7 +24,7 @@ public:
         static const char * DATA_NORMALS;
         static const char * DATA_TANGENTS;
         static const char * DATA_BITANGENTS;
-        static const char * DATA_TEXCOORDS0;
+        static const char * DATA_TEXCOORDS[8];
 
         static const char * DATA_MATERIAL_COLOR_DIFFUSE;
         static const char * DATA_MATERIAL_COLOR_SPECULAR;
@@ -43,12 +43,15 @@ public:
 
         void    SetAttribute(const char *szName, unsigned int nNumEntries, float * pArray);
         void    SetIndices(unsigned int nNumEntries, unsigned int * pArray);
+        void    SetTexturePath(std::string sTexturePath);
 
         void Debug();
 
     private:
         std::map<std::string, float *>      m_mAttributeMap;
         std::map<std::string, unsigned int> m_mAttributeSizes;
+
+        std::string         m_sTexturePath;
 
         unsigned int *m_pnIndices;
         unsigned int m_nNumIndices;

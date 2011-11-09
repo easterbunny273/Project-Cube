@@ -15,7 +15,7 @@ const char * GeometryData::GenericData::DATA_NORMALS    = "normals";
 const char * GeometryData::GenericData::DATA_COLORS     = "colors";
 const char * GeometryData::GenericData::DATA_TANGENTS   = "tangents";
 const char * GeometryData::GenericData::DATA_BITANGENTS = "bitangents";
-const char * GeometryData::GenericData::DATA_TEXCOORDS0 = "texcoords0";
+const char * GeometryData::GenericData::DATA_TEXCOORDS[] = { "texcoords0", "texcoords1", "texcoords2", "texcoords3", "texcoords4", "texcoords5", "texcoords6", "texcoords7" };
 const char * GeometryData::GenericData::DATA_MATERIAL_COLOR_DIFFUSE         = "material_color_diffuse";
 const char * GeometryData::GenericData::DATA_MATERIAL_COLOR_SPECULAR        = "material_color_specular";
 const char * GeometryData::GenericData::DATA_MATERIAL_SHININESS             = "material_shininess";
@@ -153,9 +153,16 @@ void GeometryData::GenericMesh::Debug()
 
         float *pArray = iter->second;
 
-        for (int i=0; i < m_mAttributeSizes[iter->first]; i++)
+        for (unsigned int i=0; i < m_mAttributeSizes[iter->first]; i++)
         {
             std::cout << pArray[i] << " ";
         }
     }
+}
+
+void GeometryData::GenericMesh::SetTexturePath(std::string sTexturePath)
+{
+    assert (m_sTexturePath.empty());
+
+    m_sTexturePath = sTexturePath;
 }
