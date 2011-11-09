@@ -6,6 +6,7 @@
 #include <string>
 #include <sstream>
 #include <memory>
+#include <vector>
 
 //#include <glm/gtc/matrix_projection.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -29,7 +30,9 @@ Bamboo::GlfwWindow::GlfwWindow()
   *************************************************************** */
 std::shared_ptr<Bamboo::GlfwWindow> Bamboo::GlfwWindow::Create(int iWidth, int iHeight, std::string sWindowTitle)
 {
-    bool m_bUseOpenGL_4_1 = false; //TODO: remove
+    std::vector<int> viMajorVersions = { 4, 4, 3, 3, 3, 2, 2, 1 };
+    std::vector<int> viMinorVersions = { 2, 1, 3, 2, 0, 1, 0, 5 };
+    std::vector<int> viCoreProfileFlag = { GLFW_OPENGL_CORE_PROFILE, GLFW_OPENGL_COMPAT_PROFILE, 0 };
 
     std::shared_ptr<GlfwWindow> spNewWindow(new GlfwWindow());
     spNewWindow->m_iWidth = iWidth;
@@ -55,30 +58,41 @@ std::shared_ptr<Bamboo::GlfwWindow> Bamboo::GlfwWindow::Create(int iWidth, int i
             Logger::fatal() << "glfw initialization failed" << Logger::endl;
 
 
+    bool bWindowCreated = false;
 
-
-    // Set flags so GLFW creates the desired OpenGL context
-    if (m_bUseOpenGL_4_1)
+    for (unsigned int iProfile = 0; iProfile < viCoreProfileFlag.size(); iProfile++)
+    for (unsigned int i=0; !bWindowCreated && i < viMajorVersions.size(); i++)
     {
-        glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 4);
-        glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 1);
-    }
-    else
-    {
-        // else we want opengl 3.3
-        glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
-        glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 3);
+        glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, viMajorVersions[i]);
+        glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, viMinorVersions[i]);
+
+        glfwOpenWindowHint(GLFW_OPENGL_PROFILE, viCoreProfileFlag[iProfile]);
+
+        std::string sProfileName;
+
+        if (viCoreProfileFlag[iProfile] == GLFW_OPENGL_CORE_PROFILE)
+            sProfileName = "CORE";
+        else if (viCoreProfileFlag[iProfile] == GLFW_OPENGL_COMPAT_PROFILE)
+            sProfileName = "COMPAT";
+        else
+            sProfileName = "*";
+
+
+        Logger::debug() << "Try opening context " <<
+                           viMajorVersions[i] << "." << viMinorVersions[i]
+                        << " with " << sProfileName << " profile" << Logger::endl;
+
+        bWindowCreated = (glfwOpenWindow(iWidth, iHeight, 8,8,8,8, 24, 8, GLFW_WINDOW) == GL_TRUE);
     }
 
-    glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    if (!bWindowCreated)
+        Logger::fatal() << "No opengl context could be created" << Logger::endl;
+
+    Logger::debug() << "Opened context with OpenGL Version " << (char *) glGetString(GL_VERSION) << Logger::endl;
 
     //Activate 4x antialiasing
     //glfwOpenWindowHint(GLFW_FSAA_SAMPLES, 4);
 
-    if (glfwOpenWindow(iWidth, iHeight, 8,8,8,8, 24, 8, GLFW_WINDOW) != GL_TRUE)
-            Logger::fatal() << "failed to initialize OpenGL window" << Logger::endl;
-    else
-            Logger::debug() << "OpenGL window initialized" << Logger::endl;
 
     // set input handling callback methods
     glfwSetKeyCallback(Bamboo::GlfwWindow::ItlStaticHandleKeyboardEvent);
@@ -101,29 +115,17 @@ std::shared_ptr<Bamboo::GlfwWindow> Bamboo::GlfwWindow::Create(int iWidth, int i
     else
             Logger::debug() << "glew initialized" << Logger::endl;
 
-    Logger::debug() << "Opened context with OpenGL Version " << (char *) glGetString(GL_VERSION) << Logger::endl;
+    Logger::debug() << "Got context with OpenGL Version " << (char *) glGetString(GL_VERSION) << Logger::endl;
 
-    // check if we got the right version
-    if ((GLEW_VERSION_3_3 && !m_bUseOpenGL_4_1) ||
-        (GLEW_VERSION_4_1 && m_bUseOpenGL_4_1))
-    {
-            GLint profile;
+    GLint profile;
 
-            // check if we have a core-profile
-            glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &profile);
+    // check if we have a core-profile
+    glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &profile);
 
-            if (profile == GL_CONTEXT_CORE_PROFILE_BIT)
-                    Logger::debug() << "got rendering context with core profile" << Logger::endl;
-            else
-                    Logger::fatal() << "got rendering context with compatibility profile instead of core profile" << Logger::endl;
-    }
+    if (profile == GL_CONTEXT_CORE_PROFILE_BIT)
+            Logger::debug() << "with core profile" << Logger::endl;
     else
-    {
-        if (m_bUseOpenGL_4_1)
-            Logger::info() << "The graphics engine was configured to use OpenGL 4. Maybe you should change the configuration to 3.3, see config/core_config.xml" << Logger::endl;
-
-        Logger::fatal() << "The window could not be created. The wanted OpenGL version was not supported by the system." << Logger::endl;
-    }
+            Logger::debug() << "with compatibility profile" << Logger::endl;
 
     return spNewWindow;
 }
