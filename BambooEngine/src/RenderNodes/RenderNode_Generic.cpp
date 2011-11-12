@@ -6,6 +6,10 @@
 //class specific
 #include "RenderNodes/RenderNode_Generic.h"
 
+GeometryData::TextureType tTextureTypes[4] = { GeometryData::TextureNames::ALBEDO,
+                                               GeometryData::TextureNames::NORMAL,
+                                               GeometryData::TextureNames::SPECULAR,
+                                               GeometryData::TextureNames::DISPLACE };
 
 Bamboo::RN_Generic::RN_Generic(std::shared_ptr<GeometryData::GenericObject> spObject)
     : m_pnVertexArrayObjects(NULL),
@@ -14,27 +18,66 @@ Bamboo::RN_Generic::RN_Generic(std::shared_ptr<GeometryData::GenericObject> spOb
       m_pvsAttributeNames(NULL),
       m_pvnAttributeOffsets(NULL),
       m_pnNumIndices(NULL),
+      m_psColorTexture(NULL),
+      m_psNormalTexture(NULL),
+      m_psSpecularTexture(NULL),
+      m_psDisplaceTexture(NULL),
       m_spObject(spObject)
 {
     ItlLoadShader();
     ItlPrepareGLBuffers();
+    ItlPrepareTextures();
 }
 
 Bamboo::RN_Generic::~RN_Generic()
 {
     ItlDeleteBuffers();
+    ItlDeleteTextures();
 }
 
 void Bamboo::RN_Generic::ItlRender()
 {
+    TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
+    assert (pTextureManager != NULL);
+
+    ShaderManager *pShaderManager = ItlGetGraphicCore()->GetShaderManager();
+    assert (pShaderManager != NULL);
+
+    std::vector<std::string> vUsedTextures;
+
     for (unsigned int nMesh = 0; nMesh < m_nNumMeshes; nMesh++)
     {
+        for (int i = 0; i < 4; i++)
+        {
+            // if we have a specific texture type
+            if (m_vmTextureInformations[nMesh].find(tTextureTypes[i]) != m_vmTextureInformations[nMesh].end())
+            {
+                // look if shader wants the texture
+                GLint iLocation = pShaderManager->GetUniform(tTextureTypes[i]);
+
+                if (iLocation != -1)
+                {
+                    std::shared_ptr<GeometryData::GenericMesh> spMesh(m_spObject->GetMesh(nMesh));
+                    std::string sTexturePath(spMesh->GetTexturePath(tTextureTypes[i]));
+
+                    GLuint iUsedUnit = pTextureManager->UseTexture(sTexturePath);
+
+                    glUniform1i(iLocation, iUsedUnit);
+
+                    vUsedTextures.push_back(sTexturePath);
+                }
+            }
+        }
+
         glBindVertexArray(m_pnVertexArrayObjects[nMesh]);
         glBindBuffer(GL_ARRAY_BUFFER, m_pnVertexBufferObjects[nMesh]);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_pnIndexBufferObjects[nMesh]);
 
         glDrawElements(GL_TRIANGLES, m_pnNumIndices[nMesh], GL_UNSIGNED_INT, (const GLvoid *) 0 );
     }
+
+    for (int i=0; i < vUsedTextures.size(); i++)
+        pTextureManager->UnuseTexture(vUsedTextures[i]);
 }
 
 
@@ -73,10 +116,8 @@ bool Bamboo::RN_Generic::ItlTestSkipRendering()
 
 void Bamboo::RN_Generic::ItlPrepareGLBuffers()
 {
-    // first, create the buffers
-
     // delete old buffers, if not NULL
-
+    ItlDeleteBuffers();
 
     // alloc memory for arrays
     assert (m_pnVertexBufferObjects == NULL);
@@ -94,6 +135,7 @@ void Bamboo::RN_Generic::ItlPrepareGLBuffers()
     m_pvsAttributeNames = new std::vector<std::string>[m_nNumMeshes];
     m_pvnAttributeOffsets = new std::vector<unsigned int>[m_nNumMeshes];
     m_pnNumIndices = new unsigned int [m_nNumMeshes];
+    m_vmTextureInformations.resize(m_nNumMeshes);
 
     // generate/allocate opengl ids for buffers
 
@@ -108,7 +150,7 @@ void Bamboo::RN_Generic::ItlPrepareGLBuffers()
         std::shared_ptr<GeometryData::GenericMesh> spMesh(m_spObject->GetMesh(nMesh));
         assert (spMesh);
 
-        //GeometryData::GenericMesh *spMesh;
+       // GeometryData::GenericMesh *spMesh;
 
         std::vector<GLfloat> vBufferData;
         std::vector<unsigned int> vOffsets;
@@ -124,7 +166,21 @@ void Bamboo::RN_Generic::ItlPrepareGLBuffers()
             for (unsigned int j=0; j < vAttributeList[i].second.size(); j++)
             {
                 vBufferData.push_back(vAttributeList[i].second[j]);
+            }
+        }
 
+        for (unsigned int i=0; i < 4; i++)
+        {
+            float * pfTexCoords = spMesh->GetTextureCoords(tTextureTypes[i]);
+
+            if (pfTexCoords != NULL)
+            {
+                m_vmTextureInformations[nMesh][tTextureTypes[i]] = vBufferData.size();
+
+                for (unsigned int j=0; j < spMesh->NumVertices() * 2; j++)
+                {
+                    vBufferData.push_back(pfTexCoords[j]);
+                }
             }
         }
 
@@ -191,6 +247,7 @@ void Bamboo::RN_Generic::ItlPrepareVAO()
         glBindBuffer(GL_ARRAY_BUFFER, m_pnVertexBufferObjects[nMesh]);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_pnIndexBufferObjects[nMesh]);
 
+        // set attrib pointers
         for (unsigned int i=0; i < m_pvsAttributeNames[nMesh].size(); i++)
         {
             std::string sCurrentAttributeName(m_pvsAttributeNames[nMesh][i]);
@@ -205,6 +262,26 @@ void Bamboo::RN_Generic::ItlPrepareVAO()
                 glEnableVertexAttribArray(l_current_attribute);
             }
         }
+
+        // set texcoords pointers
+        for (auto iter = m_vmTextureInformations[nMesh].begin(); iter != m_vmTextureInformations[nMesh].end(); iter++)
+        {
+            std::string sCurrentAttributeName(iter->first);
+
+            sCurrentAttributeName.append("_coords");
+
+            Logger::debug() << sCurrentAttributeName << Logger::endl;
+
+            const GLint l_current_attribute (ItlGetGraphicCore()->GetShaderManager()->GetAttribute(sCurrentAttributeName));
+
+            unsigned int nOffset = iter->second;
+
+            if (l_current_attribute != -1)
+            {
+                glVertexAttribPointer(l_current_attribute, 2, GL_FLOAT, GL_FALSE, 0, (const GLvoid *)(nOffset * sizeof(GLfloat)));
+                glEnableVertexAttribArray(l_current_attribute);
+            }
+        }
     }
 
     pShaderManager->PopActiveShader();
@@ -216,4 +293,58 @@ void Bamboo::RN_Generic::ItlLoadShader()
     assert (pShaderManager != NULL);
 
     pShaderManager->AddShader("GenericShader1", new Shader("BambooEngine/shaders/generic1.vs", "BambooEngine/shaders/generic1.fs"));
+}
+
+void Bamboo::RN_Generic::ItlPrepareTextures()
+{
+    TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
+    assert (pTextureManager != NULL);
+
+    assert (m_psColorTexture == NULL);
+    m_psColorTexture    = new std::string[m_nNumMeshes];
+    m_psNormalTexture   = new std::string[m_nNumMeshes];
+    m_psSpecularTexture = new std::string[m_nNumMeshes];
+    m_psDisplaceTexture = new std::string[m_nNumMeshes];
+
+    for (unsigned int nMesh = 0; nMesh < m_nNumMeshes; nMesh++)
+    {
+        std::shared_ptr<GeometryData::GenericMesh> spMesh(m_spObject->GetMesh(nMesh));
+
+        std::string * psTargetStrings [4] = { &m_psColorTexture[nMesh], &m_psNormalTexture[nMesh], &m_psSpecularTexture[nMesh], &m_psDisplaceTexture[nMesh] };
+        bool bGammaCorrected[4] = { true, false, false, false };
+
+        for (int i=0; i < 4; i++)
+        {
+            *(psTargetStrings[i]) = spMesh->GetTexturePath(tTextureTypes[i]);
+
+            if (psTargetStrings[i]->empty() == false)
+            {
+                pTextureManager->LoadTexture(*(psTargetStrings[i]), std::string("textures/models/") + *(psTargetStrings[i]), bGammaCorrected[i]);
+            }
+        }
+    }
+
+
+}
+
+void Bamboo::RN_Generic::ItlDeleteTextures()
+{
+    TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
+    assert (pTextureManager != NULL);
+
+    assert (m_psColorTexture != NULL);
+    delete[] m_psColorTexture;
+    m_psColorTexture = NULL;
+
+    assert (m_psNormalTexture != NULL);
+    delete[] m_psNormalTexture;
+    m_psNormalTexture = NULL;
+
+    assert (m_psSpecularTexture != NULL);
+    delete[] m_psSpecularTexture;
+    m_psSpecularTexture = NULL;
+
+    assert (m_psDisplaceTexture != NULL);
+    delete[] m_psDisplaceTexture;
+    m_psDisplaceTexture = NULL;
 }

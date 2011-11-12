@@ -343,4 +343,6 @@ bool MainApp::OnEvent(std::shared_ptr<EventManager::IEvent> spEvent)
         else
             assert (!"no if condition fired");
     }
+
+    return true;
 }

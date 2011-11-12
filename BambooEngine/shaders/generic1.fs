@@ -17,8 +17,11 @@ in vec3 my_ObjPosition;
 in vec3 my_EyeDir;
 in vec3 my_Normal;
 in vec4 my_ScreenPosition;
+in vec3 my_Color;
+
+uniform sampler2D color_texture;
 
 void main(void)
 {
-   out_Color = vec4(my_Normal, 1.0);
+   out_Color = vec4(texture(color_texture, my_Texcoord.xy).rgb, 1.0);
 }

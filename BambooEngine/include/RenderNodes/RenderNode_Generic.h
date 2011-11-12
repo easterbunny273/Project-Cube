@@ -58,9 +58,16 @@ protected:
     //@}
 
 private:
+
+
     /*! \name Internal types */
     //@{
-
+//    struct TItlTextureInformation
+//    {
+//        GeometryData::TextureType   tTextureType;
+//        std::string                 sTextureName;
+//        unsigned int                nVBOOffset;
+//    };
     //@}
 
     /*! \name Internal helper methods */
@@ -68,6 +75,8 @@ private:
         void ItlLoadShader();
         void ItlDeleteBuffers();
         void ItlPrepareGLBuffers();
+        void ItlPrepareTextures();
+        void ItlDeleteTextures();
         void ItlPrepareVAO();
     //@}
 
@@ -80,8 +89,19 @@ private:
 
     std::vector<std::string> * m_pvsAttributeNames;
     std::vector<unsigned int> * m_pvnAttributeOffsets;
+
+    //std::vector<std::vector<TItlTextureInformation> > m_vvTexureInformationPerMesh;
+    std::vector<std::map<std::string, unsigned int> > m_vmTextureInformations;
+
+
+
     unsigned int *m_pnNumIndices;
     unsigned int m_nNumMeshes;
+
+    std::string *m_psColorTexture;
+    std::string *m_psNormalTexture;
+    std::string *m_psSpecularTexture;
+    std::string *m_psDisplaceTexture;
 
     std::shared_ptr<GeometryData::GenericObject> m_spObject;
 

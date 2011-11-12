@@ -19,15 +19,15 @@ std::shared_ptr<GeometryData::GenericObject> AssimpWrapper::LoadModel(std::strin
     const aiScene* scene = importer.ReadFile(sFilename,
                                              aiProcess_CalcTangentSpace	|
                                              //aiProcess_ValidateDataStructure	|
-                                             //aiProcess_Triangulate		|
+                                             aiProcess_Triangulate		|
                                              aiProcess_PreTransformVertices	|
                                              //aiProcess_JoinIdenticalVertices	|
                                              aiProcess_GenNormals		|
                                              aiProcess_ImproveCacheLocality |
                                              //aiProcess_FindInvalidData |
-                                             //aiProcess_OptimizeMeshes |
+                                             aiProcess_OptimizeMeshes |
                                              //aiProcess_OptimizeGraph  |
-                                            // aiProcess_FindDegenerates |
+                                             aiProcess_FindDegenerates |
                                              aiProcess_SortByPType);
 
       // If the import failed, report it
@@ -59,7 +59,7 @@ std::shared_ptr<GeometryData::GenericObject> AssimpWrapper::LoadModel(std::strin
         aiMaterial *pUsedMaterial = scene->mMaterials[nMaterialIndex];
 
         // now fetch the material properties
-        aiColor3D acDiffuse (0.f,0.f,0.f);
+      /*  aiColor3D acDiffuse (0.f,0.f,0.f);
         bool bGotColorDiffuse = (AI_SUCCESS == pUsedMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, acDiffuse));
         float pfDiffuseColor[3] = { acDiffuse.r, acDiffuse.g, acDiffuse.b };
         if (bGotColorDiffuse)
@@ -79,7 +79,7 @@ std::shared_ptr<GeometryData::GenericObject> AssimpWrapper::LoadModel(std::strin
         float fShininessStrength = 0.0f;
         bool bGotShininessStrength = (AI_SUCCESS == pUsedMaterial->Get(AI_MATKEY_SHININESS_STRENGTH, fShininessStrength));
         if (bGotShininessStrength)
-            pGenericMesh->AddAttributeValues(GeometryData::GenericData::DATA_MATERIAL_SHININESS_STRENGTH, 1, &fShininessStrength);
+            pGenericMesh->AddAttributeValues(GeometryData::GenericData::DATA_MATERIAL_SHININESS_STRENGTH, 1, &fShininessStrength);*/
 
         assert (pMesh->HasPositions());
 
@@ -191,25 +191,66 @@ std::shared_ptr<GeometryData::GenericObject> AssimpWrapper::LoadModel(std::strin
 
         // get textures
 
-        bool bTextureFound = false;
-
         for (int iTextureType= (int) aiTextureType_DIFFUSE; iTextureType <= (int) aiTextureType_UNKNOWN; iTextureType++)
         {
             int iCount = pUsedMaterial->GetTextureCount((aiTextureType) iTextureType);
 
-            assert (iCount <= 1);
-
-            if (iCount == 1)
+            if (iCount >= 1)
             {
-                assert (bTextureFound == false);
-
                 aiString sTexturePath;
+
+                if (iCount > 1)
+                    Logger::debug() << "Model \"" << sFilename << "\" contains more than one texture per type. This is not supported yet." << Logger::endl;
 
                 pUsedMaterial->GetTexture((aiTextureType) iTextureType, 0, &sTexturePath);
 
-                pGenericMesh->SetTexturePath(std::string(sTexturePath.data));
+                GeometryData::TextureType tTextureType;
 
-                bTextureFound = true;
+                bool bIgnoreTexture = false;
+
+                // if the texture type is supported by GeometryData, set the corresponding type and path
+                switch (iTextureType)
+                {
+                case aiTextureType_DIFFUSE:
+                    tTextureType = GeometryData::TextureNames::ALBEDO;
+                    break;
+                case aiTextureType_NORMALS:
+                    tTextureType = GeometryData::TextureNames::NORMAL;
+                    break;
+                case aiTextureType_SPECULAR:
+                    tTextureType = GeometryData::TextureNames::SPECULAR;
+                    break;
+                case aiTextureType_DISPLACEMENT:
+                    tTextureType = GeometryData::TextureNames::DISPLACE;
+                    break;
+                default:
+                    bIgnoreTexture = true;
+                }
+
+                if (!bIgnoreTexture)
+                {
+                    std::vector<float> vTextureCoords;
+
+                    if (pMesh->GetNumUVChannels() > 1)
+                        Logger::error() << "Model \"" << sFilename << "\" contains more than one uv channel. That's not supported by the importer yet." << Logger::endl;
+
+                    if (pMesh->GetNumUVChannels() >= 1)
+                    {
+                        for (unsigned int nVertex=0; nVertex < pMesh->mNumVertices; nVertex++)
+                        {
+                            vTextureCoords.push_back(pMesh->mTextureCoords[0][nVertex].x);
+                            vTextureCoords.push_back(pMesh->mTextureCoords[0][nVertex].y);
+                        }
+
+                        pGenericMesh->SetTextureCoords(tTextureType, vTextureCoords.size(), &vTextureCoords[0]);
+                    }
+
+                    pGenericMesh->SetTexturePath(tTextureType, std::string(sTexturePath.data));
+                }
+                else
+                {
+                    Logger::debug() << "Model \"" << sFilename << "\" contains some types of textures which are not supported by the importer yet" << Logger::endl;
+                }
             }
         }
     }

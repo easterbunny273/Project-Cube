@@ -20,12 +20,25 @@ const char * GeometryData::GenericData::DATA_MATERIAL_COLOR_SPECULAR        = "m
 const char * GeometryData::GenericData::DATA_MATERIAL_SHININESS             = "material_shininess";
 const char * GeometryData::GenericData::DATA_MATERIAL_SHININESS_STRENGTH    = "material_shininess_strength";
 
-const char * GeometryData::TextureNames::DIFFUSE_COLOR = "color_texture";
+GeometryData::TextureType GeometryData::TextureNames::ALBEDO    = "color_texture";
+GeometryData::TextureType GeometryData::TextureNames::NORMAL    = "normal_texture";
+GeometryData::TextureType GeometryData::TextureNames::SPECULAR  = "specular_texture";
+GeometryData::TextureType GeometryData::TextureNames::DISPLACE  = "displace_texture";
+
+GeometryData::GenericMesh::GenericMesh()
+{
+    m_nNumVertices = 0;
+}
 
 void GeometryData::GenericMesh::AddAttributeValues(const char *szName,
                                              unsigned int nNumEntries,
                                              float *pArray)
 {
+    if (m_nNumVertices == 0)
+        m_nNumVertices = (nNumEntries / 3);
+    else
+        assert (m_nNumVertices == (nNumEntries / 3));
+
     // assert that this attribute was not set before
     assert (nNumEntries > 0);
 
@@ -130,11 +143,10 @@ void GeometryData::GenericMesh::Debug()
     }
 }
 
-void GeometryData::GenericMesh::SetTexturePath(std::string sTexturePath)
+void GeometryData::GenericMesh::SetTexturePath(TextureType tTextureType,
+                                               std::string sTexturePath)
 {
-    assert (m_sTexturePath.empty());
-
-    m_sTexturePath = sTexturePath;
+    m_mTexturePaths[std::string(tTextureType)] = sTexturePath;
 }
 
 unsigned int GeometryData::GenericMesh::NumAttributes() const
@@ -152,6 +164,53 @@ std::vector<std::pair<std::string, std::vector<float> > > GeometryData::GenericM
     }
 
     return vAttributeList;
+}
+
+std::string GeometryData::GenericMesh::GetTexturePath(GeometryData::TextureType tTextureType)
+{
+    // find the requested entry in m_mTexturePaths
+    auto iter = m_mTexturePaths.find(tTextureType);
+
+    // if found, return the texture path (the iter points to a pair of TextureType/TexturePath), else return an empty string
+    return (iter != m_mTexturePaths.end()) ? iter->second : std::string();
+}
+
+unsigned int GeometryData::GenericMesh::NumTexCoords() const
+{
+    assert (m_mTextureCoords.size() == m_mTexturePaths.size());
+
+    return m_mTextureCoords.size();
+}
+
+float * GeometryData::GenericMesh::GetTextureCoords(GeometryData::TextureType tTextureType)
+{
+    // find the requested entry in m_mTextureCoords
+    auto iter = m_mTextureCoords.find(tTextureType);
+
+    float *pReturn = NULL;
+
+    if (iter != m_mTextureCoords.end())
+        pReturn = &(iter->second[0]);
+
+    return pReturn;
+
+}
+
+void GeometryData::GenericMesh::SetTextureCoords(GeometryData::TextureType tTextureType, unsigned int nNumEntries, float *pArray)
+{
+    assert (nNumEntries > 0);
+    if (m_nNumVertices == 0)
+        m_nNumVertices = (nNumEntries / 2);
+    else
+        assert (m_nNumVertices == (nNumEntries / 2));
+
+    for (int i=0; i < nNumEntries; i++)
+        m_mTextureCoords[tTextureType].push_back(pArray[i]);
+}
+
+unsigned int GeometryData::GenericMesh::NumVertices() const
+{
+    return m_nNumVertices;
 }
 
 /*

@@ -20,6 +20,9 @@ in vec3 in_Position;
 in vec3 in_Normal;
 in vec3 in_Texcoord;
 in vec3 in_Tangent;
+in vec3 in_Color;
+in vec3 color_texture_coords;
+
 //in vec3 in_Bitangent;
 
 out vec3 my_Texcoord;
@@ -28,6 +31,7 @@ out vec3 my_EyeDir;
 out vec3 my_ObjPosition;
 out vec4 my_ScreenPosition;
 out vec3 my_Normal;
+out vec3 my_Color;
 
 void main(void)
 {
@@ -43,7 +47,7 @@ void main(void)
 
   vec3 tempVec = my_Lightpos - vVertex;
 
-  my_Texcoord = in_Texcoord;
+  my_Texcoord = color_texture_coords;
   my_EyeDir = vVertex;
 
   vec3 n = normalize(NormalMatrix * in_Normal);
@@ -63,5 +67,7 @@ void main(void)
 
   my_EyeDir = normalize(v);
 
-  my_Normal = n;
+  my_Normal = in_Normal;
+
+    my_Color = in_Color;
 }

@@ -16,6 +16,8 @@
 class GeometryData
 {
 public:
+    typedef const char * TextureType;
+
     class GenericData
     {
     public:
@@ -35,12 +37,16 @@ public:
     class TextureNames
     {
     public:
-        static const char * DIFFUSE_COLOR;
+        static TextureType ALBEDO;
+        static TextureType SPECULAR;
+        static TextureType NORMAL;
+        static TextureType DISPLACE;
     };
 
     class GenericMesh
     {
     public:
+        GenericMesh();
         ~GenericMesh();
 
         unsigned int * GetIndices(unsigned int &rnNumIndices);
@@ -51,9 +57,17 @@ public:
 
         void    AddAttributeValues(const char *szName, unsigned int nNumEntries, float * pArray);
         void    AddIndices(unsigned int nNumEntries, unsigned int * pArray);
-        void    SetTexturePath(std::string sTexturePath);
+        void    SetTexturePath(TextureType tTextureType, std::string sTexturePath);
+
+        float * GetTextureCoords(TextureType tTextureType);
+        void    SetTextureCoords(TextureType tTextureType, unsigned int nNumEntries, float *pArray);
+
+        std::string GetTexturePath(TextureType tTextureType);
 
         unsigned int NumAttributes() const;
+        unsigned int NumTexCoords() const;
+        unsigned int NumVertices() const;
+
         void Debug();
 
     private:
@@ -62,8 +76,9 @@ public:
         std::string         m_sTexturePath;
 
         std::map<std::string, std::vector<float> >  m_mTextureCoords;
-        std::map<std::string, unsigned int>         m_mTextures;
+        std::map<std::string, std::string>          m_mTexturePaths;
 
+        unsigned int m_nNumVertices;
 
         std::vector<unsigned int>   m_vIndices;
     };
