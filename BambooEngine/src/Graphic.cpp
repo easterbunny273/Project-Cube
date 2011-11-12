@@ -24,7 +24,6 @@
 #include "RenderNodes/RenderNode_Camera.h"
 #include "RenderNodes/RenderNode_FBO.h"
 #include "RenderNodes/RenderNode_Cube.h"
-#include "RenderNodes/RenderNode_AssimpImport.h"
 #include "SceneObjects/ISceneObject.h"
 #include "Graphic.h"
 #include "Scene.h"

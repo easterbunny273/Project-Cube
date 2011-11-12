@@ -3,7 +3,6 @@
 #include "RenderNodes/RenderNode_Camera.h"
 #include "RenderNodes/RenderNode_PostEffect.h"
 #include "RenderNodes/RenderNode_FBO.h"
-#include "RenderNodes/RenderNode_AssimpImport.h"
 #include "SceneObjects/ISceneObject.h"
 #include "SceneObjects/Cube.h"
 #include "SceneObjects/LoadedModel.h"
