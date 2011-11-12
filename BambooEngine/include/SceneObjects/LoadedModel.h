@@ -3,8 +3,11 @@
 #ifndef __bambooengine_loadedmodel_header
 #define __bambooengine_loadedmodel_header
 
+#include <string>
+
 #include "Graphic.h"
 #include "SceneObjects/ISceneObject.h"
+
 
 class Bamboo::SO_LoadedModel : public Bamboo::ISceneObject
 {
