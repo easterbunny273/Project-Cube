@@ -242,7 +242,7 @@ void Bamboo::RN_Cube::ItlRender()
     if (l_texture1 != -1)
 	glUniform1i(l_texture1, nUsedUnit);
 
-    glDrawArrays(GL_TRIANGLES, 0, 216);
+    glDrawArrays(GL_TRIANGLES, 0, 108);
 
     // release used texture unit
     TextureManager::instance()->UnuseTexture("cube_texture");
