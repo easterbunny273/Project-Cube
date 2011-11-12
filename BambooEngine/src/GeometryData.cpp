@@ -10,57 +10,45 @@
 #include <algorithm>
 #include <iostream>
 
-const char * GeometryData::GenericData::DATA_VERTICES   = "vertices";
-const char * GeometryData::GenericData::DATA_NORMALS    = "normals";
-const char * GeometryData::GenericData::DATA_COLORS     = "colors";
-const char * GeometryData::GenericData::DATA_TANGENTS   = "tangents";
-const char * GeometryData::GenericData::DATA_BITANGENTS = "bitangents";
-const char * GeometryData::GenericData::DATA_TEXCOORDS[] = { "texcoords0", "texcoords1", "texcoords2", "texcoords3", "texcoords4", "texcoords5", "texcoords6", "texcoords7" };
+const char * GeometryData::GenericData::DATA_VERTICES   = "in_Position";
+const char * GeometryData::GenericData::DATA_NORMALS    = "in_Normal";
+const char * GeometryData::GenericData::DATA_COLORS     = "in_Colors";
+const char * GeometryData::GenericData::DATA_TANGENTS   = "in_Tangents";
+const char * GeometryData::GenericData::DATA_BITANGENTS = "in_Bitangents";
 const char * GeometryData::GenericData::DATA_MATERIAL_COLOR_DIFFUSE         = "material_color_diffuse";
 const char * GeometryData::GenericData::DATA_MATERIAL_COLOR_SPECULAR        = "material_color_specular";
 const char * GeometryData::GenericData::DATA_MATERIAL_SHININESS             = "material_shininess";
 const char * GeometryData::GenericData::DATA_MATERIAL_SHININESS_STRENGTH    = "material_shininess_strength";
 
+const char * GeometryData::TextureNames::DIFFUSE_COLOR = "color_texture";
 
-void GeometryData::GenericMesh::SetAttribute(const char *szName,
+void GeometryData::GenericMesh::AddAttributeValues(const char *szName,
                                              unsigned int nNumEntries,
                                              float *pArray)
 {
     // assert that this attribute was not set before
-    assert (m_mAttributeMap.find(szName) == m_mAttributeMap.end());
-    assert (m_mAttributeSizes.find(szName) == m_mAttributeSizes.end());
-
     assert (nNumEntries > 0);
 
+    std::vector<float> * pfValues = &(m_mAttributeMap[szName]);
+
     // allocate new float array
-    float *pPuffer = new float[nNumEntries];
+    pfValues->reserve(pfValues->size() + nNumEntries);
 
     // copy data
     for (unsigned int i=0; i < nNumEntries; i++)
-        pPuffer[i] = pArray[i];
-
-    // insert data in maps
-    m_mAttributeMap[szName]     = pPuffer;
-    m_mAttributeSizes[szName]   = nNumEntries;
-
+        pfValues->push_back(pArray[i]);
 
     // TODO: the underlying data structure of GenericMesh should be changed
     // TODO: in a way that all values of one attribute, even from different
     // TODO: objects, are in a big float array (cache efficiency!), and the
     // TODO: GenericMesh holds pointers to the corresponding part of that big
     // TODO: array (so the interface must stay the same!)
-    // TODO: ----
-    // TODO: furthermore, in the current implementation, there may occur memory
-    // TODO: leaks if an attribute is set although it was set already, because
-    // TODO: the float* pointer is overwritten and the allocated memory is never
-    // TODO: destroyed
 }
 
 float * GeometryData::GenericMesh::GetAttribute(const char *szName,
                                                 unsigned int &rnNumEntries)
 {
     auto iterator_Attribute = m_mAttributeMap.find(szName);
-    auto iterator_NumEntries = m_mAttributeSizes.find(szName);
 
     bool bAttributeExists = ( iterator_Attribute != m_mAttributeMap.end());
 
@@ -68,10 +56,11 @@ float * GeometryData::GenericMesh::GetAttribute(const char *szName,
 
     if (bAttributeExists)
     {
-        assert (iterator_NumEntries != m_mAttributeSizes.end());
 
-        rnNumEntries = iterator_NumEntries->second;
-        pfReturn = iterator_Attribute->second;
+        std::vector<float> *pfVector = &(m_mAttributeMap[szName]);
+
+        rnNumEntries = pfVector->size();
+        pfReturn = &(pfVector->at(0));
     }
     else
         rnNumEntries = 0;
@@ -79,52 +68,33 @@ float * GeometryData::GenericMesh::GetAttribute(const char *szName,
     return pfReturn;
 }
 
-void GeometryData::GenericMesh::SetIndices(unsigned int nNumEntries,
+void GeometryData::GenericMesh::AddIndices(unsigned int nNumEntries,
                                            unsigned int *pArray)
 {
-    // assert that the indices were not set before
-    assert (m_pnIndices == NULL);
-
-    // set num of entries
-    m_nNumIndices = nNumEntries;
+    m_vIndices.reserve(m_vIndices.size() + nNumEntries);
 
     // allocate memory
-    m_pnIndices = new unsigned int [nNumEntries];
 
     // copy data
     for (unsigned int i=0; i < nNumEntries; i++)
-        m_pnIndices[i] = pArray[i];
+        m_vIndices.push_back(pArray[i]);
 
     // TODO: the underlying data structure of GenericMesh should be changed
     // TODO: in a way that all values of one attribute, even from different
     // TODO: objects, are in a big float array (cache efficiency!), and the
     // TODO: GenericMesh holds pointers to the corresponding part of that big
     // TODO: array (so the interface must stay the same!)
-    // TODO: ----
-    // TODO: furthermore, in the current implementation, there may occur memory
-    // TODO: leaks if the indices are set although they were set already, because
-    // TODO: the int* pointer is overwritten and the allocated memory is never
-    // TODO: destroyed
 }
 
 GeometryData::GenericMesh::~GenericMesh()
 {
-    // delete the attribute arrays (float *, each "iter" is a std::pair<std::string, float *>)
-    for (auto iter=m_mAttributeMap.begin(); iter != m_mAttributeMap.end(); iter++)
-        delete[] iter->second;
 
-
-    // delete indices, if set
-    if (m_pnIndices != NULL)
-        delete[] m_pnIndices;
 }
 
 unsigned int * GeometryData::GenericMesh::GetIndices(unsigned int &rnNumIndices)
 {
-    assert (m_pnIndices != NULL);
-
-    rnNumIndices = m_nNumIndices;
-    return m_pnIndices;
+    rnNumIndices = m_vIndices.size();
+    return &(m_vIndices[0]);
 }
 
 GeometryData::GenericObject::GenericObject(unsigned int nNumMeshes)
@@ -151,9 +121,9 @@ void GeometryData::GenericMesh::Debug()
     {
         std::cout << std::endl << "ATTRIBUTE #" << iter->first << "#" << std::endl;
 
-        float *pArray = iter->second;
+        float *pArray = &(iter->second[0]);
 
-        for (unsigned int i=0; i < m_mAttributeSizes[iter->first]; i++)
+        for (unsigned int i=0; i < iter->second.size(); i++)
         {
             std::cout << pArray[i] << " ";
         }
@@ -166,3 +136,61 @@ void GeometryData::GenericMesh::SetTexturePath(std::string sTexturePath)
 
     m_sTexturePath = sTexturePath;
 }
+
+unsigned int GeometryData::GenericMesh::NumAttributes() const
+{
+    return m_mAttributeMap.size();
+}
+
+std::vector<std::pair<std::string, std::vector<float> > > GeometryData::GenericMesh::GetAttributeList()
+{
+    std::vector<std::pair<std::string, std::vector<float> > > vAttributeList;
+
+    for (auto iter=m_mAttributeMap.begin(); iter != m_mAttributeMap.end(); iter++)
+    {
+        vAttributeList.push_back(std::pair<std::string, std::vector<float> >(iter->first, iter->second));
+    }
+
+    return vAttributeList;
+}
+
+/*
+void GeometryData::PerVertexData::AddVertices(unsigned int nNumVertices,
+                                              float *pPositions,
+                                              float *pColors,
+                                              float *pNormals,
+                                              float *pTangents,
+                                              float *pBitangents)
+{
+    int iOldSize = m_vColors.size();
+
+    m_vColors.reserve(m_vColors.size() + nVertices);
+    m_vNormals.reserve(m_vNormals.size() + nVertices);
+    m_vPositions.reserve(m_vPositions.size() + nVertices);
+    m_vBitangents.reserve(m_vBitangents.size() + nVertices);
+    m_vTangents.reserve(m_vTangents.size() + nVertices);
+
+    unsigned int nVerticesLeft = nNumVertices;
+
+    while (nVerticesLeft--)
+    {
+        m_vPositions.push_back(*pPositions);
+        m_vNormals.push_back(*pNormals);
+        m_vColors.push_back(*pColors);
+        m_vBitangents.push_back(*pBitangents);
+        m_vTangents.push_back(*pTangents);
+
+        pPositions++;
+        pNormals++;
+        pColors++;
+        pBitangents++;
+        pTangents++;
+    }
+
+    assert (iOldSize + nNumVertices == m_vColors.size());
+}
+
+void GeometryData::PerVertexData::AddIndices(unsigned int nNumIndices, unsigned int *pIndices)
+{
+
+}*/

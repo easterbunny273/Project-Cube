@@ -97,7 +97,7 @@ void Bamboo::Shader::ItlPrintShaderLog(GLuint obj)
 
 void Bamboo::Shader::ItlAddShader(GLenum tShaderType, const char *szFilename)
 {
-    Logger::debug() << "Loading shader source: " << szFilename << Logger::endl;
+    //Logger::debug() << "Loading shader source: " << szFilename << Logger::endl;
 
     GLubyte *szShaderLog = 0;
     unsigned long int nShaderLength;

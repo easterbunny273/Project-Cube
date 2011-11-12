@@ -90,7 +90,7 @@ void MainApp::StartGraphic_Test()
 {
     std::shared_ptr<GeometryData::GenericObject> spObject = AssimpWrapper::LoadModel("models/freepool-ng-table.3ds");
 
-    for (int i=0; i < spObject->NumMeshes(); i++)
+    for (unsigned int i=0; i < spObject->NumMeshes(); i++)
     {
         std::shared_ptr<GeometryData::GenericMesh> spMesh(spObject->GetMesh(i));
 

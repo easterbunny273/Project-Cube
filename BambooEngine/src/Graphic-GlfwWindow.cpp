@@ -30,6 +30,7 @@ Bamboo::GlfwWindow::GlfwWindow()
   *************************************************************** */
 std::shared_ptr<Bamboo::GlfwWindow> Bamboo::GlfwWindow::Create(int iWidth, int iHeight, std::string sWindowTitle)
 {
+    // todo: try only versions which are acceptable for the used rendernodes, else something strange will happen :-)
     std::vector<int> viMajorVersions = { 4, 4, 3, 3, 3, 2, 2, 1 };
     std::vector<int> viMinorVersions = { 2, 1, 3, 2, 0, 1, 0, 5 };
     std::vector<int> viCoreProfileFlag = { GLFW_OPENGL_CORE_PROFILE, GLFW_OPENGL_COMPAT_PROFILE, 0 };
@@ -88,8 +89,6 @@ std::shared_ptr<Bamboo::GlfwWindow> Bamboo::GlfwWindow::Create(int iWidth, int i
     if (!bWindowCreated)
         Logger::fatal() << "No opengl context could be created" << Logger::endl;
 
-    Logger::debug() << "Opened context with OpenGL Version " << (char *) glGetString(GL_VERSION) << Logger::endl;
-
     //Activate 4x antialiasing
     //glfwOpenWindowHint(GLFW_FSAA_SAMPLES, 4);
 
@@ -112,8 +111,6 @@ std::shared_ptr<Bamboo::GlfwWindow> Bamboo::GlfwWindow::Create(int iWidth, int i
     // start up GLEW
     if (glewInit() != GLEW_OK)
             Logger::fatal() << "glew initialization failed" << Logger::endl;
-    else
-            Logger::debug() << "glew initialized" << Logger::endl;
 
     Logger::debug() << "Got context with OpenGL Version " << (char *) glGetString(GL_VERSION) << Logger::endl;
 

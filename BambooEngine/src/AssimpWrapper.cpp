@@ -63,23 +63,23 @@ std::shared_ptr<GeometryData::GenericObject> AssimpWrapper::LoadModel(std::strin
         bool bGotColorDiffuse = (AI_SUCCESS == pUsedMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, acDiffuse));
         float pfDiffuseColor[3] = { acDiffuse.r, acDiffuse.g, acDiffuse.b };
         if (bGotColorDiffuse)
-            pGenericMesh->SetAttribute(GeometryData::GenericData::DATA_MATERIAL_COLOR_DIFFUSE, 3, pfDiffuseColor);
+            pGenericMesh->AddAttributeValues(GeometryData::GenericData::DATA_MATERIAL_COLOR_DIFFUSE, 3, pfDiffuseColor);
 
         aiColor3D acSpecular (0.f, 0.f, 0.f);
         bool bGotSpecularColor = (AI_SUCCESS == pUsedMaterial->Get(AI_MATKEY_COLOR_SPECULAR, acSpecular));
         float pfSpecularColor[3] = { acSpecular.r, acSpecular.g, acSpecular.b };
         if (bGotSpecularColor)
-            pGenericMesh->SetAttribute(GeometryData::GenericData::DATA_MATERIAL_COLOR_SPECULAR, 3, pfSpecularColor);
+            pGenericMesh->AddAttributeValues(GeometryData::GenericData::DATA_MATERIAL_COLOR_SPECULAR, 3, pfSpecularColor);
 
         float fShininess = 0.0f;
         bool bGotShininess = (AI_SUCCESS == pUsedMaterial->Get(AI_MATKEY_SHININESS, fShininess));
         if (bGotShininess)
-            pGenericMesh->SetAttribute(GeometryData::GenericData::DATA_MATERIAL_SHININESS, 1, &fShininess);
+            pGenericMesh->AddAttributeValues(GeometryData::GenericData::DATA_MATERIAL_SHININESS, 1, &fShininess);
 
         float fShininessStrength = 0.0f;
         bool bGotShininessStrength = (AI_SUCCESS == pUsedMaterial->Get(AI_MATKEY_SHININESS_STRENGTH, fShininessStrength));
         if (bGotShininessStrength)
-            pGenericMesh->SetAttribute(GeometryData::GenericData::DATA_MATERIAL_SHININESS_STRENGTH, 1, &fShininessStrength);
+            pGenericMesh->AddAttributeValues(GeometryData::GenericData::DATA_MATERIAL_SHININESS_STRENGTH, 1, &fShininessStrength);
 
         assert (pMesh->HasPositions());
 
@@ -98,7 +98,7 @@ std::shared_ptr<GeometryData::GenericObject> AssimpWrapper::LoadModel(std::strin
                 vfVertices.push_back(pMesh->mVertices[ii].z);
             }
 
-            pGenericMesh->SetAttribute(GeometryData::GenericData::DATA_VERTICES,
+            pGenericMesh->AddAttributeValues(GeometryData::GenericData::DATA_VERTICES,
                                        3 * nNumVertices,
                                        &vfVertices[0]);
         }
@@ -118,7 +118,7 @@ std::shared_ptr<GeometryData::GenericObject> AssimpWrapper::LoadModel(std::strin
                 vfNormals.push_back(pMesh->mNormals[ii].z);
             }
 
-            pGenericMesh->SetAttribute(GeometryData::GenericData::DATA_NORMALS,
+            pGenericMesh->AddAttributeValues(GeometryData::GenericData::DATA_NORMALS,
                                        3 * nNumVertices,
                                        &vfNormals[0]);
         }
@@ -141,11 +141,11 @@ std::shared_ptr<GeometryData::GenericObject> AssimpWrapper::LoadModel(std::strin
                 vfBitangents.push_back(pMesh->mBitangents[ii].z);
             }
 
-            pGenericMesh->SetAttribute(GeometryData::GenericData::DATA_TANGENTS,
+            pGenericMesh->AddAttributeValues(GeometryData::GenericData::DATA_TANGENTS,
                                        3 * nNumVertices,
                                        &vfTangents[0]);
 
-            pGenericMesh->SetAttribute(GeometryData::GenericData::DATA_BITANGENTS,
+            pGenericMesh->AddAttributeValues(GeometryData::GenericData::DATA_BITANGENTS,
                                        3 * nNumVertices,
                                        &vfTangents[0]);
         }
@@ -168,7 +168,7 @@ std::shared_ptr<GeometryData::GenericObject> AssimpWrapper::LoadModel(std::strin
                 vfColors.push_back(pMesh->mColors[0][ii].b);
             }
 
-            pGenericMesh->SetAttribute(GeometryData::GenericData::DATA_COLORS,
+            pGenericMesh->AddAttributeValues(GeometryData::GenericData::DATA_COLORS,
                                        3 * nNumVertices,
                                        &vfColors[0]);
         }
@@ -187,7 +187,7 @@ std::shared_ptr<GeometryData::GenericObject> AssimpWrapper::LoadModel(std::strin
             vIndicesVector.push_back(pMesh->mFaces[ii].mIndices[2]);
         }
 
-        pGenericMesh->SetIndices(nNumFaces * 3, &vIndicesVector[0]);
+        pGenericMesh->AddIndices(nNumFaces * 3, &vIndicesVector[0]);
 
         // get textures
 
