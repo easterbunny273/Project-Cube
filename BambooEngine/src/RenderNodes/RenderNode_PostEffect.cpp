@@ -75,6 +75,8 @@ void Bamboo::RN_PostEffect::ItlRender()
     glEnableVertexAttribArray(l_in_Position);
     glEnableVertexAttribArray(l_texcoords);
 
+    std::vector <GLuint> vManualLockedUnits;
+
     // load necessary textures and tell the shader
     for (auto iter = m_mTextures.begin(); iter != m_mTextures.end(); iter++)
     {
@@ -93,6 +95,31 @@ void Bamboo::RN_PostEffect::ItlRender()
 
         // write used texture unit to shader uniform
         glUniform1i(iUniformLocation, nUsedTextureUnit);
+    }
+
+    // load necessary textures and tell the shader
+    for (auto iter = m_mTexturesDirect.begin(); iter != m_mTexturesDirect.end(); iter++)
+    {
+        // alias for better code reading
+        GLuint nTextureID = iter->second;
+        std::string sUniformName = iter->first;
+
+        // load texture in a free unit and remember used texture unit
+        GLuint nUsedTextureUnit = TextureManager::instance()->GetFreeUnit();
+
+        // get the uniform location
+        GLint iUniformLocation = ItlGetGraphicCore()->GetShaderManager()->GetUniform(sUniformName);
+
+        // check if the uniform exists
+        assert (iUniformLocation != -1);
+
+        glActiveTexture(GL_TEXTURE0 + nUsedTextureUnit);
+        glBindTexture(GL_TEXTURE_2D, nTextureID);
+
+        // write used texture unit to shader uniform
+        glUniform1i(iUniformLocation, nUsedTextureUnit);
+
+        vManualLockedUnits.push_back(nUsedTextureUnit);
     }
 
 
@@ -144,6 +171,12 @@ void Bamboo::RN_PostEffect::ItlRender()
 
         TextureManager::instance()->UnuseTexture(sTextureName);
     }
+
+    //release used texture units
+    for (auto iter = vManualLockedUnits.begin(); iter != vManualLockedUnits.end(); iter++)
+    {
+        TextureManager::instance()->ReleaseUnit(*iter);
+    }
 }
 
 void Bamboo::RN_PostEffect::ItlPostRender()
@@ -170,3 +203,9 @@ void Bamboo::RN_PostEffect::SetTexture(std::string sUniformName, std::string sTe
 {
     m_mTextures[sUniformName] = sTextureName;
 }
+
+void Bamboo::RN_PostEffect::SetTexture(std::string sUniformName, GLuint nTextureID)
+{
+    m_mTexturesDirect[sUniformName] = nTextureID;
+}
+

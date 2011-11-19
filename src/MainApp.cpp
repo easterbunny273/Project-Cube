@@ -88,25 +88,13 @@ EventManager * MainApp::GetEventManager()
 
 void MainApp::StartGraphic_Test()
 {
-    std::shared_ptr<GeometryData::GenericObject> spObject = AssimpWrapper::LoadModel("models/freepool-ng-table.3ds");
-
-    for (unsigned int i=0; i < spObject->NumMeshes(); i++)
-    {
-        std::shared_ptr<GeometryData::GenericMesh> spMesh(spObject->GetMesh(i));
-
-        if (spMesh)
-        {
-            spMesh->Debug();
-        }
-    }
-
     // create glfw window
     std::shared_ptr<Bamboo::GlfwWindow> spWindow = Bamboo::GlfwWindow::Create(1024, 768, "Test");
     // set input event listener
     spWindow->SetInputEventListener(m_spInputEventListener);
 
     // create camera
-    m_spCamera = Bamboo::PerspectiveCamera::Create(45.0f, 1.33f, 0.01f, 100.0f, glm::vec3(), 0.0f, 0.0f);
+    m_spCamera = Bamboo::PerspectiveCamera::Create(45.0f, 1.33f, 0.01f, 100.0f, glm::vec3(-0.2f, 0.2f, 0.0f), 90.0f, -50.0f);
 
     // create scene
     std::shared_ptr<Bamboo::Scene> spScene = Bamboo::Scene::Create();
@@ -117,7 +105,7 @@ void MainApp::StartGraphic_Test()
 
     // create objects
     std::shared_ptr<Bamboo::ISceneObject> spCube = Bamboo::SO_Cube::Create();
-    std::shared_ptr<Bamboo::ISceneObject> spTable = Bamboo::SO_LoadedModel::Create("models/freepool-ng-table.3ds");
+    std::shared_ptr<Bamboo::ISceneObject> spTable = Bamboo::SO_LoadedModel::Create("models/bunte-treppe2.dae");
     spTable->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
 
     // add objects to scene

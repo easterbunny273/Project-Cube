@@ -19,6 +19,9 @@
 
 Bamboo::GlfwWindow *Bamboo::GlfwWindow::s_pInstance = NULL;
 
+
+int s_DebugDeferredTexture = 0;
+
 /****************************************************************
   *************************************************************** */
 Bamboo::GlfwWindow::GlfwWindow()
@@ -141,6 +144,13 @@ Bamboo::GlfwWindow::~GlfwWindow()
   *************************************************************** */
 void Bamboo::GlfwWindow::ItlStaticHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState)
 {
+    if (iKeyIdentifier == GLFW_KEY_LALT && iNewKeyState==GLFW_PRESS)
+    {
+        s_DebugDeferredTexture++;
+        return;
+    }
+
+
     // this method is a static method (glfw cannot call class methods)
     // which redirects the event to the member-method of the Graphic class
     // therefore, we need a pointer to the instance. Thus, only one instance

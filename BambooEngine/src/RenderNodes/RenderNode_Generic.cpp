@@ -1,3 +1,5 @@
+#include <glm/gtc/matrix_transform.hpp>
+
 //general includes
 #include "Logger.h"
 #include "ShaderManager.h"
@@ -37,6 +39,16 @@ Bamboo::RN_Generic::~RN_Generic()
 
 void Bamboo::RN_Generic::ItlRender()
 {
+    static int i=0;
+
+    i++;
+
+    glm::mat4 oldTrans1;
+
+    oldTrans1 = glm::rotate(glm::mat4(), i / 100.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+
+   // SetTransformMatrix(oldTrans1);
+
     TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
     assert (pTextureManager != NULL);
 
@@ -60,6 +72,7 @@ void Bamboo::RN_Generic::ItlRender()
                     std::shared_ptr<GeometryData::GenericMesh> spMesh(m_spObject->GetMesh(nMesh));
                     std::string sTexturePath(spMesh->GetTexturePath(tTextureTypes[i]));
 
+
                     GLuint iUsedUnit = pTextureManager->UseTexture(sTexturePath);
 
                     glUniform1i(iLocation, iUsedUnit);
@@ -74,10 +87,12 @@ void Bamboo::RN_Generic::ItlRender()
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_pnIndexBufferObjects[nMesh]);
 
         glDrawElements(GL_TRIANGLES, m_pnNumIndices[nMesh], GL_UNSIGNED_INT, (const GLvoid *) 0 );
-    }
 
-    for (int i=0; i < vUsedTextures.size(); i++)
-        pTextureManager->UnuseTexture(vUsedTextures[i]);
+        for (int i=0; i < vUsedTextures.size(); i++)
+            pTextureManager->UnuseTexture(vUsedTextures[i]);
+
+        vUsedTextures.clear();
+    }
 }
 
 
@@ -319,7 +334,8 @@ void Bamboo::RN_Generic::ItlPrepareTextures()
 
             if (psTargetStrings[i]->empty() == false)
             {
-                pTextureManager->LoadTexture(*(psTargetStrings[i]), std::string("textures/models/") + *(psTargetStrings[i]), bGammaCorrected[i]);
+                std::string sTextureName(std::string("/home/easterbunny/") + *(psTargetStrings[i]));
+                pTextureManager->LoadTexture(*(psTargetStrings[i]), sTextureName, bGammaCorrected[i]);
             }
         }
     }

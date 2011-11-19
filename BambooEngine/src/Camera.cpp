@@ -17,7 +17,7 @@ Bamboo::ICamera::ICamera()
 
     m_fRotationHorizontal = 160;
     m_fRotationVertical = -45;
-    m_v3CameraPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+    m_v3CameraPosition = glm::vec3(0.0f, 10.0f, 0.0f);
     m_v3MoveVector = glm::vec3(0.0f, 0.0f, 0.0f);
 
 

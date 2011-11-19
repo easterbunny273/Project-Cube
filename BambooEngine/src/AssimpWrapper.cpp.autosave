@@ -32,6 +32,7 @@ std::shared_ptr<GeometryData::GenericObject> AssimpWrapper::LoadModel(std::strin
                                              aiProcess_FlipUVs |
                                              aiProcess_FindDegenerates |
                                              aiProcess_SortByPType
+
                                              );
 
       // If the import failed, report it

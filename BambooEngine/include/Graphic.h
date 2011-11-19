@@ -43,6 +43,7 @@ private:
         class RN_BoundingBox;
         class RN_AssimpImport;
         class RN_Generic;
+        class RN_Deferred;
     //@}
 
 public:

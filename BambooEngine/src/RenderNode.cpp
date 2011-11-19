@@ -25,8 +25,6 @@ void Bamboo::IRenderNode::ItlSendTransformMatrices()
     const GLint l_modelviewprojection_matrix = pShaderManager->GetUniform("ModelViewProjectionMatrix");
     const GLint l_normal_matrix = pShaderManager->GetUniform("NormalMatrix");
     const GLint l_model_matrix = pShaderManager->GetUniform("ModelMatrix");
-    //const GLint l_lastFrameTransformMatrix = ShaderManager::instance()->getUniform("Camera_TransformMatrix_LastFrame");
-    const GLint l_tempTransformMatrix = pShaderManager->GetUniform("Camera_TempTransformMatrix");
 
     //if a position is -1, it was not found, so we write only in uniforms where we found a valid position
 
@@ -42,55 +40,9 @@ void Bamboo::IRenderNode::ItlSendTransformMatrices()
     if (l_model_matrix != -1)
 	glUniformMatrix4fv(l_model_matrix, 1, GL_FALSE, &m_pCurrentRenderInfo->ModelMatrix[0][0]);
 
-/*    if (l_lastFrameTransformMatrix != -1)
-	glUniformMatrix4fv(l_lastFrameTransformMatrix, 1, GL_FALSE, &Camera::instance()->getLastFrameModelViewMatrix()[0][0]);
-
-    if (l_tempTransformMatrix != -1)
-	glUniformMatrix4fv(l_tempTransformMatrix, 1, GL_FALSE, &Camera::instance()->getUsedLightProjModelViewMatrix()[0][0]);*/
-
-    if (l_tempTransformMatrix != -1)
-    {
-	if (m_spShadowCaster.get() != 0)
-	{
-            glm::mat4 puffer = m_spShadowCaster->GetProjectionMatrix() * m_spShadowCaster->GetViewMatrix();
-	    glUniformMatrix4fv(l_tempTransformMatrix, 1, GL_FALSE, &puffer[0][0]);
-	}
-    }
-
     if (l_normal_matrix != -1)
-        glUniformMatrix3fv(l_normal_matrix, 1, GL_FALSE, &(glm::mat3(glm::transpose(glm::inverse(m_pCurrentRenderInfo->ViewMatrix * m_pCurrentRenderInfo->ModelMatrix))))[0][0]);
+        glUniformMatrix3fv(l_normal_matrix, 1, GL_FALSE, &(glm::transpose(glm::inverse(glm::mat3(m_pCurrentRenderInfo->ViewMatrix * m_pCurrentRenderInfo->ModelMatrix))))[0][0]);
 
-
-    ItlSendLightPosition();
-}
-
-void Bamboo::IRenderNode::ItlSendLightPosition()
-{
-    Bamboo *pGraphicCore = ItlGetGraphicCore();
-    assert (pGraphicCore != NULL);
-
-    Bamboo::ShaderManager *pShaderManager = pGraphicCore->GetShaderManager();
-    assert (pShaderManager != NULL);
-
-    GLint l_Light0Position = pShaderManager->GetUniform("Light0Position");
-
-    if (l_Light0Position != -1)
-    {
-        float *light0Position = new float[3];
-        light0Position[0] = light0Position[1] = light0Position[2] = 0.0f; //LightManager::instance()->getCurrentLightPosition();
-	glUniform4f(l_Light0Position, light0Position[0], light0Position[1], light0Position[2], light0Position[3]);
-    }
-
-}
-
-
-void Bamboo::IRenderNode::SetLightSourceForShadowMapping(std::shared_ptr<Bamboo::ICamera> spShadowCaster, bool bRecursivelySetForChildren)
-{
-    m_spShadowCaster = spShadowCaster;
-
-    if (bRecursivelySetForChildren)
-        for (unsigned int a=0; a < m_vChildren.size(); a++)
-	    m_vChildren[a]->SetLightSourceForShadowMapping(spShadowCaster, true);
 }
 
 void Bamboo::IRenderNode::Render()

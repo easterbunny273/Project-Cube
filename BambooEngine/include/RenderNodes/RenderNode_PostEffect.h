@@ -40,6 +40,7 @@ public:
 	void SetUniform(std::string sUniform, glm::vec3 v3Value);
 
         void SetTexture(std::string sUniformName, std::string sTextureName);
+        void SetTexture(std::string sUniformName, GLuint nTextureID);
     //@}
 
 protected:
@@ -67,7 +68,8 @@ private:
          std::map<std::string, float>       m_mUniforms_Floats;
          std::map<std::string, glm::vec2>    m_mUniforms_Vec2;
          std::map<std::string, glm::vec3>    m_mUniforms_Vec3;
-         std::map<std::string, std::string>     m_mTextures;
+         std::map<std::string, std::string> m_mTextures;
+         std::map<std::string, GLuint>      m_mTexturesDirect;
 
          GLuint buffer_vertices3f;
          GLuint vao;

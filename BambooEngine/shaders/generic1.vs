@@ -20,10 +20,11 @@ in vec3 in_Position;
 in vec3 in_Normal;
 in vec3 in_Texcoord;
 in vec3 in_Tangent;
+in vec3 in_Bitangent;
 in vec3 in_Color;
+
 in vec3 color_texture_coords;
 
-//in vec3 in_Bitangent;
 
 out vec3 my_Texcoord;
 out vec3 my_LightDir;
@@ -31,6 +32,8 @@ out vec3 my_EyeDir;
 out vec3 my_ObjPosition;
 out vec4 my_ScreenPosition;
 out vec3 my_Normal;
+out vec3 my_Tangent;
+out vec3 my_Bitangent;
 out vec3 my_Color;
 
 void main(void)
@@ -42,32 +45,15 @@ void main(void)
   my_ObjPosition = in_Position;
   my_ScreenPosition = gl_Position;
 
-  vec3 vVertex = (ModelViewMatrix * vec4(in_Position, 1.0)).xyz;
-  vec3 my_Lightpos = (ViewMatrix * Light0Position).xyz;
-
-  vec3 tempVec = my_Lightpos - vVertex;
-
   my_Texcoord = color_texture_coords;
-  my_EyeDir = vVertex;
 
-  vec3 n = normalize(NormalMatrix * in_Normal);
-  vec3 t = normalize(NormalMatrix * in_Tangent);
-  vec3 b = cross(n, t);
+  /*my_Normal = in_Normal;
+  my_Tangent = in_Tangent;
+  my_Bitangent = in_Bitangent;*/
 
-  vec3 v;
-  v.x = dot(tempVec, t);
-  v.y = dot(tempVec, b);
-  v.z = dot(tempVec, n);
-  my_LightDir = normalize(v);
+  my_Normal = normalize(NormalMatrix * in_Normal);
+  my_Tangent = normalize(NormalMatrix * in_Tangent);
+  my_Bitangent = normalize(NormalMatrix * in_Bitangent);
 
-  tempVec = -vVertex;
-  v.x = dot(tempVec, t);
-  v.y = dot(tempVec, b);
-  v.z = dot(tempVec, n);
-
-  my_EyeDir = normalize(v);
-
-  my_Normal = in_Normal;
-
-    my_Color = in_Color;
+  my_Color = in_Color;
 }

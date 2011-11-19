@@ -12,9 +12,9 @@
 
 const char * GeometryData::GenericData::DATA_VERTICES   = "in_Position";
 const char * GeometryData::GenericData::DATA_NORMALS    = "in_Normal";
-const char * GeometryData::GenericData::DATA_COLORS     = "in_Colors";
-const char * GeometryData::GenericData::DATA_TANGENTS   = "in_Tangents";
-const char * GeometryData::GenericData::DATA_BITANGENTS = "in_Bitangents";
+const char * GeometryData::GenericData::DATA_COLORS     = "in_Color";
+const char * GeometryData::GenericData::DATA_TANGENTS   = "in_Tangent";
+const char * GeometryData::GenericData::DATA_BITANGENTS = "in_Bitangent";
 const char * GeometryData::GenericData::DATA_MATERIAL_COLOR_DIFFUSE         = "material_color_diffuse";
 const char * GeometryData::GenericData::DATA_MATERIAL_COLOR_SPECULAR        = "material_color_specular";
 const char * GeometryData::GenericData::DATA_MATERIAL_SHININESS             = "material_shininess";

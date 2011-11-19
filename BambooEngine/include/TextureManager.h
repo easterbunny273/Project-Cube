@@ -167,7 +167,7 @@ public:
     /// unlocks a texture
     void UnlockTextureID(GLuint nTextureID);
 
-    /// creates a sampler according to the given parameters and registers it in the texture manager,
+    /// creates a sampler according to the given parameters, registers it in the texture manager,
     /// and returns the opengl id of the created texture
     GLuint CreateSampler(std::string sTextureName, GLenum eTarget, GLint iInternalTextureFormat, GLint iWidth, GLint iHeight, GLint iClampMode, GLint iFiltering);
 
