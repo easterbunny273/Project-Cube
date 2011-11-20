@@ -53,7 +53,6 @@ private:
 #endif
 
 
-
 public:
     /*! \brief Constructor */
     TextureManager();
@@ -78,6 +77,18 @@ public:
 		     std::string sFilename,
 		     bool bAlreadyGammaCorrected,
 		     GLint iTarget = GL_TEXTURE_2D);
+
+    /*! \brief Method for loading a texture from file
+     *
+     *  This method loads a texture from a file, creates a new opengl-texture and makes it accessable over the given name
+     *  \param rnTextureID (returns) the opengl id of the loaded texture
+     *  \param sFilename The filename (relative to workdir) of the file which should be load
+     *  \param bAlreadyGammaCorrected Specify if the image which should be loaded is already gamma-corrected or not
+     *  \sa TextureManager::useTexture(), TextureManager::unuseTexture()
+     */
+    bool LoadTexture(GLuint &rnTextureID,
+                     std::string sFilename,
+                     bool bAlreadyGammaCorrected);
 
     /*! \brief Method to use an already loaded texture
      *

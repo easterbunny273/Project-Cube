@@ -334,7 +334,7 @@ void Bamboo::RN_Generic::ItlPrepareTextures()
 
             if (psTargetStrings[i]->empty() == false)
             {
-                std::string sTextureName(std::string("/home/easterbunny/") + *(psTargetStrings[i]));
+                std::string sTextureName(std::string("models/") + *(psTargetStrings[i]));
                 pTextureManager->LoadTexture(*(psTargetStrings[i]), sTextureName, bGammaCorrected[i]);
             }
         }
