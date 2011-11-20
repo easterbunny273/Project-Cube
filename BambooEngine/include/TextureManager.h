@@ -28,124 +28,47 @@
 
 class Bamboo::TextureManager
 {
-private:
-    /*! This variable marks if devIL is initialized yet (because the opengl context must be initialized before) */
-    bool m_bDevIL_Initialized;
-
-    /*! How many texture units are available on the gpu? */
-    GLint m_iMaxTextureUnits;
-
-    /*! This map connects string TextureNames (set by user) with opengl-internal texture names (=texture id)*/
-    std::map<std::string, GLuint> m_mTextureIDs;
-
-    /*! This map connects string TextureNames (set by user) with opengl-internal targets*/
-    std::map<std::string, GLint> m_mTextureTargets;
-
-    /*! This map holds all textures (first parameter) which are currently stored in texture units (second parameter) */
-    std::map<std::string, GLint> m_mTexturesInUnits;
-    std::list<GLuint> m_lFreeUnits;
-
-    std::map<GLuint, bool> m_mTextureLocks;
-
-#ifdef PREVENT_REBINDING_TEXTURE
-    /*! this map holds the texture_ids which where loaded in the units (first parameter: unit, second parameter: texture id) */
-    std::map<GLint, GLuint> m_mUnitHasTexture;
-#endif
 
 
 public:
-    /*! \brief Constructor */
+    /*! \name Construction / Destruction */
+    //@{
+    /// constructor
     TextureManager();
+
+    /// destructor
+    ~TextureManager();
+    //@}
+
+    /*! \name Public methods */
+    //@{
+    /// loads a texture from a file and makes it accessable with the given sTextureName,
+    /// returns true if successfull and false if not
+    bool LoadTexture(std::string sTextureName,
+                     std::string sFilename,
+                     bool bAlreadyGammaCorrected);
+
+    /// loads a texture from a file and writes the opengl-id in the given rnTextureID
+    /// returns true if successfull and false if not
+    bool LoadTexture(GLuint &rnTextureID,
+                     std::string sFilename,
+                     bool bAlreadyGammaCorrected);
+
+    //@}
 
     void Initialize();
 
     /*! \brief Returns the singelton instance */
     static TextureManager *instance();
 
-    /*! \brief Destructor */
-    ~TextureManager();
 
-    /*! \brief Method for loading a texture from file
-     *
-     *  This method loads a texture from a file, creates a new opengl-texture and makes it accessable over the given name
-     *  \param sTextureName The wanted name to make the texture accessable, must be unique
-     *  \param sFilename The filename (relative to workdir) of the file which should be load
-     *  \param bAlreadyGammaCorrected Specify if the image which should be loaded is already gamma-corrected or not
-     *  \sa TextureManager::useTexture(), TextureManager::unuseTexture()
-     */
-    bool LoadTexture(std::string sTextureName,
-		     std::string sFilename,
-		     bool bAlreadyGammaCorrected,
-		     GLint iTarget = GL_TEXTURE_2D);
-
-    /*! \brief Method for loading a texture from file
-     *
-     *  This method loads a texture from a file, creates a new opengl-texture and makes it accessable over the given name
-     *  \param rnTextureID (returns) the opengl id of the loaded texture
-     *  \param sFilename The filename (relative to workdir) of the file which should be load
-     *  \param bAlreadyGammaCorrected Specify if the image which should be loaded is already gamma-corrected or not
-     *  \sa TextureManager::useTexture(), TextureManager::unuseTexture()
-     */
-    bool LoadTexture(GLuint &rnTextureID,
-                     std::string sFilename,
-                     bool bAlreadyGammaCorrected);
-
-    /*! \brief Method to use an already loaded texture
-     *
-     *  This method binds an already loaded texture to a free texture
-     *  unit, marks the unit as used and returns the ID of the unit.
-     *  In case that there is no free texture unit, the method sends a fatal-message
-     *  to the logger which forces the program to quit.
-     *
-     *  To ensure that there are always enough free texture units, you must call
-     *  TextureManager::unuseTexture(...) as soon as possible for you.
-     *
-     *  \param sTextureName The name of the texture
-     *  \return The ID of the used texture unit
-     *  \sa TextureManager::loadTexture(), TextureManager::unuseTexture()
-     */
     GLuint UseTexture(std::string sTextureName);
+    GLuint UseTexture(GLuint nOpenGLID);
 
-    /*! \brief Method to unuse a texture
-     *
-     *  This method marks the texture unit which is currently used
-     *  for this texture as free. The texture unit is not cleared,
-     *  but each call of useTexture(...) may allocate the unit again and
-     *  bind another texture to this unit. Therefore, to use a texture again,
-     *  you have to call TextureManager::useTexture() again.
-     *
-     *  In case that the given texture is not bound to any unit and you call unuseTexture(...),
-     *  the method will print an error message.
-     *
-     *  \param sTextureName The name of the texture
-     *  \sa TextureManager::loadTexture(), TextureManager::useTexture()
-     */
     void UnuseTexture(std::string sTextureName);
+    void UnuseTexture(GLuint nOpenGLID);
 
-    /*! \brief Returns the ID of a free unit and marks it as used
-     *
-     *  This method returns the ID of the first free unit
-     *  and marks it as used.
-     *
-     *  Normally, this method is used internally by useTexture()
-     *
-     *  If you use this method on your own, you must release the unit as soon as possible with
-     *  TextureManager::releaseUnit().
-     *
-     *  \return The ID of a free texture unit.
-     *  \sa TextureManager::releaseUnit(), TextureManager::useTexture()
-     */
-    GLuint GetFreeUnit();
-
-    /*! \brief Marks a given texture unit as free
-     *
-     *  This method marks the given texture unit as free
-     *
-     *  Normally, this method is used internally by unuseTexture()
-     *
-     *  \param nUnit The id of the texture unit
-     *  \sa TextureManager::getFreeUnit(), TextureManager::unuseTexture()
-     */
+    GLuint RequestFreeUnit();
     void ReleaseUnit(GLuint nUnit);
 
     /*! \brief Registers an initialized opengl-texture in TextureManager to use it with TextureManager::useTexture()
@@ -184,6 +107,41 @@ public:
 
     /// returns the target of the texture
     GLint GetTextureTarget(std::string sTextureName);
+
+
+private:
+    /*! \name Internal helper methods */
+    //@{
+    //@}
+
+    /*! This variable marks if devIL is initialized yet (because the opengl context must be initialized before) */
+    bool m_bDevIL_Initialized;
+
+    /*! How many texture units are available on the gpu? */
+    GLint m_iMaxTextureUnits;
+
+    /*! This map connects string TextureNames (set by user) with opengl-internal texture names (=texture id)*/
+    std::map<std::string, GLuint> m_mTextureIDs;
+
+    /*! This map connects string TextureNames (set by user) with opengl-internal targets*/
+    std::map<std::string, GLint> m_mTextureTargets;
+
+    /*! This map holds all textures (first parameter) which are currently stored in texture units (second parameter) */
+    std::map<std::string, GLint> m_mTexturesInUnits;
+    std::list<GLuint> m_lFreeUnits;
+
+    std::map<GLuint, bool> m_mTextureLocks;
+
+#ifdef PREVENT_REBINDING_TEXTURE
+    /*! this map holds the texture_ids which where loaded in the units (first parameter: unit, second parameter: texture id) */
+    std::map<GLint, GLuint> m_mUnitHasTexture;
+#endif
+
+    bool ItlLoadTextureFromFile(GLuint &rnTextureID, std::string sFilename, bool bAlreadyGammaCorrected);
+
+    /*! \name Private members */
+    //@{
+    //@}
 };
 
 #endif

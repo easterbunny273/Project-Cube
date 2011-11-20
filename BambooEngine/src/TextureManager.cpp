@@ -44,84 +44,29 @@ void Bamboo::TextureManager::Initialize()
 
 bool Bamboo::TextureManager::LoadTexture(std::string sTextureName,
                                          std::string sFilename,
-                                         bool bAlreadyGammaCorrected,
-                                         GLint iTarget /*= GL_TEXTURE_2D*/)
+                                         bool bAlreadyGammaCorrected)
 {
-	if (m_bDevIL_Initialized == false)
-	{
-            Initialize();
-	}
+    // initialize devIl if necessary
+    if (m_bDevIL_Initialized == false)
+        Initialize();
 
-	Logger::debug() << "try to load texture from \"" << sFilename << "\"" << Logger::endl;
+    GLuint nOpenGLID;
 
-	ILuint nIlTextureId;				// index für DevIL Textur
+    // load texture from file
+    bool bOk = ItlLoadTextureFromFile(nOpenGLID, sFilename, bAlreadyGammaCorrected);
 
-	ilGenImages(1,&nIlTextureId);			// generieren von IL ID für Texturen
-	ilBindImage(nIlTextureId);			// bestimmten Texturindex als aktell setzen
+    // if successfull, store opengl id
+    if (bOk)
+    {
+        m_mTextureIDs[sTextureName] = nOpenGLID;
+        m_mTextureTargets[sTextureName] = GL_TEXTURE_2D;
+        m_mTexturesInUnits[sTextureName] = -1;
+    }
 
-        if (!ilLoadImage (sFilename.data()))		// laden der Textur
-        {
-                ILenum Error;
-                Error = ilGetError();
-		ilDeleteImages(1,&nIlTextureId);		// bei Fehlschlag wieder Index freigeben
-
-                Logger::error() << "Could not find texture file " << sFilename << ", loading failed. DevIL error-code: " << Error << Logger::endl;
-
-		return false;
-	}
-	else
-	{
-		long int iHeight, iWidth, iFormat;
-		unsigned char *szData=0;
-		GLuint OpenGLID;
-
-		iWidth=ilGetInteger(IL_IMAGE_WIDTH);		    // Breite des Bildes holen
-		iHeight=ilGetInteger(IL_IMAGE_HEIGHT);	    // Höhe des Bildes holen
-                //bpp=ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL); // Farbtiefe des Bildes
-		iFormat=ilGetInteger(IL_IMAGE_FORMAT);	    // Format des Bildes z.B. RGB RGBA BGR BGRA usw.
-		szData=ilGetData();			    // Zeiger auf Bilddaten holen
-
-		glGetError();				    // clear error state
-		glGenTextures(1,&OpenGLID);		    // ask for opengl texture-id (returns first free id)
-		glBindTexture(iTarget, OpenGLID);
-
-		if (bAlreadyGammaCorrected)
-			glTexImage2D(iTarget, 0, GL_SRGB8_ALPHA8, iWidth, iHeight, 0, iFormat, GL_UNSIGNED_BYTE, szData);
-		else
-			glTexImage2D(iTarget, 0, GL_RGBA, iWidth, iHeight, 0, iFormat, GL_UNSIGNED_BYTE, szData);
-
-
-		//activate mipmapping
-		glTexParameteri(iTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		//glTexParameteri(iTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-		float fMaximumAnisotropy;
-		//get maximum ansitropic filtering value
-		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &fMaximumAnisotropy);
-
-		//activate 4x ansitropic filtering if possible
-		if (fMaximumAnisotropy >= 4.0)
-			glTexParameterf(iTarget, GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
-		else
-		    Logger::error() << "4x Ansitropic filtering not available by graphic hardware" << Logger::endl;
-
-		glGenerateMipmap(iTarget);  //Generate mipmaps now!!!
-
-		GLenum eError = glGetError();
-		if (eError != GL_NO_ERROR)
-		    Logger::error() << "glGetError: " << TranslateGLerror(eError) << Logger::endl;
-
-		m_mTextureIDs[sTextureName] = OpenGLID;
-		m_mTextureTargets[sTextureName] = iTarget;
-		m_mTexturesInUnits[sTextureName] = -1;
-
-		Logger::debug() << "texture from " << sFilename << " loaded to intern name \"" << sTextureName << "\"" << Logger::endl;
-		return true;
-	}
+    return bOk;
 }
 
-/*
+
 bool Bamboo::TextureManager::LoadTexture(GLuint &rnTextureID,
                                          std::string sFilename,
                                          bool bAlreadyGammaCorrected)
@@ -131,73 +76,8 @@ bool Bamboo::TextureManager::LoadTexture(GLuint &rnTextureID,
             Initialize();
         }
 
-        Logger::debug() << "try to load texture from \"" << sFilename << "\"" << Logger::endl;
-
-        ILuint nIlTextureId;				// index für DevIL Textur
-
-        ilGenImages(1,&nIlTextureId);			// generieren von IL ID für Texturen
-        ilBindImage(nIlTextureId);			// bestimmten Texturindex als aktell setzen
-
-        if (!ilLoadImage (sFilename.data()))		// laden der Textur
-        {
-                ILenum Error;
-                Error = ilGetError();
-                ilDeleteImages(1,&nIlTextureId);		// bei Fehlschlag wieder Index freigeben
-
-                Logger::error() << "Could not find texture file " << sFilename << ", loading failed. DevIL error-code: " << Error << Logger::endl;
-
-                return false;
-        }
-        else
-        {
-                long int iHeight, iWidth, iFormat;
-                unsigned char *szData=0;
-                GLuint OpenGLID;
-
-                iWidth=ilGetInteger(IL_IMAGE_WIDTH);		    // Breite des Bildes holen
-                iHeight=ilGetInteger(IL_IMAGE_HEIGHT);	    // Höhe des Bildes holen
-                //bpp=ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL); // Farbtiefe des Bildes
-                iFormat=ilGetInteger(IL_IMAGE_FORMAT);	    // Format des Bildes z.B. RGB RGBA BGR BGRA usw.
-                szData=ilGetData();			    // Zeiger auf Bilddaten holen
-
-                glGetError();				    // clear error state
-                glGenTextures(1,&OpenGLID);		    // ask for opengl texture-id (returns first free id)
-                glBindTexture(iTarget, OpenGLID);
-
-                if (bAlreadyGammaCorrected)
-                        glTexImage2D(iTarget, 0, GL_SRGB8_ALPHA8, iWidth, iHeight, 0, iFormat, GL_UNSIGNED_BYTE, szData);
-                else
-                        glTexImage2D(iTarget, 0, GL_RGBA, iWidth, iHeight, 0, iFormat, GL_UNSIGNED_BYTE, szData);
-
-
-                //activate mipmapping
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-
-                float fMaximumAnisotropy;
-                //get maximum ansitropic filtering value
-                glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &fMaximumAnisotropy);
-
-                //activate 4x ansitropic filtering if possible
-                if (fMaximumAnisotropy >= 4.0)
-                        glTexParameterf(iTarget, GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
-                else
-                    Logger::error() << "4x Ansitropic filtering not available by graphic hardware" << Logger::endl;
-
-                glGenerateMipmap(iTarget);  //Generate mipmaps now!!!
-
-                GLenum eError = glGetError();
-                if (eError != GL_NO_ERROR)
-                    Logger::error() << "glGetError: " << TranslateGLerror(eError) << Logger::endl;
-
-                m_mTextureIDs[sTextureName] = OpenGLID;
-                m_mTextureTargets[sTextureName] = iTarget;
-                m_mTexturesInUnits[sTextureName] = -1;
-
-                Logger::debug() << "texture from " << sFilename << " loaded to intern name \"" << sTextureName << "\"" << Logger::endl;
-                return true;
-        }
-}*/
+        ItlLoadTextureFromFile(rnTextureID, sFilename, bAlreadyGammaCorrected);
+}
 
 
 GLuint Bamboo::TextureManager::UseTexture(std::string sTextureName)
@@ -242,7 +122,7 @@ GLuint Bamboo::TextureManager::UseTexture(std::string sTextureName)
 		    }
 #endif
 
-		GLuint nFreeUnit = GetFreeUnit();		    //remove unit from free_units queue
+                GLuint nFreeUnit = RequestFreeUnit();		    //remove unit from free_units queue
 		m_mTexturesInUnits[sTextureName] = nFreeUnit;	    //make a note that this texture now is stored in a unit
 
 #ifdef PREVENT_REBINDING_TEXTURE
@@ -289,7 +169,7 @@ Bamboo::TextureManager *Bamboo::TextureManager::instance()
     return &singelton_instance;
 }
 
-GLuint Bamboo::TextureManager::GetFreeUnit()
+GLuint Bamboo::TextureManager::RequestFreeUnit()
 {
     if (m_bDevIL_Initialized == false)
         Initialize();
@@ -367,7 +247,7 @@ GLuint Bamboo::TextureManager::CreateSampler(std::string sTextureName, GLenum eT
 {
     GLuint nTextureID;
 
-    GLuint nAssignedUnit = GetFreeUnit();
+    GLuint nAssignedUnit = RequestFreeUnit();
 
     // clear errors
     glGetError();
@@ -425,4 +305,69 @@ GLint Bamboo::TextureManager::GetTextureTarget(std::string sTextureName)
 bool Bamboo::TextureManager::IsTextureLocked(GLuint texture_id)
 {
     return !(m_mTextureLocks.find(texture_id) == m_mTextureLocks.end() || m_mTextureLocks[texture_id] == false);
+}
+
+bool Bamboo::TextureManager::ItlLoadTextureFromFile(GLuint &rnTextureID, std::string sFilename, bool bAlreadyGammaCorrected)
+{
+    Logger::debug() << "Try to load texture from \"" << sFilename << "\"" << Logger::endl;
+
+    ILuint nIlTextureId;                            // index für DevIL Textur
+
+    ilGenImages(1,&nIlTextureId);                   // generieren von IL ID für Texturen
+    ilBindImage(nIlTextureId);                      // bestimmten Texturindex als aktell setzen
+
+    if (!ilLoadImage (sFilename.data()))		// laden der Textur
+    {
+            ILenum Error;
+            Error = ilGetError();
+            ilDeleteImages(1,&nIlTextureId);		// bei Fehlschlag wieder Index freigeben
+
+            Logger::error() << "Could not find texture file " << sFilename << ", loading failed. DevIL error-code: " << Error << Logger::endl;
+
+            return false;
+    }
+    else
+    {
+            long int iHeight, iWidth, iFormat;
+            unsigned char *szData=0;
+
+            iWidth=ilGetInteger(IL_IMAGE_WIDTH);		    // Breite des Bildes holen
+            iHeight=ilGetInteger(IL_IMAGE_HEIGHT);	    // Höhe des Bildes holen
+            //bpp=ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL); // Farbtiefe des Bildes
+            iFormat=ilGetInteger(IL_IMAGE_FORMAT);	    // Format des Bildes z.B. RGB RGBA BGR BGRA usw.
+            szData=ilGetData();			    // Zeiger auf Bilddaten holen
+
+            glGetError();				    // clear error state
+            glGenTextures(1,&rnTextureID);		    // ask for opengl texture-id (returns first free id)
+            glBindTexture(GL_TEXTURE_2D, rnTextureID);
+
+            if (bAlreadyGammaCorrected)
+                    glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, iWidth, iHeight, 0, iFormat, GL_UNSIGNED_BYTE, szData);
+            else
+                    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, iWidth, iHeight, 0, iFormat, GL_UNSIGNED_BYTE, szData);
+
+
+            //activate mipmapping
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            //glTexParameteri(iTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+            float fMaximumAnisotropy;
+            //get maximum ansitropic filtering value
+            glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &fMaximumAnisotropy);
+
+            //activate 4x ansitropic filtering if possible
+            if (fMaximumAnisotropy >= 4.0)
+                    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
+            else
+                Logger::error() << "4x Ansitropic filtering not available by graphic hardware" << Logger::endl;
+
+            glGenerateMipmap(GL_TEXTURE_2D);  //Generate mipmaps now!!!
+
+            GLenum eError = glGetError();
+            if (eError != GL_NO_ERROR)
+                Logger::error() << "glGetError: " << TranslateGLerror(eError) << Logger::endl;
+
+            return true;
+    }
 }

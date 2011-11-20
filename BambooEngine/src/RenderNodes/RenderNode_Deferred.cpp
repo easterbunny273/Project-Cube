@@ -25,7 +25,7 @@ void Bamboo::RN_Deferred::ItlCreateFBO()
     assert (pTextureManager != NULL);
 
     //get the id of a free texture unit from the texture manager
-    GLuint nUsedTextureUnit = pTextureManager->GetFreeUnit(); //ask for a free texture unit
+    GLuint nUsedTextureUnit = pTextureManager->RequestFreeUnit(); //ask for a free texture unit
 
     //activate unit
     glActiveTexture(GL_TEXTURE0 + nUsedTextureUnit);

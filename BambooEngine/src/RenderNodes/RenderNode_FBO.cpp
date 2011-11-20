@@ -92,7 +92,7 @@ Bamboo::RN_FBO::RN_FBO(int iWidth,
     m_bDepthRenderbuffer = true;    //but we use a renderbuffer for the depth
 
     //get the id of a free texture unit from the texture manager
-    GLuint textureUnit = TextureManager::instance()->GetFreeUnit();
+    GLuint textureUnit = TextureManager::instance()->RequestFreeUnit();
 
     //activate this unit
     glActiveTexture(GL_TEXTURE0 + textureUnit);
@@ -208,7 +208,7 @@ Bamboo::RN_FBO::RN_FBO(int iWidth,
     m_bDepthRenderbuffer = false;   //so we don't use a depth renderbuffer
 
     //get the id of a free texture unit from the texture manager
-    GLuint textureUnit = TextureManager::instance()->GetFreeUnit(); //ask for a free texture unit
+    GLuint textureUnit = TextureManager::instance()->RequestFreeUnit(); //ask for a free texture unit
 
     //activate unit
     glActiveTexture(GL_TEXTURE0 + textureUnit);

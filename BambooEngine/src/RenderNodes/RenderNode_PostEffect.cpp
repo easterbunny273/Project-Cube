@@ -105,7 +105,7 @@ void Bamboo::RN_PostEffect::ItlRender()
         std::string sUniformName = iter->first;
 
         // load texture in a free unit and remember used texture unit
-        GLuint nUsedTextureUnit = TextureManager::instance()->GetFreeUnit();
+        GLuint nUsedTextureUnit = TextureManager::instance()->RequestFreeUnit();
 
         // get the uniform location
         GLint iUniformLocation = ItlGetGraphicCore()->GetShaderManager()->GetUniform(sUniformName);
