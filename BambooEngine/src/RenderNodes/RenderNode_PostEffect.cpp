@@ -66,6 +66,10 @@ void Bamboo::RN_PostEffect::ItlPreRender()
 
 void Bamboo::RN_PostEffect::ItlRender()
 {
+    // get texture manager
+    Bamboo::TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
+    assert (pTextureManager != NULL);
+
     const GLint l_in_Position(ItlGetGraphicCore()->GetShaderManager()->GetAttribute("in_Position"));
     const GLint l_texcoords(ItlGetGraphicCore()->GetShaderManager()->GetAttribute("in_Texcoord"));
 
@@ -85,7 +89,7 @@ void Bamboo::RN_PostEffect::ItlRender()
         std::string sUniformName = iter->first;
 
         // load texture in a free unit and remember used texture unit
-        GLuint nUsedTextureUnit = TextureManager::instance()->UseTexture(sTextureName);
+        GLuint nUsedTextureUnit = pTextureManager->UseTexture(sTextureName);
 
         // get the uniform location
         GLint iUniformLocation = ItlGetGraphicCore()->GetShaderManager()->GetUniform(sUniformName);
@@ -105,7 +109,7 @@ void Bamboo::RN_PostEffect::ItlRender()
         std::string sUniformName = iter->first;
 
         // load texture in a free unit and remember used texture unit
-        GLuint nUsedTextureUnit = TextureManager::instance()->RequestFreeUnit();
+        GLuint nUsedTextureUnit = pTextureManager->RequestFreeUnit();
 
         // get the uniform location
         GLint iUniformLocation = ItlGetGraphicCore()->GetShaderManager()->GetUniform(sUniformName);
@@ -169,13 +173,13 @@ void Bamboo::RN_PostEffect::ItlRender()
         // alias for better code reading
         std::string sTextureName = iter->second;
 
-        TextureManager::instance()->UnuseTexture(sTextureName);
+        pTextureManager->UnuseTexture(sTextureName);
     }
 
     //release used texture units
     for (auto iter = vManualLockedUnits.begin(); iter != vManualLockedUnits.end(); iter++)
     {
-        TextureManager::instance()->ReleaseUnit(*iter);
+        pTextureManager->ReleaseUnit(*iter);
     }
 }
 

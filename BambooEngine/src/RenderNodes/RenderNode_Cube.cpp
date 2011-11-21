@@ -196,6 +196,10 @@ void Bamboo::RN_Cube::ItlPostRender()
 
 void Bamboo::RN_Cube::ItlRender()
 {
+    // get texture manager
+    Bamboo::TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
+    assert (pTextureManager != NULL);
+
     GLenum eError = glGetError();
 
     if (eError != GL_NO_ERROR)
@@ -233,7 +237,7 @@ void Bamboo::RN_Cube::ItlRender()
 	Logger::error() << TranslateGLerror(eError) << Logger::endl;
 
     // load texture in texture unit
-    GLuint nUsedUnit = TextureManager::instance()->UseTexture("cube_texture");
+    GLuint nUsedUnit = pTextureManager->UseTexture("cube_texture");
 
     const GLint l_texture1(ItlGetGraphicCore()->GetShaderManager()->GetUniform("texture1"));
 
@@ -245,11 +249,11 @@ void Bamboo::RN_Cube::ItlRender()
     glDrawArrays(GL_TRIANGLES, 0, 108);
 
     // release used texture unit
-    TextureManager::instance()->UnuseTexture("cube_texture");
+    pTextureManager->UnuseTexture("cube_texture");
 }
 
 void Bamboo::RN_Cube::ItlLoadRessources()
 {
     ItlGetGraphicCore()->GetShaderManager()->AddShader("basic_shading", new Shader("BambooEngine/shaders/basic_shading.vs", "BambooEngine/shaders/basic_shading.fs"));
-    TextureManager::instance()->LoadTexture("cube_texture", "textures/cube_texture.jpg", false);
+    ItlGetGraphicCore()->GetTextureManager()->LoadTexture("cube_texture", "textures/cube_texture.jpg", false);
 }

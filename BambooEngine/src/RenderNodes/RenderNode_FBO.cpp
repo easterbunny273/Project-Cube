@@ -7,63 +7,6 @@
 
 std::stack<GLuint> bound_fbos;
 
-Bamboo::RN_FBO::RN_FBO(bool bDummy, int iWidth, int iHeight, const char * szColorTexture)
-    : m_bMipMapped(false),
-      m_iWidth(iWidth),
-      m_iHeight(iHeight),
-      m_szColorTextureName(szColorTexture),
-      m_szDepthTextureName(0)
-{
-    //write down which rendertargets we use
-    m_bColorTexture = true;	    //we use a color texture
-    m_bDepthTexture = false;	    //we use no depth texture
-    m_bDepthRenderbuffer = true;    //but we use a renderbuffer for the depth
-
-    bool bOk = TextureManager::instance()->IsTextureRegistered(szColorTexture, m_nColorTexture);
-
-    if (!bOk)
-	Logger::fatal() << "created new fbo with color texture " << szColorTexture << "; but this texture is not registered yet!" << Logger::endl;
-
-    Logger::debug() << "new fbo, already registered texture used (" << m_nColorTexture << ", " << szColorTexture << Logger::endl;
-
-    //generate renderbuffer
-    glGenRenderbuffers(1, &m_nDepthRenderbuffer);
-
-    //bind renderbuffer
-    glBindRenderbuffer(GL_RENDERBUFFER, m_nDepthRenderbuffer);
-
-    //set renderbuffer format and data
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, m_iWidth, m_iHeight);
-
-    //unbind renderbuffer
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-    //generate frame buffer
-    glGenFramebuffers(1, &m_nFramebuffer);
-
-    //bind framebuffer
-    glBindFramebuffer(GL_FRAMEBUFFER, m_nFramebuffer);
-
-    GLint iTextureTarget = TextureManager::instance()->GetTextureTarget(szColorTexture);
-
-    //attach color texture to framebuffer
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, iTextureTarget, m_nColorTexture, 0);
-
-    //attach depth renderbuffer to framebuffer
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_nDepthRenderbuffer);
-
-    //check framebuffer status
-    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-
-    //check if its complete
-    if(status != GL_FRAMEBUFFER_COMPLETE)
-	Logger::fatal() << "Failed to initialize FBO" << Logger::endl;
-    else
-	Logger::debug() << "Initialized FBO" << Logger::endl;
-
-    //unbind framebuffer
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
 
 /*! \brief Constructor for creating a fbo with a color texture attached
  *
@@ -86,13 +29,17 @@ Bamboo::RN_FBO::RN_FBO(int iWidth,
       m_szColorTextureName(szColorTextureName),
       m_szDepthTextureName(0)
 {
+    // get texture manager
+    Bamboo::TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
+    assert (pTextureManager != NULL);
+
     //write down which rendertargets we use
     m_bColorTexture = true;	    //we use a color texture
     m_bDepthTexture = false;	    //we use no depth texture
     m_bDepthRenderbuffer = true;    //but we use a renderbuffer for the depth
 
     //get the id of a free texture unit from the texture manager
-    GLuint textureUnit = TextureManager::instance()->RequestFreeUnit();
+    GLuint textureUnit = pTextureManager->RequestFreeUnit();
 
     //activate this unit
     glActiveTexture(GL_TEXTURE0 + textureUnit);
@@ -100,7 +47,7 @@ Bamboo::RN_FBO::RN_FBO(int iWidth,
 
     //bool bNewTexture = false;
 
-    if (TextureManager::instance()->IsTextureRegistered(szColorTextureName, m_nColorTexture) == false)
+    if (pTextureManager->IsTextureRegistered(szColorTextureName, m_nColorTexture) == false)
     {
 
 	//generate color texture (=create new opengl id)
@@ -132,7 +79,7 @@ Bamboo::RN_FBO::RN_FBO(int iWidth,
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	//register color texture in texture manager, for easy use by simple calling TextureManager::useTexture(szColorTextureName);
-	TextureManager::instance()->RegisterManualTexture(szColorTextureName, m_nColorTexture);
+        pTextureManager->RegisterManualTexture(szColorTextureName, m_nColorTexture);
 
 //	bNewTexture = true;
     }
@@ -140,7 +87,7 @@ Bamboo::RN_FBO::RN_FBO(int iWidth,
 	Logger::debug() << "new fbo, already registered texture used (" << m_nColorTexture << ", " << szColorTextureName << Logger::endl;
 
     //release unit
-    TextureManager::instance()->ReleaseUnit(textureUnit);
+    pTextureManager->ReleaseUnit(textureUnit);
 
     //generate renderbuffer
     glGenRenderbuffers(1, &m_nDepthRenderbuffer);
@@ -202,13 +149,17 @@ Bamboo::RN_FBO::RN_FBO(int iWidth,
       m_szColorTextureName(szColorTextureName),
       m_szDepthTextureName(szDepthTextureName)
 {
+    // get texture manager
+    Bamboo::TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
+    assert (pTextureManager != NULL);
+
     //write down which rendertargets we use
     m_bColorTexture = true;	    //we use a color texture
     m_bDepthTexture = true;	    //we use a depth texture
     m_bDepthRenderbuffer = false;   //so we don't use a depth renderbuffer
 
     //get the id of a free texture unit from the texture manager
-    GLuint textureUnit = TextureManager::instance()->RequestFreeUnit(); //ask for a free texture unit
+    GLuint textureUnit = pTextureManager->RequestFreeUnit(); //ask for a free texture unit
 
     //activate unit
     glActiveTexture(GL_TEXTURE0 + textureUnit);
@@ -258,10 +209,10 @@ Bamboo::RN_FBO::RN_FBO(int iWidth,
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
     //register color texture in texture manager, for easy use by simple calling TextureManager::useTexture(szColorTextureName);
-    TextureManager::instance()->RegisterManualTexture(szColorTextureName, m_nColorTexture);
+    pTextureManager->RegisterManualTexture(szColorTextureName, m_nColorTexture);
 
     //register depth texture in texture manager, for easy use by simple calling TextureManager::useTexture(szColorTextureName);
-    TextureManager::instance()->RegisterManualTexture(szDepthTextureName, m_nDepthTexture);
+    pTextureManager->RegisterManualTexture(szDepthTextureName, m_nDepthTexture);
 
     glGenFramebuffers(1, &m_nFramebuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, m_nFramebuffer);
@@ -281,7 +232,7 @@ Bamboo::RN_FBO::RN_FBO(int iWidth,
 	Logger::debug() << "Initialized FBO" << Logger::endl;
 
     //release used texture unit
-    TextureManager::instance()->ReleaseUnit(textureUnit);
+    pTextureManager->ReleaseUnit(textureUnit);
 
     //unbind fbo
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -312,10 +263,6 @@ Bamboo::RN_FBO::~RN_FBO()
  */
 void Bamboo::RN_FBO::ItlPreRenderChildren()
 {
-    assert (TextureManager::instance()->IsTextureInUse(m_nColorTexture) == false);
-
-    TextureManager::instance()->LockTextureID(m_nColorTexture);
-
     //save current viewport params
     glGetIntegerv(GL_VIEWPORT, m_iGeneralViewportParams);
 
@@ -340,12 +287,17 @@ void Bamboo::RN_FBO::ItlPreRenderChildren()
  */
 void Bamboo::RN_FBO::ItlPostRenderChildren()
 {
+
     //if mipmapping is activated, update mipmaps
     if (m_bMipMapped)
     {
-	TextureManager::instance()->UseTexture(m_szColorTextureName);
+        // get texture manager
+        Bamboo::TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
+        assert (pTextureManager != NULL);
+
+        pTextureManager->UseTexture(m_szColorTextureName);
 	glGenerateMipmap(GL_TEXTURE_2D);
-	TextureManager::instance()->UnuseTexture(m_szColorTextureName);
+        pTextureManager->UnuseTexture(m_szColorTextureName);
     }
 
     //remove the fbo (THIS fbo) from the bound_fbos stack
@@ -362,8 +314,6 @@ void Bamboo::RN_FBO::ItlPostRenderChildren()
 
     //restore viewport params
     glViewport(m_iGeneralViewportParams[0], m_iGeneralViewportParams[1], m_iGeneralViewportParams[2], m_iGeneralViewportParams[3]);
-
-    TextureManager::instance()->UnlockTextureID(m_nColorTexture);
 }
 
 void Bamboo::RN_FBO::ItlPreRender()

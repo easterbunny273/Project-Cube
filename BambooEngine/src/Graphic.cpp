@@ -96,7 +96,6 @@ Bamboo::TextureManager * Bamboo::GetTextureManager()
     if (m_pTextureManager == NULL)
     {
         m_pTextureManager = new TextureManager();
-        m_pTextureManager->Initialize();
     }
 
     // TODO: should we use the texture manager as a singelton or as a member of the graphics class?

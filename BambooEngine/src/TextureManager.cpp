@@ -1,38 +1,69 @@
-#include <IL/il.h>
-#include <iostream>
+// stl includes
+#include <map>
+#include <list>
 #include <sstream>
-#include <assert.h>
+
+// openGL, devIL
 #include "common_gl.h"
+#include <IL/il.h>
+
+// assert
+#include <assert.h>
+
+// project includes
 #include "TextureManager.h"
 #include "Logger.h"
 
 using namespace std;
 
-Bamboo::TextureManager::TextureManager()
-    : m_bDevIL_Initialized(false)
+struct Bamboo::TextureManager::TImpl
 {
-    //initialization of free_units is done with first loadTexture call because we need to make sure that the opengl context is already created
+    /*! \name Internal helper methods */
+    //@{
+        /// initializes DevIL
+        void ItlInitialize();
+
+        /// loads a texture from a file into an opengl-texture
+        bool ItlLoadTextureFromFile(GLuint &rnTextureID, std::string sFilename, bool bAlreadyGammaCorrected);
+    //@}
+
+    /*! \name Private members */
+    //@{
+        bool m_bDevIL_Initialized;                  /// whether DevIl is initialized
+        GLint m_iNumTextureUnits;                   /// num of available texture units on the GPU
+
+        std::list<GLuint> m_lFreeUnits;             /// list of currently available (not used) texture units
+        std::map<GLuint, GLuint> m_mTextureInUse;   /// maps the currently "used" textures to the corresponding texture units (to know in which unit a active texture is)
+
+        std::map<std::string, GLuint>   m_mTextureNames;    /// maps a texture name (string) to a opengl id (GLuint)
+    //@}
+};
+
+Bamboo::TextureManager::TextureManager()
+{  
+    m_pImpl = new TImpl();
+    m_pImpl->m_bDevIL_Initialized = false;
 }
 
 Bamboo::TextureManager::~TextureManager()
 {
-
+    delete m_pImpl;
 }
 
-void Bamboo::TextureManager::Initialize()
+void Bamboo::TextureManager::TImpl::ItlInitialize()
 {
     ilInit();
 
     stringstream puffer;	//for debugging output
     string puffer2;		//for debugging output
 
-    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &m_iMaxTextureUnits);	    //ask opengl how many texture units are available
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &m_iNumTextureUnits);	    //ask opengl how many texture units are available
 
-    puffer << m_iMaxTextureUnits;					    //for debugging output, transform integer to string, read integer in stringstream
+    puffer << m_iNumTextureUnits;					    //for debugging output, transform integer to string, read integer in stringstream
     puffer >> puffer2;						    //for debugging output, transform integer to string, write stringstream to string
 
 
-    for (int a=0; a < m_iMaxTextureUnits; a++)			    //push them all in the free_units queue
+    for (int a=0; a < m_iNumTextureUnits; a++)			    //push them all in the free_units queue
             m_lFreeUnits.push_back(a);
 
     Logger::debug() << puffer2 << " texture units available" << Logger::endl;
@@ -47,21 +78,17 @@ bool Bamboo::TextureManager::LoadTexture(std::string sTextureName,
                                          bool bAlreadyGammaCorrected)
 {
     // initialize devIl if necessary
-    if (m_bDevIL_Initialized == false)
-        Initialize();
+    if (m_pImpl->m_bDevIL_Initialized == false)
+        m_pImpl->ItlInitialize();
 
     GLuint nOpenGLID;
 
     // load texture from file
-    bool bOk = ItlLoadTextureFromFile(nOpenGLID, sFilename, bAlreadyGammaCorrected);
+    bool bOk = m_pImpl->ItlLoadTextureFromFile(nOpenGLID, sFilename, bAlreadyGammaCorrected);
 
     // if successfull, store opengl id
     if (bOk)
-    {
-        m_mTextureIDs[sTextureName] = nOpenGLID;
-        m_mTextureTargets[sTextureName] = GL_TEXTURE_2D;
-        m_mTexturesInUnits[sTextureName] = -1;
-    }
+        m_pImpl->m_mTextureNames[sTextureName] = nOpenGLID;
 
     return bOk;
 }
@@ -71,243 +98,101 @@ bool Bamboo::TextureManager::LoadTexture(GLuint &rnTextureID,
                                          std::string sFilename,
                                          bool bAlreadyGammaCorrected)
 {
-        if (m_bDevIL_Initialized == false)
+        if (m_pImpl->m_bDevIL_Initialized == false)
         {
-            Initialize();
+            m_pImpl->ItlInitialize();
         }
 
-        ItlLoadTextureFromFile(rnTextureID, sFilename, bAlreadyGammaCorrected);
+        m_pImpl->ItlLoadTextureFromFile(rnTextureID, sFilename, bAlreadyGammaCorrected);
 }
 
 
 GLuint Bamboo::TextureManager::UseTexture(std::string sTextureName)
 {
-    unsigned int nPreviousSize = m_mTextureIDs.size();
-    GLuint nTextureID = m_mTextureIDs[sTextureName];
+    auto iter = m_pImpl->m_mTextureNames.find(sTextureName);
 
-    assert (m_mTextureLocks.find(nTextureID) == m_mTextureLocks.end() || m_mTextureLocks[nTextureID] == false);
+    assert (iter != m_pImpl->m_mTextureNames.end());
 
-    m_mTextureLocks[nTextureID] = true;
+    GLuint nOpenGLID = m_pImpl->m_mTextureNames[sTextureName];
 
-    //if the size of the texture-container NOW is creater than old_size,
-    //the [] operator created a new entry in the map, which means that an entry with the given name did not exist
-    if (nPreviousSize != m_mTextureIDs.size())
-	Logger::fatal() << "Texture \"" << sTextureName << "\" could not be found (not loaded?)" << Logger::endl;
-    else
-    {
-	if (m_lFreeUnits.size() == 0)
-	    Logger::error() << "no free texture unit to use texture \"" << sTextureName << "\"" << Logger::endl;
-	else
-	{
-	    if (m_mTexturesInUnits[sTextureName] != -1)		    //if this texture is currently stored in an unit, return the id of the unit
-		return m_mTexturesInUnits[sTextureName];
-	    else						    //else find a free unit and load the texture in it
-	    {
+    return UseTexture(nOpenGLID);
+}
 
-#ifdef PREVENT_REBINDING_TEXTURE
-		//this block loops through all units and looks if on of the units is marked as free, but has the wanted texture loaded
-		//then we can reuse this unit without reloading the texture in it
-		//but we must erase the unit from the free_units-list
-		for (int a=0; a < m_iMaxTextureUnits; a++)
-		    if (m_mUnitHasTexture[a] == nTextureID)
-		    {
-			for (std::list<GLuint>::iterator it1=m_lFreeUnits.begin(); it1!=m_lFreeUnits.end(); ++it1)
-			    if (*it1 == a)
-			    {
-				m_lFreeUnits.erase(it1);
-				break;
-			    }
-			m_mTexturesInUnits[sTextureName] = a;
-			return a;
-		    }
-#endif
+GLuint Bamboo::TextureManager::UseTexture(GLuint nTextureID)
+{
+    // request a free unit
+    GLuint nFreeUnit = RequestFreeUnit();
 
-                GLuint nFreeUnit = RequestFreeUnit();		    //remove unit from free_units queue
-		m_mTexturesInUnits[sTextureName] = nFreeUnit;	    //make a note that this texture now is stored in a unit
+    // write entry to map
+    m_pImpl->m_mTextureInUse[nTextureID] = nFreeUnit;
 
-#ifdef PREVENT_REBINDING_TEXTURE
-		m_mUnitHasTexture[nFreeUnit] = nTextureID;	    //mark that the texture (texture_id) is stored in this unit, to prevent rebinding the texture in another unit
-#endif
+    // activate texture unit
+    glActiveTexture(GL_TEXTURE0 + nFreeUnit);
 
-		assert (m_mTextureTargets.find(sTextureName) != m_mTextureTargets.end());
+    // bind texture
+    glBindTexture(GL_TEXTURE_2D, nTextureID);
 
-		// get target
-		GLint iTarget = m_mTextureTargets[sTextureName];
-
-		glActiveTexture(GL_TEXTURE0 + nFreeUnit);	    //activate given texture unit
-		glBindTexture(iTarget, nTextureID);		    //load texture in this unit
-
-		return nFreeUnit;
-	    }
-	}
-    }
-
-    assert (!"should not reach this point");
-    return 0;
+    return nFreeUnit;
 }
 
 void Bamboo::TextureManager::UnuseTexture(std::string sTextureName)
 {
-    GLint iUsedUnit = m_mTexturesInUnits[sTextureName];	//which unit was used by given texture
+    auto iter = m_pImpl->m_mTextureNames.find(sTextureName);
 
-    if (iUsedUnit != -1)
-    {
-	//cout << "release unit: " << used_unit << endl;
-	ReleaseUnit(iUsedUnit);
+    assert (iter != m_pImpl->m_mTextureNames.end());
 
-	m_mTexturesInUnits[sTextureName] = -1;			//mark texture as "not stored in any unit"
+    GLuint nOpenGLID = m_pImpl->m_mTextureNames[sTextureName];
 
-	m_mTextureLocks[m_mTextureIDs[sTextureName]] = false;
-    }
-    else
-	Logger::error() << "not possible to release texture unit used by texture \"" << sTextureName << "\", texture was not loaded in any unit!" << Logger::endl;
+    return UnuseTexture(nOpenGLID);
 }
 
-Bamboo::TextureManager *Bamboo::TextureManager::instance()
+void Bamboo::TextureManager::UnuseTexture(GLuint nTextureID)
 {
-    static TextureManager singelton_instance;
-    return &singelton_instance;
+    // get map entry
+    auto iter = m_pImpl->m_mTextureInUse.find(nTextureID);
+
+    // assert that the iterator is valid (else, the texture nTextureID was not used!)
+    assert (iter != m_pImpl->m_mTextureInUse.end());
+
+    // get the used texture unit
+    GLuint nUsedUnit = iter->second;
+
+    // remove entry in map
+    m_pImpl->m_mTextureInUse.erase(iter);
+
+    // release texture unit
+    ReleaseUnit(nUsedUnit);
 }
 
 GLuint Bamboo::TextureManager::RequestFreeUnit()
 {
-    if (m_bDevIL_Initialized == false)
-        Initialize();
+    if (m_pImpl->m_bDevIL_Initialized == false)
+        m_pImpl->ItlInitialize();
 
-    GLuint nFreeUnit = m_lFreeUnits.front();	    //get first free unit
+    GLuint nFreeUnit = m_pImpl->m_lFreeUnits.front();	    //get first free unit
 
-    m_lFreeUnits.pop_front();			    //remove unit from free_units queue
-
-#ifdef PREVENT_REBINDING_TEXTURE
-    m_mUnitHasTexture[nFreeUnit] = -1;		    //mark that the returned unit has no loaded texture in it
-#endif
+    m_pImpl->m_lFreeUnits.pop_front();			    //remove unit from free_units queue
 
     return nFreeUnit;
 }
 
 void Bamboo::TextureManager::ReleaseUnit(GLuint nUnit)
 {
-    m_lFreeUnits.push_back(nUnit);
+    m_pImpl->m_lFreeUnits.push_back(nUnit);
 }
 
-void Bamboo::TextureManager::RegisterManualTexture(std::string sTextureName, GLuint nTextureID, GLenum eTarget /* = GL_TEXTURE_2D */)
+void Bamboo::TextureManager::RegisterManualTexture(std::string sTextureName, GLuint nTextureID)
 {
     Logger::debug() << "Registered manual texture \"" << sTextureName << "\" with id " << nTextureID << Logger::endl;
 
-    unsigned int nOldSize = m_mTextureIDs.size();
+    unsigned int nOldSize = m_pImpl->m_mTextureNames.size();
 
-    m_mTextureIDs[sTextureName] = nTextureID;
-    m_mTextureTargets[sTextureName] = eTarget;
+    m_pImpl->m_mTextureNames[sTextureName] = nTextureID;
 
-    m_mTexturesInUnits[sTextureName] = -1;
-
-    assert (m_mTextureIDs.size() != nOldSize);
+    assert (m_pImpl->m_mTextureNames.size() != nOldSize);
 }
 
-bool Bamboo::TextureManager::IsTextureRegistered(std::string sTextureName, GLuint &rnTextureID)
-{
-    std::map<std::string, GLuint>::iterator iter = m_mTextureIDs.find(sTextureName);
-    if (iter != m_mTextureIDs.end())
-    {
-	rnTextureID = iter->second;
-	return true;
-    }
-    else
-	return false;
-}
-
-bool Bamboo::TextureManager::IsTextureInUse(GLuint nTextureID)
-{
-    std::string sTextureName;
-
-    for (std::map<std::string, GLuint>::iterator iter = m_mTextureIDs.begin(); iter != m_mTextureIDs.end(); iter++)
-	if (iter->second == nTextureID)
-	{
-	    sTextureName = iter->first;
-	    break;
-	}
-
-    assert (sTextureName.empty() == false);
-    assert (m_mTexturesInUnits.find(sTextureName) != m_mTexturesInUnits.end());
-
-    return (m_mTexturesInUnits[sTextureName] != -1);
-}
-
-void Bamboo::TextureManager::LockTextureID(GLuint nTextureID)
-{
-    m_mTextureLocks[nTextureID] = true;
-}
-
-void Bamboo::TextureManager::UnlockTextureID(GLuint nTextureID)
-{
-    m_mTextureLocks[nTextureID] = false;
-}
-
-GLuint Bamboo::TextureManager::CreateSampler(std::string sTextureName, GLenum eTarget, GLint iInternalTextureFormat, GLint iWidth, GLint iHeight, GLint iClampMode, GLint iFiltering)
-{
-    GLuint nTextureID;
-
-    GLuint nAssignedUnit = RequestFreeUnit();
-
-    // clear errors
-    glGetError();
-
-    // switch to assigned texture unit
-    glActiveTexture(GL_TEXTURE0 + nAssignedUnit);
-
-    // generate texture (=create new opengl id)
-    glGenTextures(1, &nTextureID);
-
-    // bind color texture
-    glBindTexture(eTarget, nTextureID);
-
-    // set texture format and data
-    glTexImage2D(eTarget, 0, iInternalTextureFormat, iWidth, iHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-
-    // set texture parameters
-    glTexParameterf(eTarget, GL_TEXTURE_WRAP_S, iClampMode);
-    glTexParameterf(eTarget, GL_TEXTURE_WRAP_T, iClampMode);
-    glTexParameterf(eTarget, GL_TEXTURE_MAG_FILTER, iFiltering);
-    glTexParameterf(eTarget, GL_TEXTURE_MIN_FILTER, iFiltering);
-
-    // unbind texture
-    glBindTexture(eTarget, 0);
-
-    GLenum eError = glGetError();
-
-    assert (eError == GL_NO_ERROR);
-
-    if (eError != GL_NO_ERROR)
-	Logger::error() << __FUNCTION__ << ": Could not create a sampler!" << Logger::endl;
-
-    // release unit
-    ReleaseUnit(nAssignedUnit);
-
-    // register texture
-    RegisterManualTexture(sTextureName, nTextureID, eTarget);
-
-    // return open gl texture id
-    return nTextureID;
-}
-
-GLint Bamboo::TextureManager::GetTextureTarget(std::string sTextureName)
-{
-    unsigned int nOldSize = m_mTextureTargets.size();
-
-    GLint iTarget = m_mTextureTargets[sTextureName];
-
-    // check that size has not changed (else the entry did not exist before)
-    assert (m_mTextureTargets.size() == nOldSize);
-
-    return iTarget;
-}
-
-bool Bamboo::TextureManager::IsTextureLocked(GLuint texture_id)
-{
-    return !(m_mTextureLocks.find(texture_id) == m_mTextureLocks.end() || m_mTextureLocks[texture_id] == false);
-}
-
-bool Bamboo::TextureManager::ItlLoadTextureFromFile(GLuint &rnTextureID, std::string sFilename, bool bAlreadyGammaCorrected)
+bool Bamboo::TextureManager::TImpl::ItlLoadTextureFromFile(GLuint &rnTextureID, std::string sFilename, bool bAlreadyGammaCorrected)
 {
     Logger::debug() << "Try to load texture from \"" << sFilename << "\"" << Logger::endl;
 
@@ -370,4 +255,16 @@ bool Bamboo::TextureManager::ItlLoadTextureFromFile(GLuint &rnTextureID, std::st
 
             return true;
     }
+}
+
+bool Bamboo::TextureManager::IsTextureRegistered(std::string sTextureName, GLuint &rnTextureID)
+{
+    auto iter = m_pImpl->m_mTextureNames.find(sTextureName);
+
+    bool bIsRegistered = (iter != m_pImpl->m_mTextureNames.end());
+
+    if (bIsRegistered)
+        rnTextureID = iter->second;
+
+    return bIsRegistered;
 }

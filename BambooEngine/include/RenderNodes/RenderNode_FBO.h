@@ -75,10 +75,6 @@ public:
     ///Constructor for a SceneObject_FBO, creates a color texture and a depth texture.
     RN_FBO(int iWidth, int iHeight, const char *szColorTextureName, const char *szDepthTextureName, bool bMipMapped = false);
 
-
-    /// Constructor for a SceneObject_FBO with a color texture and renderbuffer for depth, where the color texture is created seperately
-    RN_FBO(bool bDummy, int iWidth, int iHeight, const char * szColorTexture);
-
     ///Destructor of the fbo, releases ressources
     ~RN_FBO();
 };
