@@ -143,6 +143,8 @@ void Bamboo::RN_Deferred::ItlPreRenderChildren()
 
     glBindFramebuffer(GL_FRAMEBUFFER, m_nFBO);
 
+    ItlPushFBO(m_nFBO);
+
     //set viewport size
     glViewport(0,0, m_nWidth, m_nHeight);
 
@@ -155,7 +157,17 @@ void Bamboo::RN_Deferred::ItlPreRenderChildren()
 
 void Bamboo::RN_Deferred::ItlPostRenderChildren()
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    //remove the fbo (THIS fbo) from the bound_fbos stack
+    ItlPopFBO();
+
+    //if there was a SceneObject_FBO bound in the SceneObject_Tree, rebind the previous bound fbo
+    if (ItlIsNestedFBO())
+    {
+        GLuint previous_bound = ItlGetTopFBO();
+        glBindFramebuffer(GL_FRAMEBUFFER, previous_bound);
+    }
+    else
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     //restore viewport params
     glViewport(m_iGeneralViewportParams[0], m_iGeneralViewportParams[1], m_iGeneralViewportParams[2], m_iGeneralViewportParams[3]);

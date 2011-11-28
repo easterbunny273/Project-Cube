@@ -20,10 +20,10 @@ Bamboo::RN_Generic::RN_Generic(std::shared_ptr<GeometryData::GenericObject> spOb
       m_pvsAttributeNames(NULL),
       m_pvnAttributeOffsets(NULL),
       m_pnNumIndices(NULL),
-      m_psColorTexture(NULL),
-      m_psNormalTexture(NULL),
-      m_psSpecularTexture(NULL),
-      m_psDisplaceTexture(NULL),
+      m_pnColorTexture(NULL),
+      m_pnNormalTexture(NULL),
+      m_pnSpecularTexture(NULL),
+      m_pnDisplaceTexture(NULL),
       m_spObject(spObject)
 {
     ItlLoadShader();
@@ -55,7 +55,10 @@ void Bamboo::RN_Generic::ItlRender()
     ShaderManager *pShaderManager = ItlGetGraphicCore()->GetShaderManager();
     assert (pShaderManager != NULL);
 
-    std::vector<std::string> vUsedTextures;
+    GLuint *pTextureArrayToUse[4] = { m_pnColorTexture, m_pnNormalTexture, m_pnSpecularTexture, m_pnDisplaceTexture };
+
+    std::vector<GLuint> vUsedTextures;
+    vUsedTextures.reserve(4);
 
     for (unsigned int nMesh = 0; nMesh < m_nNumMeshes; nMesh++)
     {
@@ -69,15 +72,12 @@ void Bamboo::RN_Generic::ItlRender()
 
                 if (iLocation != -1)
                 {
-                    std::shared_ptr<GeometryData::GenericMesh> spMesh(m_spObject->GetMesh(nMesh));
-                    std::string sTexturePath(spMesh->GetTexturePath(tTextureTypes[i]));
-
-
-                    GLuint iUsedUnit = pTextureManager->UseTexture(sTexturePath);
+                    GLuint nTextureID = pTextureArrayToUse[i][nMesh];
+                    GLuint iUsedUnit = pTextureManager->UseTexture(nTextureID);
 
                     glUniform1i(iLocation, iUsedUnit);
 
-                    vUsedTextures.push_back(sTexturePath);
+                    vUsedTextures.push_back(nTextureID);
                 }
             }
         }
@@ -88,7 +88,7 @@ void Bamboo::RN_Generic::ItlRender()
 
         glDrawElements(GL_TRIANGLES, m_pnNumIndices[nMesh], GL_UNSIGNED_INT, (const GLvoid *) 0 );
 
-        for (int i=0; i < vUsedTextures.size(); i++)
+        for (unsigned int i=0; i < vUsedTextures.size(); i++)
             pTextureManager->UnuseTexture(vUsedTextures[i]);
 
         vUsedTextures.clear();
@@ -315,27 +315,27 @@ void Bamboo::RN_Generic::ItlPrepareTextures()
     TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
     assert (pTextureManager != NULL);
 
-    assert (m_psColorTexture == NULL);
-    m_psColorTexture    = new std::string[m_nNumMeshes];
-    m_psNormalTexture   = new std::string[m_nNumMeshes];
-    m_psSpecularTexture = new std::string[m_nNumMeshes];
-    m_psDisplaceTexture = new std::string[m_nNumMeshes];
+    assert (m_pnColorTexture == NULL);
+    m_pnColorTexture    = new GLuint[m_nNumMeshes];
+    m_pnNormalTexture   = new GLuint[m_nNumMeshes];
+    m_pnSpecularTexture = new GLuint[m_nNumMeshes];
+    m_pnDisplaceTexture = new GLuint[m_nNumMeshes];
 
     for (unsigned int nMesh = 0; nMesh < m_nNumMeshes; nMesh++)
     {
         std::shared_ptr<GeometryData::GenericMesh> spMesh(m_spObject->GetMesh(nMesh));
 
-        std::string * psTargetStrings [4] = { &m_psColorTexture[nMesh], &m_psNormalTexture[nMesh], &m_psSpecularTexture[nMesh], &m_psDisplaceTexture[nMesh] };
+        GLuint * psTargetArrays [4] = { &m_pnColorTexture[nMesh], &m_pnNormalTexture[nMesh], &m_pnSpecularTexture[nMesh], &m_pnDisplaceTexture[nMesh] };
         bool bGammaCorrected[4] = { true, false, false, false };
 
         for (int i=0; i < 4; i++)
         {
-            *(psTargetStrings[i]) = spMesh->GetTexturePath(tTextureTypes[i]);
+            std::string sTexturePath = spMesh->GetTexturePath(tTextureTypes[i]);
 
-            if (psTargetStrings[i]->empty() == false)
+            if (sTexturePath.empty() == false)
             {
-                std::string sTextureName(std::string("models/") + *(psTargetStrings[i]));
-                pTextureManager->LoadTexture(*(psTargetStrings[i]), sTextureName, bGammaCorrected[i]);
+                std::string sFullTexturePath = std::string("models/") + sTexturePath;
+                pTextureManager->LoadTexture(*(psTargetArrays[i]), sFullTexturePath, bGammaCorrected[i]);
             }
         }
     }
@@ -348,19 +348,19 @@ void Bamboo::RN_Generic::ItlDeleteTextures()
     TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
     assert (pTextureManager != NULL);
 
-    assert (m_psColorTexture != NULL);
-    delete[] m_psColorTexture;
-    m_psColorTexture = NULL;
+    assert (m_pnColorTexture != NULL);
+    delete[] m_pnColorTexture;
+    m_pnColorTexture = NULL;
 
-    assert (m_psNormalTexture != NULL);
-    delete[] m_psNormalTexture;
-    m_psNormalTexture = NULL;
+    assert (m_pnNormalTexture != NULL);
+    delete[] m_pnNormalTexture;
+    m_pnNormalTexture = NULL;
 
-    assert (m_psSpecularTexture != NULL);
-    delete[] m_psSpecularTexture;
-    m_psSpecularTexture = NULL;
+    assert (m_pnSpecularTexture != NULL);
+    delete[] m_pnSpecularTexture;
+    m_pnSpecularTexture = NULL;
 
-    assert (m_psDisplaceTexture != NULL);
-    delete[] m_psDisplaceTexture;
-    m_psDisplaceTexture = NULL;
+    assert (m_pnDisplaceTexture != NULL);
+    delete[] m_pnDisplaceTexture;
+    m_pnDisplaceTexture = NULL;
 }

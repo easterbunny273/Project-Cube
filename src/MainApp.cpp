@@ -5,6 +5,7 @@
 #include "Graphic-GlfwWindow.h"
 #include "SceneObjects/LoadedModel.h"
 #include "SceneObjects/Cube.h"
+#include "SceneObjects/Light.h"
 #include "Graphic.h"
 #include "Camera.h"
 #include "Scene.h"
@@ -23,7 +24,7 @@ MainApp::MainApp()
 
     // set subsystems to NULL, lazy initialisation
     m_pLuaState = NULL;
-    m_pGraphic = NULL;
+    m_pGraphic = new Bamboo();
     m_pGame = NULL;
 
     // create an input event listener
@@ -99,18 +100,21 @@ void MainApp::StartGraphic_Test()
     // create scene
     std::shared_ptr<Bamboo::Scene> spScene = Bamboo::Scene::Create();
 
-    // workaround - triggers initializing of graphic engine
-    // todo: fix this.
-    GetGraphic();
-
     // create objects
     std::shared_ptr<Bamboo::ISceneObject> spCube = Bamboo::SO_Cube::Create();
+    std::shared_ptr<Bamboo::ISceneObject> spTestLight = Bamboo::SO_SpotLight::Create(glm::vec3(-0.2f, 0.15f, -0.15f), glm::vec3(1.0f, -1.0f, 1.0f), 20.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+
+    //spLight->SetTransformMatrix(glm::translate(0.0f, 1.0f, 0.0f));
+
     std::shared_ptr<Bamboo::ISceneObject> spTable = Bamboo::SO_LoadedModel::Create("models/bunte-treppe2.dae");
     spTable->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
 
     // add objects to scene
-    spScene->AttachObject(spCube);
+   // spScene->AttachObject(spCube);
     spScene->AttachObject(spTable);
+
+    // add light to scene
+    spScene->AttachObject(spTestLight);
 
     // add render loop
     GetGraphic()->AddRenderLoop(spWindow, m_spCamera, spScene);

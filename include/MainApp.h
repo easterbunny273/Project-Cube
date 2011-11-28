@@ -104,12 +104,12 @@ private:
 
     /*! \name Private members */
     //@{
-	EventManager m_EventManager;
-	Settings m_CoreSettings;
+        EventManager m_EventManager;
+        Settings m_CoreSettings;
 
-	Bamboo *m_pGraphic;
-	DummyGame *m_pGame;
-	lua_State * m_pLuaState;
+        Bamboo *m_pGraphic;
+        DummyGame *m_pGame;
+        lua_State * m_pLuaState;
         std::shared_ptr<InputEventListener> m_spInputEventListener;
         std::shared_ptr<Bamboo::ICamera> m_spCamera;
     //@}

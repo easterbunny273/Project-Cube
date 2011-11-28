@@ -44,6 +44,7 @@ private:
         class RN_AssimpImport;
         class RN_Generic;
         class RN_Deferred;
+        class RN_SpotLight;
     //@}
 
 public:
@@ -76,6 +77,8 @@ public:
         class ISceneObject;
         class SO_Cube;
         class SO_LoadedModel;
+        class SO_ILight;
+        class SO_SpotLight;
 
         class Scene;
         class LightManager;
@@ -140,6 +143,8 @@ private:
     //@{
         /// builds / prepares the render graph for a given renderloop
         void ItlBuildRenderGraph(TItlRenderLoop &tRenderLoop);
+
+        void ItlBuildDeferredRenderPipeline(TItlRenderLoop &tRenderLoop);
     //@}
 
     /*! \name Private members */

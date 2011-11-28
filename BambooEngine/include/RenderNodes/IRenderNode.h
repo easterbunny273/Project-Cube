@@ -10,7 +10,9 @@
 
 #include <glm/glm.hpp>
 #include <vector>
+#include <stack>
 #include <memory>
+#include <iostream>
 
 #include "Graphic.h"
 #include "common_gl.h"
@@ -158,6 +160,11 @@ protected:
 	void ItlSendTransformMatrices();		///<internal helper function which sends the current transormation matrices to the shader
 	void ItlSendLightPosition();
 
+        inline void ItlPushFBO(GLuint nFBO) { s_snBoundFBOs.push(nFBO); }
+        inline void ItlPopFBO() { s_snBoundFBOs.pop(); }
+        inline GLuint ItlGetTopFBO() { return s_snBoundFBOs.top(); }
+        inline bool ItlIsNestedFBO () { return !s_snBoundFBOs.empty(); }
+
         Bamboo * ItlGetGraphicCore();
     //@}
 
@@ -179,7 +186,7 @@ protected:
 
         std::vector<std::shared_ptr<Bamboo::IRenderNode> > m_vChildren;
 
-        std::shared_ptr<Bamboo::ICamera> m_spShadowCaster;
+        static std::stack<GLuint>                         s_snBoundFBOs;
 
 	bool m_bHasChildren;
 

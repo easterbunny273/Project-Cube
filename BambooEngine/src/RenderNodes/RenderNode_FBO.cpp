@@ -1,11 +1,8 @@
-#include <stack>
 #include <string.h>
 
 #include "RenderNodes/RenderNode_FBO.h"
 #include "TextureManager.h"
 #include "Logger.h"
-
-std::stack<GLuint> bound_fbos;
 
 
 /*! \brief Constructor for creating a fbo with a color texture attached
@@ -278,7 +275,7 @@ void Bamboo::RN_FBO::ItlPreRenderChildren()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     ///store our fbo-id on the stack, to allow "deeper" SceneObject_FBOs to rebind our fbo after finish drawing
-    bound_fbos.push(m_nFramebuffer);
+    ItlPushFBO(m_nFramebuffer);
 }
 
 /*!
@@ -301,12 +298,12 @@ void Bamboo::RN_FBO::ItlPostRenderChildren()
     }
 
     //remove the fbo (THIS fbo) from the bound_fbos stack
-    bound_fbos.pop();
+    ItlPopFBO();
 
     //if there was a SceneObject_FBO bound in the SceneObject_Tree, rebind the previous bound fbo
-    if (bound_fbos.size() > 0)
+    if (ItlIsNestedFBO())
     {
-	GLuint previous_bound = bound_fbos.top();
+        GLuint previous_bound = ItlGetTopFBO();
 	glBindFramebuffer(GL_FRAMEBUFFER, previous_bound);
     }
     else

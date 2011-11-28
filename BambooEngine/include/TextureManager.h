@@ -22,6 +22,19 @@
 class Bamboo::TextureManager
 {
 public:
+    /*! \name Public types */
+    //@{
+    enum TProvidedDefaultSamplerObjects
+    {
+        CLAMPED_NEAREST_FILTERING = 0,
+        CLAMPED_BILINEAR_FILTERING,
+        CLAMPED_TRILINEAR_FILTERING,
+        CLAMPED_ANSITROPIC_FILTERING,
+
+        NUM_PROVIDED_SAMPLER_OBJECTS
+    };
+
+    //@}
     /*! \name Construction / Destruction */
     //@{
     /// constructor

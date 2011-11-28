@@ -11,16 +11,11 @@
 
 #include "common_gl.h"
 #include "Graphic.h"
-/*
 
+/*
 class Bamboo::LightManager
 {
 public:
-    class ILight
-    {
-
-    };
-
     class PointLight : public ILight
     {
 

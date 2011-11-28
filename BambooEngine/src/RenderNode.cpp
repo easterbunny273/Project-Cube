@@ -11,6 +11,8 @@
 #include "RenderNodes/IRenderNode.h"
 #include "RenderNodes/RenderNode_BoundingBox.h"
 
+std::stack<GLuint> Bamboo::IRenderNode::s_snBoundFBOs;
+
 void Bamboo::IRenderNode::ItlSendTransformMatrices()
 {
     Bamboo *pGraphicCore = ItlGetGraphicCore();
@@ -26,16 +28,14 @@ void Bamboo::IRenderNode::ItlSendTransformMatrices()
     const GLint l_normal_matrix = pShaderManager->GetUniform("NormalMatrix");
     const GLint l_model_matrix = pShaderManager->GetUniform("ModelMatrix");
 
-    //if a position is -1, it was not found, so we write only in uniforms where we found a valid position
+    if (l_modelviewprojection_matrix != -1)
+        glUniformMatrix4fv(l_modelviewprojection_matrix, 1, GL_FALSE, &m_pCurrentRenderInfo->ModelViewProjectionMatrix[0][0]);
 
     if (l_projection_matrix != -1)
 	glUniformMatrix4fv(l_projection_matrix, 1, GL_FALSE, &m_pCurrentRenderInfo->ProjectionMatrix[0][0]);
 
     if (l_view_matrix != -1)
 	glUniformMatrix4fv(l_view_matrix, 1, GL_FALSE, &m_pCurrentRenderInfo->ViewMatrix[0][0]);
-
-    if (l_modelviewprojection_matrix != -1)
-	glUniformMatrix4fv(l_modelviewprojection_matrix, 1, GL_FALSE, &m_pCurrentRenderInfo->ModelViewProjectionMatrix[0][0]);
 
     if (l_model_matrix != -1)
 	glUniformMatrix4fv(l_model_matrix, 1, GL_FALSE, &m_pCurrentRenderInfo->ModelMatrix[0][0]);

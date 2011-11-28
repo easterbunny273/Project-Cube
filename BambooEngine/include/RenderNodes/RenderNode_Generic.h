@@ -98,10 +98,10 @@ private:
     unsigned int *m_pnNumIndices;
     unsigned int m_nNumMeshes;
 
-    std::string *m_psColorTexture;
-    std::string *m_psNormalTexture;
-    std::string *m_psSpecularTexture;
-    std::string *m_psDisplaceTexture;
+    GLuint *m_pnColorTexture;
+    GLuint *m_pnNormalTexture;
+    GLuint *m_pnSpecularTexture;
+    GLuint *m_pnDisplaceTexture;
 
     std::shared_ptr<GeometryData::GenericObject> m_spObject;
 

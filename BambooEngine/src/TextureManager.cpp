@@ -23,6 +23,8 @@ struct Bamboo::TextureManager::TImpl
         /// initializes DevIL
         void ItlInitialize();
 
+        void ItlInitializeSamplerObjects();
+
         /// loads a texture from a file into an opengl-texture
         bool ItlLoadTextureFromFile(GLuint &rnTextureID, std::string sFilename, bool bAlreadyGammaCorrected);
     //@}
@@ -36,6 +38,8 @@ struct Bamboo::TextureManager::TImpl
         std::map<GLuint, GLuint> m_mTextureInUse;   /// maps the currently "used" textures to the corresponding texture units (to know in which unit a active texture is)
 
         std::map<std::string, GLuint>   m_mTextureNames;    /// maps a texture name (string) to a opengl id (GLuint)
+
+        GLuint m_pSamplerObjects[NUM_PROVIDED_SAMPLER_OBJECTS];
     //@}
 };
 
@@ -71,6 +75,8 @@ void Bamboo::TextureManager::TImpl::ItlInitialize()
     m_bDevIL_Initialized = true;
 
     Logger::debug() << "DevIL initialized" << Logger::endl;
+
+    ItlInitializeSamplerObjects();
 }
 
 bool Bamboo::TextureManager::LoadTexture(std::string sTextureName,
@@ -103,7 +109,9 @@ bool Bamboo::TextureManager::LoadTexture(GLuint &rnTextureID,
             m_pImpl->ItlInitialize();
         }
 
-        m_pImpl->ItlLoadTextureFromFile(rnTextureID, sFilename, bAlreadyGammaCorrected);
+        bool bOk = m_pImpl->ItlLoadTextureFromFile(rnTextureID, sFilename, bAlreadyGammaCorrected);
+
+        return bOk;
 }
 
 
@@ -267,4 +275,27 @@ bool Bamboo::TextureManager::IsTextureRegistered(std::string sTextureName, GLuin
         rnTextureID = iter->second;
 
     return bIsRegistered;
+}
+
+void Bamboo::TextureManager::TImpl::ItlInitializeSamplerObjects()
+{
+    glGenSamplers(1 , &m_pSamplerObjects[CLAMPED_NEAREST_FILTERING]);
+    glSamplerParameteri(m_pSamplerObjects[CLAMPED_NEAREST_FILTERING], GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glSamplerParameteri(m_pSamplerObjects[CLAMPED_NEAREST_FILTERING], GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glSamplerParameteri(m_pSamplerObjects[CLAMPED_NEAREST_FILTERING], GL_TEXTURE_MIN_FILTER , GL_NEAREST);
+    glSamplerParameteri(m_pSamplerObjects[CLAMPED_NEAREST_FILTERING], GL_TEXTURE_MAG_FILTER , GL_NEAREST);
+
+    glGenSamplers(1 , &m_pSamplerObjects[CLAMPED_BILINEAR_FILTERING]);
+    glSamplerParameteri(m_pSamplerObjects[CLAMPED_BILINEAR_FILTERING], GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glSamplerParameteri(m_pSamplerObjects[CLAMPED_BILINEAR_FILTERING], GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glSamplerParameteri(m_pSamplerObjects[CLAMPED_BILINEAR_FILTERING], GL_TEXTURE_MIN_FILTER , GL_LINEAR);
+    glSamplerParameteri(m_pSamplerObjects[CLAMPED_BILINEAR_FILTERING], GL_TEXTURE_MAG_FILTER , GL_LINEAR);
+
+    glGenSamplers(1 , &m_pSamplerObjects[CLAMPED_TRILINEAR_FILTERING]);
+    glSamplerParameteri(m_pSamplerObjects[CLAMPED_TRILINEAR_FILTERING], GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glSamplerParameteri(m_pSamplerObjects[CLAMPED_TRILINEAR_FILTERING], GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glSamplerParameteri(m_pSamplerObjects[CLAMPED_TRILINEAR_FILTERING], GL_TEXTURE_MIN_FILTER , GL_LINEAR_MIPMAP_LINEAR);
+    glSamplerParameteri(m_pSamplerObjects[CLAMPED_TRILINEAR_FILTERING], GL_TEXTURE_MAG_FILTER , GL_LINEAR);
+
+
 }
