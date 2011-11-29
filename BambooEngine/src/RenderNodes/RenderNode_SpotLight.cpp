@@ -3,11 +3,12 @@
 #include "RenderNodes/RenderNode_SpotLight.h"
 #include "Logger.h"
 #include "ShaderManager.h"
+#include "TextureManager.h"
 #include <iostream>
 
 #define NEARPLANE 0.1f
 #define FARPLANE 50.0f
-#define SHADOWMAP_RESOLUTION 512.0f
+#define SHADOWMAP_RESOLUTION 256.0f
 
 Bamboo::RN_SpotLight::RN_SpotLight(glm::vec3 vPosition,
                                    glm::vec3 vLookDirection,
@@ -24,6 +25,8 @@ Bamboo::RN_SpotLight::RN_SpotLight(glm::vec3 vPosition,
     ItlCreateFBO();
 
     ItlCreateVBO();
+
+    m_vLightColor = vLightColor;
 
     Logger::debug() << "RN_SpotLight created" << Logger::endl;
 }
@@ -66,47 +69,57 @@ void Bamboo::RN_SpotLight::ItlCreateVBO()
     vertexArray[21] = 1.0f; vertexArray[22] = -1.0f; vertexArray[23] = 1.0f;
 
 
-    indexArray = new GLuint[24];
+    indexArray = new GLuint[36];
 
-    //alle linien vorne
-    indexArray[0] = 0;
-    indexArray[1] = 1;
-
+    indexArray[0] = 5;
+    indexArray[1] = 4;
     indexArray[2] = 1;
-    indexArray[3] = 2;
 
-    indexArray[4] = 2;
-    indexArray[5] = 3;
+    indexArray[3] = 0;
+    indexArray[4] = 1;
+    indexArray[5] = 4;
 
-    indexArray[6] = 3;
-    indexArray[7] = 0;
+    indexArray[6] = 5;
+    indexArray[7] = 4;
+    indexArray[8] = 6;
 
-    //alle linien hinten
-    indexArray[8] = 4;
-    indexArray[9] = 5;
-
-    indexArray[10] = 5;
-    indexArray[11] = 6;
+    indexArray[9] = 7;
+    indexArray[10] = 6;
+    indexArray[11] = 4;
 
     indexArray[12] = 6;
     indexArray[13] = 7;
+    indexArray[14] = 2;
 
-    indexArray[14] = 7;
-    indexArray[15] = 4;
-
-    //alle linien links
-    indexArray[16] = 0;
-    indexArray[17] = 4;
+    indexArray[15] = 3;
+    indexArray[16] = 2;
+    indexArray[17] = 7;
 
     indexArray[18] = 1;
-    indexArray[19] = 5;
-
-    //alle linien rechts
+    indexArray[19] = 0;
     indexArray[20] = 2;
-    indexArray[21] = 6;
 
-    indexArray[22] = 3;
-    indexArray[23] = 7;
+    indexArray[21] = 7;
+    indexArray[22] = 6;
+    indexArray[23] = 0;
+
+    indexArray[24] = 2;
+    indexArray[25] = 1;
+    indexArray[26] = 6;
+
+    indexArray[27] = 5;
+    indexArray[28] = 6;
+    indexArray[29] = 1;
+
+    indexArray[30] = 0;
+    indexArray[31] = 3;
+    indexArray[32] = 4;
+
+    indexArray[33] = 7;
+    indexArray[34] = 4;
+    indexArray[35] = 3;
+
+
 
 
     glGenVertexArrays(1, &m_nVertexArrayObject);
@@ -123,9 +136,9 @@ void Bamboo::RN_SpotLight::ItlCreateVBO()
 
     // nun nur noch den Index-Array in den Bufferbereich schreiben
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_nIndexBufferObject);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 24 * sizeof(indexArray[0]), indexArray, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 36 * sizeof(indexArray[0]), indexArray, GL_STATIC_DRAW);
 
-    m_iIndexArraySize = 24;
+    m_iIndexArraySize = 36;
 
     delete[] vertexArray;
     delete[] indexArray;
@@ -135,6 +148,33 @@ void Bamboo::RN_SpotLight::ItlCreateVBO()
 
     if (error != GL_NO_ERROR)
         Logger::error() << "glGetError: " << TranslateGLerror(error) << Logger::endl;
+}
+
+GLuint Bamboo::RN_SpotLight::ItlCreateColorTexture()
+{
+    GLuint nNewTexture;
+
+    //generate color texture (=create new opengl id)
+    glGenTextures(1, &nNewTexture);
+
+    //bind color texture
+    glBindTexture(GL_TEXTURE_2D, nNewTexture);
+
+    //set texture format and data
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, SHADOWMAP_RESOLUTION, SHADOWMAP_RESOLUTION, 0, GL_RGBA, GL_FLOAT, 0);
+    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, m_nWidth, m_nHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    //glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, m_iWidth, m_iHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, m_iWidth, m_iHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+
+    //set texture parameters
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    return nNewTexture;
 }
 
 GLuint Bamboo::RN_SpotLight::ItlCreateDepthTexture()
@@ -166,10 +206,21 @@ GLuint Bamboo::RN_SpotLight::ItlCreateDepthTexture()
 
 void Bamboo::RN_SpotLight::ItlCreateFBO()
 {
+    TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
+
+    m_nColorTexture = ItlCreateColorTexture();
     m_nDepthTexture = ItlCreateDepthTexture();
+
+    //get the id of a free texture unit from the texture manager
+    GLuint nUsedTextureUnit = pTextureManager->RequestFreeUnit(); //ask for a free texture unit
+
+    //activate unit
+    glActiveTexture(GL_TEXTURE0 + nUsedTextureUnit);
 
     glGenFramebuffers(1, &m_nFBO);
     glBindFramebuffer(GL_FRAMEBUFFER, m_nFBO);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_nColorTexture, 0);
 
     // attach the renderbuffer to depth attachment point
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_nDepthTexture, 0);
@@ -178,12 +229,14 @@ void Bamboo::RN_SpotLight::ItlCreateFBO()
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
     if(status != GL_FRAMEBUFFER_COMPLETE)
-        Logger::fatal() << "Failed to initialize FBO for RN_Deferred" << Logger::endl;
+        Logger::fatal() << "Failed to initialize FBO for RN_Spotlight" << Logger::endl;
     else
         Logger::debug() << "Created FBO for SpotLight" << Logger::endl;
 
     //unbind fbo
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    pTextureManager->ReleaseUnit(nUsedTextureUnit);
 }
 
 void Bamboo::RN_SpotLight::ItlPreRender()
@@ -204,18 +257,33 @@ void Bamboo::RN_SpotLight::ItlLoadRessources()
 
 void Bamboo::RN_SpotLight::ItlRender()
 {
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
     glBindVertexArray(m_nVertexArrayObject);
     glBindBuffer(GL_ARRAY_BUFFER, m_nVertexBufferObject);
 
     ShaderManager *pShaderManager = ItlGetGraphicCore()->GetShaderManager();
+    TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
 
     const GLint l_in_Position(pShaderManager->GetAttribute("in_Position"));
     const GLint l_cameraInverse_Position = pShaderManager->GetUniform("Camera_InverseMatrix");
+    const GLint l_lightmatrix_Position = pShaderManager->GetUniform("Light_ViewProjectionMatrix");
+    const GLint l_shadowmap_Position = pShaderManager->GetUniform("shadowmap");
+    const GLint l_lightcolor_Position = pShaderManager->GetUniform("vLightColor");
 
-    glm::mat4 mInverseViewProjectionMatrix = glm::inverse(m_m4ProjectionMatrix * m_m4ViewMatrix);
+    glm::mat4 mViewProjectionMatrix = m_m4ProjectionMatrix * m_m4ViewMatrix;
+    glm::mat4 mInverseViewProjectionMatrix = glm::inverse(mViewProjectionMatrix);
+
+    if (l_lightcolor_Position != -1)
+        glUniform3f(l_lightcolor_Position, m_vLightColor.r, m_vLightColor.g, m_vLightColor.b);
 
     if (l_cameraInverse_Position != -1)
         glUniformMatrix4fv(l_cameraInverse_Position, 1, GL_FALSE, &mInverseViewProjectionMatrix[0][0]);
+
+    if (l_lightmatrix_Position != -1)
+        glUniformMatrix4fv(l_lightmatrix_Position, 1, GL_FALSE, &mViewProjectionMatrix[0][0]);
 
     if (l_in_Position != -1)
     {
@@ -223,17 +291,47 @@ void Bamboo::RN_SpotLight::ItlRender()
         glEnableVertexAttribArray(l_in_Position);
     }
 
+    GLuint iTextureUnitShadowMap = pTextureManager->UseTexture(m_nColorTexture);
+
+    if (l_shadowmap_Position != -1)
+        glUniform1i(l_shadowmap_Position, iTextureUnitShadowMap);
+
+    for (auto iter=m_mTextureLocations.begin(); iter!= m_mTextureLocations.end(); iter++)
+    {
+        const std::string *pName = &(iter->first);
+        GLint iTextureID = iter->second;
+
+        GLuint iTextureUnit = pTextureManager->UseTexture(iTextureID);
+
+        GLint iUniformLocation = pShaderManager->GetUniform(*pName);
+        if (iUniformLocation != -1)
+            glUniform1i(iUniformLocation, iTextureUnit);
+    }
+
    // glLineWidth(1.0f);
    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glDisable(GL_CULL_FACE);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_nIndexBufferObject);
-    glDrawElements(GL_LINES, m_iIndexArraySize, GL_UNSIGNED_INT, NULL);
+    glDrawElements(GL_TRIANGLES, m_iIndexArraySize, GL_UNSIGNED_INT, NULL);
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glEnable(GL_CULL_FACE);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     glBindVertexArray(0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    pTextureManager->UnuseTexture(m_nColorTexture);
+
+    for (auto iter=m_mTextureLocations.begin(); iter!= m_mTextureLocations.end(); iter++)
+    {
+        GLint iTextureID = iter->second;
+        pTextureManager->UnuseTexture(iTextureID);
+    }
+
+    glEnable(GL_DEPTH_TEST);
+    glDisable(GL_BLEND);
 }
 
 void Bamboo::RN_SpotLight::ItlPreRenderChildren()
@@ -278,6 +376,8 @@ void Bamboo::RN_SpotLight::ItlPostRenderChildren()
 
     //restore viewport params
     glViewport(m_iGeneralViewportParams[0], m_iGeneralViewportParams[1], m_iGeneralViewportParams[2], m_iGeneralViewportParams[3]);
+
+
 }
 
 void Bamboo::RN_SpotLight::ItlChangeMatrices()
@@ -299,7 +399,12 @@ void Bamboo::RN_SpotLight::ItlRestoreMatrices()
     m_pCurrentRenderInfo->ModelViewProjectionMatrix = m_m4SavedViewProjectionMatrix;
     m_pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = m_pCurrentRenderInfo->ModelViewProjectionMatrix;
 
-    glPassThrough(0.3f);
+
+}
+
+void Bamboo::RN_SpotLight::SetTextureLocation(std::string sTexture, GLint iLocation)
+{
+    m_mTextureLocations[sTexture] = iLocation;
 }
 
 /*

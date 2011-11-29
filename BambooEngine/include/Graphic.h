@@ -45,6 +45,7 @@ private:
         class RN_Generic;
         class RN_Deferred;
         class RN_SpotLight;
+        class RN_SpotLight_Model;
     //@}
 
 public:

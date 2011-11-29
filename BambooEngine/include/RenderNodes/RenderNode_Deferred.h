@@ -10,6 +10,11 @@
 #define __BAMBOO_RENDERNODE_DEFFERED_HEADER
 
 #include "RenderNodes/IRenderNode.h"
+#include "RenderNodes/RenderNode_SpotLight.h"
+
+#include <vector>
+#include <memory>
+
 
 //!  A RenderNode which does deferred lighting.
 /*!
@@ -31,6 +36,11 @@ public:
     /// destructor
     virtual ~RN_Deferred();
 
+    //@}
+
+    /*! \name xy */
+    //@{
+        void AddSpotLight(std::shared_ptr<Bamboo::RN_SpotLight> spSpotlight);
     //@}
 
     /*! \name Bamboo::IRenderNode interface */
@@ -72,11 +82,16 @@ private:
         GLuint      m_nNormalDrawBuffer;
         GLuint      m_nTangentDrawBuffer;
         GLuint      m_nSpecularDrawBuffer;
+        GLuint      m_nPositionDrawBuffer;
         GLuint      m_nDepthDrawBuffer;
+
+        GLuint      m_nCombinedDrawBuffer;
 
         GLuint      m_nFBO;
 
         int m_iGeneralViewportParams[4];	//viewport params as it were BEFORE we bind our fbo, used to save and restore these values
+
+        std::vector<std::shared_ptr<Bamboo::RN_SpotLight> > m_vspSpotLights;
     //@}
 };
 

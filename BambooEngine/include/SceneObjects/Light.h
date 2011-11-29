@@ -22,6 +22,7 @@ public:
                                                 glm::vec3 vLightColor);
 
     virtual std::shared_ptr<Bamboo::IRenderNode> CreateRenderNode();
+    virtual std::shared_ptr<Bamboo::IRenderNode> CreateRenderNodeModel();
 
 private:
     /*! \name Construction */

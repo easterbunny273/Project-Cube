@@ -75,7 +75,9 @@ public:
 	//! renders the sceneobject and its children (first, it renders the children).
 	/*! First, the itlTestSkipRendering() method is called, if false, itlBeforeRender() gets called.
 	 *  Then, the render()-method of the children is called and finally the own itlRender()-method is called. */
-	void Render();
+        void Render();
+
+        void Render(IRenderNode *pStart);
     //@}
 
 
@@ -97,28 +99,29 @@ public:
 
     //@}
 
+
 protected:
     /*! \name Internal types */
     //@{
-	struct TItlRenderInfo
-	{
-	    glm::mat4 ProjectionMatrix;
-	    glm::mat4 ViewMatrix;
-	    glm::mat4 ModelMatrix;
+        struct TItlRenderInfo
+        {
+            glm::mat4 ProjectionMatrix;
+            glm::mat4 ViewMatrix;
+            glm::mat4 ModelMatrix;
 
-	    glm::mat4 ModelViewProjectionMatrix;
+            glm::mat4 ModelViewProjectionMatrix;
 
-	    glm::mat4 ModelViewProjectionMatrix_ForFrustumCulling;
+            glm::mat4 ModelViewProjectionMatrix_ForFrustumCulling;
 
-	    glm::mat4 InverseModelViewProjectionMatrix;
+            glm::mat4 InverseModelViewProjectionMatrix;
 
-	    int	tCurrentRenderPass;
-	};
+            int	tCurrentRenderPass;
+        };
     //@}
 
     /*! \name Operations */
     //@{
-	virtual void Render(std::shared_ptr<TItlRenderInfo> pRenderInfo);
+        virtual void Render(std::shared_ptr<TItlRenderInfo> pRenderInfo);
     //@}
 
     /*! \name Methods which must be implemented by inherit classes */
@@ -222,5 +225,6 @@ protected:
         //@}
 
 };
+
 
 #endif

@@ -114,6 +114,11 @@ Bamboo::IRenderNode::~IRenderNode()
 }
 
 
+void Bamboo::IRenderNode::Render(Bamboo::IRenderNode *pStart)
+{
+    Render(pStart->m_pCurrentRenderInfo);
+}
+
 bool Bamboo::IRenderNode::ItlTestIfVisible()
 {
     return true;

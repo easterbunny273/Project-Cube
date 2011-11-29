@@ -200,16 +200,17 @@ void Bamboo::ItlBuildDeferredRenderPipeline(Bamboo::TItlRenderLoop &tRenderLoop)
     GetShaderManager()->AddShader("posteffect1", new Bamboo::Shader("BambooEngine/shaders/posteffect1.vs", "BambooEngine/shaders/posteffect1.fs"));
     GetShaderManager()->AddShader("directwrite", new Bamboo::Shader("BambooEngine/shaders/directwrite.vs", "BambooEngine/shaders/directwrite.fs"));
     GetShaderManager()->AddShader("camera-debug", new Bamboo::Shader("BambooEngine/shaders/camera-debug.vs", "BambooEngine/shaders/camera-debug.fs"));
+    GetShaderManager()->AddShader("camera-debug2", new Bamboo::Shader("BambooEngine/shaders/camera-debug2.vs", "BambooEngine/shaders/camera-debug2.fs"));
 
-    std::shared_ptr<Bamboo::IRenderNode> spDeferredNode(new Bamboo::RN_Deferred(1024,768));
+    std::shared_ptr<Bamboo::RN_Deferred> spDeferredNode(new Bamboo::RN_Deferred(1024,768));
 
     std::vector<std::shared_ptr<Bamboo::ISceneObject>>  vObjects;
-    std::vector<std::shared_ptr<Bamboo::SO_ILight>>     vLights;
+    std::vector<std::shared_ptr<Bamboo::SO_SpotLight>>  vLights;
 
     for (auto iter=tRenderLoop.spScene->m_lSceneObjects.begin(); iter != tRenderLoop.spScene->m_lSceneObjects.end(); iter++)
     {
         std::shared_ptr<Bamboo::ISceneObject> spSceneObject = *iter;
-        std::shared_ptr<Bamboo::SO_ILight> spLight = std::dynamic_pointer_cast<Bamboo::SO_ILight>(spSceneObject);
+        std::shared_ptr<Bamboo::SO_SpotLight> spLight = std::dynamic_pointer_cast<Bamboo::SO_SpotLight>(spSceneObject);
 
         if (spLight)
             vLights.push_back(spLight);
@@ -220,14 +221,20 @@ void Bamboo::ItlBuildDeferredRenderPipeline(Bamboo::TItlRenderLoop &tRenderLoop)
 
     for (unsigned int i=0; i < vLights.size(); i++)
     {
-        std::shared_ptr<Bamboo::IRenderNode> spRenderNode = vLights[i]->GetRenderNode();
+        std::shared_ptr<Bamboo::RN_SpotLight> spRenderNode = std::dynamic_pointer_cast<Bamboo::RN_SpotLight>(vLights[i]->GetRenderNode());
+
+        std::shared_ptr<Bamboo::IRenderNode> spRenderNode_Model = std::dynamic_pointer_cast<Bamboo::IRenderNode>(vLights[i]->CreateRenderNodeModel());
+
+        assert (spRenderNode);
+        assert (spRenderNode_Model);
 
         for (unsigned int j=0; j < vObjects.size(); j++)
         {
             spRenderNode->AddChild(vObjects[j]->GetRenderNode());
         }
 
-        spDeferredNode->AddChild(spRenderNode);
+        spDeferredNode->AddSpotLight(spRenderNode);
+        spDeferredNode->AddChild(spRenderNode_Model);
     }
 
     for (unsigned int j=0; j < vObjects.size(); j++)

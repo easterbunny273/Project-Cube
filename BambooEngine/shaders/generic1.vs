@@ -35,6 +35,7 @@ out vec3 my_Normal;
 out vec3 my_Tangent;
 out vec3 my_Bitangent;
 out vec3 my_Color;
+out vec4 my_Position;
 
 void main(void)
 {
@@ -55,5 +56,6 @@ void main(void)
   my_Tangent = normalize(NormalMatrix * in_Tangent);
   my_Bitangent = normalize(NormalMatrix * in_Bitangent);
 
+  my_Position = ModelMatrix * vec4(in_Position, 1.0);
   my_Color = in_Color;
 }

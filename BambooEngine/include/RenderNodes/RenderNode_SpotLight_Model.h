@@ -4,23 +4,23 @@
  * 11/2011, Project Cube
  */
 
-#ifndef __BAMBOOENGINE_RENDERNODE_SPOTLIGHT
-#define __BAMBOOENGINE_RENDERNODE_SPOTLIGHT
+#ifndef __BAMBOOENGINE_RENDERNODE_SPOTLIGHTMODEL
+#define __BAMBOOENGINE_RENDERNODE_SPOTLIGHTMODEL
 
 #include "RenderNodes/IRenderNode.h"
 
 
-class Bamboo::RN_SpotLight : public Bamboo::IRenderNode
+class Bamboo::RN_SpotLight_Model : public Bamboo::IRenderNode
 {
 public:
     /*! \name Constructor / Destructor */
     //@{
-    RN_SpotLight(glm::vec3 vPosition,
+    RN_SpotLight_Model(glm::vec3 vPosition,
                  glm::vec3 vLookDirection,
                  float fFOV,
                  glm::vec3 vLightColor);
 
-    ~RN_SpotLight();
+    ~RN_SpotLight_Model();
     //@}
     /*! \name Operations */
     //@{
@@ -52,19 +52,9 @@ protected:
 private:
     /*! \name Internal help methods */
     //@{
-    // generates the fbo where the shadomap gets rendered
-    void ItlCreateFBO();
-
-    // creates the depth texture
-    GLuint ItlCreateDepthTexture();
-
-    GLuint ItlCreateColorTexture();
-
     /// creates a vbo to draw the spotlight as wireframe
     void ItlCreateVBO();
 
-    void ItlChangeMatrices();
-    void ItlRestoreMatrices();
     //@}
 
     /*! \name Private members */
@@ -72,24 +62,12 @@ private:
     glm::mat4       m_m4ViewMatrix;
     glm::mat4       m_m4ProjectionMatrix;
 
-    glm::mat4       m_m4SavedProjectionMatrix;
-    glm::mat4       m_m4SavedViewMatrix;
-    glm::mat4       m_m4SavedViewProjectionMatrix;
-
     glm::vec3       m_vLightColor;
-
-    GLuint m_nColorTexture;
-    GLuint m_nDepthTexture;
-    GLuint m_nFBO;
-    int m_iGeneralViewportParams[4];	//viewport params as it were BEFORE we bind our fbo, used to save and restore these values
 
     GLuint m_nVertexArrayObject;	///< The opengl name (=unsigned int) of the vertex array object
     GLuint m_nVertexBufferObject;	///< The opengl name (=unsigned int) of the vertex buffer object
     GLuint m_nIndexBufferObject;	///< The opengl name (=unsigned int) of the index buffer object
     int m_iIndexArraySize;		///< The size of the index array
-
-    std::map<std::string, GLint>   m_mTextureLocations;
-
     //@}
 };
 
