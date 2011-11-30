@@ -39,7 +39,7 @@ void Bamboo::RN_Deferred::ItlCreateFBO()
     m_nDepthDrawBuffer = ItlCreateDepthTexture();
     m_nCombinedDrawBuffer = ItlCreateColorTexture();
     m_nPositionDrawBuffer = ItlCreateColorTexture();
-
+    m_nStencilDrawBuffer = ItlCreateColorTexture();
 
     glGenFramebuffers(1, &m_nFBO);
     glBindFramebuffer(GL_FRAMEBUFFER, m_nFBO);
@@ -52,9 +52,10 @@ void Bamboo::RN_Deferred::ItlCreateFBO()
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, GL_TEXTURE_2D, m_nCombinedDrawBuffer, 0);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT5, GL_TEXTURE_2D, m_nPositionDrawBuffer, 0);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT6, GL_TEXTURE_2D, m_nNormalMapDrawBuffer, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, m_nStencilDrawBuffer, 0);
 
     // attach the renderbuffer to depth attachment point
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_nDepthDrawBuffer, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, m_nDepthDrawBuffer, 0);
 
     GLenum tDrawBuffers[7] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 , GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4, GL_COLOR_ATTACHMENT5, GL_COLOR_ATTACHMENT6 };
     glDrawBuffers(7, tDrawBuffers);
@@ -111,7 +112,7 @@ GLuint Bamboo::RN_Deferred::ItlCreateDepthTexture()
     glBindTexture(GL_TEXTURE_2D, nNewTexture);
 
     //set texture format and data
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, m_nWidth, m_nHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_STENCIL, m_nWidth, m_nHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_NONE);
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
 
@@ -142,6 +143,7 @@ void Bamboo::RN_Deferred::ItlDeleteTextures()
     glDeleteTextures(1, &m_nTangentDrawBuffer);
     glDeleteTextures(1, &m_nSpecularDrawBuffer);
     glDeleteTextures(1, &m_nCombinedDrawBuffer);
+    glDeleteRenderbuffers(1, &m_nStencilDrawBuffer);
     glDeleteTextures(1, &m_nDepthDrawBuffer);
     glDeleteTextures(1, &m_nPositionDrawBuffer);
 }
@@ -197,12 +199,16 @@ void Bamboo::RN_Deferred::ItlRender()
     glDrawBuffers(1, tDrawBuffers);
     //glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     //glClear(GL_COLOR_BUFFER_BIT);
-
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_EQUAL, 0, 1);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
 
 
     // first, we search for all lights
     for (unsigned int a=0; a < m_vspSpotLights.size(); a++)
     {
+        glClear(GL_STENCIL_BUFFER_BIT);
+
         std::shared_ptr<Bamboo::RN_SpotLight> spLight (m_vspSpotLights[a]);
         spLight->SetTextureLocation("color_texture", m_nAlbedoDrawBuffer);
         spLight->SetTextureLocation("normal_texture", m_nNormalDrawBuffer);
@@ -233,6 +239,8 @@ void Bamboo::RN_Deferred::ItlRender()
         pCurrentRenderInfo->ModelMatrix = SavedModelMatrix;
         pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = SavedModelViewProjectionMatrix_ForFrustumCulling;
     }
+
+    glDisable(GL_STENCIL_TEST);
 
     GLenum tDrawBuffers2[7] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 , GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4 , GL_COLOR_ATTACHMENT5, GL_COLOR_ATTACHMENT6};
     glDrawBuffers(7, tDrawBuffers2);
