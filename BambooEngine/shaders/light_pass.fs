@@ -18,9 +18,11 @@ uniform sampler2D depth_texture;
 uniform sampler2D position_texture;
 
 uniform sampler2D shadowmap;
+uniform sampler2D spotmask;
 
 uniform mat4 Light_ViewProjectionMatrix;
 uniform mat4 ModelViewProjectionMatrix;
+uniform mat4 ViewMatrix;
 
 uniform vec3 vLightColor;
 uniform vec3 LightPosition;
@@ -48,6 +50,10 @@ void main()
     if (vTexCoordsShadowMap.y > 1.0 || vTexCoordsShadowMap.y < 0.0)
         discard;
 
+    vec3 vMaskValue = texture(spotmask, vTexCoordsShadowMap).rgb;
+
+    if (vMaskValue.r < 0.5)
+        discard;
     //FragColor = texture(shadowmap, vTexCoordsShadowMap);
 
     if (fDepth < fDepthInShadowMap + 0.00001)
@@ -58,7 +64,8 @@ void main()
         vec3 vTangent = texture(tangent_texture, vTexCoords).rgb;
         vec3 vBitangent = cross(vNormal, vTangent);
 
-        vec3 vVertex = (v4Position / v4Position.w).rgb;
+        vec4 vVertexVS = (ViewMatrix * v4Position);
+        vec3 vVertex = vVertexVS.xyz / vVertexVS.w;
         vec3 tmpVec = LightPosition.xyz - vVertex;
 
         vec3 lightVec;
@@ -74,7 +81,7 @@ void main()
         eyeVec.z = dot(tmpVec, vNormal);
 
 // -----------------------------
-        float distSqr = dot(lightVec, lightVec);
+        float distSqr = 1.0 * dot(lightVec, lightVec);
         float invRadius = 1;
         float att = clamp(1.0 - invRadius * sqrt(distSqr), 0.0, 1.0);
         vec3 lVec = lightVec * inversesqrt(distSqr);
@@ -92,11 +99,12 @@ void main()
         vec4 vDiffuse = vec4(vLightColor * diffuse, 1.0);
 
         float specular = pow(clamp(dot(reflect(-lVec, bump), vVec), 0.0, 1.0),
-                         500.0 );
+                         50.0 );
 
         vec4 vSpecular = vec4(vLightColor * specular, 1.0);
 
-        FragColor = ( vAmbient*base + vDiffuse*base + vSpecular);// * att;
+        FragColor = ( vAmbient*base + vDiffuse*base + vSpecular) * att;
+        //FragColor = vec4(diffuse, 0.0, specular, 1.0);
 
         //FragColor = vec4(vTangent, 1.0);
 // -----------------------------

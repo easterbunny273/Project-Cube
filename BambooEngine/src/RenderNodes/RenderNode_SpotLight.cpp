@@ -271,6 +271,7 @@ void Bamboo::RN_SpotLight::ItlRender()
     const GLint l_cameraInverse_Position = pShaderManager->GetUniform("Camera_InverseMatrix");
     const GLint l_lightmatrix_Position = pShaderManager->GetUniform("Light_ViewProjectionMatrix");
     const GLint l_shadowmap_Position = pShaderManager->GetUniform("shadowmap");
+    const GLint l_spotmask_Position = pShaderManager->GetUniform("spotmask");
     const GLint l_lightcolor_Position = pShaderManager->GetUniform("vLightColor");
 
     glm::mat4 mViewProjectionMatrix = m_m4ProjectionMatrix * m_m4ViewMatrix;
@@ -292,6 +293,10 @@ void Bamboo::RN_SpotLight::ItlRender()
     }
 
     GLuint iTextureUnitShadowMap = pTextureManager->UseTexture(m_nColorTexture);
+    GLuint iTextureUnitSpotMask = pTextureManager->UseTexture("spotlight");
+
+    if (l_spotmask_Position != -1)
+        glUniform1i(l_spotmask_Position, iTextureUnitSpotMask);
 
     if (l_shadowmap_Position != -1)
         glUniform1i(l_shadowmap_Position, iTextureUnitShadowMap);
@@ -323,6 +328,7 @@ void Bamboo::RN_SpotLight::ItlRender()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     pTextureManager->UnuseTexture(m_nColorTexture);
+    pTextureManager->UnuseTexture("spotlight");
 
     for (auto iter=m_mTextureLocations.begin(); iter!= m_mTextureLocations.end(); iter++)
     {

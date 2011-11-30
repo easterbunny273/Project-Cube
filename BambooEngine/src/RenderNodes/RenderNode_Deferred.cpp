@@ -246,9 +246,9 @@ void Bamboo::RN_Deferred::ItlRender()
 
     GLuint nTextureToShow;
 
-    std::cout << s_DebugDeferredTexture << std::endl;
+   // std::cout << s_DebugDeferredTexture << std::endl;
 
-    switch (s_DebugDeferredTexture % 6)
+    switch (s_DebugDeferredTexture % 2)
     {
     case 0:
         nTextureToShow = m_nAlbedoDrawBuffer;
@@ -256,7 +256,7 @@ void Bamboo::RN_Deferred::ItlRender()
     case 1:
         nTextureToShow = m_nCombinedDrawBuffer;
         break;
-    case 2:
+  /*  case 2:
         nTextureToShow = m_nNormalDrawBuffer;
         break;
     case 3:
@@ -267,7 +267,7 @@ void Bamboo::RN_Deferred::ItlRender()
         break;
     case 5:
         nTextureToShow = m_nSpecularDrawBuffer;
-        break;
+        break;*/
     }
 
     rPostEffectNode.SetTexture("texture1", nTextureToShow );

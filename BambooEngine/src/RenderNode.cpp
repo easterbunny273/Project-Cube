@@ -32,13 +32,13 @@ void Bamboo::IRenderNode::ItlSendTransformMatrices()
         glUniformMatrix4fv(l_modelviewprojection_matrix, 1, GL_FALSE, &m_pCurrentRenderInfo->ModelViewProjectionMatrix[0][0]);
 
     if (l_projection_matrix != -1)
-	glUniformMatrix4fv(l_projection_matrix, 1, GL_FALSE, &m_pCurrentRenderInfo->ProjectionMatrix[0][0]);
+        glUniformMatrix4fv(l_projection_matrix, 1, GL_FALSE, &m_pCurrentRenderInfo->ProjectionMatrix[0][0]);
 
     if (l_view_matrix != -1)
-	glUniformMatrix4fv(l_view_matrix, 1, GL_FALSE, &m_pCurrentRenderInfo->ViewMatrix[0][0]);
+        glUniformMatrix4fv(l_view_matrix, 1, GL_FALSE, &m_pCurrentRenderInfo->ViewMatrix[0][0]);
 
     if (l_model_matrix != -1)
-	glUniformMatrix4fv(l_model_matrix, 1, GL_FALSE, &m_pCurrentRenderInfo->ModelMatrix[0][0]);
+        glUniformMatrix4fv(l_model_matrix, 1, GL_FALSE, &m_pCurrentRenderInfo->ModelMatrix[0][0]);
 
     if (l_normal_matrix != -1)
         glUniformMatrix3fv(l_normal_matrix, 1, GL_FALSE, &(glm::transpose(glm::inverse(glm::mat3(m_pCurrentRenderInfo->ViewMatrix * m_pCurrentRenderInfo->ModelMatrix))))[0][0]);

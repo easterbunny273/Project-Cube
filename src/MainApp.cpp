@@ -102,9 +102,9 @@ void MainApp::StartGraphic_Test()
 
     // create objects
     std::shared_ptr<Bamboo::ISceneObject> spCube = Bamboo::SO_Cube::Create();
-    std::shared_ptr<Bamboo::ISceneObject> spTestLight1 = Bamboo::SO_SpotLight::Create(glm::vec3(-0.2f, 0.15f, 0.16f), glm::vec3(1.0f, -0.98f, -1.0f), 10.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-    std::shared_ptr<Bamboo::ISceneObject> spTestLight2 = Bamboo::SO_SpotLight::Create(glm::vec3(-0.05f, 0.25f, -0.13f), glm::vec3(0.0f, -2.0f, 1.0f), 20.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    std::shared_ptr<Bamboo::ISceneObject> spTestLight3 = Bamboo::SO_SpotLight::Create(glm::vec3(-0.2f, 0.15f, -0.14f), glm::vec3(1.0f, -1.01f, 1.0f), 3.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+    std::shared_ptr<Bamboo::ISceneObject> spTestLight1 = Bamboo::SO_SpotLight::Create(glm::vec3(-0.2f, 0.20f, 0.16f), glm::vec3(1.0f, -0.9f, -1.0f), 6.0f, glm::vec3(1.0f, 0.5f, 0.5f));
+    std::shared_ptr<Bamboo::ISceneObject> spTestLight2 = Bamboo::SO_SpotLight::Create(glm::vec3(-0.05f, 0.25f, -0.13f), glm::vec3(0.0f, -2.0f, 1.0f), 20.0f, glm::vec3(0.3f, 0.3f, 0.3f));
+    std::shared_ptr<Bamboo::ISceneObject> spTestLight3 = Bamboo::SO_SpotLight::Create(glm::vec3(-0.2f, 0.2f, -0.14f), glm::vec3(1.0f, -1.1f, 0.62f), 3.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
     //spLight->SetTransformMatrix(glm::translate(0.0f, 1.0f, 0.0f));
 
