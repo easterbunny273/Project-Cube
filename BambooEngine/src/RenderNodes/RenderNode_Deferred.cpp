@@ -32,6 +32,7 @@ void Bamboo::RN_Deferred::ItlCreateFBO()
     glActiveTexture(GL_TEXTURE0 + nUsedTextureUnit);
 
     m_nAlbedoDrawBuffer = ItlCreateColorTexture();
+    m_nNormalMapDrawBuffer = ItlCreateColorTexture();
     m_nNormalDrawBuffer = ItlCreateColorTexture();
     m_nTangentDrawBuffer = ItlCreateColorTexture();
     m_nSpecularDrawBuffer = ItlCreateColorTexture();
@@ -50,12 +51,13 @@ void Bamboo::RN_Deferred::ItlCreateFBO()
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, m_nSpecularDrawBuffer, 0);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, GL_TEXTURE_2D, m_nCombinedDrawBuffer, 0);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT5, GL_TEXTURE_2D, m_nPositionDrawBuffer, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT6, GL_TEXTURE_2D, m_nNormalMapDrawBuffer, 0);
 
     // attach the renderbuffer to depth attachment point
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_nDepthDrawBuffer, 0);
 
-    GLenum tDrawBuffers[6] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 , GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4, GL_COLOR_ATTACHMENT5 };
-    glDrawBuffers(6, tDrawBuffers);
+    GLenum tDrawBuffers[7] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 , GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4, GL_COLOR_ATTACHMENT5, GL_COLOR_ATTACHMENT6 };
+    glDrawBuffers(7, tDrawBuffers);
 
     //check fbo status
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
@@ -136,6 +138,7 @@ void Bamboo::RN_Deferred::ItlDeleteTextures()
 {
     glDeleteTextures(1, &m_nAlbedoDrawBuffer);
     glDeleteTextures(1, &m_nNormalDrawBuffer);
+    glDeleteTextures(1, &m_nNormalMapDrawBuffer);
     glDeleteTextures(1, &m_nTangentDrawBuffer);
     glDeleteTextures(1, &m_nSpecularDrawBuffer);
     glDeleteTextures(1, &m_nCombinedDrawBuffer);
@@ -203,6 +206,8 @@ void Bamboo::RN_Deferred::ItlRender()
         std::shared_ptr<Bamboo::RN_SpotLight> spLight (m_vspSpotLights[a]);
         spLight->SetTextureLocation("color_texture", m_nAlbedoDrawBuffer);
         spLight->SetTextureLocation("normal_texture", m_nNormalDrawBuffer);
+        spLight->SetTextureLocation("tangent_texture", m_nTangentDrawBuffer);
+        spLight->SetTextureLocation("normalmap_texture", m_nNormalMapDrawBuffer);
         spLight->SetTextureLocation("depth_texture", m_nDepthDrawBuffer);
         spLight->SetTextureLocation("position_texture", m_nPositionDrawBuffer);
 
@@ -229,8 +234,8 @@ void Bamboo::RN_Deferred::ItlRender()
         pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = SavedModelViewProjectionMatrix_ForFrustumCulling;
     }
 
-    GLenum tDrawBuffers2[6] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 , GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4 , GL_COLOR_ATTACHMENT5};
-    glDrawBuffers(6, tDrawBuffers2);
+    GLenum tDrawBuffers2[7] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 , GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4 , GL_COLOR_ATTACHMENT5, GL_COLOR_ATTACHMENT6};
+    glDrawBuffers(7, tDrawBuffers2);
 
 
     ItlPostRenderChildren();
@@ -241,7 +246,9 @@ void Bamboo::RN_Deferred::ItlRender()
 
     GLuint nTextureToShow;
 
-    switch (s_DebugDeferredTexture % 2)
+    std::cout << s_DebugDeferredTexture << std::endl;
+
+    switch (s_DebugDeferredTexture % 6)
     {
     case 0:
         nTextureToShow = m_nAlbedoDrawBuffer;
@@ -249,24 +256,18 @@ void Bamboo::RN_Deferred::ItlRender()
     case 1:
         nTextureToShow = m_nCombinedDrawBuffer;
         break;
-    /*case 1:
+    case 2:
         nTextureToShow = m_nNormalDrawBuffer;
         break;
-    case 2:
-        nTextureToShow = m_nTangentDrawBuffer;
-        break;
     case 3:
-        nTextureToShow = m_nSpecularDrawBuffer;
+        nTextureToShow = m_nNormalMapDrawBuffer;
         break;
     case 4:
-        nTextureToShow = m_nDepthDrawBuffer;
+        nTextureToShow = m_nTangentDrawBuffer;
         break;
     case 5:
-        nTextureToShow = m_nPositionDrawBuffer;
+        nTextureToShow = m_nSpecularDrawBuffer;
         break;
-    case 6:
-        nTextureToShow = m_nCombinedDrawBuffer;
-        break;*/
     }
 
     rPostEffectNode.SetTexture("texture1", nTextureToShow );
@@ -284,4 +285,5 @@ void Bamboo::RN_Deferred::AddSpotLight(std::shared_ptr<Bamboo::RN_SpotLight> spS
 {
     m_vspSpotLights.push_back(spSpotlight);
 }
+
 

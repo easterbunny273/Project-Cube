@@ -80,6 +80,7 @@ private:
 
         GLuint      m_nAlbedoDrawBuffer;
         GLuint      m_nNormalDrawBuffer;
+        GLuint      m_nNormalMapDrawBuffer;
         GLuint      m_nTangentDrawBuffer;
         GLuint      m_nSpecularDrawBuffer;
         GLuint      m_nPositionDrawBuffer;

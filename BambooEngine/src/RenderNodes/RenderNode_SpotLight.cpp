@@ -242,7 +242,7 @@ void Bamboo::RN_SpotLight::ItlCreateFBO()
 void Bamboo::RN_SpotLight::ItlPreRender()
 {
     ItlGetGraphicCore()->GetShaderManager()->PushActiveShader();
-    ItlGetGraphicCore()->GetShaderManager()->ActivateShader("camera-debug");
+    ItlGetGraphicCore()->GetShaderManager()->ActivateShader("light-pass");
 }
 
 void Bamboo::RN_SpotLight::ItlPostRender()

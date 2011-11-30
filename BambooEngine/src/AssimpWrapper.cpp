@@ -27,8 +27,11 @@ std::shared_ptr<GeometryData::GenericObject> AssimpWrapper::LoadModel(std::strin
                                              aiProcess_GenSmoothNormals		|
                                              aiProcess_ImproveCacheLocality |
                                              aiProcess_FindInvalidData |
+                                             //aiProcess_MakeLeftHanded |
                                              //aiProcess_OptimizeMeshes |
                                              //aiProcess_OptimizeGraph  |
+                                             aiProcess_GenUVCoords |
+                                             aiProcess_TransformUVCoords |
                                              aiProcess_FlipUVs |
                                              aiProcess_FindDegenerates |
                                              aiProcess_SortByPType
@@ -170,7 +173,7 @@ std::shared_ptr<GeometryData::GenericObject> AssimpWrapper::LoadModel(std::strin
 
             pGenericMesh->AddAttributeValues(GeometryData::GenericData::DATA_BITANGENTS,
                                        3 * nNumVertices,
-                                       &vfTangents[0]);
+                                       &vfBitangents[0]);
         }
 
 

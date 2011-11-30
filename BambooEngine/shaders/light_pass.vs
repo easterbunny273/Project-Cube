@@ -14,6 +14,7 @@ uniform mat4 ViewMatrix;
 uniform mat4 ModelMatrix[128];
 
 uniform mat4 Camera_InverseMatrix;
+uniform vec3 LightPosition;
 
 in vec3 in_Position;
 
