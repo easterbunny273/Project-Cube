@@ -42,7 +42,7 @@ void main(void)
    //vec3 vNormalFromMapInOS = normalize(mTransformObjectToTangentSpace * vNormalFromMapInTS2);
 
 
-   out_Albedo = vec4(texture(color_texture, my_Texcoord.xy).rgb, 1.0);
+   out_Albedo = vec4(texture(color_texture, my_Texcoord.xy).rgb, 1.0) * 0.1;
 
    // write depth into alpha
    out_Albedo.a = my_ScreenPosition.z / my_ScreenPosition.w;

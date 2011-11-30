@@ -193,10 +193,10 @@ void Bamboo::RN_Deferred::ItlRender()
     glBindFramebuffer(GL_FRAMEBUFFER, m_nFBO);
     ItlPushFBO(m_nFBO);
     glViewport(0,0, m_nWidth, m_nHeight);
-    GLenum tDrawBuffers[1] = { GL_COLOR_ATTACHMENT4 };
+    GLenum tDrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
     glDrawBuffers(1, tDrawBuffers);
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    //glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    //glClear(GL_COLOR_BUFFER_BIT);
 
 
 

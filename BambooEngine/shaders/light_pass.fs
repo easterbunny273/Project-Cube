@@ -31,6 +31,8 @@ in vec4 finalPosition;
 
 void main()
 {
+    //FragColor = vec4(vLightColor, 1.0);
+    //return;
     vec2 vTexCoords = finalPosition.xy / finalPosition.w;
     vTexCoords += vec2(1.0);
     vTexCoords /= 2.0;
@@ -52,13 +54,14 @@ void main()
 
     vec3 vMaskValue = texture(spotmask, vTexCoordsShadowMap).rgb;
 
-    if (vMaskValue.r < 0.5)
+    if (vMaskValue.r < 0.001)
         discard;
+
     //FragColor = texture(shadowmap, vTexCoordsShadowMap);
 
     if (fDepth < fDepthInShadowMap + 0.00001)
     {
-        vec3 vAlbedo = texture(color_texture, vTexCoords).rgb;
+        vec3 vAlbedo = texture(color_texture, vTexCoords).rgb * 9;
 
         vec3 vNormal = texture(normal_texture, vTexCoords).rgb;
         vec3 vTangent = texture(tangent_texture, vTexCoords).rgb;
@@ -99,11 +102,11 @@ void main()
         vec4 vDiffuse = vec4(vLightColor * diffuse, 1.0);
 
         float specular = pow(clamp(dot(reflect(-lVec, bump), vVec), 0.0, 1.0),
-                         50.0 );
+                         30.0 );
 
         vec4 vSpecular = vec4(vLightColor * specular, 1.0);
 
-        FragColor = ( vAmbient*base + vDiffuse*base + vSpecular) * att;
+        FragColor = ( vAmbient*base + vDiffuse*base + vSpecular) * att * vMaskValue.r;
         //FragColor = vec4(diffuse, 0.0, specular, 1.0);
 
         //FragColor = vec4(vTangent, 1.0);
@@ -111,10 +114,7 @@ void main()
         //FragColor = vec4(fRed, fGreen, fBlue, 1.0);
     }
     else
-    {
-        vec3 vAlbedo = texture(color_texture, vTexCoords).rgb;
-        FragColor = vec4(vAlbedo*0.02, 0.0);
-    }
+        discard;
 
     //FragColor = vec4(vec3(fDepth), 1.0);
     //FragColor = vec4(vec3(fDepthInShadowMap), 1.0);
