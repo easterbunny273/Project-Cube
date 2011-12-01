@@ -30,6 +30,7 @@ uniform mat3 NormalMatrix;
 
 uniform sampler2D color_texture;
 uniform sampler2D normal_texture;
+uniform sampler2D specular_texture;
 
 void main(void)
 {
@@ -50,6 +51,6 @@ void main(void)
    out_Normal = vec4(my_Normal, 1.0);
    out_NormalMap = texture(normal_texture, my_Texcoord.xy);
    out_Tangent = vec4(my_Tangent, 1.0);
-   out_Specular = vec4(1.0);
+   out_Specular = texture(specular_texture, my_Texcoord.xy);
    out_Position = (my_Position / my_Position.w);
 }

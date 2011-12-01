@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.56.0 r34074</authoring_tool>
     </contributor>
-    <created>2011-11-30T22:26:18</created>
-    <modified>2011-11-30T22:26:18</modified>
+    <created>2011-11-30T22:51:43</created>
+    <modified>2011-11-30T22:51:43</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -88,6 +88,36 @@
     </effect>
     <effect id="Grn-effect">
       <profile_COMMON>
+        <newparam sid="green_png-surface">
+          <surface type="2D">
+            <init_from>green_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="green_png-sampler">
+          <sampler2D>
+            <source>green_png-surface</source>
+          </sampler2D>
+        </newparam>
+        <newparam sid="metal02s_jpg-surface">
+          <surface type="2D">
+            <init_from>metal02s_jpg</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="metal02s_jpg-sampler">
+          <sampler2D>
+            <source>metal02s_jpg-surface</source>
+          </sampler2D>
+        </newparam>
+        <newparam sid="metal02n_jpg-surface">
+          <surface type="2D">
+            <init_from>metal02n_jpg</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="metal02n_jpg-sampler">
+          <sampler2D>
+            <source>metal02n_jpg-surface</source>
+          </sampler2D>
+        </newparam>
         <technique sid="common">
           <lambert>
             <emission>
@@ -97,12 +127,22 @@
               <color>0 0 0 1</color>
             </ambient>
             <diffuse>
-              <color>0 0.8 0 1</color>
+              <texture texture="green_png-sampler" texcoord="UVTex"/>
             </diffuse>
+            <specular>
+              <texture texture="metal02s_jpg-sampler" texcoord="UVTex"/>
+            </specular>
             <index_of_refraction>
               <float>1</float>
             </index_of_refraction>
           </lambert>
+          <extra>
+            <technique profile="FCOLLADA">
+              <bump>
+                <texture texture="metal02n_jpg-sampler" texcoord="UVTex"/>
+              </bump>
+            </technique>
+          </extra>
         </technique>
         <extra>
           <technique profile="GOOGLEEARTH">

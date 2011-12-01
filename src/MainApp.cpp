@@ -109,7 +109,7 @@ void MainApp::StartGraphic_Test()
 
     //spLight->SetTransformMatrix(glm::translate(0.0f, 1.0f, 0.0f));
 
-    std::shared_ptr<Bamboo::ISceneObject> spTreppe = Bamboo::SO_LoadedModel::Create("models/bunte-treppe2.dae");
+    std::shared_ptr<Bamboo::ISceneObject> spTreppe = Bamboo::SO_LoadedModel::Create("models/bunte-treppe3.dae");
     std::shared_ptr<Bamboo::ISceneObject> spTable = Bamboo::SO_LoadedModel::Create("models/table.dae");
     spTreppe->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
     spTable->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)) * glm::translate(glm::mat4(), glm::vec3(0.0f, -0.9f, 0.0f)));

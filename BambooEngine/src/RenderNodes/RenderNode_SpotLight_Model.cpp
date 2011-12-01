@@ -66,15 +66,16 @@ void Bamboo::RN_SpotLight_Model::ItlCreateVBO()
 
 
     indexArray = new GLuint[36];
-
+    // links
     indexArray[0] = 5;
-    indexArray[1] = 4;
-    indexArray[2] = 1;
+    indexArray[1] = 1;
+    indexArray[2] = 4;
 
-    indexArray[3] = 0;
+    indexArray[3] = 4;
     indexArray[4] = 1;
-    indexArray[5] = 4;
+    indexArray[5] = 0;
 
+    //hingen
     indexArray[6] = 5;
     indexArray[7] = 4;
     indexArray[8] = 6;
@@ -83,6 +84,7 @@ void Bamboo::RN_SpotLight_Model::ItlCreateVBO()
     indexArray[10] = 6;
     indexArray[11] = 4;
 
+    //rechts
     indexArray[12] = 6;
     indexArray[13] = 7;
     indexArray[14] = 2;
@@ -91,14 +93,16 @@ void Bamboo::RN_SpotLight_Model::ItlCreateVBO()
     indexArray[16] = 2;
     indexArray[17] = 7;
 
+    // vorne
     indexArray[18] = 1;
     indexArray[19] = 0;
     indexArray[20] = 2;
 
-    indexArray[21] = 7;
-    indexArray[22] = 6;
-    indexArray[23] = 0;
+    indexArray[21] = 2;
+    indexArray[22] = 0;
+    indexArray[23] = 3;
 
+    //oben
     indexArray[24] = 2;
     indexArray[25] = 1;
     indexArray[26] = 6;
@@ -107,6 +111,7 @@ void Bamboo::RN_SpotLight_Model::ItlCreateVBO()
     indexArray[28] = 6;
     indexArray[29] = 1;
 
+    //unten
     indexArray[30] = 0;
     indexArray[31] = 3;
     indexArray[32] = 4;
@@ -114,7 +119,6 @@ void Bamboo::RN_SpotLight_Model::ItlCreateVBO()
     indexArray[33] = 7;
     indexArray[34] = 4;
     indexArray[35] = 3;
-
 
 
 

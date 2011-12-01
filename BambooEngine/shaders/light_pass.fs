@@ -16,6 +16,8 @@ uniform sampler2D normal_texture;
 uniform sampler2D tangent_texture;
 uniform sampler2D depth_texture;
 uniform sampler2D position_texture;
+uniform sampler2D specular_texture;
+uniform sampler2D bump_texture;
 
 uniform sampler2D shadowmap;
 uniform sampler2D spotmask;
@@ -85,7 +87,7 @@ void main()
 
 // -----------------------------
         float distSqr = 1.0 * dot(lightVec, lightVec);
-        float invRadius = 1;
+        float invRadius = 3;
         float att = clamp(1.0 - invRadius * sqrt(distSqr), 0.0, 1.0);
         vec3 lVec = lightVec * inversesqrt(distSqr);
 
@@ -101,8 +103,10 @@ void main()
 
         vec4 vDiffuse = vec4(vLightColor * diffuse, 1.0);
 
+        float specular_factor_texture = texture(specular_texture, vTexCoords).r;
+
         float specular = pow(clamp(dot(reflect(-lVec, bump), vVec), 0.0, 1.0),
-                         30.0 );
+                         60.0 ) * specular_factor_texture;
 
         vec4 vSpecular = vec4(vLightColor * specular, 1.0);
 

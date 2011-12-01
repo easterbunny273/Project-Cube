@@ -37,7 +37,7 @@ void Bamboo::RN_Deferred::ItlCreateFBO()
     m_nTangentDrawBuffer = ItlCreateColorTexture();
     m_nSpecularDrawBuffer = ItlCreateColorTexture();
     m_nDepthDrawBuffer = ItlCreateDepthTexture();
-    m_nCombinedDrawBuffer = ItlCreateColorTexture();
+    m_nDisplaceDrawBuffer = ItlCreateColorTexture();
     m_nPositionDrawBuffer = ItlCreateColorTexture();
     m_nStencilDrawBuffer = ItlCreateColorTexture();
 
@@ -49,10 +49,9 @@ void Bamboo::RN_Deferred::ItlCreateFBO()
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, m_nNormalDrawBuffer, 0);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, m_nTangentDrawBuffer, 0);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, m_nSpecularDrawBuffer, 0);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, GL_TEXTURE_2D, m_nCombinedDrawBuffer, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, GL_TEXTURE_2D, m_nDisplaceDrawBuffer, 0);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT5, GL_TEXTURE_2D, m_nPositionDrawBuffer, 0);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT6, GL_TEXTURE_2D, m_nNormalMapDrawBuffer, 0);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, m_nStencilDrawBuffer, 0);
 
     // attach the renderbuffer to depth attachment point
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, m_nDepthDrawBuffer, 0);
@@ -142,8 +141,7 @@ void Bamboo::RN_Deferred::ItlDeleteTextures()
     glDeleteTextures(1, &m_nNormalMapDrawBuffer);
     glDeleteTextures(1, &m_nTangentDrawBuffer);
     glDeleteTextures(1, &m_nSpecularDrawBuffer);
-    glDeleteTextures(1, &m_nCombinedDrawBuffer);
-    glDeleteRenderbuffers(1, &m_nStencilDrawBuffer);
+    glDeleteTextures(1, &m_nDisplaceDrawBuffer);
     glDeleteTextures(1, &m_nDepthDrawBuffer);
     glDeleteTextures(1, &m_nPositionDrawBuffer);
 }
@@ -216,6 +214,9 @@ void Bamboo::RN_Deferred::ItlRender()
         spLight->SetTextureLocation("normalmap_texture", m_nNormalMapDrawBuffer);
         spLight->SetTextureLocation("depth_texture", m_nDepthDrawBuffer);
         spLight->SetTextureLocation("position_texture", m_nPositionDrawBuffer);
+        spLight->SetTextureLocation("specular_texture", m_nSpecularDrawBuffer);
+        spLight->SetTextureLocation("displace_texture", m_nDisplaceDrawBuffer);
+        //spLight->SetTextureLocation("position_texture", m_nPositionDrawBuffer);
 
         TItlRenderInfo *pCurrentRenderInfo = m_pCurrentRenderInfo.get();
 
@@ -256,18 +257,18 @@ void Bamboo::RN_Deferred::ItlRender()
 
    // std::cout << s_DebugDeferredTexture << std::endl;
 
-    switch (s_DebugDeferredTexture % 2)
+    switch (s_DebugDeferredTexture % 3)
     {
     case 0:
         nTextureToShow = m_nAlbedoDrawBuffer;
         break;
     case 1:
-        nTextureToShow = m_nCombinedDrawBuffer;
+        nTextureToShow = m_nDisplaceDrawBuffer;
         break;
-  /*  case 2:
-        nTextureToShow = m_nNormalDrawBuffer;
+    case 2:
+        nTextureToShow = m_nSpecularDrawBuffer;
         break;
-    case 3:
+    /*case 3:
         nTextureToShow = m_nNormalMapDrawBuffer;
         break;
     case 4:

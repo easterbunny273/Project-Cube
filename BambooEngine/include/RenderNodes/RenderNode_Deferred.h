@@ -87,7 +87,7 @@ private:
         GLuint      m_nPositionDrawBuffer;
         GLuint      m_nDepthDrawBuffer;
 
-        GLuint      m_nCombinedDrawBuffer;
+        GLuint      m_nDisplaceDrawBuffer;
 
         GLuint      m_nFBO;
 
