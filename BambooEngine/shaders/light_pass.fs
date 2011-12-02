@@ -87,13 +87,16 @@ void main()
 
 // -----------------------------
         float distSqr = 1.0 * dot(lightVec, lightVec);
-        float invRadius = 3;
+        float invRadius = 0.5;
         float att = clamp(1.0 - invRadius * sqrt(distSqr), 0.0, 1.0);
         vec3 lVec = lightVec * inversesqrt(distSqr);
 
         vec3 vVec = normalize(eyeVec);
 
-        vec4 base = vec4(vAlbedo, 1.0);
+        float fMinColorReflection = 0.0;
+
+        vec4 base = vec4(max(vAlbedo.r, fMinColorReflection), max(vAlbedo.g, fMinColorReflection), max(vAlbedo.b, fMinColorReflection), 1.0);
+        //vec4 base = vec4(vAlbedo, 1.0);
 
         vec3 bump = normalize( texture(normalmap_texture, vTexCoords).xyz * 2.0 - 1.0);
 
@@ -106,7 +109,7 @@ void main()
         float specular_factor_texture = texture(specular_texture, vTexCoords).r;
 
         float specular = pow(clamp(dot(reflect(-lVec, bump), vVec), 0.0, 1.0),
-                         60.0 ) * specular_factor_texture;
+                         100.0 ) * specular_factor_texture;
 
         vec4 vSpecular = vec4(vLightColor * specular, 1.0);
 
