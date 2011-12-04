@@ -17,7 +17,6 @@ uniform sampler2D tangent_texture;
 uniform sampler2D depth_texture;
 uniform sampler2D position_texture;
 uniform sampler2D specular_texture;
-uniform sampler2D bump_texture;
 
 uniform sampler2D shadowmap;
 uniform sampler2D spotmask;
@@ -61,7 +60,7 @@ void main()
 
     //FragColor = texture(shadowmap, vTexCoordsShadowMap);
 
-    if (fDepth < fDepthInShadowMap + 0.00001)
+    if (fDepth < fDepthInShadowMap + 0.00002)
     {
         vec3 vAlbedo = texture(color_texture, vTexCoords).rgb * 9;
 

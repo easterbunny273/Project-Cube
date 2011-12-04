@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.56.0 r34074</authoring_tool>
     </contributor>
-    <created>2011-12-04T12:48:31</created>
-    <modified>2011-12-04T12:48:31</modified>
+    <created>2011-12-04T13:36:43</created>
+    <modified>2011-12-04T13:36:43</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -60,13 +60,22 @@
   </library_lights>
   <library_images>
     <image id="project-cube-orange_p" name="project-cube-orange_p">
-      <init_from>/home/easterbunny/Projekte/Project-Cube/Project-Cube/models/Projekte/Project-Cube/Project-Cube/textures/models/project-cube-orange.png</init_from>
+      <init_from>/home/easterbunny/Projekte/Project-Cube/Project-Cube/models/treppe/project-cube-orange.png</init_from>
+    </image>
+    <image id="project-cube-oran_000" name="project-cube-oran_000">
+      <init_from>/home/easterbunny/Projekte/Project-Cube/Project-Cube/models/treppe/project-cube-orange-normal.png</init_from>
     </image>
     <image id="metal02_jpg" name="metal02_jpg">
       <init_from>/home/easterbunny/Projekte/Project-Cube/Project-Cube/models/treppe/metal02.png</init_from>
     </image>
     <image id="metal02n_jpg_001" name="metal02n_jpg_001">
       <init_from>/home/easterbunny/Projekte/Project-Cube/Project-Cube/models/treppe/metal02n.png</init_from>
+    </image>
+    <image id="metal06_png" name="metal06_png">
+      <init_from>/home/easterbunny/Projekte/Project-Cube/Project-Cube/models/treppe/metal06.png</init_from>
+    </image>
+    <image id="metal06n_png" name="metal06n_png">
+      <init_from>/home/easterbunny/Projekte/Project-Cube/Project-Cube/models/treppe/metal06n.png</init_from>
     </image>
   </library_images>
   <library_effects>
@@ -80,6 +89,16 @@
         <newparam sid="project-cube-orange_p-sampler">
           <sampler2D>
             <source>project-cube-orange_p-surface</source>
+          </sampler2D>
+        </newparam>
+        <newparam sid="project-cube-oran_000-surface">
+          <surface type="2D">
+            <init_from>project-cube-oran_000</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="project-cube-oran_000-sampler">
+          <sampler2D>
+            <source>project-cube-oran_000-surface</source>
           </sampler2D>
         </newparam>
         <technique sid="common">
@@ -97,6 +116,13 @@
               <float>1</float>
             </index_of_refraction>
           </lambert>
+          <extra>
+            <technique profile="FCOLLADA">
+              <bump>
+                <texture texture="project-cube-oran_000-sampler" texcoord="UVTex"/>
+              </bump>
+            </technique>
+          </extra>
         </technique>
         <extra>
           <technique profile="GOOGLEEARTH">
@@ -161,6 +187,26 @@
     </effect>
     <effect id="Rot-effect">
       <profile_COMMON>
+        <newparam sid="metal06_png-surface">
+          <surface type="2D">
+            <init_from>metal06_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="metal06_png-sampler">
+          <sampler2D>
+            <source>metal06_png-surface</source>
+          </sampler2D>
+        </newparam>
+        <newparam sid="metal06n_png-surface">
+          <surface type="2D">
+            <init_from>metal06n_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="metal06n_png-sampler">
+          <sampler2D>
+            <source>metal06n_png-surface</source>
+          </sampler2D>
+        </newparam>
         <technique sid="common">
           <lambert>
             <emission>
@@ -170,12 +216,19 @@
               <color>0 0 0 1</color>
             </ambient>
             <diffuse>
-              <color>0.64 0.6046903 0.5964884 1</color>
+              <texture texture="metal06_png-sampler" texcoord="UVTex"/>
             </diffuse>
             <index_of_refraction>
               <float>1</float>
             </index_of_refraction>
           </lambert>
+          <extra>
+            <technique profile="FCOLLADA">
+              <bump>
+                <texture texture="metal06n_png-sampler" texcoord="UVTex"/>
+              </bump>
+            </technique>
+          </extra>
         </technique>
         <extra>
           <technique profile="GOOGLEEARTH">
