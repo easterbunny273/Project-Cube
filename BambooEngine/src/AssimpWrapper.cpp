@@ -237,18 +237,23 @@ std::shared_ptr<GeometryData::GenericObject> AssimpWrapper::LoadModel(std::strin
                 switch (iTextureType)
                 {
                 case aiTextureType_DIFFUSE:
+                    Logger::debug() << "diffuse " << std::string(sTexturePath.data) << Logger::endl;
                     tTextureType = GeometryData::TextureNames::ALBEDO;
                     break;
                 case aiTextureType_NORMALS:
+                    Logger::debug() << "normals " << std::string(sTexturePath.data) << Logger::endl;
                     tTextureType = GeometryData::TextureNames::NORMAL;
                     break;
                 case aiTextureType_SPECULAR:
+                    Logger::debug() << "specular " << std::string(sTexturePath.data) << Logger::endl;
                     tTextureType = GeometryData::TextureNames::SPECULAR;
                     break;
                 case aiTextureType_HEIGHT:
+                    Logger::debug() << "height " << std::string(sTexturePath.data) << Logger::endl;
                     tTextureType = GeometryData::TextureNames::NORMAL;
                     break;
                 case aiTextureType_DISPLACEMENT:
+                    Logger::debug() << "displacement " << std::string(sTexturePath.data) << Logger::endl;
                     tTextureType = GeometryData::TextureNames::DISPLACE;
                     break;
                 default:

@@ -35,6 +35,7 @@ out vec4 my_Position;
 
 void main(void)
 {
+
   mat4 ModelViewMatrix = ViewMatrix * ModelMatrix;
 
   gl_Position = ModelViewProjectionMatrix * vec4(in_Position, 1.0);
@@ -49,4 +50,15 @@ void main(void)
 
   my_Position = ModelMatrix * vec4(in_Position, 1.0);
   my_Color = in_Color;
+
+  vec4 v4Vertex = ViewMatrix * my_Position;
+  vec3 vVertex = v4Vertex.xyz / v4Vertex.w;
+
+  vec3 eyeVec;
+  eyeVec.x = dot(-vVertex, my_Tangent);
+  eyeVec.y = dot(-vVertex, cross(my_Normal, my_Tangent));
+  eyeVec.z = dot(-vVertex, my_Normal);
+
+    my_EyeDir = -eyeVec;
+
 }

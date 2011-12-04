@@ -114,6 +114,7 @@ void main()
         vec4 vSpecular = vec4(vLightColor * specular, 1.0);
 
         FragColor = ( vAmbient*base + vDiffuse*base + vSpecular) * att * vMaskValue.r;
+        //FragColor = vec4(texture(normalmap_texture, vTexCoords).aaa, 1.0);
         //FragColor = vec4(diffuse, 0.0, specular, 1.0);
 
         //FragColor = vec4(vTangent, 1.0);

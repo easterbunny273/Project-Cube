@@ -34,23 +34,30 @@ uniform sampler2D specular_texture;
 
 void main(void)
 {
-   //mat3 mTransformObjectToTangentSpace = mat3(my_Tangent, my_Bitangent, my_Normal);
-   //mat3 mTransformTangentToObjectSpace = transpose(mTransformObjectToTangentSpace);
 
-   //vec3 vNormalFromMapInTS = (texture(normal_texture, my_Texcoord.xy).rgb - vec3(0.5)) * 2.0;
-   //vec3 vNormalFromMapInTS2 = vec3(vNormalFromMapInTS.x, vNormalFromMapInTS.z, vNormalFromMapInTS.y);
+    vec3 vVec = normalize(my_EyeDir);
+    vec3 vVec2 = vVec;
+    vVec2.x = -vVec2.x;	//dont know why this is needed - maybe a bug in viewvector calculation?
 
-   //vec3 vNormalFromMapInOS = normalize(mTransformObjectToTangentSpace * vNormalFromMapInTS2);
+    float scale = 0.0125f;
+    float height = texture(normal_texture, my_Texcoord.xy).a;
+    float offset = scale * (2.0 * height - 1.0);
+
+    vec2 texcoord_offset = (offset * vVec2.xy);// / vVec2.z;
 
 
-   out_Albedo = vec4(texture(color_texture, my_Texcoord.xy).rgb, 1.0) * 0.1;
+   out_Albedo = vec4(texture(color_texture, my_Texcoord.xy + texcoord_offset).rgb, 1.0) * 0.1;
+   // out_Albedo = vec4(texcoord_offset, 0.0, 1.0);
 
    // write depth into alpha
    out_Albedo.a = my_ScreenPosition.z / my_ScreenPosition.w;
 
    out_Normal = vec4(my_Normal, 1.0);
-   out_NormalMap = texture(normal_texture, my_Texcoord.xy);
+   out_NormalMap = texture(normal_texture, my_Texcoord.xy + texcoord_offset);
    out_Tangent = vec4(my_Tangent, 1.0);
-   out_Specular = texture(specular_texture, my_Texcoord.xy);
+
+
+   out_Specular = vec4(texture(color_texture, my_Texcoord.xy  + texcoord_offset).a);
+
    out_Position = (my_Position / my_Position.w);
 }

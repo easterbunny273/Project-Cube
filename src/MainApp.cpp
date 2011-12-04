@@ -156,7 +156,7 @@ void MainApp::Run()
         static int count = 0;
         count+=1;
 
-        g_spTreppe->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)) * glm::translate(glm::mat4(), glm::vec3(0.0, 5.5f, 0.0f)) * glm::rotate(glm::mat4(), 0.1f * count, glm::vec3(1.0f, 0.2f, 0.0f)));
+        //g_spTreppe->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)) * glm::translate(glm::mat4(), glm::vec3(0.0, 5.5f, 0.0f)) * glm::rotate(glm::mat4(), 0.1f * count, glm::vec3(1.0f, 0.2f, 0.0f)));
     }
 }
 
