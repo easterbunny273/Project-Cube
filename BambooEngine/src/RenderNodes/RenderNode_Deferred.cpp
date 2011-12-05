@@ -1,10 +1,12 @@
 #include "RenderNodes/RenderNode_Deferred.h"
 #include "RenderNodes/RenderNode_PostEffect.h"
 #include "RenderNodes/RenderNode_SpotLight.h"
+#include "ShaderManager.h"
 #include "TextureManager.h"
 #include "Logger.h"
 
 extern int s_DebugDeferredTexture;
+extern int s_nUseParallax;
 
 Bamboo::RN_Deferred::RN_Deferred(unsigned int nWidth, unsigned int nHeight)
     : m_nWidth(nWidth), m_nHeight(nHeight)
@@ -148,8 +150,15 @@ void Bamboo::RN_Deferred::ItlDeleteTextures()
 
 void Bamboo::RN_Deferred::ItlPreRenderChildren()
 {
-    //save current viewport params
-    glGetIntegerv(GL_VIEWPORT, m_iGeneralViewportParams);
+    static bool bFirstRun = true;
+
+    if (bFirstRun)
+    {
+        //save current viewport params
+        glGetIntegerv(GL_VIEWPORT, m_iGeneralViewportParams);
+
+        bFirstRun = false;
+    }
 
     glBindFramebuffer(GL_FRAMEBUFFER, m_nFBO);
 
@@ -163,10 +172,21 @@ void Bamboo::RN_Deferred::ItlPreRenderChildren()
     //glClearDepth(1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    ItlGetGraphicCore()->GetShaderManager()->PushActiveShader();
+    ItlGetGraphicCore()->GetShaderManager()->ActivateShader("deferred_pass");
+
+    GLuint l_nUseParallax = ItlGetGraphicCore()->GetShaderManager()->GetUniform("nUseParallax");
+
+    assert (l_nUseParallax != -1);
+    glUniform1i(l_nUseParallax, s_nUseParallax % 3);
+
 }
 
 void Bamboo::RN_Deferred::ItlPostRenderChildren()
 {
+
+    ItlGetGraphicCore()->GetShaderManager()->PushActiveShader();
+
     //remove the fbo (THIS fbo) from the bound_fbos stack
     ItlPopFBO();
 

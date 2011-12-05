@@ -126,8 +126,8 @@ void MainApp::StartGraphic_Test()
     // add light to scene
     spScene->AttachObject(spTestLight1);
     spScene->AttachObject(spTestLight2);
-    spScene->AttachObject(spTestLight3);
-    spScene->AttachObject(spTestLight4);
+   // spScene->AttachObject(spTestLight3);
+    //spScene->AttachObject(spTestLight4);
 
     // add render loop
     GetGraphic()->AddRenderLoop(spWindow, m_spCamera, spScene);
@@ -341,11 +341,11 @@ bool MainApp::OnEvent(std::shared_ptr<EventManager::IEvent> spEvent)
         float fValue = spMovementEvent->GetValue();
 
         if (eMovementType == CameraMovementEvent::CAMERA_MOVE_X)
-            spCamera->AddToMoveVector(glm::vec3(fValue, 0.0f, 0.0f));
+            spCamera->AddToMoveVector(glm::vec3(fValue * 5, 0.0f, 0.0f));
         else if (eMovementType == CameraMovementEvent::CAMERA_MOVE_Y)
-            spCamera->AddToMoveVector(glm::vec3(0.0f, fValue, 0.0f));
+            spCamera->AddToMoveVector(glm::vec3(0.0f, fValue * 5, 0.0f));
         else if (eMovementType == CameraMovementEvent::CAMERA_MOVE_Z)
-            spCamera->AddToMoveVector(glm::vec3(0.0f, 0.0f, fValue));
+            spCamera->AddToMoveVector(glm::vec3(0.0f, 0.0f, fValue * 5));
         else if (eMovementType == CameraMovementEvent::CAMERA_ROTATE_X)
             spCamera->RotateHorizontal(fValue);
         else if (eMovementType == CameraMovementEvent::CAMERA_ROTATE_Y)

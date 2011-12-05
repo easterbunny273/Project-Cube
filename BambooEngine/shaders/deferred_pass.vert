@@ -55,10 +55,10 @@ void main(void)
   vec3 vVertex = v4Vertex.xyz / v4Vertex.w;
 
   vec3 eyeVec;
-  eyeVec.x = dot(-vVertex, my_Tangent);
-  eyeVec.y = dot(-vVertex, cross(my_Normal, my_Tangent));
-  eyeVec.z = dot(-vVertex, my_Normal);
+  eyeVec.x = dot(vVertex, my_Tangent);
+  eyeVec.y = dot(vVertex, cross(my_Normal, my_Tangent));
+  eyeVec.z = dot(vVertex, my_Normal);
 
-    my_EyeDir = -eyeVec;
+  my_EyeDir = eyeVec;
 
 }

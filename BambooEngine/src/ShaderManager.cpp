@@ -33,10 +33,13 @@ bool Bamboo::ShaderManager::ActivateShader(std::string sName)
     {
 	if (m_vsShaderNames[a].compare(sName)==0)
 	{
-	    m_vpShaders[a]->Activate();
-	    m_nCurrentActiveShaderProgram = a;
-	    bSuccess = true;
-	    break;
+            if (m_nCurrentActiveShaderProgram != a)
+            {
+                m_vpShaders[a]->Activate();
+                m_nCurrentActiveShaderProgram = a;
+                bSuccess = true;
+                break;
+            }
 	}
     }
 
@@ -63,8 +66,12 @@ void Bamboo::ShaderManager::PushActiveShader()
 
 void Bamboo::ShaderManager::PopActiveShader()
 {
+    unsigned int nOldActiveShader = m_nCurrentActiveShaderProgram;
+
     m_nCurrentActiveShaderProgram = m_vActiveShaderStack.top();
 
     m_vActiveShaderStack.pop();
-    m_vpShaders[m_nCurrentActiveShaderProgram]->Activate();
+
+    if (m_nCurrentActiveShaderProgram != nOldActiveShader)
+        m_vpShaders[m_nCurrentActiveShaderProgram]->Activate();
 }

@@ -113,6 +113,7 @@ void main()
         vec4 vSpecular = vec4(vLightColor * specular, 1.0);
 
         FragColor = ( vAmbient*base + vDiffuse*base + vSpecular) * att * vMaskValue.r;
+        //FragColor = vec4(vAlbedo, 1.0);
         //FragColor = vec4(texture(normalmap_texture, vTexCoords).aaa, 1.0);
         //FragColor = vec4(diffuse, 0.0, specular, 1.0);
 
@@ -132,7 +133,7 @@ void main()
     //FragColor = vec4(texture(shadowmap, vTexCoordsShadowMap).rgb, 1.0);
 
    // FragColor = vec4(vScreenSpaceTest.rgb / vScreenSpaceTest.w, 1.0);
-    //FragColor = vec4(finalPosition.rgb / finalPosition.w, 1.0);
+
 
    // if (texture(depth_texture, vTexCoords).r > (finalPosition.z / finalPosition.w))
 

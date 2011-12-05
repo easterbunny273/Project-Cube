@@ -98,19 +98,12 @@ void Bamboo::RN_Generic::ItlRender()
 
 void Bamboo::RN_Generic::ItlPreRender()
 {
-    ShaderManager *pShaderManager = ItlGetGraphicCore()->GetShaderManager();
-    assert (pShaderManager != NULL);
 
-    pShaderManager->PushActiveShader();
-    pShaderManager->ActivateShader("GenericShader1");
 }
 
 void Bamboo::RN_Generic::ItlPostRender()
 {
-    ShaderManager *pShaderManager = ItlGetGraphicCore()->GetShaderManager();
-    assert (pShaderManager != NULL);
 
-    pShaderManager->PopActiveShader();
 }
 
 void Bamboo::RN_Generic::ItlPreRenderChildren()
@@ -250,7 +243,7 @@ void Bamboo::RN_Generic::ItlPrepareVAO()
     assert (pShaderManager != NULL);
 
     pShaderManager->PushActiveShader();
-    pShaderManager->ActivateShader("GenericShader1");
+    pShaderManager->ActivateShader("deferred_pass");
 
     // generate arrays
     glGenVertexArrays(m_nNumMeshes, m_pnVertexArrayObjects);
@@ -304,10 +297,7 @@ void Bamboo::RN_Generic::ItlPrepareVAO()
 
 void Bamboo::RN_Generic::ItlLoadShader()
 {
-    ShaderManager *pShaderManager = ItlGetGraphicCore()->GetShaderManager();
-    assert (pShaderManager != NULL);
-
-    pShaderManager->AddShader("GenericShader1", new Shader("BambooEngine/shaders/generic1.vs", "BambooEngine/shaders/generic1.fs"));
+    ItlGetGraphicCore()->GetShaderManager()->AddShader("deferred_pass", new Shader("BambooEngine/shaders/deferred_pass.vert", "BambooEngine/shaders/deferred_pass.frag"));
 }
 
 void Bamboo::RN_Generic::ItlPrepareTextures()

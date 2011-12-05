@@ -21,6 +21,7 @@ Bamboo::GlfwWindow *Bamboo::GlfwWindow::s_pInstance = NULL;
 
 
 int s_DebugDeferredTexture = 0;
+int s_nUseParallax = 0;
 
 /****************************************************************
   *************************************************************** */
@@ -149,6 +150,14 @@ void Bamboo::GlfwWindow::ItlStaticHandleKeyboardEvent(int iKeyIdentifier, int iN
         s_DebugDeferredTexture++;
         return;
     }
+
+    if (iKeyIdentifier == GLFW_KEY_TAB && iNewKeyState==GLFW_PRESS)
+    {
+        s_nUseParallax++;
+
+        return;
+    }
+
 
 
     // this method is a static method (glfw cannot call class methods)

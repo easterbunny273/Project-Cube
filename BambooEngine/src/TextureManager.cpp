@@ -39,6 +39,8 @@ struct Bamboo::TextureManager::TImpl
 
         std::map<std::string, GLuint>   m_mTextureNames;    /// maps a texture name (string) to a opengl id (GLuint)
 
+        std::map<GLuint, GLuint> m_mLastBindedTextures;
+
         GLuint m_pSamplerObjects[NUM_PROVIDED_SAMPLER_OBJECTS];
     //@}
 };
@@ -134,11 +136,17 @@ GLuint Bamboo::TextureManager::UseTexture(GLuint nTextureID)
     // write entry to map
     m_pImpl->m_mTextureInUse[nTextureID] = nFreeUnit;
 
-    // activate texture unit
-    glActiveTexture(GL_TEXTURE0 + nFreeUnit);
+    if (m_pImpl->m_mLastBindedTextures[nFreeUnit] != nTextureID)
+    {
+        // activate texture unit
+        glActiveTexture(GL_TEXTURE0 + nFreeUnit);
 
-    // bind texture
-    glBindTexture(GL_TEXTURE_2D, nTextureID);
+        // bind texture
+        glBindTexture(GL_TEXTURE_2D, nTextureID);
+
+        m_pImpl->m_mLastBindedTextures[nFreeUnit] = nTextureID;
+    }
+
 
     return nFreeUnit;
 }
@@ -243,17 +251,20 @@ bool Bamboo::TextureManager::TImpl::ItlLoadTextureFromFile(GLuint &rnTextureID, 
             //activate mipmapping
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-            //glTexParameteri(iTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-            float fMaximumAnisotropy;
+            float fMaximumAnisotropy=0.0;
             //get maximum ansitropic filtering value
             glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &fMaximumAnisotropy);
 
             //activate 4x ansitropic filtering if possible
-            if (fMaximumAnisotropy >= 4.0)
-                    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
+            if (fMaximumAnisotropy >= 1.0)
+            {
+                    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, fMaximumAnisotropy);
+                    Logger::debug() << fMaximumAnisotropy << " ansitropic filtering activated" << Logger::endl;
+            }
             else
-                Logger::error() << "4x Ansitropic filtering not available by graphic hardware" << Logger::endl;
+                Logger::error() << "Ansitropic filtering not available by graphic hardware" << Logger::endl;
 
             glGenerateMipmap(GL_TEXTURE_2D);  //Generate mipmaps now!!!
 
