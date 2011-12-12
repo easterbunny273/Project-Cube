@@ -38,16 +38,16 @@
   </library_lights>
   <library_images>
     <image id="green_bmp" name="green_bmp">
-      <init_from>Projekte/Project-Cube/Project-Cube/models/green.bmp</init_from>
+      <init_from>../textures/models/green.png</init_from>
     </image>
     <image id="green-normals_bmp" name="green-normals_bmp">
-      <init_from>Projekte/Project-Cube/Project-Cube/textures/models/green-normals.bmp</init_from>
+      <init_from>../textures/models/green-normals.png</init_from>
     </image>
     <image id="holz_bmp" name="holz_bmp">
-      <init_from>Projekte/Project-Cube/Project-Cube/models/holz.bmp</init_from>
+      <init_from>../textures/models/holz.png</init_from>
     </image>
     <image id="holz-normals_bmp" name="holz-normals_bmp">
-      <init_from>Projekte/Project-Cube/Project-Cube/textures/models/holz-normals.bmp</init_from>
+      <init_from>../textures/models/holz-normals.png</init_from>
     </image>
   </library_images>
   <library_effects>

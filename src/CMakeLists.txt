@@ -1,7 +1,7 @@
 #CMakeLists.txt for src-Folder
 
 #define libraries which should be linked additionally
-link_libraries(glfw GLEW IL assimp pthread cpptest lua luabind)
+link_libraries(glfw GLEW IL assimp pthread cpptest lua luabind GL)
 
 #add include directories for compiler
 include_directories(../BambooEngine/include)

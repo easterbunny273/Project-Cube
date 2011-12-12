@@ -260,6 +260,8 @@ bool Bamboo::TextureManager::TImpl::ItlLoadTextureFromFile(GLuint &rnTextureID, 
             //activate 4x ansitropic filtering if possible
             if (fMaximumAnisotropy >= 1.0)
             {
+                if (fMaximumAnisotropy > 4.0)
+                    fMaximumAnisotropy = 4.0f;
                     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, fMaximumAnisotropy);
                     Logger::debug() << fMaximumAnisotropy << " ansitropic filtering activated" << Logger::endl;
             }

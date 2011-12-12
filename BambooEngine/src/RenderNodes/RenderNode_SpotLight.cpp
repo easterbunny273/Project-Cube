@@ -8,7 +8,7 @@
 
 #define NEARPLANE 0.1f
 #define FARPLANE 50.0f
-#define SHADOWMAP_RESOLUTION 1024.0f
+#define SHADOWMAP_RESOLUTION 512.0f
 
 Bamboo::RN_SpotLight::RN_SpotLight(glm::vec3 vPosition,
                                    glm::vec3 vLookDirection,
@@ -27,6 +27,8 @@ Bamboo::RN_SpotLight::RN_SpotLight(glm::vec3 vPosition,
     ItlCreateVBO();
 
     m_vLightColor = vLightColor;
+    m_vLightPosition = vPosition;
+
 
     Logger::debug() << "RN_SpotLight created" << Logger::endl;
 }
@@ -279,9 +281,13 @@ void Bamboo::RN_SpotLight::ItlRender()
     const GLint l_shadowmap_Position = pShaderManager->GetUniform("shadowmap");
     const GLint l_spotmask_Position = pShaderManager->GetUniform("spotmask");
     const GLint l_lightcolor_Position = pShaderManager->GetUniform("vLightColor");
+    const GLint l_lightposition_Position = pShaderManager->GetUniform("LightPosition");
 
     glm::mat4 mViewProjectionMatrix = m_m4ProjectionMatrix * m_m4ViewMatrix;
     glm::mat4 mInverseViewProjectionMatrix = glm::inverse(mViewProjectionMatrix);
+
+    if (l_lightposition_Position != -1)
+        glUniform3f(l_lightposition_Position, m_vLightPosition.x, m_vLightPosition.y, m_vLightPosition.z);
 
     if (l_lightcolor_Position != -1)
         glUniform3f(l_lightcolor_Position, m_vLightColor.r, m_vLightColor.g, m_vLightColor.b);

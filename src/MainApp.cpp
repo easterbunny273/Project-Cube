@@ -104,10 +104,12 @@ void MainApp::StartGraphic_Test()
 
     // create objects
     std::shared_ptr<Bamboo::ISceneObject> spCube = Bamboo::SO_Cube::Create();
-    std::shared_ptr<Bamboo::ISceneObject> spTestLight1 = Bamboo::SO_SpotLight::Create(glm::vec3(-0.2f, 0.20f, 0.16f), glm::vec3(1.0f, -0.9f, -1.0f), 25.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-    std::shared_ptr<Bamboo::ISceneObject> spTestLight2 = Bamboo::SO_SpotLight::Create(glm::vec3(-0.05f, 0.25f, -0.13f), glm::vec3(0.0f, -2.0f, 1.0f), 25.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+    std::shared_ptr<Bamboo::ISceneObject> spTestLight1 = Bamboo::SO_SpotLight::Create(glm::vec3(-0.2f, 0.10f, 0.14f), glm::vec3(1.0f, -0.4f, -1.0f), 25.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+    std::shared_ptr<Bamboo::ISceneObject> spTestLight2 = Bamboo::SO_SpotLight::Create(glm::vec3(0.0f, 0.25f, -0.09f), glm::vec3(0.0f, -2.0f, 1.0f), 5.0f, glm::vec3(1.0f, 1.0f, 1.0f));
     std::shared_ptr<Bamboo::ISceneObject> spTestLight3 = Bamboo::SO_SpotLight::Create(glm::vec3(-0.2f, 0.2f, -0.14f), glm::vec3(1.0f, -1.1f, 0.62f), 25.0f, glm::vec3(1.0f, 1.0f, 1.0f));
     std::shared_ptr<Bamboo::ISceneObject> spTestLight4 = Bamboo::SO_SpotLight::Create(glm::vec3(0.0f, 0.3f, 0.0f), glm::vec3(0.2f, -1.0f, 0.0f), 25.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+    std::shared_ptr<Bamboo::ISceneObject> spTestLight5 = Bamboo::SO_SpotLight::Create(glm::vec3(-0.2f, 0.20f, 0.16f), glm::vec3(1.0f, -0.9f, -1.0f), 25.0f, glm::vec3(0.5f, 0.5f, 0.5f));
+    std::shared_ptr<Bamboo::ISceneObject> spTestLight6 = Bamboo::SO_SpotLight::Create(glm::vec3(-0.2f, 0.20f, 0.18f), glm::vec3(1.0f, -0.9f, -1.0f), 25.0f, glm::vec3(0.5f, 0.5f, 0.5f));
 
     //spLight->SetTransformMatrix(glm::translate(0.0f, 1.0f, 0.0f));
 
@@ -124,10 +126,12 @@ void MainApp::StartGraphic_Test()
     spScene->AttachObject(spTreppe);
 
     // add light to scene
-    spScene->AttachObject(spTestLight1);
-    spScene->AttachObject(spTestLight2);
-   // spScene->AttachObject(spTestLight3);
-    //spScene->AttachObject(spTestLight4);
+  //  spScene->AttachObject(spTestLight1);
+//    spScene->AttachObject(spTestLight5);
+ //   spScene->AttachObject(spTestLight6);
+    //spScene->AttachObject(spTestLight2);
+    //spScene->AttachObject(spTestLight3);
+    spScene->AttachObject(spTestLight4);
 
     // add render loop
     GetGraphic()->AddRenderLoop(spWindow, m_spCamera, spScene);

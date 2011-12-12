@@ -87,7 +87,7 @@ GLuint Bamboo::RN_Deferred::ItlCreateColorTexture()
 
     //set texture format and data
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_nWidth, m_nHeight, 0, GL_RGBA, GL_FLOAT, 0);
-    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, m_nWidth, m_nHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, m_nWidth, m_nHeight, 0, GL_RGBA, GL_FLOAT, 0);
     //glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, m_iWidth, m_iHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
     //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, m_iWidth, m_iHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
@@ -121,8 +121,8 @@ GLuint Bamboo::RN_Deferred::ItlCreateDepthTexture()
     //set texture parameters
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
     glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -178,7 +178,7 @@ void Bamboo::RN_Deferred::ItlPreRenderChildren()
     GLuint l_nUseParallax = ItlGetGraphicCore()->GetShaderManager()->GetUniform("nUseParallax");
 
     assert (l_nUseParallax != -1);
-    glUniform1i(l_nUseParallax, s_nUseParallax % 3);
+    glUniform1i(l_nUseParallax, s_nUseParallax % 2);
 
 }
 

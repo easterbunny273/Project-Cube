@@ -55,12 +55,15 @@ void main()
 
     vec3 vMaskValue = texture(spotmask, vTexCoordsShadowMap).rgb;
 
+
     if (vMaskValue.r < 0.001)
         discard;
 
     //FragColor = texture(shadowmap, vTexCoordsShadowMap);
 
-    if (fDepth < fDepthInShadowMap + 0.00002)
+    float epsilon = 0.00002;
+
+    if (fDepth < fDepthInShadowMap + epsilon)
     {
         vec3 vAlbedo = texture(color_texture, vTexCoords).rgb * 9;
 
@@ -70,7 +73,8 @@ void main()
 
         vec4 vVertexVS = (ViewMatrix * v4Position);
         vec3 vVertex = vVertexVS.xyz / vVertexVS.w;
-        vec3 tmpVec = LightPosition.xyz - vVertex;
+        vec4 lightVecVS = ViewMatrix * vec4(LightPosition, 1.0);
+        vec3 tmpVec = lightVecVS.xyz / lightVecVS.w - vVertex;
 
         vec3 lightVec;
         lightVec.x = dot(tmpVec, vTangent);
@@ -109,6 +113,7 @@ void main()
 
         float specular = pow(clamp(dot(reflect(-lVec, bump), vVec), 0.0, 1.0),
                          100.0 ) * specular_factor_texture;
+
 
         vec4 vSpecular = vec4(vLightColor * specular, 1.0);
 

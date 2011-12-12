@@ -77,6 +77,7 @@ private:
     glm::mat4       m_m4SavedViewProjectionMatrix;
 
     glm::vec3       m_vLightColor;
+    glm::vec3       m_vLightPosition;
 
     GLuint m_nColorTexture;
     GLuint m_nDepthTexture;
