@@ -54,6 +54,8 @@ void main(void)
   vec4 v4Vertex = ViewMatrix * my_Position;
   vec3 vVertex = v4Vertex.xyz / v4Vertex.w;
 
+  vVertex = v4Vertex.xyz / v4Vertex.w;
+
   vec3 eyeVec;
   eyeVec.x = dot(vVertex, my_Tangent);
   eyeVec.y = dot(vVertex, cross(my_Normal, my_Tangent));

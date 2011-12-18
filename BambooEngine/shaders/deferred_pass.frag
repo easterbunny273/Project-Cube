@@ -34,83 +34,7 @@ uniform sampler2D specular_texture;
 
 uniform int nUseParallax;
 
-
 vec2 GetParallaxOcclusionOffset2(vec2 original_Texcoords, bool bDoBinarySearch)
-{
-    vec3 vVec = (my_EyeDir);
-    vec3 vVec2 = vVec;
-    vVec2.y = -vVec2.y;
-
-    float dHeightScale = 0.01;
-
-    vec2 vCurrentTexCoords = original_Texcoords;
-
-     float fCurrentTexHeight = texture2D(normal_texture, vCurrentTexCoords).a * dHeightScale;
-    float fCurrentHeight = dHeightScale;
-    float nNumSamples = mix(8, 1, my_EyeDir.z);
-
-     float fCurrentPreviousHeight = fCurrentHeight;
-    vec2 vCurrentPreviousTexCoords = vCurrentTexCoords;
-
-    while (fCurrentHeight > fCurrentTexHeight)
-    {
-        vCurrentPreviousTexCoords = vCurrentTexCoords;
-        vCurrentTexCoords = vCurrentTexCoords + vVec2.xy / nNumSamples;
-
-        fCurrentTexHeight = texture2D(normal_texture, vCurrentTexCoords).a * dHeightScale;
-
-        fCurrentPreviousHeight = fCurrentHeight;
-        fCurrentHeight = fCurrentHeight + vVec2.z / nNumSamples;
-
-        if (fCurrentHeight > fCurrentPreviousHeight)
-            break;
-
-        if (fCurrentHeight < 0.0)
-            break;
-     }
-
-    vec2 dBegin = vCurrentTexCoords;
-    vec2 dEnd = vCurrentPreviousTexCoords;
-    vec2 dMiddle = 0.5 * dBegin + 0.5 * dEnd;
-    float dTexHeightAtMiddle = texture2D(normal_texture, dMiddle).a * dHeightScale;
-
-    float dEyeHeightAtBegin = fCurrentHeight;
-    float dEyeHeightAtEnd = fCurrentPreviousHeight;
-    float dEyeHeightAtMiddle = dEyeHeightAtBegin * 0.5 + dEyeHeightAtEnd * 0.5;
-
-    int iAbort = 0;
-
-    while (bDoBinarySearch && abs(dTexHeightAtMiddle - dEyeHeightAtMiddle) > 0.0001 && length(dEnd - dBegin) > 0.0001)
-    {
-        iAbort += 1;
-
-        if (iAbort > 20)
-            break;
-
-        if (dTexHeightAtMiddle > dEyeHeightAtMiddle)
-        {
-            dBegin = dMiddle;
-            dMiddle = 0.5 * dBegin + 0.5 * dEnd;
-            dTexHeightAtMiddle = texture2D(normal_texture, dMiddle).a * dHeightScale;
-
-            dEyeHeightAtBegin = dEyeHeightAtMiddle;
-            dEyeHeightAtMiddle = dEyeHeightAtBegin * 0.5 + dEyeHeightAtEnd * 0.5;
-        }
-        else
-        {
-            dEnd = dMiddle;
-            dMiddle = 0.5 * dBegin + 0.5 * dEnd;
-            dTexHeightAtMiddle = texture2D(normal_texture, dMiddle).a * dHeightScale;
-
-            dEyeHeightAtEnd = dEyeHeightAtMiddle;
-            dEyeHeightAtMiddle = dEyeHeightAtBegin * 0.5 + dEyeHeightAtEnd * 0.5;
-        }
-    }
-
-    return (dMiddle - original_Texcoords);
-
-}
-vec2 GetParallaxOcclusionOffset(vec2 original_Texcoords, bool bDoBinarySearch)
 {
     vec3 vVec = (my_EyeDir);
     vec3 vVec2 = vVec;
@@ -127,7 +51,9 @@ vec2 GetParallaxOcclusionOffset(vec2 original_Texcoords, bool bDoBinarySearch)
     float fCurrentPreviousHeight = fCurrentHeight;
     vec2 vCurrentPreviousTexCoords = vCurrentTexCoords;
 
-    while (fCurrentHeight > fCurrentTexHeight)
+    float epsilon = 0.0001;
+
+    while (fCurrentHeight > fCurrentTexHeight + epsilon)
     {
         vCurrentPreviousTexCoords = vCurrentTexCoords;
         vCurrentTexCoords = vCurrentTexCoords + vVec2.xy / nNumSamples;
@@ -155,7 +81,86 @@ vec2 GetParallaxOcclusionOffset(vec2 original_Texcoords, bool bDoBinarySearch)
 
     int iAbort = 0;
 
-    while (bDoBinarySearch && abs(dTexHeightAtMiddle - dEyeHeightAtMiddle) > 0.0001 && length(dEnd - dBegin) > 0.0001)
+    while (bDoBinarySearch && abs(dTexHeightAtMiddle - dEyeHeightAtMiddle) > epsilon && length(dEnd - dBegin) > 0.0001)
+    {
+        iAbort += 1;
+
+        if (iAbort > 20)
+            break;
+
+        if (dTexHeightAtMiddle > (dEyeHeightAtMiddle - epsilon))
+        {
+            dBegin = dMiddle;
+            dMiddle = 0.5 * dBegin + 0.5 * dEnd;
+            dTexHeightAtMiddle = (1.0 - 1.0 * dHeightScale) + texture2D(normal_texture, dMiddle).a * dHeightScale;
+
+            dEyeHeightAtBegin = dEyeHeightAtMiddle;
+            dEyeHeightAtMiddle = dEyeHeightAtBegin * 0.5 + dEyeHeightAtEnd * 0.5;
+        }
+        else if (dTexHeightAtMiddle < (dEyeHeightAtMiddle + epsilon))
+        {
+            dEnd = dMiddle;
+            dMiddle = 0.5 * dBegin + 0.5 * dEnd;
+            dTexHeightAtMiddle = (1.0 - 1.0 * dHeightScale) +  texture2D(normal_texture, dMiddle).a * dHeightScale;
+
+            dEyeHeightAtEnd = dEyeHeightAtMiddle;
+            dEyeHeightAtMiddle = dEyeHeightAtBegin * 0.5 + dEyeHeightAtEnd * 0.5;
+        }
+        else
+            break;
+    }
+
+    return (dMiddle - original_Texcoords);
+
+}
+vec2 GetParallaxOcclusionOffset(vec2 original_Texcoords, bool bDoBinarySearch)
+{
+    vec3 vVec = (my_EyeDir);
+    vec3 vVec2 = vVec;
+    vVec2.y = -vVec2.y;
+
+    float dHeightScale = 0.01;
+
+    vec2 vCurrentTexCoords = original_Texcoords;
+
+    float fCurrentTexHeight = (1.0 - 1.0 * dHeightScale) + texture2D(normal_texture, vCurrentTexCoords).a * dHeightScale;
+    float fCurrentHeight = 1.0;
+    float nNumSamples = mix(8, 1, my_EyeDir.z);
+
+    float fCurrentPreviousHeight = fCurrentHeight;
+    vec2 vCurrentPreviousTexCoords = vCurrentTexCoords;
+
+    float epsilon = 0.0;
+
+    while (fCurrentHeight > fCurrentTexHeight + epsilon)
+    {
+        vCurrentPreviousTexCoords = vCurrentTexCoords;
+        vCurrentTexCoords = vCurrentTexCoords + vVec2.xy / nNumSamples;
+
+        fCurrentTexHeight = (1.0 - 1.0 * dHeightScale) + texture2D(normal_texture, vCurrentTexCoords).a * dHeightScale;
+
+        fCurrentPreviousHeight = fCurrentHeight;
+        fCurrentHeight = fCurrentHeight + vVec2.z / nNumSamples;
+
+        if (fCurrentHeight > fCurrentPreviousHeight)
+            break;
+
+        if (fCurrentHeight < 0.0)
+            break;
+     }
+
+    vec2 dBegin = vCurrentTexCoords;
+    vec2 dEnd = vCurrentPreviousTexCoords;
+    vec2 dMiddle = 0.5 * dBegin + 0.5 * dEnd;
+    float dTexHeightAtMiddle = (1.0 - 1.0 * dHeightScale) + texture2D(normal_texture, dMiddle).a * dHeightScale;
+
+    float dEyeHeightAtBegin = fCurrentHeight;
+    float dEyeHeightAtEnd = fCurrentPreviousHeight;
+    float dEyeHeightAtMiddle = dEyeHeightAtBegin * 0.5 + dEyeHeightAtEnd * 0.5;
+
+    int iAbort = 0;
+
+    while (bDoBinarySearch && abs(dTexHeightAtMiddle - dEyeHeightAtMiddle) > epsilon && length(dEnd - dBegin) > 0.0001)
     {
         iAbort += 1;
 
@@ -222,8 +227,8 @@ void main(void)
 
     vec2 vTexOffset;
 
-    /*if (nUseParallax == 3)
-        vTexOffset = GetParallaxOcclusionOffset2(my_Texcoord.xy, true);*/
+    if (nUseParallax == 2)
+        vTexOffset = GetParallaxOcclusionOffset2(my_Texcoord.xy, true);
     if (nUseParallax == 1)
         vTexOffset = GetParallaxOcclusionOffset(my_Texcoord.xy, true);
    /* else if (nUseParallax == 1)
