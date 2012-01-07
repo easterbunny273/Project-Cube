@@ -2,7 +2,7 @@
 #include <algorithm>
 
 #include "ShaderManager.h"
-#include "Logger.h"
+#include "PC_Logger.h"
 
 using namespace std;
 

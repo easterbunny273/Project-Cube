@@ -3,7 +3,7 @@
 #include "RenderNodes/RenderNode_SpotLight.h"
 #include "ShaderManager.h"
 #include "TextureManager.h"
-#include "Logger.h"
+#include "PC_Logger.h"
 
 extern int s_DebugDeferredTexture;
 extern int s_nUseParallax;

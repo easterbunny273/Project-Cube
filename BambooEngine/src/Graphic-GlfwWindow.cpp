@@ -15,7 +15,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "common_gl.h"
-#include "Logger.h"
+#include "PC_Logger.h"
 
 Bamboo::GlfwWindow *Bamboo::GlfwWindow::s_pInstance = NULL;
 
@@ -35,9 +35,28 @@ Bamboo::GlfwWindow::GlfwWindow()
 std::shared_ptr<Bamboo::GlfwWindow> Bamboo::GlfwWindow::Create(int iWidth, int iHeight, std::string sWindowTitle)
 {
     // todo: try only versions which are acceptable for the used rendernodes, else something strange will happen :-)
-    std::vector<int> viMajorVersions = { 4, 4, 3, 3, 3, 2, 2, 1 };
-    std::vector<int> viMinorVersions = { 2, 1, 3, 2, 0, 1, 0, 5 };
-    std::vector<int> viCoreProfileFlag = { GLFW_OPENGL_CORE_PROFILE, GLFW_OPENGL_COMPAT_PROFILE, 0 };
+    std::vector<int> viMajorVersions;
+	viMajorVersions.push_back(4);
+	viMajorVersions.push_back(4);
+	viMajorVersions.push_back(3);
+	viMajorVersions.push_back(3);
+	viMajorVersions.push_back(3);
+	viMajorVersions.push_back(2);
+	viMajorVersions.push_back(2);
+	viMajorVersions.push_back(1);
+    std::vector<int> viMinorVersions;
+	viMinorVersions.push_back(2);
+	viMinorVersions.push_back(1);
+	viMinorVersions.push_back(3);
+	viMinorVersions.push_back(2);
+	viMinorVersions.push_back(0);
+	viMinorVersions.push_back(1);
+	viMinorVersions.push_back(0);
+	viMinorVersions.push_back(5);
+    std::vector<int> viCoreProfileFlag;
+	viCoreProfileFlag.push_back(GLFW_OPENGL_CORE_PROFILE);
+	viCoreProfileFlag.push_back(GLFW_OPENGL_COMPAT_PROFILE);
+	viCoreProfileFlag.push_back(0);
 
     std::shared_ptr<GlfwWindow> spNewWindow(new GlfwWindow());
     spNewWindow->m_iWidth = iWidth;

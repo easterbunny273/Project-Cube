@@ -180,11 +180,12 @@ void Bamboo::IRenderNode::SetTransformMatrix(glm::mat4 rToWorld, glm::mat4 rFrom
 
 void Bamboo::IRenderNode::SetTransformMatrix(glm::mat4 rToWorld)
 {
-    glm::mat4 mFromWorld;
+    /*glm::mat4 mFromWorld;
 
     mFromWorld = glm::core::function::matrix::inverse(rToWorld);
 
     SetTransformMatrix(rToWorld, mFromWorld);
+	*/
 }
 
 bool Bamboo::IRenderNode_Cullable::ItlInitializeBoundingBox()

@@ -17,6 +17,7 @@
 #include "Gamelogic/Cube.h"
 #include <vector>
 
+
 class Level : public ILevel, public IXMLSerializeable
 {
 public:

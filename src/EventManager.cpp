@@ -7,7 +7,7 @@
 // project includes
 #include "EventManager.h"
 #include "Events.h"
-#include "Logger.h"
+#include "PC_Logger.h"
 #include "MainApp.h"
 
 // stl includes
@@ -29,7 +29,7 @@ int EventManager::IEvent::s_iCount = 0;
   *************************************************************** */
 EventManager::EventManager()
 {
-
+	m_nActiveQueue = 0;
 }
 
 /****************************************************************
@@ -53,11 +53,16 @@ EventManager::~EventManager()
   *************************************************************** */
 void EventManager::ItlRegisterEventPrototype(std::shared_ptr<IEvent> spEventPrototype)
 {
-    for (auto iter : m_lPrototypes)
+	for (auto iter = m_lPrototypes.begin(); iter != m_lPrototypes.end(); iter++)
+    {
+		if ((*iter)->GetEventType() == spEventPrototype->GetEventType())
+			Logger::fatal() << "You tried to register an already registered event type" << Logger::endl;
+    }
+    /*for (auto iter : m_lPrototypes)
     {
 	if ((*iter).GetEventType() == spEventPrototype->GetEventType())
 	    Logger::fatal() << "You tried to register an already registered event type" << Logger::endl;
-    }
+    }*/
 
     m_lPrototypes.push_back(spEventPrototype);
 }
@@ -145,6 +150,7 @@ std::shared_ptr<EventManager::IEvent> EventManager::CreateEvent(const char * szC
     }
 
     return std::shared_ptr<EventManager::IEvent>();*/
+	return NULL;
 }
 
 /****************************************************************
@@ -174,14 +180,15 @@ void EventManager::RegisterEventListener(IEventListener *pListener,
 
     std::list<IEventListener*> *plListenerForEvent = &(m_mEventListener[tEventType]);
 
-    for (auto iter : *plListenerForEvent)
+	for (auto iter = plListenerForEvent->begin(); iter != plListenerForEvent->end(); iter++)
+    //for (auto iter : *plListenerForEvent)
     {
-	IEventListener *pIterListener = &(*iter);
+		IEventListener *pIterListener = (*iter);
 
-	if (pIterListener == pListener)
-	{
-	    Logger::fatal() << "The listener has already registered for that event type" << Logger::endl;
-	}
+		if (pIterListener == pListener)
+		{
+			Logger::fatal() << "The listener has already registered for that event type" << Logger::endl;
+		}
     }
 
 
@@ -271,14 +278,14 @@ lua_State * EventManager::RegisterLua()
     lua_State *pLuaState = MainApp::GetInstance()->GetLuaState();
     assert (pLuaState != NULL);
 
-    luabind::module(pLuaState)
+    /*luabind::module(pLuaState)
     [
 	luabind::class_<EventManager>("EventManager")
 	    .def("QueueEvent", &EventManager::QueueEvent)
     ];
 
     luabind::globals(pLuaState)["eventmanager"] = this;
-
+	*/
     return pLuaState;
 }
 

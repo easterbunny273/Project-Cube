@@ -7,7 +7,7 @@
 #include <string>
 
 #include "TextureManager.h"
-#include "Logger.h"
+#include "PC_Logger.h"
 #include "ShaderManager.h"
 #include "RenderNodes/RenderNode_PostEffect.h"
 

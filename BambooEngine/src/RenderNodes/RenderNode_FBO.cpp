@@ -2,7 +2,7 @@
 
 #include "RenderNodes/RenderNode_FBO.h"
 #include "TextureManager.h"
-#include "Logger.h"
+#include "PC_Logger.h"
 
 
 /*! \brief Constructor for creating a fbo with a color texture attached

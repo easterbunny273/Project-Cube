@@ -1,7 +1,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "RenderNodes/RenderNode_SpotLight_Model.h"
-#include "Logger.h"
+#include "PC_Logger.h"
 #include "ShaderManager.h"
 #include "TextureManager.h"
 #include <iostream>

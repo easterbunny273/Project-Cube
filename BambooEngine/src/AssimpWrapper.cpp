@@ -5,7 +5,7 @@
   */
 
 #include "AssimpWrapper.h"
-#include "Logger.h"
+#include "PC_Logger.h"
 
 #include <assimp/assimp.hpp>
 #include <assimp/aiPostProcess.h>

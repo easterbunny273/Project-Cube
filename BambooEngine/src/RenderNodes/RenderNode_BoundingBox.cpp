@@ -14,7 +14,7 @@
 #include <glm/glm.hpp>
 
 #include "TextureManager.h"
-#include "Logger.h"
+#include "PC_Logger.h"
 #include "ShaderManager.h"
 #include "RenderNodes/RenderNode_BoundingBox.h"
 #include "RenderNodes/RenderNode_RenderPass.h"

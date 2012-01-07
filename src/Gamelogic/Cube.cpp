@@ -1,5 +1,5 @@
 #include "Gamelogic/Cube.h"
-#include "Logger.h"
+#include "PC_Logger.h"
 
 Cube::Cube()
 {

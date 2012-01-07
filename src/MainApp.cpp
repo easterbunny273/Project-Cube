@@ -1,7 +1,7 @@
 #include "GL/glfw.h"
 
 #include "MainApp.h"
-#include "Logger.h"
+#include "PC_Logger.h"
 #include "Graphic-GlfwWindow.h"
 #include "SceneObjects/LoadedModel.h"
 #include "SceneObjects/Cube.h"
@@ -198,7 +198,7 @@ lua_State * MainApp::GetLuaState()
 	// load lua libs
 	luaL_openlibs(m_pLuaState);
 
-	luabind::open(m_pLuaState);
+	//luabind::open(m_pLuaState);
     }
 
     assert (m_pLuaState != NULL);

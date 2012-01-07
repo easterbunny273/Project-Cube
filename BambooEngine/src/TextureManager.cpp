@@ -12,7 +12,7 @@
 
 // project includes
 #include "TextureManager.h"
-#include "Logger.h"
+#include "PC_Logger.h"
 
 using namespace std;
 

@@ -3,8 +3,8 @@
 #include <iostream>
 using namespace std;
 
-#include "Logger.h"
 
+#include "PC_Logger.h"
 
 Level::Level()
 {

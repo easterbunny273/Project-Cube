@@ -34,14 +34,7 @@ CMakeLists.txt.user
 CMakeLists.txt.user.2.3pre1
 
 #external libs
-external/glm
-external/lua*
-external/glew
-external/glfw
-external/cpptest
-external/cppunit
-external/assimp
-external/DevIL
+external
 
 #test results
 testresults*

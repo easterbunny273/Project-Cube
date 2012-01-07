@@ -78,7 +78,7 @@ public:
 		/// returns true if this event has the given type
 		bool IsEventType(TEventType tEventType) { return (GetEventType()==tEventType); }
 	    //@}
-	protected:
+	//protected:
 	    /*! \name Construction / Destruction */
 	    //@{
 		/// constructor, counts the instances of IEvents

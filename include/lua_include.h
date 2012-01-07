@@ -10,6 +10,6 @@ extern "C"
 #include <lualib.h>
 }
 
-#include <luabind/luabind.hpp>
+//#include <luabind/luabind.hpp>
 
 #endif

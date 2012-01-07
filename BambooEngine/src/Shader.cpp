@@ -12,7 +12,7 @@
 
 #include "common_gl.h"
 #include "Shader.h"
-#include "Logger.h"
+#include "PC_Logger.h"
 
 
 using namespace std;

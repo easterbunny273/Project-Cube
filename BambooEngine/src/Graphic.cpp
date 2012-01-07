@@ -17,7 +17,7 @@
 #include "common_gl.h"
 #include "ShaderManager.h"
 #include "TextureManager.h"
-#include "Logger.h"
+#include "PC_Logger.h"
 #include "RenderNodes/IRenderNode.h"
 #include "RenderNodes/RenderNode_PostEffect.h"
 #include "RenderNodes/RenderNode_RenderPass.h"

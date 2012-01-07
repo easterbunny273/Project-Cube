@@ -2,7 +2,7 @@
 #include "DummyGame/SampleObject.h"
 
 #include "MainApp.h"
-#include "Logger.h"
+#include "PC_Logger.h"
 #include "EventManager.h"
 #include "Events.h"
 
@@ -161,4 +161,5 @@ bool DummyGame::OnEvent(std::shared_ptr<EventManager::IEvent> spEvent)
 
 	OnMouseMove(iRelX, iRelY);
     }
+	return true;
 }
