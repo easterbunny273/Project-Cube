@@ -18,7 +18,7 @@ if(WIN32)
 	SET(CMAKE_CXX_FLAGS_DEBUG "/MTd /W3")
 	SET(CMAKE_EXE_LINKER_FLAGS_DEBUG "/FORCE:MULTIPLE")
 else(WIN32)
-	add_definitions(-ggdb -std=c++11 -Wall -lpthread)
+    add_definitions(-ggdb -std=c++0x -Wall -lpthread)
 endif(WIN32)
 
 #add include directories for compiler
