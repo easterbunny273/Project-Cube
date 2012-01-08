@@ -28,25 +28,43 @@ include_directories(../include/tinyxml/)
 include_directories(../test/)
 
 #define headers, not for compile time, only for QtCreator
-file(GLOB HEADERS "../include/*.h")
-file(GLOB HEADERS ${HEADERS} "../BambooEngine/include/*.h")
-file(GLOB HEADERS ${HEADERS} "../BambooEngine/include/RenderNodes/*.h")
-file(GLOB HEADERS ${HEADERS} "../BambooEngine/include/SceneObjects/*.h")
-file(GLOB HEADERS ${HEADERS} "../include/Gamelogic/*.h")
-file(GLOB HEADERS ${HEADERS} "../include/DummyGame/*.h")
+file(GLOB H_BAMBOO "../BambooEngine/include/*.h")
+file(GLOB H_BAMBOO_RN "../BambooEngine/include/RenderNodes/*.h")
+file(GLOB H_BAMBOO_SO "../BambooEngine/include/SceneObjects/*.h")
+file(GLOB H_GAMELOGIC "../include/Gamelogic/*.h")
+file(GLOB H_DUMMYGAME "../include/DummyGame/*.h")
 #add test headers
-file(GLOB HEADERS ${HEADERS} "../test/*.h")
+file(GLOB H_TEST "../test/*.h")
+#combine headers
+file(GLOB HEADERS "../include/*.h" ${H_BAMBOO} ${H_BAMBOO_RN} ${H_BAMBOO_SO} ${H_GAMELOGIC} ${H_DUMMYGAME} ${H_TEST})
 
 #define sources
-file(GLOB SOURCES "../src/*.cpp")
-file(GLOB HEADERS ${HEADERS} "../BambooEngine/src/*.cpp")
-file(GLOB HEADERS ${HEADERS} "../BambooEngine/src/RenderNodes/*.cpp")
-file(GLOB HEADERS ${HEADERS} "../BambooEngine/src/SceneObjects/*.cpp")
-file(GLOB SOURCES ${SOURCES} "../src/Gamelogic/*.cpp")
-file(GLOB SOURCES ${SOURCES} "../src/DummyGame/*.cpp")
+file(GLOB S_BAMBOO "../BambooEngine/src/*.cpp")
+file(GLOB S_BAMBOO_RN "../BambooEngine/src/RenderNodes/*.cpp")
+file(GLOB S_BAMBOO_SO "../BambooEngine/src/SceneObjects/*.cpp")
+file(GLOB S_GAMELOGIC "../src/Gamelogic/*.cpp")
+file(GLOB S_DUMMYGAME "../src/DummyGame/*.cpp")
 #add test sources
-file(GLOB SOURCES ${SOURCES} "../test/*.cpp")
+file(GLOB S_TEST "../test/*.cpp")
+#combine sources
+file(GLOB SOURCES "../src/*.cpp" ${S_BAMBOO} ${S_BAMBOO_RN} ${S_BAMBOO_SO} ${S_GAMELOGIC} ${S_DUMMYGAME} ${S_TEST})
 
+
+if(WIN32)
+	SOURCE_GROUP("Header Files\\Gamelogic" FILES ${H_GAMELOGIC})
+	SOURCE_GROUP("Header Files\\DummyGame" FILES ${H_DUMMYGAME})
+	SOURCE_GROUP("Header Files\\BambooEngine" FILES ${H_BAMBOO})
+	SOURCE_GROUP("Header Files\\BambooEngine\\RenderNodes" FILES ${H_BAMBOO_RN})
+	SOURCE_GROUP("Header Files\\BambooEngine\\SceneObjects" FILES ${H_BAMBOO_SO})
+	SOURCE_GROUP("Header Files\\Test" FILES ${H_TEST})
+	
+	SOURCE_GROUP("Source Files\\Gamelogic" FILES ${S_GAMELOGIC})
+	SOURCE_GROUP("Source Files\\DummyGame" FILES ${S_DUMMYGAME})
+	SOURCE_GROUP("Source Files\\BambooEngine" FILES ${S_BAMBOO})
+	SOURCE_GROUP("Source Files\\BambooEngine\\RenderNodes" FILES ${S_BAMBOO_RN})
+	SOURCE_GROUP("Source Files\\BambooEngine\\SceneObjects" FILES ${S_BAMBOO_SO})
+	SOURCE_GROUP("Source Files\\Test" FILES ${S_TEST})
+endif(WIN32)
 
 add_executable(project-cube ${SOURCES} ${HEADERS})
 
