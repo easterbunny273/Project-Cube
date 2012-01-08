@@ -4,8 +4,6 @@
 if(WIN32)
 	include_directories(../external/glm/)
 	include_directories(../external/lua/include)
-	include_directories(../external/luabind)
-	include_directories(../external/boost)
 	include_directories(../external/cpptest/include)
 	include_directories(../external/glfw/include)
 	include_directories(../external/glew/include)
@@ -15,14 +13,19 @@ else(WIN32)
 	link_libraries(glfw GLEW IL assimp pthread cpptest lua luabind GL)
 endif(WIN32)
 
+#compiler flags
+if(WIN32)
+	SET(CMAKE_CXX_FLAGS_DEBUG "/MTd /W3")
+	SET(CMAKE_EXE_LINKER_FLAGS_DEBUG "/FORCE:MULTIPLE")
+else(WIN32)
+	add_definitions(-ggdb -std=c++11 -Wall -lpthread)
+endif(WIN32)
+
 #add include directories for compiler
 include_directories(../BambooEngine/include)
 include_directories(../include/)
 include_directories(../include/tinyxml/)
 include_directories(../test/)
-
-#add definitions (for gcc)
-add_definitions(-ggdb -std=c++11 -Wall -lpthread)
 
 #define headers, not for compile time, only for QtCreator
 file(GLOB HEADERS "../include/*.h")
@@ -63,6 +66,5 @@ if(WIN32)
 	target_link_libraries(project-cube ../../Project-Cube/external/glew/lib/glew32)
 	target_link_libraries(project-cube ../../Project-Cube/external/glfw/lib-msvc100/debug/GLFW)
 	target_link_libraries(project-cube ../../Project-Cube/external/lua/lib/lua51)
-	target_link_libraries(project-cube ../../Project-Cube/external/luabind/luabind)
 	
 endif(WIN32)

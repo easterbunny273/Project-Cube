@@ -189,7 +189,8 @@ void MainApp::ItlCreateSceneGraphs()
 
 lua_State * MainApp::GetLuaState()
 {
-    // lazy evaluation
+    /*
+	// lazy evaluation
     if (m_pLuaState == NULL)
     {
 	// open lua state
@@ -198,20 +199,22 @@ lua_State * MainApp::GetLuaState()
 	// load lua libs
 	luaL_openlibs(m_pLuaState);
 
-	//luabind::open(m_pLuaState);
+	luabind::open(m_pLuaState);
     }
 
     assert (m_pLuaState != NULL);
+	*/
     return m_pLuaState;
 }
 
 void MainApp::LuaTest()
 {
-    luaL_dostring(
+    /*luaL_dostring(
     m_pLuaState,
     "new_event = InputKeyEvent::Create(87, 1)\n"
     "eventmanager::QueueEvent(new_event)\n"
                 );
+				*/
 }
 
 void MainApp::InputEventListener::ItlHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState)

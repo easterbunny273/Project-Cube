@@ -24,7 +24,7 @@ extern "C"
 #include <lualib.h>
 }
 
-#include <luabind/luabind.hpp>
+//#include <luabind/luabind.hpp>
 
 class MainApp : public EventManager::IEventListener
 {

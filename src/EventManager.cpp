@@ -276,9 +276,9 @@ bool EventManager::ItlCheckIfEventIsRegistered(std::shared_ptr<IEvent> spEvent)
 lua_State * EventManager::RegisterLua()
 {
     lua_State *pLuaState = MainApp::GetInstance()->GetLuaState();
-    assert (pLuaState != NULL);
+    /*assert (pLuaState != NULL);
 
-    /*luabind::module(pLuaState)
+    luabind::module(pLuaState)
     [
 	luabind::class_<EventManager>("EventManager")
 	    .def("QueueEvent", &EventManager::QueueEvent)
