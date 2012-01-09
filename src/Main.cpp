@@ -5,6 +5,9 @@
 #include "EventManager.h"
 #include "LuaManager.h"
 
+#include "lua.hpp"
+#include <luabind/luabind.hpp>
+
 int main()
 {
 	LuaManager::GetInstance()->ExecuteFile("lua/test.lua");

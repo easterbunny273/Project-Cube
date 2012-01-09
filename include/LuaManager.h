@@ -15,4 +15,7 @@ private:
 	LuaManager();
 	~LuaManager();
 	LuaManager(const LuaManager&);
+
+	void InitLua();
+
 };
