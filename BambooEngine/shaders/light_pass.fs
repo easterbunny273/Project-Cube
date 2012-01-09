@@ -30,6 +30,86 @@ uniform vec3 LightPosition;
 
 in vec4 finalPosition;
 
+const float epsilon = 0.00002;
+
+float GetLitFactor(float fDepth, vec2 vTexCoords)
+{
+  float fTexelSize = 1 / 2048.0f;
+
+
+  float fDepthInShadowMap1 = texture(shadowmap, vTexCoords - 0.5 * vec2(fTexelSize, fTexelSize)).a;
+  float fDepthInShadowMap2 = texture(shadowmap, vTexCoords + 0.5 * vec2(fTexelSize, fTexelSize)).a;
+  float fDepthInShadowMap3 = texture(shadowmap, vTexCoords + 0.5 * vec2(-fTexelSize, fTexelSize)).a;
+  float fDepthInShadowMap4 = texture(shadowmap, vTexCoords + 0.5 * vec2(fTexelSize, -fTexelSize)).a;
+
+  float fDepthInShadowMap5 = texture(shadowmap, vTexCoords - 1.5 * vec2(fTexelSize, fTexelSize)).a;
+  float fDepthInShadowMap6 = texture(shadowmap, vTexCoords + 1.5 * vec2(fTexelSize, fTexelSize)).a;
+  float fDepthInShadowMap7 = texture(shadowmap, vTexCoords + 1.5 * vec2(-fTexelSize, fTexelSize)).a;
+  float fDepthInShadowMap8 = texture(shadowmap, vTexCoords + 1.5 * vec2(fTexelSize, -fTexelSize)).a;
+
+  float fDepthInShadowMap9 = texture(shadowmap, vTexCoords - vec2(1.5 * fTexelSize, 0.5 * fTexelSize)).a;
+  float fDepthInShadowMap10 = texture(shadowmap, vTexCoords - vec2(1.5 * fTexelSize, -0.5 * fTexelSize)).a;
+  float fDepthInShadowMap11 = texture(shadowmap, vTexCoords - vec2(1.5 * -fTexelSize, 0.5 * fTexelSize)).a;
+  float fDepthInShadowMap12 = texture(shadowmap, vTexCoords - vec2(1.5 * -fTexelSize, 0.5 * fTexelSize)).a;
+
+  float fDepthInShadowMap13 = texture(shadowmap, vTexCoords - vec2(0.5 * fTexelSize, 1.5 * fTexelSize)).a;
+  float fDepthInShadowMap14 = texture(shadowmap, vTexCoords - vec2(-0.5 * fTexelSize, 1.5 * fTexelSize)).a;
+  float fDepthInShadowMap15 = texture(shadowmap, vTexCoords - vec2(0.5 * fTexelSize, -1.5 * fTexelSize)).a;
+  float fDepthInShadowMap16 = texture(shadowmap, vTexCoords - vec2(-0.5 * fTexelSize, -1.5 * fTexelSize)).a;
+
+  float fLitFactor = 0.0;
+
+  if (fDepth < fDepthInShadowMap1 + epsilon)
+    fLitFactor += 1 / 16.0;
+
+  if (fDepth < fDepthInShadowMap2 + epsilon)
+    fLitFactor += 1 / 16.0;
+
+  if (fDepth < fDepthInShadowMap3 + epsilon)
+    fLitFactor += 1 / 16.0;
+
+  if (fDepth < fDepthInShadowMap4 + epsilon)
+    fLitFactor += 1 / 16.0;
+
+  if (fDepth < fDepthInShadowMap5 + epsilon)
+  fLitFactor += 1 / 16.0;
+
+  if (fDepth < fDepthInShadowMap6 + epsilon)
+  fLitFactor += 1 / 16.0;
+
+  if (fDepth < fDepthInShadowMap7 + epsilon)
+  fLitFactor += 1 / 16.0;
+
+  if (fDepth < fDepthInShadowMap8 + epsilon)
+  fLitFactor += 1 / 16.0;
+
+  if (fDepth < fDepthInShadowMap9 + epsilon)
+  fLitFactor += 1 / 16.0;
+
+  if (fDepth < fDepthInShadowMap10 + epsilon)
+  fLitFactor += 1 / 16.0;
+
+  if (fDepth < fDepthInShadowMap11 + epsilon)
+  fLitFactor += 1 / 16.0;
+
+  if (fDepth < fDepthInShadowMap12 + epsilon)
+  fLitFactor += 1 / 16.0;
+
+  if (fDepth < fDepthInShadowMap13 + epsilon)
+  fLitFactor += 1 / 16.0;
+
+  if (fDepth < fDepthInShadowMap14 + epsilon)
+  fLitFactor += 1 / 16.0;
+
+  if (fDepth < fDepthInShadowMap15 + epsilon)
+  fLitFactor += 1 / 16.0;
+
+  if (fDepth < fDepthInShadowMap16 + epsilon)
+  fLitFactor += 1 / 16.0;
+
+  return fLitFactor;
+}
+
 void main()
 {
     //FragColor = vec4(vLightColor, 1.0);
@@ -61,9 +141,11 @@ void main()
 
     //FragColor = texture(shadowmap, vTexCoordsShadowMap);
 
-    float epsilon = 0.00002;
 
-    if (fDepth < fDepthInShadowMap + epsilon)
+
+    float fLitFactor = GetLitFactor(fDepth, vTexCoordsShadowMap);
+
+    if (fLitFactor > 0.0)
     {
         vec3 vAlbedo = texture(color_texture, vTexCoords).rgb * 9;
 
@@ -117,7 +199,7 @@ void main()
 
         vec4 vSpecular = vec4(vLightColor * specular, 1.0);
 
-        FragColor = ( vAmbient*base + vDiffuse*base + vSpecular) * att * vMaskValue.r;
+        FragColor = ( vAmbient*base + vDiffuse*base + vSpecular) * att * vMaskValue.r * fLitFactor;
         //FragColor = vec4(vAlbedo, 1.0);
         //FragColor = vec4(texture(normalmap_texture, vTexCoords).aaa, 1.0);
         //FragColor = vec4(diffuse, 0.0, specular, 1.0);

@@ -82,6 +82,10 @@ private:
     glm::vec3       m_vLightColor;
     glm::vec3       m_vLightPosition;
 
+
+    glm::mat4       m_m4LastUsedViewProjectionMatrix;
+    glm::vec3       m_v3LastUsedLightPosition;
+
     GLuint m_nColorTexture;
     GLuint m_nDepthTexture;
     GLuint m_nFBO;
@@ -98,3 +102,4 @@ private:
 };
 
 #endif
+

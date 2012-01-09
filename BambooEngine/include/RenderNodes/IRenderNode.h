@@ -99,7 +99,7 @@ public:
 
     //@}
 
-
+        void SetInitialViewportInformation(int iWidth, int iHeight) { assert(s_ViewportInformation.size() == 0); s_ViewportInformation.push(std::pair<int, int>(iWidth, iHeight));}
 protected:
     /*! \name Internal types */
     //@{
@@ -168,6 +168,12 @@ protected:
         inline GLuint ItlGetTopFBO() { return s_snBoundFBOs.top(); }
         inline bool ItlIsNestedFBO () { return !s_snBoundFBOs.empty(); }
 
+        inline void ItlPushViewportInformation(int iWidth, int iHeight) { s_ViewportInformation.push(std::pair<int, int>(iWidth, iHeight)); }
+        inline void ItlPopViewportInformation() { s_ViewportInformation.pop(); }
+        inline void ItlGetTopViewportInformation(int &riWidth, int &riHeight) { std::pair<int, int> info = s_ViewportInformation.top(); riWidth = info.first; riHeight = info.second; }
+
+
+
         Bamboo * ItlGetGraphicCore();
     //@}
 
@@ -190,6 +196,7 @@ protected:
         std::vector<std::shared_ptr<Bamboo::IRenderNode> > m_vChildren;
 
         static std::stack<GLuint>                         s_snBoundFBOs;
+        static std::stack<std::pair<int, int> >           s_ViewportInformation;
 
 	bool m_bHasChildren;
 

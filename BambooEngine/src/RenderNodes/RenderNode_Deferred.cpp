@@ -150,16 +150,6 @@ void Bamboo::RN_Deferred::ItlDeleteTextures()
 
 void Bamboo::RN_Deferred::ItlPreRenderChildren()
 {
-    static bool bFirstRun = true;
-
-    if (bFirstRun)
-    {
-        //save current viewport params
-        glGetIntegerv(GL_VIEWPORT, m_iGeneralViewportParams);
-
-        bFirstRun = false;
-    }
-
     glBindFramebuffer(GL_FRAMEBUFFER, m_nFBO);
 
     ItlPushFBO(m_nFBO);
@@ -180,6 +170,8 @@ void Bamboo::RN_Deferred::ItlPreRenderChildren()
     assert (l_nUseParallax != -1);
     glUniform1i(l_nUseParallax, s_nUseParallax % 2);
 
+    ItlPushViewportInformation(m_nWidth, m_nHeight);
+
 }
 
 void Bamboo::RN_Deferred::ItlPostRenderChildren()
@@ -190,6 +182,8 @@ void Bamboo::RN_Deferred::ItlPostRenderChildren()
     //remove the fbo (THIS fbo) from the bound_fbos stack
     ItlPopFBO();
 
+    ItlPopViewportInformation();
+
     //if there was a SceneObject_FBO bound in the SceneObject_Tree, rebind the previous bound fbo
     if (ItlIsNestedFBO())
     {
@@ -199,8 +193,12 @@ void Bamboo::RN_Deferred::ItlPostRenderChildren()
     else
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+    int iOldWidth, iOldHeight;
+
+    ItlGetTopViewportInformation(iOldWidth, iOldHeight);
+
     //restore viewport params
-    glViewport(m_iGeneralViewportParams[0], m_iGeneralViewportParams[1], m_iGeneralViewportParams[2], m_iGeneralViewportParams[3]);
+    glViewport(0, 0, iOldWidth, iOldHeight);
 }
 
 void Bamboo::RN_Deferred::ItlPreRender()
@@ -209,9 +207,10 @@ void Bamboo::RN_Deferred::ItlPreRender()
 
 void Bamboo::RN_Deferred::ItlRender()
 {
-    glGetIntegerv(GL_VIEWPORT, m_iGeneralViewportParams);
     glBindFramebuffer(GL_FRAMEBUFFER, m_nFBO);
     ItlPushFBO(m_nFBO);
+    ItlPushViewportInformation(m_nWidth, m_nHeight);
+
     glViewport(0,0, m_nWidth, m_nHeight);
     GLenum tDrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
     glDrawBuffers(1, tDrawBuffers);
@@ -277,7 +276,7 @@ void Bamboo::RN_Deferred::ItlRender()
 
    // std::cout << s_DebugDeferredTexture << std::endl;
 
-    switch (s_DebugDeferredTexture % 3)
+    switch (s_DebugDeferredTexture % 6)
     {
     case 0:
         nTextureToShow = m_nAlbedoDrawBuffer;
@@ -288,7 +287,7 @@ void Bamboo::RN_Deferred::ItlRender()
     case 2:
         nTextureToShow = m_nSpecularDrawBuffer;
         break;
-    /*case 3:
+    case 3:
         nTextureToShow = m_nNormalMapDrawBuffer;
         break;
     case 4:
@@ -296,7 +295,7 @@ void Bamboo::RN_Deferred::ItlRender()
         break;
     case 5:
         nTextureToShow = m_nSpecularDrawBuffer;
-        break;*/
+        break;
     }
 
     rPostEffectNode.SetTexture("texture1", nTextureToShow );

@@ -126,11 +126,11 @@ void MainApp::StartGraphic_Test()
     spScene->AttachObject(spTreppe);
 
     // add light to scene
-  //  spScene->AttachObject(spTestLight1);
+    spScene->AttachObject(spTestLight1);
     spScene->AttachObject(spTestLight5);
-    spScene->AttachObject(spTestLight6);
-    //spScene->AttachObject(spTestLight2);
-    //spScene->AttachObject(spTestLight3);
+   // spScene->AttachObject(spTestLight6);
+    spScene->AttachObject(spTestLight2);
+    spScene->AttachObject(spTestLight3);
     spScene->AttachObject(spTestLight4);
 
     // add render loop
