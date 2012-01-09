@@ -25,6 +25,9 @@ Bamboo::RN_SpotLight_Model::RN_SpotLight_Model(glm::vec3 vPosition,
 
     m_vLightColor = vLightColor;
 
+    // prepare vertex array object
+    ItlPrepareVAO();
+
     Logger::debug() << "RN_SpotLight_Model created" << Logger::endl;
 }
 
@@ -174,7 +177,6 @@ void Bamboo::RN_SpotLight_Model::ItlRender()
     glBindBuffer(GL_ARRAY_BUFFER, m_nVertexBufferObject);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_nIndexBufferObject);
 
-    const GLint l_in_Position(pShaderManager->GetAttribute("in_Position"));
     const GLint l_cameraInverse_Position = pShaderManager->GetUniform("Camera_InverseMatrix");
     const GLint l_lightcolor_Position = pShaderManager->GetUniform("vLightColor");
 
@@ -186,12 +188,6 @@ void Bamboo::RN_SpotLight_Model::ItlRender()
 
     if (l_cameraInverse_Position != -1)
         glUniformMatrix4fv(l_cameraInverse_Position, 1, GL_FALSE, &mInverseViewProjectionMatrix[0][0]);
-
-    if (l_in_Position != -1)
-    {
-        glVertexAttribPointer(l_in_Position, 3, GL_DOUBLE, GL_FALSE, 3 * sizeof(GLdouble), NULL);
-        glEnableVertexAttribArray(l_in_Position);
-    }
 
    // glLineWidth(1.0f);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -206,6 +202,37 @@ void Bamboo::RN_SpotLight_Model::ItlRender()
     glBindVertexArray(0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+
+void Bamboo::RN_SpotLight_Model::ItlPrepareVAO()
+{
+  // get shaer manager
+  ShaderManager *pShaderManager = ItlGetGraphicCore()->GetShaderManager();
+
+  // set "our" shader
+  pShaderManager->PushActiveShader();
+  pShaderManager->ActivateShader("light-pass");
+
+  // get memory position of attribute
+  const GLint l_in_Position(pShaderManager->GetAttribute("in_Position"));
+  assert (l_in_Position != -1);
+
+  // bind vertex array object
+  glBindVertexArray(m_nVertexArrayObject);
+
+  // bind vertex buffer object
+  glBindBuffer(GL_ARRAY_BUFFER, m_nVertexBufferObject);
+
+  // bind data in vbo to "in_Position" and enable attribute
+  if (l_in_Position != -1)
+  {
+      glVertexAttribPointer(l_in_Position, 3, GL_DOUBLE, GL_FALSE, 3 * sizeof(GLdouble), NULL);
+      glEnableVertexAttribArray(l_in_Position);
+  }
+
+  // reset active shader
+  pShaderManager->PopActiveShader();
 }
 
 void Bamboo::RN_SpotLight_Model::ItlPreRenderChildren()

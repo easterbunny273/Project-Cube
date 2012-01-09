@@ -155,7 +155,40 @@ void Bamboo::RN_SpotLight::ItlCreateVBO()
     GLenum error = glGetError();
 
     if (error != GL_NO_ERROR)
-        Logger::error() << "glGetError: " << TranslateGLerror(error) << Logger::endl;
+      Logger::error() << "glGetError: " << TranslateGLerror(error) << Logger::endl;
+
+    // prepare the vertex array object
+    ItlPrepareVAO();
+}
+
+void Bamboo::RN_SpotLight::ItlPrepareVAO()
+{
+  // get shaer manager
+  ShaderManager *pShaderManager = ItlGetGraphicCore()->GetShaderManager();
+
+  // set "our" shader
+  pShaderManager->PushActiveShader();
+  pShaderManager->ActivateShader("light-pass");
+
+  // get memory position of attribute
+  const GLint l_in_Position(pShaderManager->GetAttribute("in_Position"));
+  assert (l_in_Position != -1);
+
+  // bind vertex array object
+  glBindVertexArray(m_nVertexArrayObject);
+
+  // bind vertex buffer object
+  glBindBuffer(GL_ARRAY_BUFFER, m_nVertexBufferObject);
+
+  // bind data in vbo to "in_Position" and enable attribute
+  if (l_in_Position != -1)
+  {
+      glVertexAttribPointer(l_in_Position, 3, GL_DOUBLE, GL_FALSE, 3 * sizeof(GLdouble), NULL);
+      glEnableVertexAttribArray(l_in_Position);
+  }
+
+  // reset active shader
+  pShaderManager->PopActiveShader();
 }
 
 GLuint Bamboo::RN_SpotLight::ItlCreateColorTexture()
@@ -275,7 +308,6 @@ void Bamboo::RN_SpotLight::ItlRender()
     ShaderManager *pShaderManager = ItlGetGraphicCore()->GetShaderManager();
     TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
 
-    const GLint l_in_Position(pShaderManager->GetAttribute("in_Position"));
     const GLint l_cameraInverse_Position = pShaderManager->GetUniform("Camera_InverseMatrix");
     const GLint l_lightmatrix_Position = pShaderManager->GetUniform("Light_ViewProjectionMatrix");
     const GLint l_shadowmap_Position = pShaderManager->GetUniform("shadowmap");
@@ -297,12 +329,6 @@ void Bamboo::RN_SpotLight::ItlRender()
 
     if (l_lightmatrix_Position != -1)
         glUniformMatrix4fv(l_lightmatrix_Position, 1, GL_FALSE, &mViewProjectionMatrix[0][0]);
-
-    if (l_in_Position != -1)
-    {
-        glVertexAttribPointer(l_in_Position, 3, GL_DOUBLE, GL_FALSE, 3 * sizeof(GLdouble), NULL);
-        glEnableVertexAttribArray(l_in_Position);
-    }
 
     GLuint iTextureUnitShadowMap = pTextureManager->UseTexture(m_nColorTexture);
     GLuint iTextureUnitSpotMask = pTextureManager->UseTexture("spotlight");

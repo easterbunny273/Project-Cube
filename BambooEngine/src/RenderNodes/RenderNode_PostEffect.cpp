@@ -47,6 +47,9 @@ Bamboo::RN_PostEffect::RN_PostEffect(std::string sShaderToUse)
     if (error != GL_NO_ERROR)
         Logger::error() << "glGetError: " << TranslateGLerror(error) << Logger::endl;
 
+    // prepare the vertex array object
+    ItlPrepareVAO();
+
     Logger::debug() << "SceneObject_PostEffect created" << Logger::endl;
 }
 
@@ -69,15 +72,6 @@ void Bamboo::RN_PostEffect::ItlRender()
     // get texture manager
     Bamboo::TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
     assert (pTextureManager != NULL);
-
-    const GLint l_in_Position(ItlGetGraphicCore()->GetShaderManager()->GetAttribute("in_Position"));
-    const GLint l_texcoords(ItlGetGraphicCore()->GetShaderManager()->GetAttribute("in_Texcoord"));
-
-    glVertexAttribPointer(l_in_Position, 3, GL_DOUBLE, GL_FALSE, 6 * sizeof(GLdouble), NULL);
-    glVertexAttribPointer(l_texcoords, 3, GL_DOUBLE, GL_FALSE, 6 * sizeof(GLdouble), (GLvoid *) (3 * sizeof(GLdouble)));
-
-    glEnableVertexAttribArray(l_in_Position);
-    glEnableVertexAttribArray(l_texcoords);
 
     std::vector <GLuint> vManualLockedUnits;
 
@@ -185,7 +179,27 @@ void Bamboo::RN_PostEffect::ItlRender()
 
 void Bamboo::RN_PostEffect::ItlPostRender()
 {
-    ItlGetGraphicCore()->GetShaderManager()->PopActiveShader();
+  ItlGetGraphicCore()->GetShaderManager()->PopActiveShader();
+}
+
+void Bamboo::RN_PostEffect::ItlPrepareVAO()
+{
+  glBindVertexArray(vao);
+  glBindBuffer(GL_ARRAY_BUFFER, this->buffer_vertices3f);
+
+  ItlGetGraphicCore()->GetShaderManager()->PushActiveShader();
+  ItlGetGraphicCore()->GetShaderManager()->ActivateShader(m_sShaderName);
+
+  const GLint l_in_Position(ItlGetGraphicCore()->GetShaderManager()->GetAttribute("in_Position"));
+  const GLint l_texcoords(ItlGetGraphicCore()->GetShaderManager()->GetAttribute("in_Texcoord"));
+
+  glVertexAttribPointer(l_in_Position, 3, GL_DOUBLE, GL_FALSE, 6 * sizeof(GLdouble), NULL);
+  glVertexAttribPointer(l_texcoords, 3, GL_DOUBLE, GL_FALSE, 6 * sizeof(GLdouble), (GLvoid *) (3 * sizeof(GLdouble)));
+
+  glEnableVertexAttribArray(l_in_Position);
+  glEnableVertexAttribArray(l_texcoords);
+
+  ItlGetGraphicCore()->GetShaderManager()->PopActiveShader();
 }
 
 void Bamboo::RN_PostEffect::SetUniform(std::string sUniform, float fValue)
