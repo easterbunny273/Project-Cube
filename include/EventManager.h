@@ -12,6 +12,8 @@
 #include <vector>
 #include <list>
 
+#include "lua_include.h"
+
 /*
  *  EventManager
  *
@@ -30,8 +32,6 @@
  *  static std::shared_ptr<IEvent> GetPrototype();
  *  which creates a prototype of the event
  */
-
-class lua_State;
 
 class EventManager
 {

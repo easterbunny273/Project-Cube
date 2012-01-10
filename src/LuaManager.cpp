@@ -1,7 +1,6 @@
 #include "LuaManager.h"
 #include "PC_Logger.h"
 #include <iostream>
-#include <luabind/luabind.hpp>
 
 LuaManager* LuaManager::instance = NULL;
 
@@ -19,7 +18,7 @@ LuaManager::LuaManager()
 {
 }
 
-void PrintDebugMessage(std::string sMessage)
+void PrintDebugMessageLuaManager(std::string sMessage)
 {
 	Logger::debug() << sMessage << Logger::endl;
 }
@@ -31,16 +30,15 @@ void LuaManager::InitLua()
 	luaL_openlibs(m_LuaState);
 
 	luabind::open(m_LuaState);
-
+	
 	luabind::module(m_LuaState)
 		[
-			luabind::def("PrintDebugMessage", &PrintDebugMessage)
+			luabind::def("PrintDebugMessageLuaManager", &PrintDebugMessageLuaManager)
 		];
 }
 
 void LuaManager::ExecuteFile(std::string sFile)
 {
 	luaL_dofile(m_LuaState, sFile.c_str());
-	
 }
 

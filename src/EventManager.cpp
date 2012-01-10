@@ -18,9 +18,6 @@
 // use C-style assert
 #include <assert.h>
 
-// lua include, forcing C-mode
-#include "lua_include.h"
-
 
 // static member initialisation
 int EventManager::IEvent::s_iCount = 0;

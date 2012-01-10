@@ -1,3 +1,4 @@
 io.write("Running ", _VERSION, "\n")
 
-PrintDebugMessage("Calling PrintDebugMessage from LUA")
+PrintDebugMessageLuaManager("Calling PrintDebugMessageLuaManager from LUA")
+PrintDebugMessageMain("Calling PrintDebugMessageMain from LUA")

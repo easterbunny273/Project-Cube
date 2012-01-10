@@ -16,15 +16,7 @@
 #include "Graphic-GlfwWindow.h"
 #include "DummyGame/Game.h"
 
-// include lua libs as explicit C-functions, because
-// the lib is compiled as C-lib (-> other naming conventions)
-extern "C"
-{
-#include <lua.h>
-#include <lualib.h>
-}
-
-//#include <luabind/luabind.hpp>
+#include "lua_include.h"
 
 class MainApp : public EventManager::IEventListener
 {
