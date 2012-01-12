@@ -30,6 +30,8 @@ void LuaManager::InitLua()
 	luaL_openlibs(m_LuaState);
 
 	luabind::open(m_LuaState);
+
+	ExecuteFile("lua/functions.lua");
 	
 	luabind::module(m_LuaState)
 		[
