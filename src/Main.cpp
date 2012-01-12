@@ -27,13 +27,11 @@ int main()
 	Logger::debug() << LuaManager::GetInstance()->CallLuaFunction<int>("add3", 1, 1, 2) << Logger::endl;
 	Logger::debug() << LuaManager::GetInstance()->CallLuaFunction<int>("add4", 1, 1, 1, 2) << Logger::endl;
 	Logger::debug() << LuaManager::GetInstance()->CallLuaFunction<int>("add5", 1, 1, 1, 1, 2) << Logger::endl;
-	
-	LuaManager::GetInstance()->RegisterClass(luabind::class_<Grid>("Grid")
-												.def(luabind::constructor<>())
-												.def("AddDoor", (bool(Grid::*)(int, int))&Grid::AddDoor)
-												.def("PrintGrid", &Grid::PrintGrid));
 
 	LuaManager::GetInstance()->ExecuteFile("lua/test.lua");
+
+	Grid grid = LuaManager::GetInstance()->CallLuaFunction<Grid>("retGrid");
+	grid.PrintGrid();
     //TestMain::GetInstance()->Run();
     MainApp::GetInstance()->Run();
 }

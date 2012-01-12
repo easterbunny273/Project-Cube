@@ -1,6 +1,7 @@
 #include "LuaManager.h"
 #include "PC_Logger.h"
 #include <iostream>
+#include "Gamelogic/Grid.h"
 
 LuaManager* LuaManager::instance = NULL;
 
@@ -37,6 +38,22 @@ void LuaManager::InitLua()
 		[
 			luabind::def("PrintDebugMessageLuaManager", &PrintDebugMessageLuaManager)
 		];
+
+	luabind::module(m_LuaState)
+		[
+			luabind::class_<Grid>("Grid")
+				.def(luabind::constructor<>())
+				.def("AddDoor", (bool(Grid::*)(int, int))&Grid::AddDoor)
+				.def("ClearGrid", &Grid::ClearGrid)
+				.def("GetDoorPositions", &Grid::GetDoorPositions)
+				.def("RotateGrid", &Grid::RotateGrid)
+				.def("MirrorGridVertical", &Grid::MirrorGridVertical)
+				.def("MirrorGridHorizontal", &Grid::MirrorGridHorizontal)
+				.def("SetPosition", &Grid::SetPosition)
+				.def("GetPosition", &Grid::GetPosition)
+				.def("PrintGrid", &Grid::PrintGrid)
+		];
+
 }
 
 void LuaManager::ExecuteFile(std::string sFile)

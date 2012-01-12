@@ -6,3 +6,8 @@ PrintDebugMessageMain("Calling PrintDebugMessageMain from LUA")
 a = Grid()
 a:AddDoor(1,1)
 a:PrintGrid()
+
+function retGrid()
+	
+	return a
+end

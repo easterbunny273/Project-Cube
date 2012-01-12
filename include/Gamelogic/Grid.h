@@ -5,7 +5,6 @@
  * 07/2011, Project Cube
  */
 
-#pragma once
 #ifndef __GRID_PROJECTCUBE_HEADER
 #define __GRID_PROJECTCUBE_HEADER
 
@@ -54,10 +53,10 @@ public:
         void MirrorGridHorizontal();
 
         /// Sets the position of the grid inside a cube as string
-        void setPosition(std::string sPosition);
+        void SetPosition(std::string sPosition);
 
         /// Returns the position inside a cube as string
-        std::string getPosition();
+        std::string GetPosition();
 
         /// Prints the doors of the grid to the output
         void PrintGrid();
