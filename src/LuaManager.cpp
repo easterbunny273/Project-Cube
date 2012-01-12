@@ -32,7 +32,7 @@ void LuaManager::InitLua()
 	luabind::open(m_LuaState);
 
 	ExecuteFile("lua/functions.lua");
-	
+
 	luabind::module(m_LuaState)
 		[
 			luabind::def("PrintDebugMessageLuaManager", &PrintDebugMessageLuaManager)

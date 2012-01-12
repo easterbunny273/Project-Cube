@@ -31,6 +31,10 @@ public:
 	template <class R, class A, class B, class C, class D, class E>
 	R CallLuaFunction(const char* name, A a, B b, C c, D d, E e);
 
+	template <class A>
+	void RegisterClass(luabind::class_<A> c);
+
+
 private:
 	static LuaManager* instance;
 
@@ -89,6 +93,15 @@ template <class R, class A, class B, class C, class D, class E>
 R LuaManager::CallLuaFunction(const char* name, A a, B b, C c, D d, E e)
 {
 	return luabind::call_function<R>(m_LuaState, name, a, b, c, d, e);
+}
+
+template <class A>
+void LuaManager::RegisterClass(luabind::class_<A> classDescriptor)
+{
+	luabind::module(m_LuaState)
+		[
+			classDescriptor
+		];
 }
 
 #endif //__PROJECT_CUBE_LUA_MANAGER_HEADER
