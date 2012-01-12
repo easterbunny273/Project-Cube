@@ -9,9 +9,6 @@
 
 #include "PC_Logger.h"
 
-//include grid for testing registerclass
-#include "Gamelogic/Grid.h"
-
 int main()
 {
 	Logger::debug() << LuaManager::GetInstance()->CallLuaFunction<int>("ret") << Logger::endl;
@@ -22,6 +19,9 @@ int main()
 	Logger::debug() << LuaManager::GetInstance()->CallLuaFunction<int>("add5", 1, 1, 1, 1, 2) << Logger::endl;
 
 	LuaManager::GetInstance()->ExecuteFile("lua/test.lua");
+
+	Level level = LuaManager::GetInstance()->CallLuaFunction<Level>("GetLevel");
+	level.GetCubeByPosition(0,0,0)->GetGrid(3).PrintGrid();
 
     //TestMain::GetInstance()->Run();
     MainApp::GetInstance()->Run();
