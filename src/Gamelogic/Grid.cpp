@@ -112,12 +112,12 @@ void Grid::MirrorGridHorizontal()
 }
 
 
-void Grid::setPosition(std::string sPosition)
+void Grid::SetPosition(std::string sPosition)
 {
     m_sPosition = sPosition;
 }
 
-std::string Grid::getPosition()
+std::string Grid::GetPosition()
 {
     return m_sPosition;
 }

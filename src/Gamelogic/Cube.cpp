@@ -51,37 +51,37 @@ void Cube::SetGrids(Grid& xplus, Grid& xminus, Grid& yplus, Grid& yminus, Grid& 
 void Cube::SetXplus(Grid& xplus)
 {
 	m_Xplus = xplus;
-	m_Xplus.setPosition("Xplus");
+	m_Xplus.SetPosition("Xplus");
 }
 
 void Cube::SetXminus(Grid& xminus)
 {
 	m_Xminus = xminus;
-	m_Xminus.setPosition("Xminus");
+	m_Xminus.SetPosition("Xminus");
 }
 
 void Cube::SetYplus(Grid& yplus)
 {
 	m_Yplus = yplus;
-	m_Yplus.setPosition("Yplus");
+	m_Yplus.SetPosition("Yplus");
 }
 
 void Cube::SetYminus(Grid& yminus)
 {
 	m_Yminus = yminus;
-	m_Yminus.setPosition("Yminus");
+	m_Yminus.SetPosition("Yminus");
 }
 
 void Cube::SetZplus(Grid& zplus)
 {
 	m_Zplus = zplus;
-	m_Zplus.setPosition("Zplus");
+	m_Zplus.SetPosition("Zplus");
 }
 
 void Cube::SetZminus(Grid& zminus)
 {
 	m_Zminus = zminus;
-	m_Zminus.setPosition("Zminus");
+	m_Zminus.SetPosition("Zminus");
 }
 
 int Cube::GetX()
@@ -291,10 +291,10 @@ void Cube::itlSwitchGrids(Grid& grid1, Grid& grid2)
 
 void Cube::itlUpdateGridPositions()
 {
-    m_Xplus.setPosition("Xplus");
-    m_Xminus.setPosition("Xminus");
-    m_Yplus.setPosition("Yplus");
-    m_Yminus.setPosition("Yminus");
-    m_Zplus.setPosition("Zplus");
-    m_Zminus.setPosition("Zminus");
+    m_Xplus.SetPosition("Xplus");
+    m_Xminus.SetPosition("Xminus");
+    m_Yplus.SetPosition("Yplus");
+    m_Yminus.SetPosition("Yminus");
+    m_Zplus.SetPosition("Zplus");
+    m_Zminus.SetPosition("Zminus");
 }

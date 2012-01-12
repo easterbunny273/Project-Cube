@@ -4,12 +4,7 @@
 #ifndef __PROJECT_CUBE_LUA_INCLUDE
 #define __PROJECT_CUBE_LUA_INCLUDE
 
-extern "C"
-{
-#include <lua.h>
-#include <lualib.h>
-}
-
-//#include <luabind/luabind.hpp>
+#include "lua.hpp"
+#include <luabind/luabind.hpp>
 
 #endif

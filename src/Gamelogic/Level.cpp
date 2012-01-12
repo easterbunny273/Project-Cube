@@ -286,7 +286,7 @@ bool Level::WriteToXMLString(std::string &sString)
         for(int j = 1; j <= 6; j++)
         {
             grid = cube->GetGrid(j);
-            rssStream << "<grid pos=\"" << grid.getPosition() << "\">";
+            rssStream << "<grid pos=\"" << grid.GetPosition() << "\">";
 			
             doors = grid.GetDoorPositions();
             // write all doors of a grid to the stream
