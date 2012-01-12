@@ -1,13 +1,8 @@
 io.write("Running ", _VERSION, "\n")
 
-PrintDebugMessageLuaManager("Calling PrintDebugMessageLuaManager from LUA")
-PrintDebugMessageMain("Calling PrintDebugMessageMain from LUA")
+level1 = Level()
+level1:LoadLevelFromXMLFile('config/levels/level1.xml')
 
-a = Grid()
-a:AddDoor(1,1)
-a:PrintGrid()
+cube1 = level1:GetCubeByPosition(0,0,0)
 
-function retGrid()
-	
-	return a
-end
+cube1:GetGrid(3):PrintGrid()

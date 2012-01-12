@@ -56,12 +56,6 @@ public:
         /// allowed factors are 90, 180, 270, ...
         bool RotateZ(const int iFactor);
 
-        /// Reads a level from an xml-string
-        virtual bool ReadFromXMLString(std::string sString);
-
-        /// Writes the current level state to an xml-string
-        virtual bool WriteToXMLString(std::string &sString);
-
         /// Writes the level to the given file
         bool StoreLevelAsXMLFile(std::string sFilename);
 
@@ -71,7 +65,7 @@ public:
         /// Returns the vector of cubes
         std::vector<Cube*> GetCubes();
 
-        /// Returns a cube by its given position inside the level
+        /// Returns a cube by its givenposition inside the level
         /// Returns NULL if not no cube is at the given position
         Cube* GetCubeByPosition(glm::ivec3 iv3Position);
 
@@ -97,6 +91,12 @@ private:
 
     /*! \name Private methods */
     //@{
+		/// Reads a level from an xml-string
+        bool ReadFromXMLString(std::string sString);
+
+        /// Writes the current level state to an xml-string
+        bool WriteToXMLString(std::string &sString);
+
         /// Reads a group from xml
         bool itlReadGroupFromXML(TiXmlElement *pGroup);
 

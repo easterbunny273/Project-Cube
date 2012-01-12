@@ -1,7 +1,11 @@
 #include "LuaManager.h"
 #include "PC_Logger.h"
 #include <iostream>
+
+//includes for class registerings
 #include "Gamelogic/Grid.h"
+#include "Gamelogic/Cube.h"
+#include "Gamelogic/Level.h"
 
 LuaManager* LuaManager::instance = NULL;
 
@@ -19,11 +23,6 @@ LuaManager::LuaManager()
 {
 }
 
-void PrintDebugMessageLuaManager(std::string sMessage)
-{
-	Logger::debug() << sMessage << Logger::endl;
-}
-
 void LuaManager::InitLua()
 {
 	m_LuaState = lua_open();
@@ -34,11 +33,12 @@ void LuaManager::InitLua()
 
 	ExecuteFile("lua/functions.lua");
 
-	luabind::module(m_LuaState)
-		[
-			luabind::def("PrintDebugMessageLuaManager", &PrintDebugMessageLuaManager)
-		];
+	RegisterClasses();
+}
 
+void LuaManager::RegisterClasses()
+{
+	// Register Grid class
 	luabind::module(m_LuaState)
 		[
 			luabind::class_<Grid>("Grid")
@@ -53,7 +53,51 @@ void LuaManager::InitLua()
 				.def("GetPosition", &Grid::GetPosition)
 				.def("PrintGrid", &Grid::PrintGrid)
 		];
+	
+	// Register Cube class
+	luabind::module(m_LuaState)
+		[
+			luabind::class_<Cube>("Cube")
+				.def(luabind::constructor<>())
+				.def("GetCubeID", &Cube::GetCubeID)
+				.def("GetCubePosition", &Cube::GetCubePosition)
+				.def("GetTransfomation", &Cube::GetTransformation)
+				.def("RotateX", &Cube::RotateX)
+				.def("RotateY", &Cube::RotateY)
+				.def("RotateZ", &Cube::RotateZ)
+				.def("SetGrids", &Cube::SetGrids)
+				.def("SetXplus", &Cube::SetXplus)
+				.def("SetXminus", &Cube::SetXminus)
+				.def("SetYplus", &Cube::SetYplus)
+				.def("SetYminus", &Cube::SetYminus)
+				.def("SetZplus", &Cube::SetZplus)
+				.def("SetZminus", &Cube::SetZminus)
+				.def("GetGrid", &Cube::GetGrid)
+				.def("GetX", &Cube::GetX)
+				.def("GetY", &Cube::GetY)
+				.def("GetZ", &Cube::GetZ)
+				.def("SetX", &Cube::SetX)
+				.def("SetY", &Cube::SetY)
+				.def("SetZ", &Cube::SetZ)
+		];
 
+	// Register Level class
+	luabind::module(m_LuaState)
+		[
+			luabind::class_<Level>("Level")
+				.def(luabind::constructor<>())
+				.def("GetLevelID", &Level::GetLevelID)
+				.def("GetLevelName", &Level::GetLevelName)
+				.def("GetNumCubes", &Level::GetNumCubes)
+				.def("Clear", &Level::Clear)
+				.def("RotateX", &Level::RotateX)
+				.def("RotateY", &Level::RotateY)
+				.def("RotateZ", &Level::RotateZ)
+				.def("StoreLevelAsXMLFile", &Level::StoreLevelAsXMLFile)
+				.def("LoadLevelFromXMLFile", &Level::LoadLevelFromXMLFile)
+				.def("GetCubes", &Level::GetCubes)
+				.def("GetCubeByPosition", (Cube*(Level::*)(int, int, int))&Level::GetCubeByPosition)
+		];
 }
 
 void LuaManager::ExecuteFile(std::string sFile)

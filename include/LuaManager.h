@@ -41,6 +41,7 @@ private:
 	LuaManager(const LuaManager&);
 
 	void InitLua();
+	void RegisterClasses();
 
 };
 
