@@ -60,6 +60,9 @@ public:
 
         /// Prints the doors of the grid to the output
         void PrintGrid();
+
+		/// Calculates vertices of the grid for drawing
+		std::vector<glm::ivec2> CalcVertices();
     //@}
 
 
@@ -79,6 +82,8 @@ private:
     //@{
         /// Checks if a given door can be inserted to the grid
         bool ItlCheckDoorInsertion(const int iX, const int iY);
+
+		std::vector<glm::ivec2> ItlCalcVerticesRec(std::vector<glm::ivec2> doors, std::vector<glm::ivec2> vertices);
     //@}
 };
 
