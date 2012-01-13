@@ -185,11 +185,11 @@ std::vector<glm::ivec2> Grid::ItlCalcVerticesRec(std::vector<glm::ivec2> doors, 
 	if(doors.size() == 0)
 	{
 		vertices.push_back(v0);
+		vertices.push_back(v2);
 		vertices.push_back(v1);
-		vertices.push_back(v2);
 		vertices.push_back(v0);
-		vertices.push_back(v2);
 		vertices.push_back(v3);
+		vertices.push_back(v2);
 		return vertices;
 	}
 
@@ -213,11 +213,11 @@ std::vector<glm::ivec2> Grid::ItlCalcVerticesRec(std::vector<glm::ivec2> doors, 
 	if(current_pos == -1)
 	{
 		vertices.push_back(v0);
+		vertices.push_back(v2);
 		vertices.push_back(v1);
-		vertices.push_back(v2);
 		vertices.push_back(v0);
-		vertices.push_back(v2);
 		vertices.push_back(v3);
+		vertices.push_back(v2);
 		return vertices;
 	}
 
@@ -251,8 +251,8 @@ std::vector<glm::ivec2> Grid::ItlCalcVerticesRec(std::vector<glm::ivec2> doors, 
 		vertices.push_back(v8);
 
 		vertices.push_back(v0);
-		vertices.push_back(v5);
 		vertices.push_back(v9);
+		vertices.push_back(v5);
 	}
 
 	if(current_door.y > v0.y)
@@ -262,8 +262,8 @@ std::vector<glm::ivec2> Grid::ItlCalcVerticesRec(std::vector<glm::ivec2> doors, 
 		vertices.push_back(v4);
 
 		vertices.push_back(v9);
-		vertices.push_back(v7);
 		vertices.push_back(v10);
+		vertices.push_back(v7);
 	}
 	/*Logger::debug() << v0.x << "|" << v0.y << Logger::endl;
 	Logger::debug() << v1.x << "|" << v1.y << Logger::endl;
