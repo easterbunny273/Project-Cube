@@ -68,6 +68,8 @@ public:
         /// TODO: find a better solution
         Grid GetGrid(const unsigned int nID);
 
+		std::vector<glm::vec3> BuildCubeVertices();
+
         /// Getter for the x-coordinate of the position of the cube inside a level
         int GetX();
         /// Getter for the y-coordinate of the position of the cube inside a level
