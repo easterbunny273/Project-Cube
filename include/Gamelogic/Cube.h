@@ -68,9 +68,16 @@ public:
         /// TODO: find a better solution
         Grid GetGrid(const unsigned int nID);
 
+		/// Builds the vertices, normals and texture-coordinates from all the grids
 		void BuildCubeVertices();
+
+		/// Returns generated vertices for drawing
 		std::vector<glm::vec3> GetVertices();
+
+		/// Returns generated normal vectors
 		std::vector<glm::vec3> GetNormals();
+
+		/// Returns generated texture-coordinates
 		std::vector<glm::vec2> GetTexCoords();
 
         /// Getter for the x-coordinate of the position of the cube inside a level
