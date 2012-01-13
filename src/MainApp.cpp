@@ -11,6 +11,9 @@
 #include "Scene.h"
 #include "AssimpWrapper.h"
 #include "GeometryData.h"
+#include "LuaManager.h"
+
+#include "Gamelogic/Level.h"
 
 // initialize singelton ptr to NULL
 MainApp * MainApp::s_pInstance = NULL;
@@ -103,7 +106,7 @@ void MainApp::StartGraphic_Test()
     std::shared_ptr<Bamboo::Scene> spScene = Bamboo::Scene::Create();
 
     // create objects
-    std::shared_ptr<Bamboo::ISceneObject> spCube = Bamboo::SO_Cube::Create();
+
     std::shared_ptr<Bamboo::ISceneObject> spTestLight1 = Bamboo::SO_SpotLight::Create(glm::vec3(-0.2f, 0.10f, 0.14f), glm::vec3(1.0f, -0.4f, -1.0f), 25.0f, glm::vec3(1.0f, 1.0f, 1.0f));
     std::shared_ptr<Bamboo::ISceneObject> spTestLight2 = Bamboo::SO_SpotLight::Create(glm::vec3(0.0f, 0.25f, -0.09f), glm::vec3(0.0f, -2.0f, 1.0f), 5.0f, glm::vec3(1.0f, 1.0f, 1.0f));
     std::shared_ptr<Bamboo::ISceneObject> spTestLight3 = Bamboo::SO_SpotLight::Create(glm::vec3(-0.2f, 0.2f, -0.14f), glm::vec3(1.0f, -1.1f, 0.62f), 25.0f, glm::vec3(1.0f, 1.0f, 1.0f));
@@ -120,10 +123,22 @@ void MainApp::StartGraphic_Test()
 
     g_spTreppe = spTreppe;
 
+    // load level
+    LuaManager::GetInstance()->ExecuteFile("lua/test.lua");
+
+    Level level = LuaManager::GetInstance()->CallLuaFunction<Level>("GetLevel");
+
+    // add doors
+   /* level.GetCubeByPosition(0,0,0)->GetGrid(3).AddDoor(5,2);
+    level.GetCubeByPosition(0,0,0)->GetGrid(3).AddDoor(5,9);
+    level.GetCubeByPosition(0,0,0)->GetGrid(3).AddDoor(3,3);*/
+
+    std::shared_ptr<Bamboo::ISceneObject> spCube = Bamboo::SO_Cube::Create(level.GetCubeByPosition(0,0,0));
+
     // add objects to scene
     spScene->AttachObject(spCube);
-    //spScene->AttachObject(spTable);
-    //spScene->AttachObject(spTreppe);
+    spScene->AttachObject(spTable);
+    spScene->AttachObject(spTreppe);
 
     // add light to scene
     spScene->AttachObject(spTestLight1);
