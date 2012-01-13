@@ -34,29 +34,18 @@ Bamboo::GlfwWindow::GlfwWindow()
   *************************************************************** */
 std::shared_ptr<Bamboo::GlfwWindow> Bamboo::GlfwWindow::Create(int iWidth, int iHeight, std::string sWindowTitle)
 {
-    // todo: try only versions which are acceptable for the used rendernodes, else something strange will happen :-)
-    std::vector<int> viMajorVersions;
-	viMajorVersions.push_back(4);
-	viMajorVersions.push_back(4);
-	viMajorVersions.push_back(3);
-	viMajorVersions.push_back(3);
-	viMajorVersions.push_back(3);
-	viMajorVersions.push_back(2);
-	viMajorVersions.push_back(2);
-	viMajorVersions.push_back(1);
-    std::vector<int> viMinorVersions;
-	viMinorVersions.push_back(2);
-	viMinorVersions.push_back(1);
-	viMinorVersions.push_back(3);
-	viMinorVersions.push_back(2);
-	viMinorVersions.push_back(0);
-	viMinorVersions.push_back(1);
-	viMinorVersions.push_back(0);
-	viMinorVersions.push_back(5);
-    std::vector<int> viCoreProfileFlag;
-	viCoreProfileFlag.push_back(GLFW_OPENGL_CORE_PROFILE);
-	viCoreProfileFlag.push_back(GLFW_OPENGL_COMPAT_PROFILE);
-	viCoreProfileFlag.push_back(0);
+  std::vector<std::pair<int, int> > viOpenGLVersions;
+
+  viOpenGLVersions.push_back(std::pair<int, int> (4, 2));
+  viOpenGLVersions.push_back(std::pair<int, int> (4, 1));
+  viOpenGLVersions.push_back(std::pair<int, int> (3, 3));
+  viOpenGLVersions.push_back(std::pair<int, int> (3, 2));
+
+
+  std::vector<int> viCoreProfileFlag;
+  viCoreProfileFlag.push_back(GLFW_OPENGL_CORE_PROFILE);
+  viCoreProfileFlag.push_back(GLFW_OPENGL_COMPAT_PROFILE);
+  viCoreProfileFlag.push_back(0);
 
     std::shared_ptr<GlfwWindow> spNewWindow(new GlfwWindow());
     spNewWindow->m_iWidth = iWidth;
@@ -85,10 +74,10 @@ std::shared_ptr<Bamboo::GlfwWindow> Bamboo::GlfwWindow::Create(int iWidth, int i
     bool bWindowCreated = false;
 
     for (unsigned int iProfile = 0; iProfile < viCoreProfileFlag.size(); iProfile++)
-    for (unsigned int i=0; !bWindowCreated && i < viMajorVersions.size(); i++)
+    for (unsigned int i=0; !bWindowCreated && i < viOpenGLVersions.size(); i++)
     {
-        glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, viMajorVersions[i]);
-        glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, viMinorVersions[i]);
+        glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, viOpenGLVersions[i].first);
+        glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, viOpenGLVersions[i].second);
 
         glfwOpenWindowHint(GLFW_OPENGL_PROFILE, viCoreProfileFlag[iProfile]);
 
@@ -103,7 +92,7 @@ std::shared_ptr<Bamboo::GlfwWindow> Bamboo::GlfwWindow::Create(int iWidth, int i
 
 
         Logger::debug() << "Try opening context " <<
-                           viMajorVersions[i] << "." << viMinorVersions[i]
+                           viOpenGLVersions[i].first << "." << viOpenGLVersions[i].second
                         << " with " << sProfileName << " profile" << Logger::endl;
 
         bWindowCreated = (glfwOpenWindow(iWidth, iHeight, 8,8,8,8, 24, 8, GLFW_WINDOW) == GL_TRUE);

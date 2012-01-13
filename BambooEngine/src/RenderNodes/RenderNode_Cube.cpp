@@ -169,6 +169,9 @@ Bamboo::RN_Cube::RN_Cube()
     // load ressources
     ItlLoadRessources();
 
+    // prepare VAO
+    ItlPrepareVAO();
+
     Logger::debug() << "SceneObject_Cube created" << Logger::endl;
 }
 
@@ -207,35 +210,6 @@ void Bamboo::RN_Cube::ItlRender()
 
     glBindBuffer(GL_ARRAY_BUFFER, m_nVertexBufferObject);
 
-    const GLint l_in_Position(ItlGetGraphicCore()->GetShaderManager()->GetAttribute("in_Position"));
-
-    if (l_in_Position != -1)
-    {
-	glVertexAttribPointer(l_in_Position, 3, GL_DOUBLE, GL_FALSE, 6 * sizeof(GLdouble), NULL);
-	glEnableVertexAttribArray(l_in_Position);
-    }
-
-    const GLint l_in_Normal(ItlGetGraphicCore()->GetShaderManager()->GetAttribute("in_Normal"));
-
-    if (l_in_Normal != -1)
-    {
-	//glVertexAttribPointer(l_in_Normal, 3, GL_DOUBLE, GL_FALSE, 9 * sizeof(GLdouble),  (const GLvoid *)(6 * sizeof(GLdouble)));
-	//glEnableVertexAttribArray(l_in_Normal);
-    }
-
-    const GLint l_in_Texcoord(ItlGetGraphicCore()->GetShaderManager()->GetAttribute("in_Texcoord"));
-
-    if (l_in_Texcoord != -1)
-    {
-	glVertexAttribPointer(l_in_Texcoord, 3, GL_DOUBLE, GL_FALSE, 6 * sizeof(GLdouble),  (const GLvoid *)(3 * sizeof(GLdouble)));
-	glEnableVertexAttribArray(l_in_Texcoord);
-    }
-
-    eError = glGetError();
-
-    if (eError != GL_NO_ERROR)
-	Logger::error() << TranslateGLerror(eError) << Logger::endl;
-
     // load texture in texture unit
     GLuint nUsedUnit = pTextureManager->UseTexture("cube_texture");
 
@@ -256,4 +230,44 @@ void Bamboo::RN_Cube::ItlLoadRessources()
 {
     ItlGetGraphicCore()->GetShaderManager()->AddShader("basic_shading", new Shader("BambooEngine/shaders/basic_shading.vs", "BambooEngine/shaders/basic_shading.fs"));
     ItlGetGraphicCore()->GetTextureManager()->LoadTexture("cube_texture", "textures/cube_texture.jpg", false);
+}
+
+void Bamboo::RN_Cube::ItlPrepareVAO()
+{
+  glBindVertexArray(m_nVertexArrayObject);
+  glBindBuffer(GL_ARRAY_BUFFER, m_nVertexBufferObject);
+
+  ItlGetGraphicCore()->GetShaderManager()->PushActiveShader();
+  ItlGetGraphicCore()->GetShaderManager()->ActivateShader("basic_shading");
+
+  const GLint l_in_Position(ItlGetGraphicCore()->GetShaderManager()->GetAttribute("in_Position"));
+
+  if (l_in_Position != -1)
+  {
+      glVertexAttribPointer(l_in_Position, 3, GL_DOUBLE, GL_FALSE, 6 * sizeof(GLdouble), NULL);
+      glEnableVertexAttribArray(l_in_Position);
+  }
+
+  const GLint l_in_Normal(ItlGetGraphicCore()->GetShaderManager()->GetAttribute("in_Normal"));
+
+  if (l_in_Normal != -1)
+  {
+      //glVertexAttribPointer(l_in_Normal, 3, GL_DOUBLE, GL_FALSE, 9 * sizeof(GLdouble),  (const GLvoid *)(6 * sizeof(GLdouble)));
+      //glEnableVertexAttribArray(l_in_Normal);
+  }
+
+  const GLint l_in_Texcoord(ItlGetGraphicCore()->GetShaderManager()->GetAttribute("in_Texcoord"));
+
+  if (l_in_Texcoord != -1)
+  {
+      glVertexAttribPointer(l_in_Texcoord, 3, GL_DOUBLE, GL_FALSE, 6 * sizeof(GLdouble),  (const GLvoid *)(3 * sizeof(GLdouble)));
+      glEnableVertexAttribArray(l_in_Texcoord);
+  }
+
+  GLenum eError = glGetError();
+
+  if (eError != GL_NO_ERROR)
+      Logger::error() << TranslateGLerror(eError) << Logger::endl;
+
+  ItlGetGraphicCore()->GetShaderManager()->PopActiveShader();
 }

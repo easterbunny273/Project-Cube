@@ -12,6 +12,7 @@
 #include "RenderNodes/RenderNode_BoundingBox.h"
 
 std::stack<GLuint> Bamboo::IRenderNode::s_snBoundFBOs;
+std::stack<std::pair<int, int> > Bamboo::IRenderNode::s_ViewportInformation;
 
 void Bamboo::IRenderNode::ItlSendTransformMatrices()
 {

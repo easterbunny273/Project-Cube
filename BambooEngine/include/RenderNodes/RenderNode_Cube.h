@@ -48,6 +48,12 @@ protected:
 	virtual void ItlLoadRessources();
     //@}
 private:
+    /*! \name Internal helper methods */
+    //@{
+        /// prepares the vertex array object
+        void ItlPrepareVAO();
+    //@}
+
     /*! \name Private members */
     //@{
     GLuint m_nVertexArrayObject;	///< The opengl name (=unsigned int) of the vertex array object

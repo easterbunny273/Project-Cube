@@ -55,6 +55,8 @@ private:
     /// creates a vbo to draw the spotlight as wireframe
     void ItlCreateVBO();
 
+    /// prepares the vertex array object
+    void ItlPrepareVAO();
     //@}
 
     /*! \name Private members */

@@ -63,6 +63,12 @@ protected:
      //@}
 
 private:
+    /*! \name Internal helper methods */
+    //@{
+        void ItlPrepareVAO();
+
+    //@}
+
     /*! \name SceneObject Interface */
     //@{
          std::map<std::string, float>       m_mUniforms_Floats;

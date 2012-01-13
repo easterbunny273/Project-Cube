@@ -283,6 +283,8 @@ void Bamboo::RN_FBO::ItlPreRenderChildren()
 
     ///store our fbo-id on the stack, to allow "deeper" SceneObject_FBOs to rebind our fbo after finish drawing
     ItlPushFBO(m_nFramebuffer);
+
+    ItlPushViewportInformation(m_iWidth, m_iHeight);
 }
 
 /*!
@@ -307,6 +309,8 @@ void Bamboo::RN_FBO::ItlPostRenderChildren()
     //remove the fbo (THIS fbo) from the bound_fbos stack
     ItlPopFBO();
 
+    ItlPopViewportInformation();
+
     //if there was a SceneObject_FBO bound in the SceneObject_Tree, rebind the previous bound fbo
     if (ItlIsNestedFBO())
     {
@@ -316,8 +320,12 @@ void Bamboo::RN_FBO::ItlPostRenderChildren()
     else
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+    int iOldHeight, iOldWidth;
+
+    ItlGetTopViewportInformation(iOldWidth, iOldHeight);
+
     //restore viewport params
-    glViewport(m_iGeneralViewportParams[0], m_iGeneralViewportParams[1], m_iGeneralViewportParams[2], m_iGeneralViewportParams[3]);
+    glViewport(0, 0, iOldWidth, iOldHeight);
 }
 
 void Bamboo::RN_FBO::ItlPreRender()
