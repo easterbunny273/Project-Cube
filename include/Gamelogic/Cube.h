@@ -68,7 +68,10 @@ public:
         /// TODO: find a better solution
         Grid GetGrid(const unsigned int nID);
 
-		std::vector<glm::vec3> BuildCubeVertices();
+		void BuildCubeVertices();
+		std::vector<glm::vec3> GetVertices();
+		std::vector<glm::vec3> GetNormals();
+		std::vector<glm::vec2> GetTexCoords();
 
         /// Getter for the x-coordinate of the position of the cube inside a level
         int GetX();
@@ -97,6 +100,10 @@ private:
         /// Transformation of a cube; not used yet
         glm::mat4 m_CubeTransformation;
 		
+		std::vector<glm::vec3> m_CubeVertices;
+		std::vector<glm::vec3> m_CubeNormals;
+		std::vector<glm::vec2> m_CubeTexCoords;
+				
         /// Grid Xplus
         Grid m_Xplus;
         /// Grid Xminus
