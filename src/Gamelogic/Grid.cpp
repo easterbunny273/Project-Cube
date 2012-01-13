@@ -131,6 +131,17 @@ void Grid::PrintGrid()
     }
 }
 
+std::vector<glm::ivec2> Grid::CalcVertices()
+{
+	std::vector<glm::ivec2> doorscopy = m_vDoorPositions;
+	std::vector<glm::ivec2> vertices;
+	vertices.push_back(glm::ivec2(0,0));
+	vertices.push_back(glm::ivec2(0,11));
+	vertices.push_back(glm::ivec2(11,11));
+	vertices.push_back(glm::ivec2(11,0));
+	return ItlCalcVerticesRec(doorscopy, vertices);
+}
+
 
 /*#############################################################
 *################## PRIVATE METHODS ##########################
@@ -160,4 +171,149 @@ bool Grid::ItlCheckDoorInsertion(const int iX, const int iY)
     }
     // door can be inserted
     return true;
+}
+
+std::vector<glm::ivec2> Grid::ItlCalcVerticesRec(std::vector<glm::ivec2> doors, std::vector<glm::ivec2> vertices)
+{
+	glm::ivec2 v3 = vertices.back(); vertices.pop_back();
+	glm::ivec2 v2 = vertices.back(); vertices.pop_back();
+	glm::ivec2 v1 = vertices.back(); vertices.pop_back();
+	glm::ivec2 v0 = vertices.back(); vertices.pop_back();
+
+	
+
+	if(doors.size() == 0)
+	{
+		vertices.push_back(v0);
+		vertices.push_back(v1);
+		vertices.push_back(v2);
+		vertices.push_back(v0);
+		vertices.push_back(v2);
+		vertices.push_back(v3);
+		return vertices;
+	}
+
+	glm::ivec2 current_door = v0;
+	int current_pos = -1;
+
+	// get door that has lowest x and y and is inside the square defined of v0, v1, v2, v3
+	for(int i = 0; i < doors.size(); i++)
+	{
+		glm::ivec2 temp = doors.at(i);
+		if(temp.x >= v0.x && temp.y >= v0.y && temp.x < v2.x && temp.y < v2.y)
+		{
+			if(current_pos == -1 || temp.y < current_door.y || (temp.y == current_door.y && temp.x < current_door.x)) 
+			{
+				current_door = temp;
+				current_pos = i;
+			}
+		}	
+	}
+
+	if(current_pos == -1)
+	{
+		vertices.push_back(v0);
+		vertices.push_back(v1);
+		vertices.push_back(v2);
+		vertices.push_back(v0);
+		vertices.push_back(v2);
+		vertices.push_back(v3);
+		return vertices;
+	}
+
+	//Logger::debug() << "current_door: " << current_door.x << "|" << current_door.y << Logger::endl;
+
+	//create vector of the remaining doors
+	std::vector<glm::ivec2> remaining_doors;
+	for(int i = 0; i < doors.size(); i++)
+	{
+		if(current_pos != i)
+			remaining_doors.push_back(doors.at(i));
+	}
+
+	//vertices of the door
+	glm::ivec2 v4(current_door.x, current_door.y);
+	glm::ivec2 v5(current_door.x, current_door.y+1);
+	glm::ivec2 v6(current_door.x+1, current_door.y+1);
+	glm::ivec2 v7(current_door.x+1, current_door.y);
+
+	//other needed vertices
+	glm::ivec2 v8(v0.x, current_door.y+1);
+	glm::ivec2 v9(current_door.x, v0.y);
+	glm::ivec2 v10(current_door.x+1, v0.y);
+	glm::ivec2 v11(current_door.x+1, 11);
+
+	//draw squares left of the door
+	if(current_door.x > v0.x)
+	{
+		vertices.push_back(v0);
+		vertices.push_back(v5);
+		vertices.push_back(v8);
+
+		vertices.push_back(v0);
+		vertices.push_back(v5);
+		vertices.push_back(v9);
+	}
+
+	if(current_door.y > v0.y)
+	{
+		vertices.push_back(v9);
+		vertices.push_back(v7);
+		vertices.push_back(v4);
+
+		vertices.push_back(v9);
+		vertices.push_back(v7);
+		vertices.push_back(v10);
+	}
+	/*Logger::debug() << v0.x << "|" << v0.y << Logger::endl;
+	Logger::debug() << v1.x << "|" << v1.y << Logger::endl;
+	Logger::debug() << v2.x << "|" << v2.y << Logger::endl;
+	Logger::debug() << v3.x << "|" << v3.y << Logger::endl;
+	Logger::debug() << v4.x << "|" << v4.y << Logger::endl;
+	Logger::debug() << v5.x << "|" << v5.y << Logger::endl;
+	Logger::debug() << v6.x << "|" << v6.y << Logger::endl;
+	Logger::debug() << v7.x << "|" << v7.y << Logger::endl;
+	Logger::debug() << v8.x << "|" << v8.y << Logger::endl;
+	Logger::debug() << v9.x << "|" << v9.y << Logger::endl;
+	Logger::debug() << v10.x << "|" << v10.y << Logger::endl;
+	Logger::debug() << v11.x << "|" << v11.y << Logger::endl;
+	Logger::debug() << "##########" << Logger::endl;
+	*/
+	//subsquare1
+	std::vector<glm::ivec2> vert_sub1;
+	vert_sub1.push_back(v8);
+	vert_sub1.push_back(v1);
+	vert_sub1.push_back(v11);
+	vert_sub1.push_back(v6);
+	//subsquare1
+	std::vector<glm::ivec2> vert_sub2;
+	vert_sub2.push_back(v10);
+	vert_sub2.push_back(v11);
+	vert_sub2.push_back(v2);
+	vert_sub2.push_back(v3);
+
+	//calculate vertices of subsquare1
+	if(v6.y < v1.y)
+	{
+		std::vector<glm::ivec2> vertices_subsquare1 = ItlCalcVerticesRec(remaining_doors, vert_sub1);
+		//add subsquare1 vertices
+		while(vertices_subsquare1.size() != 0)
+		{
+			vertices.push_back(vertices_subsquare1.back());
+			vertices_subsquare1.pop_back();
+		}
+	}
+
+	//calculate vertices of subsquare2
+	if(v6.x < v2.x)
+	{
+		std::vector<glm::ivec2> vertices_subsquare2 = ItlCalcVerticesRec(remaining_doors, vert_sub2);
+		//add subsquare2 vertices
+		while(vertices_subsquare2.size() != 0)
+		{
+			vertices.push_back(vertices_subsquare2.back());
+			vertices_subsquare2.pop_back();
+		}
+	}
+	return vertices;
 }

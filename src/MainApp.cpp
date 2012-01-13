@@ -121,9 +121,9 @@ void MainApp::StartGraphic_Test()
     g_spTreppe = spTreppe;
 
     // add objects to scene
-   // spScene->AttachObject(spCube);
-    spScene->AttachObject(spTable);
-    spScene->AttachObject(spTreppe);
+    spScene->AttachObject(spCube);
+    //spScene->AttachObject(spTable);
+    //spScene->AttachObject(spTreppe);
 
     // add light to scene
     spScene->AttachObject(spTestLight1);
