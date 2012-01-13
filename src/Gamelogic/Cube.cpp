@@ -269,9 +269,8 @@ Grid Cube::GetGrid(const unsigned int nID)
     }
 }
 
-std::vector<glm::vec3> Cube::BuildCubeVertices()
+void Cube::BuildCubeVertices()
 {
-	std::vector<glm::vec3> vertices;
 	std::vector<glm::ivec2> xPlusVertices = m_Xplus.CalcVertices();
 	std::vector<glm::ivec2> xMinusVertices = m_Xplus.CalcVertices();
 	std::vector<glm::ivec2> yPlusVertices = m_Xplus.CalcVertices();
@@ -280,18 +279,60 @@ std::vector<glm::vec3> Cube::BuildCubeVertices()
 	std::vector<glm::ivec2> zMinusVertices = m_Xplus.CalcVertices();
 
 	for(int i = 0; i < xPlusVertices.size(); i++)
-		vertices.push_back(glm::vec3(11, xPlusVertices.at(i).y, xPlusVertices.at(i).x));
+	{
+		m_CubeVertices.push_back(glm::vec3(11, xPlusVertices.at(i).y, xPlusVertices.at(i).x));
+		m_CubeNormals.push_back(glm::vec3(-1, 0, 0));
+		m_CubeTexCoords.push_back(glm::vec2(xPlusVertices.at(i).x / 11.0f, xPlusVertices.at(i).y / 11.0f));
+	}
 	for(int i = 0; i < xMinusVertices.size(); i++)
-		vertices.push_back(glm::vec3(0, xMinusVertices.at(i).y, xMinusVertices.at(i).x));
+	{
+		m_CubeVertices.push_back(glm::vec3(0, xMinusVertices.at(i).y, xMinusVertices.at(i).x));
+		m_CubeNormals.push_back(glm::vec3(1, 0, 0));
+		m_CubeTexCoords.push_back(glm::vec2(xMinusVertices.at(i).x / 11.0f, xMinusVertices.at(i).y / 11.0f));
+	}
 	for(int i = 0; i < yPlusVertices.size(); i++)
-		vertices.push_back(glm::vec3(yPlusVertices.at(i).x, 11, yPlusVertices.at(i).y));
+	{
+		m_CubeVertices.push_back(glm::vec3(yPlusVertices.at(i).x, 11, yPlusVertices.at(i).y));
+		m_CubeNormals.push_back(glm::vec3(0, -1, 0));
+		m_CubeTexCoords.push_back(glm::vec2(yPlusVertices.at(i).x / 11.0f, yPlusVertices.at(i).y / 11.0f));
+
+	}
 	for(int i = 0; i < yMinusVertices.size(); i++)
-		vertices.push_back(glm::vec3(yMinusVertices.at(i).x, 0, yMinusVertices.at(i).y));
+	{
+		m_CubeVertices.push_back(glm::vec3(yMinusVertices.at(i).x, 0, yMinusVertices.at(i).y));
+		m_CubeNormals.push_back(glm::vec3(0, 1, 0));
+		m_CubeTexCoords.push_back(glm::vec2(yMinusVertices.at(i).x / 11.0f, yMinusVertices.at(i).y / 11.0f));
+
+	}
 	for(int i = 0; i < zPlusVertices.size(); i++)
-		vertices.push_back(glm::vec3(zPlusVertices.at(i).x, zPlusVertices.at(i).y, 11));
+	{
+		m_CubeVertices.push_back(glm::vec3(zPlusVertices.at(i).x, zPlusVertices.at(i).y, 11));
+		m_CubeNormals.push_back(glm::vec3(0, 0, -1));
+		m_CubeTexCoords.push_back(glm::vec2(zPlusVertices.at(i).x / 11.0f, zPlusVertices.at(i).y / 11.0f));
+
+	}
 	for(int i = 0; i < zMinusVertices.size(); i++)
-		vertices.push_back(glm::vec3(zMinusVertices.at(i).x, zMinusVertices.at(i).y, 0));
-	return vertices;
+	{
+		m_CubeVertices.push_back(glm::vec3(zMinusVertices.at(i).x, zMinusVertices.at(i).y, 0));
+		m_CubeNormals.push_back(glm::vec3(0, 0, 1));
+		m_CubeTexCoords.push_back(glm::vec2(zMinusVertices.at(i).x / 11.0f, zMinusVertices.at(i).y / 11.0f));
+
+	}
+}
+
+std::vector<glm::vec3> Cube::GetVertices()
+{
+	return m_CubeVertices;
+}
+
+std::vector<glm::vec3> Cube::GetNormals()
+{
+	return m_CubeNormals;
+}
+
+std::vector<glm::vec2> Cube::GetTexCoords()
+{
+	return m_CubeTexCoords;
 }
 
 
