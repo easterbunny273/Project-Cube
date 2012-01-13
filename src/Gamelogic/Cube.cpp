@@ -272,46 +272,46 @@ Grid Cube::GetGrid(const unsigned int nID)
 void Cube::BuildCubeVertices()
 {
 	std::vector<glm::ivec2> xPlusVertices = m_Xplus.CalcVertices();
-	std::vector<glm::ivec2> xMinusVertices = m_Xplus.CalcVertices();
-	std::vector<glm::ivec2> yPlusVertices = m_Xplus.CalcVertices();
-	std::vector<glm::ivec2> yMinusVertices = m_Xplus.CalcVertices();
-	std::vector<glm::ivec2> zPlusVertices = m_Xplus.CalcVertices();
-	std::vector<glm::ivec2> zMinusVertices = m_Xplus.CalcVertices();
+	std::vector<glm::ivec2> xMinusVertices = m_Xminus.CalcVertices();
+	std::vector<glm::ivec2> yPlusVertices = m_Yplus.CalcVertices();
+	std::vector<glm::ivec2> yMinusVertices = m_Yminus.CalcVertices();
+	std::vector<glm::ivec2> zPlusVertices = m_Zplus.CalcVertices();
+	std::vector<glm::ivec2> zMinusVertices = m_Zminus.CalcVertices();
 
-	for(int i = 0; i < xPlusVertices.size(); i++)
+	for(unsigned int i = 0; i < xPlusVertices.size(); i++)
 	{
 		m_CubeVertices.push_back(glm::vec3(11, xPlusVertices.at(i).y, xPlusVertices.at(i).x));
 		m_CubeNormals.push_back(glm::vec3(-1, 0, 0));
 		m_CubeTexCoords.push_back(glm::vec2(xPlusVertices.at(i).x / 11.0f, xPlusVertices.at(i).y / 11.0f));
 	}
-	for(int i = 0; i < xMinusVertices.size(); i++)
+	for(unsigned int i = 0; i < xMinusVertices.size(); i++)
 	{
 		m_CubeVertices.push_back(glm::vec3(0, xMinusVertices.at(i).y, xMinusVertices.at(i).x));
 		m_CubeNormals.push_back(glm::vec3(1, 0, 0));
 		m_CubeTexCoords.push_back(glm::vec2(xMinusVertices.at(i).x / 11.0f, xMinusVertices.at(i).y / 11.0f));
 	}
-	for(int i = 0; i < yPlusVertices.size(); i++)
+	for(unsigned int i = 0; i < yPlusVertices.size(); i++)
 	{
 		m_CubeVertices.push_back(glm::vec3(yPlusVertices.at(i).x, 11, yPlusVertices.at(i).y));
 		m_CubeNormals.push_back(glm::vec3(0, -1, 0));
 		m_CubeTexCoords.push_back(glm::vec2(yPlusVertices.at(i).x / 11.0f, yPlusVertices.at(i).y / 11.0f));
 
 	}
-	for(int i = 0; i < yMinusVertices.size(); i++)
+	for(unsigned int i = 0; i < yMinusVertices.size(); i++)
 	{
 		m_CubeVertices.push_back(glm::vec3(yMinusVertices.at(i).x, 0, yMinusVertices.at(i).y));
 		m_CubeNormals.push_back(glm::vec3(0, 1, 0));
 		m_CubeTexCoords.push_back(glm::vec2(yMinusVertices.at(i).x / 11.0f, yMinusVertices.at(i).y / 11.0f));
 
 	}
-	for(int i = 0; i < zPlusVertices.size(); i++)
+	for(unsigned int i = 0; i < zPlusVertices.size(); i++)
 	{
 		m_CubeVertices.push_back(glm::vec3(zPlusVertices.at(i).x, zPlusVertices.at(i).y, 11));
 		m_CubeNormals.push_back(glm::vec3(0, 0, -1));
 		m_CubeTexCoords.push_back(glm::vec2(zPlusVertices.at(i).x / 11.0f, zPlusVertices.at(i).y / 11.0f));
 
 	}
-	for(int i = 0; i < zMinusVertices.size(); i++)
+	for(unsigned int i = 0; i < zMinusVertices.size(); i++)
 	{
 		m_CubeVertices.push_back(glm::vec3(zMinusVertices.at(i).x, zMinusVertices.at(i).y, 0));
 		m_CubeNormals.push_back(glm::vec3(0, 0, 1));
@@ -333,6 +333,66 @@ std::vector<glm::vec3> Cube::GetNormals()
 std::vector<glm::vec2> Cube::GetTexCoords()
 {
 	return m_CubeTexCoords;
+}
+
+
+std::shared_ptr<GeometryData::GenericObject> Cube::GenerateGenericObject()
+{
+  std::shared_ptr<GeometryData::GenericObject> spNewObject(new GeometryData::GenericObject(1));
+
+  std::shared_ptr<GeometryData::GenericMesh> spMesh = spNewObject->GetMesh(0).lock();
+
+  GeometryData::GenericMesh *pMesh = spMesh.get();
+
+  // generate vertices
+  BuildCubeVertices();
+
+  std::vector<glm::vec3> vVertices = GetVertices();
+  std::vector<glm::vec3> vNormals = GetNormals();
+  std::vector<glm::vec2> vTexCoords = GetTexCoords();
+
+  assert (vVertices.size() == vNormals.size());
+  assert (vVertices.size() == vTexCoords.size());
+
+  float *pfVertices = new float[vVertices.size() * 3];
+  float *pfNormals = new float[vNormals.size() * 3];
+  float *pfTexCoords = new float[vTexCoords.size() * 2];
+
+  unsigned int *pnIndices = new unsigned int [vVertices.size()];
+
+  for (int i=0; i < vVertices.size(); i++)
+    {
+      pfVertices[3*i] = vVertices[i].x / 11.0;
+      pfVertices[3*i + 1] = vVertices[i].y / 11.0;
+      pfVertices[3*i + 2] = vVertices[i].z / 11.0;
+
+      pfNormals[3*i + 0] = vNormals[i].x;
+      pfNormals[3*i + 1] = vNormals[i].y;
+      pfNormals[3*i + 2] = vNormals[i].z;
+
+      pfTexCoords[2*i + 0] = vTexCoords[i].x;
+      pfTexCoords[2*i + 1] = vTexCoords[i].y;
+
+      pnIndices[i] = i;
+    }
+
+  pMesh->AddAttributeValues(GeometryData::GenericData::DATA_VERTICES, vVertices.size() * 3, pfVertices);
+  pMesh->AddAttributeValues(GeometryData::GenericData::DATA_NORMALS, vNormals.size() * 3, pfNormals);
+  //pMesh->AddAttributeValues(GeometryData::GenericData::DATA_TEXCOORDS, vTexCoords.size() * 2, pfTexCoords);
+
+  pMesh->AddIndices(vVertices.size(), pnIndices);
+  pMesh->SetTexturePath(GeometryData::TextureNames::ALBEDO, "textures/cube_texture.jpg");
+  pMesh->SetTexturePath(GeometryData::TextureNames::NORMAL, "textures/cube_texture_n.jpg");
+  pMesh->SetTextureCoords(GeometryData::TextureNames::ALBEDO, vTexCoords.size() * 2, pfTexCoords);
+  pMesh->SetTextureCoords(GeometryData::TextureNames::NORMAL, vTexCoords.size() * 2, pfTexCoords);
+
+
+  delete[] pfVertices;
+  delete[] pfNormals;
+  delete[] pfTexCoords;
+  delete[] pnIndices;
+
+  return spNewObject;
 }
 
 
@@ -365,3 +425,4 @@ void Cube::itlUpdateGridPositions()
     m_Zplus.SetPosition("Zplus");
     m_Zminus.SetPosition("Zminus");
 }
+

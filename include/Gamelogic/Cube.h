@@ -9,6 +9,8 @@
 #ifndef __CUBE_PROJECT_CUBE_HEADER
 #define __CUBE_PROJECT_CUBE_HEADER
 
+#include "GeometryData.h"
+
 #include "Gamelogic/ICube.h"
 #include "Gamelogic/Grid.h"
 
@@ -72,6 +74,8 @@ public:
 		std::vector<glm::vec3> GetVertices();
 		std::vector<glm::vec3> GetNormals();
 		std::vector<glm::vec2> GetTexCoords();
+
+	std::shared_ptr<GeometryData::GenericObject> GenerateGenericObject();
 
         /// Getter for the x-coordinate of the position of the cube inside a level
         int GetX();

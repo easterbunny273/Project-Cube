@@ -6,6 +6,7 @@
 #include <string>
 #include <cstdarg>
 
+#include "PC_Logger.h"
 
 
 class LuaManager

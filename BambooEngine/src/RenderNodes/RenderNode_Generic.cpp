@@ -60,6 +60,8 @@ void Bamboo::RN_Generic::ItlRender()
     std::vector<GLuint> vUsedTextures;
     vUsedTextures.reserve(4);
 
+    glDisable(GL_CULL_FACE);
+
     for (unsigned int nMesh = 0; nMesh < m_nNumMeshes; nMesh++)
     {
         for (int i = 0; i < 4; i++)
