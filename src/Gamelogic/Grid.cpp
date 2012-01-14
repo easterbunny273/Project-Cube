@@ -297,10 +297,9 @@ std::vector<glm::ivec2> Grid::ItlCalcVerticesRec(std::vector<glm::ivec2> doors, 
 	{
 		std::vector<glm::ivec2> vertices_subsquare1 = ItlCalcVerticesRec(remaining_doors, vert_sub1);
 		//add subsquare1 vertices
-		while(vertices_subsquare1.size() != 0)
+		for(int i = 0; i < vertices_subsquare1.size(); i++)
 		{
-			vertices.push_back(vertices_subsquare1.back());
-			vertices_subsquare1.pop_back();
+			vertices.push_back(vertices_subsquare1.at(i));
 		}
 	}
 
@@ -309,10 +308,9 @@ std::vector<glm::ivec2> Grid::ItlCalcVerticesRec(std::vector<glm::ivec2> doors, 
 	{
 		std::vector<glm::ivec2> vertices_subsquare2 = ItlCalcVerticesRec(remaining_doors, vert_sub2);
 		//add subsquare2 vertices
-		while(vertices_subsquare2.size() != 0)
+		for(int i = 0; i < vertices_subsquare2.size(); i++)
 		{
-			vertices.push_back(vertices_subsquare2.back());
-			vertices_subsquare2.pop_back();
+			vertices.push_back(vertices_subsquare2.at(i));
 		}
 	}
 	return vertices;

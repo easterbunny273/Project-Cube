@@ -284,39 +284,38 @@ void Cube::BuildCubeVertices()
 		m_CubeNormals.push_back(glm::vec3(-1, 0, 0));
 		m_CubeTexCoords.push_back(glm::vec2(xPlusVertices.at(i).x / 11.0f, xPlusVertices.at(i).y / 11.0f));
 	}
-	for(unsigned int i = 0; i < xMinusVertices.size(); i++)
+	while(xMinusVertices.size() != 0)
 	{
-		m_CubeVertices.push_back(glm::vec3(0, xMinusVertices.at(i).y, xMinusVertices.at(i).x));
+		m_CubeVertices.push_back(glm::vec3(0, xMinusVertices.back().y, xMinusVertices.back().x));
 		m_CubeNormals.push_back(glm::vec3(1, 0, 0));
-		m_CubeTexCoords.push_back(glm::vec2(xMinusVertices.at(i).x / 11.0f, xMinusVertices.at(i).y / 11.0f));
+		m_CubeTexCoords.push_back(glm::vec2(xMinusVertices.back().x / 11.0f, xMinusVertices.back().y / 11.0f));
+		xMinusVertices.pop_back();
 	}
 	for(unsigned int i = 0; i < yPlusVertices.size(); i++)
 	{
 		m_CubeVertices.push_back(glm::vec3(yPlusVertices.at(i).x, 11, yPlusVertices.at(i).y));
 		m_CubeNormals.push_back(glm::vec3(0, -1, 0));
 		m_CubeTexCoords.push_back(glm::vec2(yPlusVertices.at(i).x / 11.0f, yPlusVertices.at(i).y / 11.0f));
-
 	}
-	for(unsigned int i = 0; i < yMinusVertices.size(); i++)
+	while(yMinusVertices.size() != 0)
 	{
-		m_CubeVertices.push_back(glm::vec3(yMinusVertices.at(i).x, 0, yMinusVertices.at(i).y));
+		m_CubeVertices.push_back(glm::vec3(yMinusVertices.back().x, 0, yMinusVertices.back().y));
 		m_CubeNormals.push_back(glm::vec3(0, 1, 0));
-		m_CubeTexCoords.push_back(glm::vec2(yMinusVertices.at(i).x / 11.0f, yMinusVertices.at(i).y / 11.0f));
-
+		m_CubeTexCoords.push_back(glm::vec2(yMinusVertices.back().x / 11.0f, yMinusVertices.back().y / 11.0f));
+		yMinusVertices.pop_back();
 	}
-	for(unsigned int i = 0; i < zPlusVertices.size(); i++)
+	while(zPlusVertices.size() != 0)
 	{
-		m_CubeVertices.push_back(glm::vec3(zPlusVertices.at(i).x, zPlusVertices.at(i).y, 11));
+		m_CubeVertices.push_back(glm::vec3(zPlusVertices.back().x, zPlusVertices.back().y, 11));
 		m_CubeNormals.push_back(glm::vec3(0, 0, -1));
-		m_CubeTexCoords.push_back(glm::vec2(zPlusVertices.at(i).x / 11.0f, zPlusVertices.at(i).y / 11.0f));
-
+		m_CubeTexCoords.push_back(glm::vec2(zPlusVertices.back().x / 11.0f, zPlusVertices.back().y / 11.0f));
+		zPlusVertices.pop_back();
 	}
 	for(unsigned int i = 0; i < zMinusVertices.size(); i++)
 	{
 		m_CubeVertices.push_back(glm::vec3(zMinusVertices.at(i).x, zMinusVertices.at(i).y, 0));
 		m_CubeNormals.push_back(glm::vec3(0, 0, 1));
 		m_CubeTexCoords.push_back(glm::vec2(zMinusVertices.at(i).x / 11.0f, zMinusVertices.at(i).y / 11.0f));
-
 	}
 }
 
