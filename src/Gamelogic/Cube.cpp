@@ -361,16 +361,16 @@ std::shared_ptr<GeometryData::GenericObject> Cube::GenerateGenericObject()
 
   for (int i=0; i < vVertices.size(); i++)
     {
-      pfVertices[3*i] = vVertices[i].x / 11.0;
-      pfVertices[3*i + 1] = vVertices[i].y / 11.0;
-      pfVertices[3*i + 2] = vVertices[i].z / 11.0;
+      pfVertices[3*i] = vVertices[i].x / 11.0 - 0.5;
+      pfVertices[3*i + 1] = vVertices[i].y / 11.0 - 0.5;
+      pfVertices[3*i + 2] = vVertices[i].z / 11.0 - 0.5;
 
       pfNormals[3*i + 0] = vNormals[i].x;
       pfNormals[3*i + 1] = vNormals[i].y;
       pfNormals[3*i + 2] = vNormals[i].z;
 
-      pfTexCoords[2*i + 0] = vTexCoords[i].x;
-      pfTexCoords[2*i + 1] = vTexCoords[i].y;
+      pfTexCoords[2*i + 0] = vTexCoords[i].x * 10;
+      pfTexCoords[2*i + 1] = vTexCoords[i].y * 10;
 
       pnIndices[i] = i;
     }
@@ -380,8 +380,8 @@ std::shared_ptr<GeometryData::GenericObject> Cube::GenerateGenericObject()
   //pMesh->AddAttributeValues(GeometryData::GenericData::DATA_TEXCOORDS, vTexCoords.size() * 2, pfTexCoords);
 
   pMesh->AddIndices(vVertices.size(), pnIndices);
-  pMesh->SetTexturePath(GeometryData::TextureNames::ALBEDO, "textures/cube_texture.jpg");
-  pMesh->SetTexturePath(GeometryData::TextureNames::NORMAL, "textures/cube_texture_n.jpg");
+  pMesh->SetTexturePath(GeometryData::TextureNames::ALBEDO, "../textures/cube_texture2.png");
+  pMesh->SetTexturePath(GeometryData::TextureNames::NORMAL, "../textures/cube_texture2_n.png");
   pMesh->SetTextureCoords(GeometryData::TextureNames::ALBEDO, vTexCoords.size() * 2, pfTexCoords);
   pMesh->SetTextureCoords(GeometryData::TextureNames::NORMAL, vTexCoords.size() * 2, pfTexCoords);
 

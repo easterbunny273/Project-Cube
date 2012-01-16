@@ -8,7 +8,7 @@
 
 #define NEARPLANE 0.1f
 #define FARPLANE 50.0f
-#define SHADOWMAP_RESOLUTION 2048.0f
+#define SHADOWMAP_RESOLUTION 512.0f
 
 Bamboo::RN_SpotLight::RN_SpotLight(glm::vec3 vPosition,
                                    glm::vec3 vLookDirection,
@@ -305,8 +305,9 @@ void Bamboo::RN_SpotLight::ItlRender()
     glm::mat4 mViewProjectionMatrix = m_m4ProjectionMatrix * m_m4ViewMatrix;
     glm::mat4 mInverseViewProjectionMatrix = glm::inverse(mViewProjectionMatrix);
 
-    if (mViewProjectionMatrix != m_m4LastUsedViewProjectionMatrix || m_vLightPosition != m_v3LastUsedLightPosition)
-      m_bHasChildren = (!m_vChildren.empty());
+    //if (mViewProjectionMatrix != m_m4LastUsedViewProjectionMatrix || m_vLightPosition != m_v3LastUsedLightPosition)
+      //m_bHasChildren = (!m_vChildren.empty());
+
 
 
       glDisable(GL_DEPTH_TEST);
@@ -396,7 +397,8 @@ void Bamboo::RN_SpotLight::ItlPreRenderChildren()
 
    // m_m4LastUsedViewProjectionMatrix = glm::mat4();
 
-    if (mViewProjectionMatrix != m_m4LastUsedViewProjectionMatrix || m_vLightPosition != m_v3LastUsedLightPosition)
+    //if (mViewProjectionMatrix != m_m4LastUsedViewProjectionMatrix || m_vLightPosition != m_v3LastUsedLightPosition)
+    if (true)
     {
         //bind fbo
         glBindFramebuffer(GL_FRAMEBUFFER, m_nFBO);
@@ -429,7 +431,8 @@ void Bamboo::RN_SpotLight::ItlPostRenderChildren()
 {
     glm::mat4 mViewProjectionMatrix = m_m4ProjectionMatrix * m_m4ViewMatrix;
 
-    if (mViewProjectionMatrix != m_m4LastUsedViewProjectionMatrix || m_vLightPosition != m_v3LastUsedLightPosition)
+    //if (mViewProjectionMatrix != m_m4LastUsedViewProjectionMatrix || m_vLightPosition != m_v3LastUsedLightPosition)
+    if (true)
     {
       // restore matrices
       ItlRestoreMatrices();

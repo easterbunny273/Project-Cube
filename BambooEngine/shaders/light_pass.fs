@@ -34,7 +34,7 @@ const float epsilon = 0.00002;
 
 float GetLitFactor(float fDepth, vec2 vTexCoords)
 {
-  float fTexelSize = 1 / 2048.0f;
+  float fTexelSize = 1 / 512.0f;
 
 
   float fDepthInShadowMap1 = texture(shadowmap, vTexCoords - 0.5 * vec2(fTexelSize, fTexelSize)).a;
