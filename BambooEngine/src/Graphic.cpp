@@ -23,7 +23,6 @@
 #include "RenderNodes/RenderNode_RenderPass.h"
 #include "RenderNodes/RenderNode_Camera.h"
 #include "RenderNodes/RenderNode_FBO.h"
-#include "RenderNodes/RenderNode_Cube.h"
 #include "RenderNodes/RenderNode_Deferred.h"
 #include "SceneObjects/ISceneObject.h"
 #include "SceneObjects/Light.h"
