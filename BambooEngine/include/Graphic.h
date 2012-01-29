@@ -37,7 +37,6 @@ private:
 
         class RN_PostEffect;
         class RN_Camera;
-        class RN_Cube;
         class RN_FBO;
         class RN_RenderPass;
         class RN_BoundingBox;
@@ -45,6 +44,7 @@ private:
         class RN_Generic;
         class RN_Deferred;
         class RN_SpotLight;
+        class RN_CubeMap;
         class RN_SpotLight_Model;
     //@}
 

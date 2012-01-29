@@ -35,7 +35,6 @@ out vec4 my_Position;
 
 void main(void)
 {
-
   mat4 ModelViewMatrix = ViewMatrix * ModelMatrix;
 
   gl_Position = ModelViewProjectionMatrix * vec4(in_Position, 1.0);

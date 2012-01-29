@@ -37,8 +37,6 @@ private:
     int m_iWidth;			//width of the fbo
     int m_iHeight;			//height of the fbo
 
-    int m_iGeneralViewportParams[4];	//viewport params as it were BEFORE we bind our fbo, used to save and restore these values
-
     const char *m_szColorTextureName;		//name of the color texture, if the fbo uses one, uses for registering in texture manager
     const char *m_szDepthTextureName;		//name of the depth texture, if the fbo uses one, uses for registering in texture manager
 

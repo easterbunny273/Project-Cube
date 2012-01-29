@@ -50,4 +50,39 @@ inline const char *TranslateGLerror(GLenum error)
     }
 }
 
+
+//helper function for translating glerrors to char*
+inline const char *TranslateFBOStatus(GLenum status)
+{
+    switch (status)
+    {
+    case GL_FRAMEBUFFER_UNDEFINED:
+        return "GL_FRAMEBUFFER_UNDEFINED";
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+        return "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+        return "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+        return "GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER";
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+        return "GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER";
+        break;
+    case GL_FRAMEBUFFER_UNSUPPORTED:
+        return "GL_FRAMEBUFFER_UNSUPPORTED";
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
+        return "GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE";
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS:
+        return "GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS";
+        break;
+    default:
+        return "unknown fbo status";
+        break;
+    }
+}
 #endif

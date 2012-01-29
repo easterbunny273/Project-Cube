@@ -22,8 +22,28 @@
 class Bamboo::TextureManager
 {
 public:
+
     /*! \name Public types */
     //@{
+    class Texture
+    {
+    public:
+
+    private:
+      /*! \name Construction / Destruction */
+      //@{
+      // private constructor
+      Texture();
+
+      //@}
+
+      /*! \name Private members */
+      //@{
+          GLuint m_nTextureID;
+          GLuint m_nSamplerID;
+      //@}
+    };
+
     enum TProvidedDefaultSamplerObjects
     {
         CLAMPED_NEAREST_FILTERING = 0,
@@ -35,6 +55,7 @@ public:
     };
 
     //@}
+
     /*! \name Construction / Destruction */
     //@{
     /// constructor
