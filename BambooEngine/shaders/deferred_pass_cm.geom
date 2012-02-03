@@ -1,9 +1,7 @@
-#version 330 core
+#version 400 core
+
 layout(triangles) in;
-
 layout(triangle_strip, max_vertices=18) out;
-
-uniform mat4 cm_mat[6];
 
 uniform mat4 ModelViewProjectionMatrix;
 uniform mat4 ProjectionMatrix;
@@ -15,8 +13,7 @@ uniform mat3 NormalMatrix;
 in vec3 attr_Normal[];
 in vec3 attr_Tangent[];
 in vec3 attr_Color[];
-
-out vec4 WS_pos_from_GS;
+in vec4 attr_Position[];
 
 out vec3 my_Texcoord;
 out vec3 my_LightDir;
@@ -62,14 +59,15 @@ void main(void)
                       0.0, 0.0, 1.0, 0.0,
                       0.0, 0.0, 0.0, 1.0);
 
-  for (gl_Layer = 0; gl_Layer < 6; gl_Layer++)
+  for (int iLayer = 0; iLayer < 2; iLayer++)
   {
+
     for (int tri_vert=0; tri_vert < 3; tri_vert++)
     {
-      vec3 in_Position = gl_in[tri_vert].gl_Position.xyz;
+      vec3 in_Position = attr_Position[tri_vert].xyz;
 
-
-      gl_Position = ProjectionMatrix * mRotations[gl_Layer] * TranslationMatrix * ModelMatrix * vec4(in_Position, 1.0);
+      gl_Layer = iLayer;
+      gl_Position = ProjectionMatrix * ViewMatrix * ModelMatrix * vec4(in_Position, 1.0);
 
       my_ObjPosition = in_Position;
       my_ScreenPosition = gl_Position;

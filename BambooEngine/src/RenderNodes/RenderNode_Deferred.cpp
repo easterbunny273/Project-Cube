@@ -15,6 +15,8 @@ Bamboo::RN_Deferred::RN_Deferred(unsigned int nWidth, unsigned int nHeight, bool
     ItlCreateLayeredFBO();
   else
     ItlCreateFBO();
+
+    m_bLayeredFBO = bLayered;
 }
 
 Bamboo::RN_Deferred::~RN_Deferred()
@@ -124,7 +126,7 @@ void Bamboo::RN_Deferred::ItlCreateLayeredFBO()
   glGenFramebuffers(1, &m_nFBO);
   glBindFramebuffer(GL_FRAMEBUFFER, m_nFBO);
 
-
+  error = glGetError();
   assert (error == GL_NO_ERROR);
 
   // attach the texture to FBO color attachment point
@@ -338,7 +340,10 @@ void Bamboo::RN_Deferred::ItlPreRenderChildren()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     ItlGetGraphicCore()->GetShaderManager()->PushActiveShader();
-    ItlGetGraphicCore()->GetShaderManager()->ActivateShader("deferred_pass_cm");
+    if (m_bLayeredFBO)
+      ItlGetGraphicCore()->GetShaderManager()->ActivateShader("deferred_pass_cm");
+    else
+      ItlGetGraphicCore()->GetShaderManager()->ActivateShader("deferred_pass");
 
     GLuint l_nUseParallax = ItlGetGraphicCore()->GetShaderManager()->GetUniform("nUseParallax");
 
@@ -351,8 +356,7 @@ void Bamboo::RN_Deferred::ItlPreRenderChildren()
 
 void Bamboo::RN_Deferred::ItlPostRenderChildren()
 {
-
-    ItlGetGraphicCore()->GetShaderManager()->PushActiveShader();
+    ItlGetGraphicCore()->GetShaderManager()->PopActiveShader();
 
     //remove the fbo (THIS fbo) from the bound_fbos stack
     ItlPopFBO();
@@ -382,7 +386,10 @@ void Bamboo::RN_Deferred::ItlPreRender()
 
 void Bamboo::RN_Deferred::ItlRender()
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, m_nFBO);
+  double test[3];
+//  glVertex3dv(test);
+
+ /*   glBindFramebuffer(GL_FRAMEBUFFER, m_nFBO);
     ItlPushFBO(m_nFBO);
     ItlPushViewportInformation(m_nWidth, m_nHeight);
 
@@ -442,10 +449,10 @@ void Bamboo::RN_Deferred::ItlRender()
 
 
     ItlPostRenderChildren();
-
+*/
     // ---BEGIN ---- this is just for debugging!
 
-    static Bamboo::RN_PostEffect rPostEffectNode("directwrite");
+   /* static Bamboo::RN_PostEffect rPostEffectNode("directwrite");
 
     GLuint nTextureToShow;
 
@@ -476,7 +483,7 @@ void Bamboo::RN_Deferred::ItlRender()
     rPostEffectNode.SetTexture("texture1", nTextureToShow );
 
     rPostEffectNode.Render();
-
+*/
 
 }
 

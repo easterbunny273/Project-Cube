@@ -244,7 +244,7 @@ void Bamboo::RN_Generic::ItlPrepareVAO()
     assert (pShaderManager != NULL);
 
     pShaderManager->PushActiveShader();
-    pShaderManager->ActivateShader("deferred_pass");
+    pShaderManager->ActivateShader("deferred_pass_cm");
 
     // generate arrays
     glGenVertexArrays(m_nNumMeshes, m_pnVertexArrayObjects);
@@ -298,7 +298,7 @@ void Bamboo::RN_Generic::ItlPrepareVAO()
 
 void Bamboo::RN_Generic::ItlLoadShader()
 {
-    ItlGetGraphicCore()->GetShaderManager()->AddShader("deferred_pass", new Shader("BambooEngine/shaders/deferred_pass.vert", "BambooEngine/shaders/deferred_pass.frag"));
+    //ItlGetGraphicCore()->GetShaderManager()->AddShader("deferred_pass", new Shader("BambooEngine/shaders/deferred_pass.vert", "BambooEngine/shaders/deferred_pass.frag"));
     ItlGetGraphicCore()->GetShaderManager()->AddShader("deferred_pass_cm", new Shader("BambooEngine/shaders/deferred_pass_cm.vert", "BambooEngine/shaders/deferred_pass_cm.geom", "BambooEngine/shaders/deferred_pass_cm.frag"));
 }
 
