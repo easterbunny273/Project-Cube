@@ -24,6 +24,7 @@ out vec3 my_Normal;
 out vec3 my_Tangent;
 out vec3 my_Color;
 out vec4 my_Position;
+out vec3 my_Layer;
 in vec3 texcoords[];
 
 void main(void)
@@ -34,32 +35,36 @@ void main(void)
                       -1.0, 0.0, 0.0, 0.0,
                       0.0, 0.0, 0.0, 1.0);
 
-  mRotations[1] = mat4(1.0, 0.0, 0.0, 0.0,
-                      0.0, 0.0, 1.0, 0.0,
-                      0.0, -1.0, 0.0, 0.0,
-                      0.0, 0.0, 0.0, 1.0);
-
-  mRotations[2] = mat4(1.0, 0.0, 0.0, 0.0,
-                      0.0, -1.0, 0.0, 0.0,
-                      0.0, 0.0, -1.0, 0.0,
-                      0.0, 0.0, 0.0, 1.0);
-
-  mRotations[3] = mat4(0.0, 0.0, 1.0, 0.0,
+  mRotations[1] = mat4(0.0, 0.0, 1.0, 0.0,
                       0.0, -1.0, 0.0, 0.0,
                       1.0, 0.0, 0.0, 0.0,
                       0.0, 0.0, 0.0, 1.0);
 
-  mRotations[4] = mat4(1.0, 0.0, 0.0, 0.0,
+  mRotations[2] = mat4(1.0, 0.0, 0.0, 0.0,
+                      0.0, 0.0, 1.0, 0.0,
+                      0.0, -1.0, 0.0, 0.0,
+                      0.0, 0.0, 0.0, 1.0);
+
+  mRotations[3] = mat4(1.0, 0.0, 0.0, 0.0,
                       0.0, 0.0, -1.0, 0.0,
                       0.0, 1.0, 0.0, 0.0,
                       0.0, 0.0, 0.0, 1.0);
+
+  mRotations[4] = mat4(1.0, 0.0, 0.0, 0.0,
+                      0.0, -1.0, 0.0, 0.0,
+                      0.0, 0.0, -1.0, 0.0,
+                      0.0, 0.0, 0.0, 1.0);
+
+
+
+
 
   mRotations[5] = mat4(-1.0, 0.0, 0.0, 0.0,
                       0.0, -1.0, 0.0, 0.0,
                       0.0, 0.0, 1.0, 0.0,
                       0.0, 0.0, 0.0, 1.0);
 
-  for (int iLayer = 0; iLayer < 2; iLayer++)
+  for (int iLayer = 0; iLayer < 6; iLayer++)
   {
 
     for (int tri_vert=0; tri_vert < 3; tri_vert++)
@@ -67,7 +72,8 @@ void main(void)
       vec3 in_Position = attr_Position[tri_vert].xyz;
 
       gl_Layer = iLayer;
-      gl_Position = ProjectionMatrix * ViewMatrix * ModelMatrix * vec4(in_Position, 1.0);
+      my_Layer.x = iLayer / 6.0;
+      gl_Position = ProjectionMatrix * mRotations[iLayer] * ModelMatrix * vec4(in_Position, 1.0);
 
       my_ObjPosition = in_Position;
       my_ScreenPosition = gl_Position;

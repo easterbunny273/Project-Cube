@@ -117,8 +117,10 @@ void MainApp::StartGraphic_Test()
     //spLight->SetTransformMatrix(glm::translate(0.0f, 1.0f, 0.0f));
 
     std::shared_ptr<Bamboo::ISceneObject> spTreppe = Bamboo::SO_LoadedModel::Create("models/bunte-treppe3.dae");
+    std::shared_ptr<Bamboo::ISceneObject> spSphere = Bamboo::SO_LoadedModel::Create("models/pool_sphere.dae");
   //  std::shared_ptr<Bamboo::ISceneObject> spTable = Bamboo::SO_LoadedModel::Create("models/table.dae");
     spTreppe->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
+    spSphere->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
     //spTable->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)) * glm::translate(glm::mat4(), glm::vec3(0.0f, -0.9f, 0.0f)));
 
     g_spTreppe = spTreppe;
@@ -137,8 +139,8 @@ void MainApp::StartGraphic_Test()
 
     // add objects to scene
     spScene->AttachObject(spCube);
-    //spScene->AttachObject(spTable);
-    spScene->AttachObject(spTreppe);
+   // spScene->AttachObject(spTreppe);
+    spScene->AttachObject(spSphere);
 
     // add light to scene
     spScene->AttachObject(spTestLight1);
@@ -147,6 +149,7 @@ void MainApp::StartGraphic_Test()
     //spScene->AttachObject(spTestLight2);
     spScene->AttachObject(spTestLight3);
     spScene->AttachObject(spTestLight4);
+
 
     // add render loop
     GetGraphic()->AddRenderLoop(spWindow, m_spCamera, spScene);

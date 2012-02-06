@@ -69,6 +69,7 @@ void Bamboo::TextureManager::TImpl::ItlInitialize()
     puffer >> puffer2;						    //for debugging output, transform integer to string, write stringstream to string
 
 
+    m_iNumTextureUnits = 14;
     for (int a=0; a < m_iNumTextureUnits; a++)			    //push them all in the free_units queue
             m_lFreeUnits.push_back(a);
 

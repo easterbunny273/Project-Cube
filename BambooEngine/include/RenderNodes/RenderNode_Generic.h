@@ -105,6 +105,7 @@ private:
 
     std::shared_ptr<GeometryData::GenericObject> m_spObject;
 
+    bool m_bIsSphere;
     //@}
 
     /*! \name Static members */

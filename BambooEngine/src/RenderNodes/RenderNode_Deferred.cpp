@@ -356,7 +356,8 @@ void Bamboo::RN_Deferred::ItlPreRenderChildren()
 
 void Bamboo::RN_Deferred::ItlPostRenderChildren()
 {
-    ItlGetGraphicCore()->GetShaderManager()->PopActiveShader();
+    // todo:: fault?
+    ItlGetGraphicCore()->GetShaderManager()->PushActiveShader();
 
     //remove the fbo (THIS fbo) from the bound_fbos stack
     ItlPopFBO();
@@ -389,101 +390,114 @@ void Bamboo::RN_Deferred::ItlRender()
   double test[3];
 //  glVertex3dv(test);
 
- /*   glBindFramebuffer(GL_FRAMEBUFFER, m_nFBO);
-    ItlPushFBO(m_nFBO);
-    ItlPushViewportInformation(m_nWidth, m_nHeight);
-
-    glViewport(0,0, m_nWidth, m_nHeight);
-    GLenum tDrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
-    glDrawBuffers(1, tDrawBuffers);
-    //glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    //glClear(GL_COLOR_BUFFER_BIT);
-    glEnable(GL_STENCIL_TEST);
-    glStencilFunc(GL_EQUAL, 0, 1);
-    glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
-
-
-    // first, we search for all lights
-    for (unsigned int a=0; a < m_vspSpotLights.size(); a++)
+  if (m_bLayeredFBO == false)
     {
-        glClear(GL_STENCIL_BUFFER_BIT);
+      glBindFramebuffer(GL_FRAMEBUFFER, m_nFBO);
+      ItlPushFBO(m_nFBO);
+      ItlPushViewportInformation(m_nWidth, m_nHeight);
 
-        std::shared_ptr<Bamboo::RN_SpotLight> spLight (m_vspSpotLights[a]);
-        spLight->SetTextureLocation("color_texture", m_nAlbedoDrawBuffer);
-        spLight->SetTextureLocation("normal_texture", m_nNormalDrawBuffer);
-        spLight->SetTextureLocation("tangent_texture", m_nTangentDrawBuffer);
-        spLight->SetTextureLocation("normalmap_texture", m_nNormalMapDrawBuffer);
-        spLight->SetTextureLocation("depth_texture", m_nDepthDrawBuffer);
-        spLight->SetTextureLocation("position_texture", m_nPositionDrawBuffer);
-        spLight->SetTextureLocation("specular_texture", m_nSpecularDrawBuffer);
-        spLight->SetTextureLocation("displace_texture", m_nDisplaceDrawBuffer);
-        //spLight->SetTextureLocation("position_texture", m_nPositionDrawBuffer);
+      glViewport(0,0, m_nWidth, m_nHeight);
+      GLenum tDrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
+      glDrawBuffers(1, tDrawBuffers);
+      //glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+      //glClear(GL_COLOR_BUFFER_BIT);
+      glEnable(GL_STENCIL_TEST);
+      glStencilFunc(GL_EQUAL, 0, 1);
+      glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
 
-        TItlRenderInfo *pCurrentRenderInfo = m_pCurrentRenderInfo.get();
 
-        //store old matrices
-        glm::mat4 SavedModelViewProjectionMatrix = pCurrentRenderInfo->ModelViewProjectionMatrix;
-        glm::mat4 SavedInverseModelViewProjectionMatrix = pCurrentRenderInfo->InverseModelViewProjectionMatrix;
-        glm::mat4 SavedModelMatrix = pCurrentRenderInfo->ModelMatrix;
-        glm::mat4 SavedModelViewProjectionMatrix_ForFrustumCulling = pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling;
+      // first, we search for all lights
+      for (unsigned int a=0; a < m_vspSpotLights.size(); a++)
+      {
+          glClear(GL_STENCIL_BUFFER_BIT);
 
-        //update matrices by multiplying with our matrices
-        pCurrentRenderInfo->ModelViewProjectionMatrix = pCurrentRenderInfo->ModelViewProjectionMatrix * m_mTransformMatrixToWorld;
-        pCurrentRenderInfo->InverseModelViewProjectionMatrix = pCurrentRenderInfo->InverseModelViewProjectionMatrix * m_mTransformMatrixFromWorld;
-        pCurrentRenderInfo->ModelMatrix = pCurrentRenderInfo->ModelMatrix * m_mTransformMatrixToWorld;
-        pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling * m_mTransformMatrixToWorld;
+          std::shared_ptr<Bamboo::RN_SpotLight> spLight (m_vspSpotLights[a]);
+          spLight->SetTextureLocation("color_texture", m_nAlbedoDrawBuffer);
+          spLight->SetTextureLocation("normal_texture", m_nNormalDrawBuffer);
+          spLight->SetTextureLocation("tangent_texture", m_nTangentDrawBuffer);
+          spLight->SetTextureLocation("normalmap_texture", m_nNormalMapDrawBuffer);
+          spLight->SetTextureLocation("depth_texture", m_nDepthDrawBuffer);
+          spLight->SetTextureLocation("position_texture", m_nPositionDrawBuffer);
+          spLight->SetTextureLocation("specular_texture", m_nSpecularDrawBuffer);
+          spLight->SetTextureLocation("displace_texture", m_nDisplaceDrawBuffer);
+          //spLight->SetTextureLocation("position_texture", m_nPositionDrawBuffer);
 
-        spLight->Render(this);
+          TItlRenderInfo *pCurrentRenderInfo = m_pCurrentRenderInfo.get();
 
-        //write old matrices
-        pCurrentRenderInfo->ModelViewProjectionMatrix = SavedModelViewProjectionMatrix;
-        pCurrentRenderInfo->InverseModelViewProjectionMatrix = SavedInverseModelViewProjectionMatrix;
-        pCurrentRenderInfo->ModelMatrix = SavedModelMatrix;
-        pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = SavedModelViewProjectionMatrix_ForFrustumCulling;
+          //store old matrices
+          glm::mat4 SavedModelViewProjectionMatrix = pCurrentRenderInfo->ModelViewProjectionMatrix;
+          glm::mat4 SavedInverseModelViewProjectionMatrix = pCurrentRenderInfo->InverseModelViewProjectionMatrix;
+          glm::mat4 SavedModelMatrix = pCurrentRenderInfo->ModelMatrix;
+          glm::mat4 SavedModelViewProjectionMatrix_ForFrustumCulling = pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling;
+
+          //update matrices by multiplying with our matrices
+          pCurrentRenderInfo->ModelViewProjectionMatrix = pCurrentRenderInfo->ModelViewProjectionMatrix * m_mTransformMatrixToWorld;
+          pCurrentRenderInfo->InverseModelViewProjectionMatrix = pCurrentRenderInfo->InverseModelViewProjectionMatrix * m_mTransformMatrixFromWorld;
+          pCurrentRenderInfo->ModelMatrix = pCurrentRenderInfo->ModelMatrix * m_mTransformMatrixToWorld;
+          pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling * m_mTransformMatrixToWorld;
+
+          spLight->Render(this);
+
+          //write old matrices
+          pCurrentRenderInfo->ModelViewProjectionMatrix = SavedModelViewProjectionMatrix;
+          pCurrentRenderInfo->InverseModelViewProjectionMatrix = SavedInverseModelViewProjectionMatrix;
+          pCurrentRenderInfo->ModelMatrix = SavedModelMatrix;
+          pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = SavedModelViewProjectionMatrix_ForFrustumCulling;
+      }
+
+      glDisable(GL_STENCIL_TEST);
+
+      GLenum tDrawBuffers2[7] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 , GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4 , GL_COLOR_ATTACHMENT5, GL_COLOR_ATTACHMENT6};
+      glDrawBuffers(7, tDrawBuffers2);
+
+
+      ItlPostRenderChildren();
+
+      // ---BEGIN ---- this is just for debugging!
+
+      static Bamboo::RN_PostEffect rPostEffectNode("directwrite");
+
+      GLuint nTextureToShow;
+
+     // std::cout << s_DebugDeferredTexture << std::endl;
+
+      switch (s_DebugDeferredTexture % 6)
+      {
+      case 0:
+          nTextureToShow = m_nAlbedoDrawBuffer;
+          break;
+      case 1:
+          nTextureToShow = m_nDisplaceDrawBuffer;
+          break;
+      case 2:
+          nTextureToShow = m_nSpecularDrawBuffer;
+          break;
+      case 3:
+          nTextureToShow = m_nNormalMapDrawBuffer;
+          break;
+      case 4:
+          nTextureToShow = m_nTangentDrawBuffer;
+          break;
+      case 5:
+          nTextureToShow = m_nSpecularDrawBuffer;
+          break;
+      }
+
+      rPostEffectNode.SetTexture("texture1", nTextureToShow );
+
+      rPostEffectNode.Render();
+    }
+  else
+    {
+      static bool bAlreadyPrinted = false;
+      if (bAlreadyPrinted == false)
+        {
+          Logger::debug() << "Texture id of cube map: " << m_nAlbedoDrawBuffer << Logger::endl;
+          bAlreadyPrinted = true;
+        }
     }
 
-    glDisable(GL_STENCIL_TEST);
 
-    GLenum tDrawBuffers2[7] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 , GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4 , GL_COLOR_ATTACHMENT5, GL_COLOR_ATTACHMENT6};
-    glDrawBuffers(7, tDrawBuffers2);
-
-
-    ItlPostRenderChildren();
-*/
-    // ---BEGIN ---- this is just for debugging!
-
-   /* static Bamboo::RN_PostEffect rPostEffectNode("directwrite");
-
-    GLuint nTextureToShow;
-
-   // std::cout << s_DebugDeferredTexture << std::endl;
-
-    switch (s_DebugDeferredTexture % 6)
-    {
-    case 0:
-        nTextureToShow = m_nAlbedoDrawBuffer;
-        break;
-    case 1:
-        nTextureToShow = m_nDisplaceDrawBuffer;
-        break;
-    case 2:
-        nTextureToShow = m_nSpecularDrawBuffer;
-        break;
-    case 3:
-        nTextureToShow = m_nNormalMapDrawBuffer;
-        break;
-    case 4:
-        nTextureToShow = m_nTangentDrawBuffer;
-        break;
-    case 5:
-        nTextureToShow = m_nSpecularDrawBuffer;
-        break;
-    }
-
-    rPostEffectNode.SetTexture("texture1", nTextureToShow );
-
-    rPostEffectNode.Render();
-*/
 
 }
 

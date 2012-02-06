@@ -216,7 +216,7 @@ void Bamboo::ItlBuildDeferredRenderPipeline(Bamboo::TItlRenderLoop &tRenderLoop)
 
     spAntiAliasPostEffect->AddChild(spAntiAliasFBO);*/
 
-   // std::shared_ptr<Bamboo::RN_Deferred> spDeferredNode(new Bamboo::RN_Deferred(1024,768, false));
+    std::shared_ptr<Bamboo::RN_Deferred> spDeferredNode(new Bamboo::RN_Deferred(1024,768, false));
 
     std::vector<std::shared_ptr<Bamboo::ISceneObject>>  vObjects;
     std::vector<std::shared_ptr<Bamboo::SO_SpotLight>>  vLights;
@@ -247,8 +247,8 @@ void Bamboo::ItlBuildDeferredRenderPipeline(Bamboo::TItlRenderLoop &tRenderLoop)
             spRenderNode->AddChild(vObjects[j]->GetRenderNode());
         }
 
-      //  spDeferredNode->AddSpotLight(spRenderNode);
-      //  spDeferredNode->AddChild(spRenderNode_Model);
+        spDeferredNode->AddSpotLight(spRenderNode);
+        spDeferredNode->AddChild(spRenderNode_Model);
     }
 
     for (unsigned int j=0; j < vObjects.size(); j++)
@@ -258,7 +258,7 @@ void Bamboo::ItlBuildDeferredRenderPipeline(Bamboo::TItlRenderLoop &tRenderLoop)
 
         spRenderNode->SetGraphicCore(this);
 
-       // spDeferredNode->AddChild(spRenderNode);
+        spDeferredNode->AddChild(spRenderNode);
         spTestCubeMap->AddChild(spRenderNode);
     }
 
@@ -266,5 +266,6 @@ void Bamboo::ItlBuildDeferredRenderPipeline(Bamboo::TItlRenderLoop &tRenderLoop)
     //spAntiAliasFBO->AddChild(spTestCubeMap);
 
     //tRenderLoop.spRenderGraph->AddChild(spAntiAliasPostEffect);
+    tRenderLoop.spRenderGraph->AddChild(spDeferredNode);
     tRenderLoop.spRenderGraph->AddChild(spTestCubeMap);
 }

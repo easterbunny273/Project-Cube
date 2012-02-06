@@ -215,6 +215,11 @@ std::shared_ptr<GeometryData::GenericObject> AssimpWrapper::LoadModel(std::strin
 
         pGenericMesh->AddIndices(nNumFaces * 3, &vIndicesVector[0]);
 
+        if (sFilename == "models/pool_sphere.dae")
+        {
+            pGenericMesh->SetTexturePath(GeometryData::TextureNames::CUBEMAP, "abc");
+        }
+
         // get textures
         for (int iTextureType= (int) aiTextureType_DIFFUSE; iTextureType <= (int) aiTextureType_UNKNOWN; iTextureType++)
         {

@@ -41,6 +41,7 @@ public:
         static TextureType SPECULAR;
         static TextureType NORMAL;
         static TextureType DISPLACE;
+        static TextureType CUBEMAP;
     };
 
     class GenericMesh

@@ -25,6 +25,7 @@ GeometryData::TextureType GeometryData::TextureNames::ALBEDO    = "color_texture
 GeometryData::TextureType GeometryData::TextureNames::NORMAL    = "normal_texture";
 GeometryData::TextureType GeometryData::TextureNames::SPECULAR  = "specular_texture";
 GeometryData::TextureType GeometryData::TextureNames::DISPLACE  = "displace_texture";
+GeometryData::TextureType GeometryData::TextureNames::CUBEMAP  = "cubemap_texture";
 
 GeometryData::GenericMesh::GenericMesh()
 {

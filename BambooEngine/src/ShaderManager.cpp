@@ -36,10 +36,11 @@ bool Bamboo::ShaderManager::ActivateShader(std::string sName)
             if (m_nCurrentActiveShaderProgram != a)
             {
                 m_vpShaders[a]->Activate();
-                m_nCurrentActiveShaderProgram = a;
-                bSuccess = true;
-                break;
+                m_nCurrentActiveShaderProgram = a;               
             }
+
+            bSuccess = true;
+            break;
 	}
     }
 

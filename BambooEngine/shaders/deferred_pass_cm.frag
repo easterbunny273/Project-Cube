@@ -25,6 +25,7 @@ in vec3 my_Tangent;
 in vec4 my_ScreenPosition;
 in vec3 my_Color;
 in vec4 my_Position;
+in vec3 my_Layer;
 
 uniform mat3 NormalMatrix;
 
@@ -238,7 +239,27 @@ void main(void)
    // out_Albedo = vec4(texcoord_offset, 0.0, 1.0);
 
    // write depth into alpha
+
    out_Albedo.a = my_ScreenPosition.z / my_ScreenPosition.w;
+
+   /* TEST */
+   if (my_Layer.x < 1.0 / 6)
+     out_Albedo = vec4(1.0, 1.0, 0.0, 1.0);
+   else if (my_Layer.x < 2.0 / 6)
+     out_Albedo = vec4(0.0, 1.0, 0.0, 1.0);
+   else if (my_Layer.x < 3.0 / 6)
+     out_Albedo = vec4(0.0, 0.0, 1.0, 1.0);
+   else if (my_Layer.x < 4.0 / 6)
+     out_Albedo = vec4(1.0, 0.0, 0.0, 1.0);
+   else if (my_Layer.x < 5.0 / 6)
+     out_Albedo = vec4(0.0, 1.0, 1.0, 1.0);
+   else if (my_Layer.x < 6.0 / 6)
+     out_Albedo = vec4(1.0, 1.0, 1.0, 1.0);
+   else
+     out_Albedo = vec4(0.0, 0.0, 0.0, 1.0);
+
+
+   /* END TEST */
 
    out_Normal = vec4(my_Normal, 1.0);
    out_NormalMap = texture2D(normal_texture, my_Texcoord.xy + vTexOffset);
