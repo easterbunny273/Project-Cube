@@ -21,10 +21,12 @@ in vec3 my_LightDir;
 in vec3 my_ObjPosition;
 in vec3 my_EyeDir;
 in vec3 my_Normal;
+in vec3 my_Normal_EM;
 in vec3 my_Tangent;
 in vec4 my_ScreenPosition;
 in vec3 my_Color;
 in vec4 my_Position;
+in vec3 my_ViewDir_EM;
 
 uniform mat3 NormalMatrix;
 
@@ -161,8 +163,11 @@ void main(void)
 
     if (bIsSphere)
     {
-      out_Albedo = vec4(texture(cubemap_texture, reflect(my_EyeDir, normalize(my_Normal))).rgb, 1.0) * 0.01;
-      out_Albedo += vec4(reflect(my_EyeDir, normalize(my_Normal)).rgb, 1.0);
+      vec3 reflectVector = normalize(reflect(normalize(my_ViewDir_EM), normalize(my_Normal_EM)));
+
+      out_Albedo = vec4(texture(cubemap_texture, reflectVector).rgb, 1.0);
+      //out_Albedo += vec4(reflect(my_EyeDir, normalize(my_Normal)).rgb, 1.0) * 0.01;
+      //out_Albedo += vec4(normalize(my_Normal), 1.0);
     }
       //out_Albedo = vec4(texture(cubemap_texture, vec3(0.0, 1.0, 0.0)).rgb, 1.0);
     else

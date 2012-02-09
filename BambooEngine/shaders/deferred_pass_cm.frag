@@ -243,7 +243,7 @@ void main(void)
    out_Albedo.a = my_ScreenPosition.z / my_ScreenPosition.w;
 
    /* TEST */
-   if (my_Layer.x < 1.0 / 6)
+  /* if (my_Layer.x < 1.0 / 6)
      out_Albedo = vec4(1.0, 1.0, 0.0, 1.0);
    else if (my_Layer.x < 2.0 / 6)
      out_Albedo = vec4(0.0, 1.0, 0.0, 1.0);
@@ -256,8 +256,7 @@ void main(void)
    else if (my_Layer.x < 6.0 / 6)
      out_Albedo = vec4(1.0, 1.0, 1.0, 1.0);
    else
-     out_Albedo = vec4(0.0, 0.0, 0.0, 1.0);
-
+     out_Albedo = vec4(0.0, 0.0, 0.0, 1.0);*/
 
    /* END TEST */
 

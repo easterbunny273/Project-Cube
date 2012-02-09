@@ -34,17 +34,17 @@ void DummyGame::ItlOnKeyDown(InputKeyEvent::TKey eKey)
     assert(pEventManager != NULL);
 
     if (eKey == 'W')
-	pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_Z, 1.0f));
+    pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_Z, 3.0f));
     else if (eKey == 'S')
-	pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_Z, -1.0f));
+    pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_Z, -3.0f));
     else if (eKey == 'A')
-	pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_X, -1.0f));
+    pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_X, -3.0f));
     else if (eKey == 'D')
-	pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_X, 1.0f));
+    pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_X, 3.0f));
     else if (eKey == InputKeyEvent::KEY_LCTRL)
-	pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_Y, -1.0f));
+    pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_Y, -3.0f));
     else if (eKey == InputKeyEvent::KEY_SPACE)
-	pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_Y, 1.0f));
+    pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_Y, 3.0f));
     else if (eKey == InputKeyEvent::KEY_ESC)
 	m_bStop = true;
 
@@ -59,17 +59,17 @@ void DummyGame::ItlOnKeyUp(InputKeyEvent::TKey eKey)
     assert(pEventManager != NULL);
 
     if (eKey == 'W')
-	pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_Z, -1.0f));
+    pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_Z, -3.0f));
     else if (eKey == 'S')
-	pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_Z, 1.0f));
+    pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_Z, 3.0f));
     else if (eKey == 'A')
-	pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_X, 1.0f));
+    pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_X, 3.0f));
     else if (eKey == 'D')
-	pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_X, -1.0f));
+    pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_X, -3.0f));
     else if (eKey == InputKeyEvent::KEY_LCTRL)
-	pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_Y, 1.0f));
+    pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_Y, 3.0f));
     else if (eKey == InputKeyEvent::KEY_SPACE)
-	pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_Y, -1.0f));
+    pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_Y, -3.0f));
     else if (eKey == InputKeyEvent::KEY_ESC)
 	m_bStop = true;
 }

@@ -139,7 +139,7 @@ void MainApp::StartGraphic_Test()
 
     // add objects to scene
     spScene->AttachObject(spCube);
-   // spScene->AttachObject(spTreppe);
+    spScene->AttachObject(spTreppe);
     spScene->AttachObject(spSphere);
 
     // add light to scene

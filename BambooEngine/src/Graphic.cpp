@@ -209,7 +209,7 @@ void Bamboo::ItlBuildDeferredRenderPipeline(Bamboo::TItlRenderLoop &tRenderLoop)
 
    // std::shared_ptr<Bamboo::IRenderNode> spAntiAliasFBO(new Bamboo::RN_FBO(1024, 768, "test1", "test1_depth"));
    // std::shared_ptr<Bamboo::RN_PostEffect> spAntiAliasPostEffect(new Bamboo::RN_PostEffect("posteffect1"));
-    std::shared_ptr<Bamboo::IRenderNode> spTestCubeMap(new Bamboo::RN_Deferred(256, 256, true));
+    std::shared_ptr<Bamboo::IRenderNode> spTestCubeMap(new Bamboo::RN_Deferred(512, 512, true));
 
     /*spAntiAliasPostEffect->SetTexture("texture1", "test1");
     spAntiAliasPostEffect->SetTexture("texture3",  "test1_depth");

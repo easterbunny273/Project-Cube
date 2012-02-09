@@ -65,7 +65,7 @@ void Bamboo::RN_Generic::ItlRender()
     GLint iLocationIsSphere = pShaderManager->GetUniform("bIsSphere");
     GLuint iTextureUnitForCubeMap = 15;//pTextureManager->RequestFreeUnit();
 
-    std::cout << iTextureUnitForCubeMap << std::endl;
+   // std::cout << iTextureUnitForCubeMap << std::endl;
 
     if (iLocationIsSphere != -1)
       {
