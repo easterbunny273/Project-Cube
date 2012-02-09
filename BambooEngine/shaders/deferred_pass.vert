@@ -65,5 +65,5 @@ void main(void)
 
   //my_ViewDir = -vVertex;//(TranslationMatrix * ModelMatrix * vec4(in_Position, 1.0)).xyz;
   my_Normal_EM = normalize(in_Normal);
-  my_ViewDir_EM = -(TranslationMatrix * ModelMatrix * vec4(in_Position, 1.0)).xyz;
+  my_ViewDir_EM = (TranslationMatrix * ModelMatrix * vec4(in_Position, 1.0)).xyz;
 }

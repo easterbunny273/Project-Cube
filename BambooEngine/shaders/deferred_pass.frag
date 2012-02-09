@@ -163,7 +163,10 @@ void main(void)
 
     if (bIsSphere)
     {
-      vec3 reflectVector = normalize(reflect(normalize(my_ViewDir_EM), normalize(my_Normal_EM)));
+      vec3 modified_Normal = my_Normal_EM;
+      //modified_Normal.x = - modified_Normal.x;
+
+      vec3 reflectVector = normalize(reflect(normalize(my_ViewDir_EM), normalize(modified_Normal)));
 
       out_Albedo = vec4(texture(cubemap_texture, reflectVector).rgb, 1.0);
       //out_Albedo += vec4(reflect(my_EyeDir, normalize(my_Normal)).rgb, 1.0) * 0.01;
