@@ -100,7 +100,7 @@ void MainApp::StartGraphic_Test()
     spWindow->SetInputEventListener(m_spInputEventListener);
 
     // create camera
-    m_spCamera = Bamboo::PerspectiveCamera::Create(45.0f, 1.33f, 0.01f, 100.0f, glm::vec3(-0.2f, 0.2f, 0.0f), 90.0f, -50.0f);
+    m_spCamera = Bamboo::PerspectiveCamera::Create(90.0f, 1.0f, 0.01f, 100.0f, glm::vec3(-0.2f, 0.2f, 0.0f), 90.0f, -50.0f);
 
     // create scene
     std::shared_ptr<Bamboo::Scene> spScene = Bamboo::Scene::Create();

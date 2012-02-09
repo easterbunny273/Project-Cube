@@ -40,12 +40,12 @@ void main(void)
                       1.0, 0.0, 0.0, 0.0,
                       0.0, 0.0, 0.0, 1.0);
 
-  mRotations[2] = mat4(1.0, 0.0, 0.0, 0.0,
+  mRotations[3] = mat4(1.0, 0.0, 0.0, 0.0,
                       0.0, 0.0, 1.0, 0.0,
                       0.0, -1.0, 0.0, 0.0,
                       0.0, 0.0, 0.0, 1.0);
 
-  mRotations[3] = mat4(1.0, 0.0, 0.0, 0.0,
+  mRotations[2] = mat4(1.0, 0.0, 0.0, 0.0,
                       0.0, 0.0, -1.0, 0.0,
                       0.0, 1.0, 0.0, 0.0,
                       0.0, 0.0, 0.0, 1.0);
@@ -68,7 +68,7 @@ void main(void)
       vec3 in_Position = attr_Position[tri_vert].xyz;
 
       gl_Layer = iLayer;
-      my_Layer.x = iLayer / 6.0;
+      my_Layer.x = iLayer;
       gl_Position = ProjectionMatrix * mRotations[iLayer] * ModelMatrix * vec4(in_Position, 1.0);
 
       my_ObjPosition = in_Position;

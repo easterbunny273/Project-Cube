@@ -83,7 +83,7 @@ void Bamboo::RN_Generic::ItlRender()
             if (iLocationCubeMap != -1)
               {
                 glActiveTexture(GL_TEXTURE0+iTextureUnitForCubeMap);
-                glBindTexture(GL_TEXTURE_CUBE_MAP, 1);
+                glBindTexture(GL_TEXTURE_CUBE_MAP, 13);
                 glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
                 glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 

@@ -38,6 +38,7 @@ void main(void)
 
 
   texcoords = color_texture_coords;
+
   attr_Normal = in_Normal;
   attr_Tangent = in_Tangent;
   attr_Color = in_Color;
