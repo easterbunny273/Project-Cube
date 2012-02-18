@@ -20,11 +20,11 @@ public:
 protected:
 
 
-    void SetScene(std::weak_ptr<Scene> wpScene);
+   // void SetScene(std::weak_ptr<Scene> wpScene);
     ISceneObject() {}
 
     std::shared_ptr<Bamboo::IRenderNode>    m_spRenderNode;
-    std::weak_ptr<Scene>                    m_wpScene;
+   // std::weak_ptr<Scene>                    m_wpScene;
 };
 
 #endif
