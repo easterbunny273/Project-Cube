@@ -23,6 +23,9 @@ public:
     /// class id
     typedef unsigned int t_classID;
 
+    /// object id
+    typedef unsigned int t_objectID;
+
     /// vector of child nodes
     typedef std::vector<std::shared_ptr<ISemanticSceneNode> > t_children_vec;
 
@@ -34,7 +37,10 @@ public:
   /*! \name Class identification */
   //@{
     /// returns the class id of this instance
-    t_classID GetClassID();
+    t_classID GetClassID() { return m_nClassID; }
+
+    /// returns the object id of this instance
+    t_objectID GetObjectID() { return m_nObjectID; }
 
     /// returns the static class id, must be defined in each inherit class
     // static t_classID StaticClassID();
@@ -65,7 +71,7 @@ protected:
     /*! \name Construction / Destruction */
     //@{
       /// constructor
-      ISemanticSceneNode(t_classID nClassID) : m_nClassID(nClassID) {}
+      ISemanticSceneNode(t_classID nClassID) : m_nClassID(nClassID) { static t_objectID sNextObjectID = 0; m_nObjectID = sNextObjectID++; }
 
       /// destructor
       virtual ~ISemanticSceneNode() {}
@@ -75,6 +81,7 @@ protected:
     //@{
       t_children_vec  m_vpChildren;
       t_classID       m_nClassID;
+      t_objectID      m_nObjectID;
       glm::mat4       m_mTransformMatrix;
     //@}
 };

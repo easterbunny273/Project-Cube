@@ -33,6 +33,12 @@ public:
                              float fNearplane,
                              float fFarplane);
 
+    /// sets the transformation matrix (position + rotation) by "look-at" parameters,
+    /// which define the position of the kamera and the look direction
+    void SetTransformationMatrixByLookAtParameters(glm::vec3 vPosition,
+                                                   glm::vec3 vLookDirection,
+                                                   glm::vec3 vUp);
+
     /// returns the perspective projection parameters
     void  GetLightParameters(float &rfFOV,
                              glm::vec3 &rvLightColor,

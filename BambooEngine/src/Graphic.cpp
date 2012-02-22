@@ -25,6 +25,7 @@
 #include "RenderNodes/RenderNode_FBO.h"
 #include "RenderNodes/RenderNode_CubeMap.h"
 #include "RenderNodes/RenderNode_Deferred.h"
+#include "DeferredNodeTranslator/DeferredNodeTranslator.h"
 #include "SceneObjects/ISceneObject.h"
 #include "SceneObjects/Light.h"
 #include "Graphic.h"
@@ -47,6 +48,8 @@ Bamboo::Bamboo()
 {
     m_pShaderManager = new ShaderManager();
     m_pTextureManager = new TextureManager();
+
+    m_pNodeTranslator = new DeferredNodeTranslator();
 
     s_pInstance = this;
 }
@@ -120,6 +123,12 @@ int Bamboo::AddRenderLoop(std::shared_ptr<Bamboo::IRenderTarget> spRenderTarget,
     m_mRenderLoops[iID++] = NewLoop;
 
     return iID;
+}
+
+int Bamboo::AddRenderLoop(std::shared_ptr<IRenderTarget> spRenderTarget,
+                          std::shared_ptr<ISemanticSceneNode> spRootNode)
+{
+    return 0;
 }
 
 /****************************************************************

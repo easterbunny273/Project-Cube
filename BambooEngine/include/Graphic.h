@@ -20,12 +20,15 @@
 // glm includes
 #include <glm/glm.hpp>
 
+#include "SemanticSceneNodes/ISemanticSceneNode.h"
+
 // forward declarations
 class SceneObject_RenderTarget;
+class INodeTranslator;
 
 class Bamboo
 {
-private:
+public:
     /*! \name Internal classes, forward declarations */
     //@{
         class Shader;
@@ -124,6 +127,10 @@ public:
                           std::shared_ptr<ICamera> spCamera,
                           std::shared_ptr<Scene> spScene);
 
+
+        int AddRenderLoop(std::shared_ptr<IRenderTarget> spRenderTarget,
+                          std::shared_ptr<ISemanticSceneNode> spRootNode);
+
         /// removes a render loop
         void RemoveRenderLoop(int iLoopID);
     //@}
@@ -154,6 +161,8 @@ private:
 
         ShaderManager       * m_pShaderManager;
         TextureManager      * m_pTextureManager;
+
+        INodeTranslator     * m_pNodeTranslator;
     //@}
 
     /*! \name Static members */

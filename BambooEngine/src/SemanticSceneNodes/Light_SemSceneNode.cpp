@@ -1,6 +1,7 @@
-#include "SemanticSceneNodes/Light_SemSceneNode.h"
-
+#include <glm/gtc/matrix_transform.hpp>
 #include <cassert>
+
+#include "SemanticSceneNodes/Light_SemSceneNode.h"
 
 std::shared_ptr<Light_SemSceneNode> Light_SemSceneNode::Create(float fFOV,
                                                                glm::vec3 vLightColor,
@@ -35,6 +36,17 @@ void Light_SemSceneNode::SetLightParameters(float fFOV,
   m_vLightColor = vLightColor;
   m_fNearplane  = fNearplane;
   m_fFarplane   = fFarplane;
+}
+
+void Light_SemSceneNode::SetTransformationMatrixByLookAtParameters(glm::vec3 vPosition,
+                                                                   glm::vec3 vLookDirection,
+                                                                   glm::vec3 vUp)
+{
+  // calc new transformation matrix
+  glm::mat4 mNewTransformationMatrix = glm::lookAt(vPosition, vPosition + vLookDirection, vUp);
+
+  // set
+  SetTransformMatrix(mNewTransformationMatrix);
 }
 
 void Light_SemSceneNode::GetLightParameters(float &rfFOV,

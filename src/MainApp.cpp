@@ -13,6 +13,12 @@
 #include "GeometryData.h"
 #include "LuaManager.h"
 
+#include "SemanticSceneNodes/ISemanticSceneNode.h"
+#include "SemanticSceneNodes/LoadedModel_SemSceneNode.h"
+#include "SemanticSceneNodes/Camera_SemSceneNode.h"
+#include "SemanticSceneNodes/Cube_SemSceneNode.h"
+#include "SemanticSceneNodes/Light_SemSceneNode.h"
+
 #include "Gamelogic/Level.h"
 
 // initialize singelton ptr to NULL
@@ -92,6 +98,39 @@ EventManager * MainApp::GetEventManager()
     return &m_EventManager;
 }
 
+void MainApp::StartGraphic_Test2()
+{
+  // this method uses the new SemanticSceneNodes
+  //
+
+  // create scene nodes
+  std::shared_ptr<ISemanticSceneNode> spTreppe = LoadedModel_SemSceneNode::Create("models/bunte-treppe3.dae");
+  spTreppe->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
+
+  std::shared_ptr<ISemanticSceneNode> spSphere = LoadedModel_SemSceneNode::Create("models/pool_sphere.dae");
+  spSphere->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
+
+  std::shared_ptr<Light_SemSceneNode> spTestLight1 = Light_SemSceneNode::Create(50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
+  spTestLight1->SetTransformationMatrixByLookAtParameters(glm::vec3(-0.2f, 0.10f, 0.14f), glm::vec3(1.0f, -0.4f, -1.0f), glm::vec3(0.0, 1.0, 0.0));
+
+  std::shared_ptr<Light_SemSceneNode> spTestLight2 = Light_SemSceneNode::Create(50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
+  spTestLight2->SetTransformationMatrixByLookAtParameters(glm::vec3(-0.2f, 0.2f, -0.14f), glm::vec3(1.0f, -1.1f, 0.62f), glm::vec3(0.0, 1.0, 0.0));
+
+  std::shared_ptr<Camera_SemSceneNode> spCamera = Camera_SemSceneNode::Create(45.0f, 1.33, 0.01, 100.0f);
+
+  // link scene graph
+  spCamera->AddChild(spTestLight1);
+  spTestLight1->AddChild(spTestLight2);
+  spTestLight2->AddChild(spTreppe);
+  spTestLight2->AddChild(spSphere);
+
+  // create glfw window
+  std::shared_ptr<Bamboo::GlfwWindow> spWindow = Bamboo::GlfwWindow::Create(1024, 768, "Test");
+  spWindow->SetInputEventListener(m_spInputEventListener);
+
+
+}
+
 void MainApp::StartGraphic_Test()
 {
     // create glfw window
@@ -115,6 +154,7 @@ void MainApp::StartGraphic_Test()
     std::shared_ptr<Bamboo::ISceneObject> spTestLight6 = Bamboo::SO_SpotLight::Create(glm::vec3(-0.2f, 0.20f, 0.18f), glm::vec3(1.0f, -0.9f, -1.0f), 45.0f, glm::vec3(0.5f, 0.5f, 0.5f));
 
     //spLight->SetTransformMatrix(glm::translate(0.0f, 1.0f, 0.0f));
+
 
     std::shared_ptr<Bamboo::ISceneObject> spTreppe = Bamboo::SO_LoadedModel::Create("models/bunte-treppe3.dae");
     std::shared_ptr<Bamboo::ISceneObject> spSphere = Bamboo::SO_LoadedModel::Create("models/pool_sphere.dae");
@@ -144,11 +184,11 @@ void MainApp::StartGraphic_Test()
 
     // add light to scene
     spScene->AttachObject(spTestLight1);
-    spScene->AttachObject(spTestLight5);
+   // spScene->AttachObject(spTestLight5);
    // spScene->AttachObject(spTestLight6);
     //spScene->AttachObject(spTestLight2);
     spScene->AttachObject(spTestLight3);
-    spScene->AttachObject(spTestLight4);
+    //spScene->AttachObject(spTestLight4);
 
 
     // add render loop
@@ -164,7 +204,7 @@ void MainApp::Run()
 
     GetEventManager()->Initialize();
 
-    StartGraphic_Test();
+    StartGraphic_Test2();
 
     // main loop
     while(GetGame()->GetStop() == false)

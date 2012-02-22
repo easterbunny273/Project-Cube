@@ -53,6 +53,7 @@ public:
     //@{
 	void LuaTest();
         void StartGraphic_Test();
+        void StartGraphic_Test2();
     //@}
 
     /*! \name Get singelton instance */
