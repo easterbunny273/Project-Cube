@@ -18,7 +18,7 @@
 class DeferredNodeTranslator::Light_RuleObject : public DeferredNodeTranslator::IRuleObject
 {
 public:
-  virtual IRuleObject * CloneFor(std::shared_ptr<ISemanticSceneNode> spSemNode);
+  virtual IRuleObject * CloneFor(std::shared_ptr<ISemanticSceneNode> spSemNode, DeferredNodeTranslator *pTranslator);
 
   /// update the rendering scene graph pieces which correspond to the given semantic scene node
   virtual void Action();

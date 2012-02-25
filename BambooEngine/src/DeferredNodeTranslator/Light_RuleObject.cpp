@@ -16,11 +16,12 @@ void DeferredNodeTranslator::Light_RuleObject::Action()
 
 }
 
-DeferredNodeTranslator::IRuleObject *DeferredNodeTranslator::Light_RuleObject::CloneFor(std::shared_ptr<ISemanticSceneNode> spSemNode)
+DeferredNodeTranslator::IRuleObject *DeferredNodeTranslator::Light_RuleObject::CloneFor(std::shared_ptr<ISemanticSceneNode> spSemNode, DeferredNodeTranslator *pTranslator)
 {
   Light_RuleObject *pNewObject = new Light_RuleObject();
 
   pNewObject->m_spSemNode = spSemNode;
+  pNewObject->m_pTranslator = pTranslator;
 
   return pNewObject;
 }

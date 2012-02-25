@@ -9,9 +9,9 @@
 #ifndef __BAMBOOENGINE_DEFERREDNODETRANSLATOR_HEADER
 #define __BAMBOOENGINE_DEFERREDNODETRANSLATOR_HEADER
 
-#include "common_gl.h"
+/*#include "common_gl.h"
 #include "Graphic.h"
-#include "RenderNodes/IRenderNode.h"
+#include "RenderNodes/IRenderNode.h"*/
 #include "INodeTranslator.h"
 
 #include <memory>
@@ -31,7 +31,7 @@ public:
     class IRuleObject
     {
     public:
-      virtual IRuleObject * CloneFor(std::shared_ptr<ISemanticSceneNode> spSemNode) = 0;
+      virtual IRuleObject * CloneFor(std::shared_ptr<ISemanticSceneNode> spSemNode, DeferredNodeTranslator *pTranslator) = 0;
 
       /// update the rendering scene graph pieces which correspond to the given semantic scene node
       virtual void Action() = 0;
@@ -73,7 +73,7 @@ public:
 
   /*! \name INodeTranslator interface */
   //@{
-    virtual std::shared_ptr<Bamboo::IRenderNode> Translate(std::shared_ptr<ISemanticSceneNode> spSemRoot);
+    virtual void Translate(std::shared_ptr<ISemanticSceneNode> spSemRoot);
   //@}
 
 private:
@@ -87,6 +87,8 @@ private:
   std::map<ISemanticSceneNode::t_objectID, std::shared_ptr<IRuleObject> > m_mCachedRuleObjects;
 
   std::map<ISemanticSceneNode::t_classID, std::shared_ptr<IRuleObject> > m_mRegisteredRuleObjects;
+
+  std::shared_ptr<Bamboo::IRenderNode>    m_spDeferredNode;
 };
 
 #endif

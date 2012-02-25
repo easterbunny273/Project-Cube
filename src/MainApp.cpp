@@ -1,5 +1,3 @@
-#include "GL/glfw.h"
-
 #include "MainApp.h"
 #include "PC_Logger.h"
 #include "Graphic-GlfwWindow.h"
@@ -15,12 +13,12 @@
 #include "SemanticSceneNodes/Cube_SemSceneNode.h"
 #include "SemanticSceneNodes/Light_SemSceneNode.h"
 
+#include "DeferredNodeTranslator/DeferredNodeTranslator.h"
+
 #include "Gamelogic/Level.h"
 
 // initialize singelton ptr to NULL
 MainApp * MainApp::s_pInstance = NULL;
-
-std::shared_ptr<Bamboo::ISceneObject> g_spTreppe;
 
 MainApp::MainApp()
 {
@@ -115,16 +113,20 @@ void MainApp::StartGraphic_Test2()
   std::shared_ptr<Camera_SemSceneNode> spCamera = Camera_SemSceneNode::Create(45.0f, 1.33, 0.01, 100.0f);
 
   // link scene graph
+  spCamera->AddChild(spTreppe);
+  spCamera->AddChild(spSphere);
   spCamera->AddChild(spTestLight1);
-  spTestLight1->AddChild(spTestLight2);
-  spTestLight2->AddChild(spTreppe);
-  spTestLight2->AddChild(spSphere);
+  spCamera->AddChild(spTestLight2);
+
+  // create node translator
+  std::shared_ptr<INodeTranslator> spDeferredTranslator(new DeferredNodeTranslator());
 
   // create glfw window
   std::shared_ptr<Bamboo::GlfwWindow> spWindow = Bamboo::GlfwWindow::Create(1024, 768, "Test");
   spWindow->SetInputEventListener(m_spInputEventListener);
 
-
+  // add render loop
+  m_pGraphic->AddRenderLoop(spWindow, spCamera, spDeferredTranslator);
 }
 
 void MainApp::StartGraphic_Test()

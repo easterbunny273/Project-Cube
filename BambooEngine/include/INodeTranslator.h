@@ -9,8 +9,8 @@
 #ifndef __BAMBOOENGINE_INODETRANSLATOR_HEADER
 #define __BAMBOOENGINE_INODETRANSLATOR_HEADER
 
-#include "common_gl.h"
-#include "Graphic.h"
+//#include "common_gl.h"
+//#include "Graphic.h"
 #include "RenderNodes/IRenderNode.h"
 
 #include <memory>
@@ -25,9 +25,14 @@
 class INodeTranslator
 {
 public:
-  virtual std::shared_ptr<Bamboo::IRenderNode> Translate(std::shared_ptr<ISemanticSceneNode> spSemRoot) = 0;
+  virtual void Translate(std::shared_ptr<ISemanticSceneNode> spSemRoot) = 0;
+
+  std::shared_ptr<Bamboo::IRenderNode> GetRenderGraph() { return m_spRootNode; }
 
   virtual ~INodeTranslator() {};
+
+protected:
+  std::shared_ptr<Bamboo::IRenderNode> m_spRootNode;
 };
 
 #endif

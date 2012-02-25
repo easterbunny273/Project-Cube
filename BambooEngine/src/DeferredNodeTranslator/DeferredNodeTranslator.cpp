@@ -25,7 +25,7 @@ DeferredNodeTranslator::~DeferredNodeTranslator()
 
 }
 
-std::shared_ptr<Bamboo::IRenderNode> DeferredNodeTranslator::Translate(std::shared_ptr<ISemanticSceneNode> spSemRoot)
+void DeferredNodeTranslator::Translate(std::shared_ptr<ISemanticSceneNode> spSemRoot)
 {
   ItlTranslateSemNode(spSemRoot);
 
@@ -70,7 +70,7 @@ void DeferredNodeTranslator::ItlTranslateSemNode(std::shared_ptr<ISemanticSceneN
         {
           std::shared_ptr<IRuleObject> spRulePrototype = m_mRegisteredRuleObjects[spSemNode->GetClassID()];
 
-          std::shared_ptr<IRuleObject> spConcreteRuleObject(spRulePrototype->CloneFor(spSemNode));
+          std::shared_ptr<IRuleObject> spConcreteRuleObject(spRulePrototype->CloneFor(spSemNode, this));
 
           unsigned int nOldSize = m_mCachedRuleObjects.size();
 

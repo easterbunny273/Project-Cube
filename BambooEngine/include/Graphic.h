@@ -8,6 +8,9 @@
 #ifndef __realtime_lu_graphic
 #define __realtime_lu_graphic
 
+// opengl libs
+#include "common_gl.h"
+
 // stl includes
 #include <memory>
 #include <list>
@@ -20,6 +23,7 @@
 // glm includes
 #include <glm/glm.hpp>
 
+// semantic scene node interface
 #include "SemanticSceneNodes/ISemanticSceneNode.h"
 
 // forward declarations
@@ -78,13 +82,6 @@ public:
         class PerspectiveCamera;
         class OrthogonalCamera;
 
-        class ISceneObject;
-        class SO_Cube;
-        class SO_LoadedModel;
-        class SO_ILight;
-        class SO_SpotLight;
-
-        class Scene;
         class LightManager;
     //@}
 
@@ -124,7 +121,8 @@ public:
     //@{
         /// adds a render loop and returns its id
         int AddRenderLoop(std::shared_ptr<IRenderTarget> spRenderTarget,
-                          std::shared_ptr<ISemanticSceneNode> spRootNode);
+                          std::shared_ptr<ISemanticSceneNode> spRootNode,
+                          std::shared_ptr<INodeTranslator> spTranslator);
 
         /// removes a render loop
         void RemoveRenderLoop(int iLoopID);
@@ -137,6 +135,7 @@ private:
         {
             std::shared_ptr<IRenderTarget>      spRenderTarget;
             std::shared_ptr<ISemanticSceneNode> spSceneRoot;
+            std::shared_ptr<INodeTranslator>    spTranslator;
         };
     //@}
 
@@ -154,8 +153,6 @@ private:
 
         ShaderManager       * m_pShaderManager;
         TextureManager      * m_pTextureManager;
-
-        INodeTranslator     * m_pNodeTranslator;
     //@}
 
     /*! \name Static members */

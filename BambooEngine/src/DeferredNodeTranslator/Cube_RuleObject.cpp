@@ -16,11 +16,12 @@ void DeferredNodeTranslator::Cube_RuleObject::Action()
 
 }
 
-DeferredNodeTranslator::IRuleObject *DeferredNodeTranslator::Cube_RuleObject::CloneFor(std::shared_ptr<ISemanticSceneNode> spSemNode)
+DeferredNodeTranslator::IRuleObject *DeferredNodeTranslator::Cube_RuleObject::CloneFor(std::shared_ptr<ISemanticSceneNode> spSemNode, DeferredNodeTranslator *pTranslator)
 {
   Cube_RuleObject *pNewObject = new Cube_RuleObject();
 
-  pNewObject->m_spSemNode = spSemNode;
+  pNewObject->m_pTranslator   = pTranslator;
+  pNewObject->m_spSemNode     = spSemNode;
 
   return pNewObject;
 }

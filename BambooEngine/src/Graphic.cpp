@@ -46,8 +46,6 @@ Bamboo::Bamboo()
     m_pShaderManager = new ShaderManager();
     m_pTextureManager = new TextureManager();
 
-    m_pNodeTranslator = new DeferredNodeTranslator();
-
     s_pInstance = this;
 }
 
@@ -72,12 +70,23 @@ void Bamboo::Render()
 {
     for (auto iter=m_mRenderLoops.begin(); iter != m_mRenderLoops.end(); iter++)
     {
+        // get raw ptr for easier access
         TItlRenderLoop *pRenderLoop = &(iter->second);
 
+        // clear buffers
         pRenderLoop->spRenderTarget->ClearBuffers();
 
-        // TODO: integrate render nodes
+        // translate semantic scene graph into a rendering scene graph
+        pRenderLoop->spTranslator->Translate(pRenderLoop->spSceneRoot);
 
+        // get render scene graph from translator
+        std::shared_ptr<IRenderNode> spRenderNode = pRenderLoop->spTranslator->GetRenderGraph();
+        assert (spRenderNode);
+
+        // start rendering
+        spRenderNode->Render();
+
+        // swap buffers
         pRenderLoop->spRenderTarget->SwapBuffers();
     }
 }
@@ -104,7 +113,8 @@ Bamboo::TextureManager * Bamboo::GetTextureManager()
 /****************************************************************
   *************************************************************** */
 int Bamboo::AddRenderLoop(std::shared_ptr<IRenderTarget> spRenderTarget,
-                          std::shared_ptr<ISemanticSceneNode> spRootNode)
+                          std::shared_ptr<ISemanticSceneNode> spRootNode,
+                          std::shared_ptr<INodeTranslator> spTranslator)
 {
     static int iID = 0;
 
@@ -112,8 +122,16 @@ int Bamboo::AddRenderLoop(std::shared_ptr<IRenderTarget> spRenderTarget,
 
     NewLoop.spRenderTarget  = spRenderTarget;
     NewLoop.spSceneRoot     = spRootNode;
+    NewLoop.spTranslator    = spTranslator;
 
     m_mRenderLoops[iID++] = NewLoop;
+
+    // load shader, if not loaded
+    GetShaderManager()->AddShader("posteffect1", new Bamboo::Shader("BambooEngine/shaders/posteffect1.vs", "BambooEngine/shaders/posteffect1.fs"));
+    GetShaderManager()->AddShader("directwrite", new Bamboo::Shader("BambooEngine/shaders/directwrite.vs", "BambooEngine/shaders/directwrite.fs"));
+    GetShaderManager()->AddShader("light-pass", new Bamboo::Shader("BambooEngine/shaders/light_pass.vs", "BambooEngine/shaders/light_pass.fs"));
+    GetShaderManager()->AddShader("camera-debug2", new Bamboo::Shader("BambooEngine/shaders/camera-debug2.vs", "BambooEngine/shaders/camera-debug2.fs"));
+    GetTextureManager()->LoadTexture("spotlight", "textures/spot.png", false);
 
     return iID;
 }
