@@ -124,11 +124,6 @@ public:
     //@{
         /// adds a render loop and returns its id
         int AddRenderLoop(std::shared_ptr<IRenderTarget> spRenderTarget,
-                          std::shared_ptr<ICamera> spCamera,
-                          std::shared_ptr<Scene> spScene);
-
-
-        int AddRenderLoop(std::shared_ptr<IRenderTarget> spRenderTarget,
                           std::shared_ptr<ISemanticSceneNode> spRootNode);
 
         /// removes a render loop
@@ -141,9 +136,7 @@ private:
         struct TItlRenderLoop
         {
             std::shared_ptr<IRenderTarget>      spRenderTarget;
-            std::shared_ptr<ICamera>            spCamera;
-            std::shared_ptr<Scene>              spScene;
-            std::shared_ptr<IRenderNode>        spRenderGraph;
+            std::shared_ptr<ISemanticSceneNode> spSceneRoot;
         };
     //@}
 

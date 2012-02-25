@@ -3,12 +3,8 @@
 #include "MainApp.h"
 #include "PC_Logger.h"
 #include "Graphic-GlfwWindow.h"
-#include "SceneObjects/LoadedModel.h"
-#include "SceneObjects/Cube.h"
-#include "SceneObjects/Light.h"
 #include "Graphic.h"
 #include "Camera.h"
-#include "Scene.h"
 #include "AssimpWrapper.h"
 #include "GeometryData.h"
 #include "LuaManager.h"
@@ -133,6 +129,7 @@ void MainApp::StartGraphic_Test2()
 
 void MainApp::StartGraphic_Test()
 {
+#ifdef something
     // create glfw window
     std::shared_ptr<Bamboo::GlfwWindow> spWindow = Bamboo::GlfwWindow::Create(1024, 768, "Test");
     // set input event listener
@@ -196,6 +193,8 @@ void MainApp::StartGraphic_Test()
 
     // register itself as listener for camera events
     GetEventManager()->RegisterEventListener(this, CameraMovementEvent::EventType());
+
+#endif
 }
 
 void MainApp::Run()
@@ -214,11 +213,6 @@ void MainApp::Run()
 	LuaTest();
 
         GetGraphic()->Render();
-
-        static int count = 0;
-        count+=1;
-
-        g_spTreppe->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)) * glm::translate(glm::mat4(), glm::vec3(0.0, 5.5f, 0.0f)) * glm::rotate(glm::mat4(), 0.1f * count, glm::vec3(1.0f, 0.2f, 0.0f)));
     }
 }
 

@@ -10,3 +10,17 @@ std::vector<ISemanticSceneNode::t_classID> DeferredNodeTranslator::Camera_RuleOb
 
   return vAcceptedIDs;
 }
+
+void DeferredNodeTranslator::Camera_RuleObject::Action()
+{
+
+}
+
+DeferredNodeTranslator::IRuleObject *DeferredNodeTranslator::Camera_RuleObject::CloneFor(std::shared_ptr<ISemanticSceneNode> spSemNode)
+{
+  Camera_RuleObject *pNewObject = new Camera_RuleObject();
+
+  pNewObject->m_spSemNode = spSemNode;
+
+  return pNewObject;
+}

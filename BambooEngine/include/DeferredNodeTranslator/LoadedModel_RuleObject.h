@@ -18,8 +18,10 @@
 class DeferredNodeTranslator::LoadedModel_RuleObject : public DeferredNodeTranslator::IRuleObject
 {
 public:
+  virtual IRuleObject * CloneFor(std::shared_ptr<ISemanticSceneNode> spSemNode);
+
   /// update the rendering scene graph pieces which correspond to the given semantic scene node
-  virtual void Action(std::shared_ptr<ISemanticSceneNode> spSemNode) = 0;
+  virtual void Action();
 
   /// returns the list of accepted semantic scene nodes
   std::vector<ISemanticSceneNode::t_classID> GetAcceptedNodeIDs() const;

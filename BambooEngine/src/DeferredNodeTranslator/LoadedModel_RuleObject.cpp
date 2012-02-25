@@ -10,3 +10,17 @@ std::vector<ISemanticSceneNode::t_classID> DeferredNodeTranslator::LoadedModel_R
 
   return vAcceptedIDs;
 }
+
+void DeferredNodeTranslator::LoadedModel_RuleObject::Action()
+{
+
+}
+
+DeferredNodeTranslator::IRuleObject *DeferredNodeTranslator::LoadedModel_RuleObject::CloneFor(std::shared_ptr<ISemanticSceneNode> spSemNode)
+{
+  LoadedModel_RuleObject *pNewObject = new LoadedModel_RuleObject();
+
+  pNewObject->m_spSemNode = spSemNode;
+
+  return pNewObject;
+}

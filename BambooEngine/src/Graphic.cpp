@@ -26,10 +26,7 @@
 #include "RenderNodes/RenderNode_CubeMap.h"
 #include "RenderNodes/RenderNode_Deferred.h"
 #include "DeferredNodeTranslator/DeferredNodeTranslator.h"
-#include "SceneObjects/ISceneObject.h"
-#include "SceneObjects/Light.h"
 #include "Graphic.h"
-#include "Scene.h"
 #include "Camera.h"
 
 #include "Events.h"
@@ -78,8 +75,9 @@ void Bamboo::Render()
         TItlRenderLoop *pRenderLoop = &(iter->second);
 
         pRenderLoop->spRenderTarget->ClearBuffers();
-        pRenderLoop->spCamera->Move(0.0001f);
-        pRenderLoop->spRenderGraph->Render();
+
+        // TODO: integrate render nodes
+
         pRenderLoop->spRenderTarget->SwapBuffers();
     }
 }
@@ -105,31 +103,21 @@ Bamboo::TextureManager * Bamboo::GetTextureManager()
 
 /****************************************************************
   *************************************************************** */
-int Bamboo::AddRenderLoop(std::shared_ptr<Bamboo::IRenderTarget> spRenderTarget,
-                             std::shared_ptr<Bamboo::ICamera> spCamera,
-                             std::shared_ptr<Bamboo::Scene> spScene)
+int Bamboo::AddRenderLoop(std::shared_ptr<IRenderTarget> spRenderTarget,
+                          std::shared_ptr<ISemanticSceneNode> spRootNode)
 {
     static int iID = 0;
 
     TItlRenderLoop NewLoop;
 
-    NewLoop.spRenderTarget = spRenderTarget;
-    NewLoop.spCamera = spCamera;
-    NewLoop.spScene = spScene;
-
-    // build the render graph
-    ItlBuildDeferredRenderPipeline(NewLoop);
+    NewLoop.spRenderTarget  = spRenderTarget;
+    NewLoop.spSceneRoot     = spRootNode;
 
     m_mRenderLoops[iID++] = NewLoop;
 
     return iID;
 }
 
-int Bamboo::AddRenderLoop(std::shared_ptr<IRenderTarget> spRenderTarget,
-                          std::shared_ptr<ISemanticSceneNode> spRootNode)
-{
-    return 0;
-}
 
 /****************************************************************
   *************************************************************** */
@@ -140,70 +128,10 @@ void Bamboo::RemoveRenderLoop(int iLoopID)
     m_mRenderLoops.erase(iLoopID);
 }
 
-
-/****************************************************************
-  *************************************************************** */
-void Bamboo::ISceneObject::SetTransformMatrix(glm::mat4 mNewMatrix)
-{
-    GetRenderNode()->SetTransformMatrix(mNewMatrix);
-}
-
-/****************************************************************
-  *************************************************************** */
-std::shared_ptr<Bamboo::IRenderNode> Bamboo::ISceneObject::GetRenderNode()
-{
-    if (!m_spRenderNode)
-        m_spRenderNode = CreateRenderNode();
-
-    assert(m_spRenderNode);
-
-    return m_spRenderNode;
-}
-
-/****************************************************************
-  *************************************************************** */
-void Bamboo::ItlBuildRenderGraph(Bamboo::TItlRenderLoop &tRenderLoop)
-{
-    tRenderLoop.spRenderGraph = std::shared_ptr<Bamboo::IRenderNode>(new Bamboo::RN_Camera(tRenderLoop.spCamera.get()));
-
-    // load shader, if not loaded
-    GetShaderManager()->AddShader("posteffect1", new Bamboo::Shader("BambooEngine/shaders/posteffect1.vs", "BambooEngine/shaders/posteffect1.fs"));
-    GetShaderManager()->AddShader("directwrite", new Bamboo::Shader("BambooEngine/shaders/directwrite.vs", "BambooEngine/shaders/directwrite.fs"));
-
-
-    static int a=0;
-
-    std::string psSceneColorTextures[] = { "scene_color1", "scene_color2" };
-    std::string psSceneDepthTextures[] = { "scene_depth1", "scene_depth2" };
-
-    std::shared_ptr<Bamboo::IRenderNode> spAntiAliasFBO(new Bamboo::RN_FBO(2048, 768*2, psSceneColorTextures[a].c_str(), psSceneDepthTextures[a].c_str()));
-    std::shared_ptr<Bamboo::RN_PostEffect> spAntiAliasPostEffect(new Bamboo::RN_PostEffect("posteffect1"));
-    spAntiAliasPostEffect->SetTexture("texture1", psSceneColorTextures[a].c_str());
-    spAntiAliasPostEffect->SetTexture("texture3",  psSceneDepthTextures[a].c_str());
-
-    a++;
-
-    assert (a <= 2);
-
-    spAntiAliasPostEffect->AddChild(spAntiAliasFBO);
-
-    for (auto iter=tRenderLoop.spScene->m_lSceneObjects.begin(); iter != tRenderLoop.spScene->m_lSceneObjects.end(); iter++)
-    {
-        std::shared_ptr<Bamboo::ISceneObject> spSceneObject = *iter;
-        std::shared_ptr<Bamboo::IRenderNode> spRenderNode = spSceneObject->GetRenderNode();
-
-        spRenderNode->SetGraphicCore(this);
-
-        //spAntiAliasFBO->AddChild(spRenderNode);
-        tRenderLoop.spRenderGraph->AddChild(spRenderNode);
-
-    }
-
-    //tRenderLoop.spRenderGraph->AddChild(spAntiAliasPostEffect);
-}
-
 void Bamboo::ItlBuildDeferredRenderPipeline(Bamboo::TItlRenderLoop &tRenderLoop)
 {
+#ifdef something
+
     tRenderLoop.spRenderGraph = std::shared_ptr<Bamboo::IRenderNode>(new Bamboo::RN_Camera(tRenderLoop.spCamera.get()));
 
     tRenderLoop.spRenderGraph->SetInitialViewportInformation(1024,768);
@@ -224,6 +152,7 @@ void Bamboo::ItlBuildDeferredRenderPipeline(Bamboo::TItlRenderLoop &tRenderLoop)
     spAntiAliasPostEffect->SetTexture("texture3",  "test1_depth");
 
     spAntiAliasPostEffect->AddChild(spAntiAliasFBO);*/
+
 
     std::shared_ptr<Bamboo::RN_Deferred> spDeferredNode(new Bamboo::RN_Deferred(1024,768, false));
 
@@ -277,4 +206,5 @@ void Bamboo::ItlBuildDeferredRenderPipeline(Bamboo::TItlRenderLoop &tRenderLoop)
     //tRenderLoop.spRenderGraph->AddChild(spAntiAliasPostEffect);
     tRenderLoop.spRenderGraph->AddChild(spDeferredNode);
     tRenderLoop.spRenderGraph->AddChild(spTestCubeMap);
+  #endif
 }

@@ -10,3 +10,17 @@ std::vector<ISemanticSceneNode::t_classID> DeferredNodeTranslator::Cube_RuleObje
 
   return vAcceptedIDs;
 }
+
+void DeferredNodeTranslator::Cube_RuleObject::Action()
+{
+
+}
+
+DeferredNodeTranslator::IRuleObject *DeferredNodeTranslator::Cube_RuleObject::CloneFor(std::shared_ptr<ISemanticSceneNode> spSemNode)
+{
+  Cube_RuleObject *pNewObject = new Cube_RuleObject();
+
+  pNewObject->m_spSemNode = spSemNode;
+
+  return pNewObject;
+}
