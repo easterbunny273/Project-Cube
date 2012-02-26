@@ -12,7 +12,7 @@
 #include "common_gl.h"
 #include "Graphic.h"
 #include "DeferredNodeTranslator/DeferredNodeTranslator.h"
-
+#include "SemanticSceneNodes/Light_SemSceneNode.h"
 #include <memory>
 
 class DeferredNodeTranslator::Light_RuleObject : public DeferredNodeTranslator::IRuleObject
@@ -27,7 +27,10 @@ public:
   std::vector<ISemanticSceneNode::t_classID> GetAcceptedNodeIDs() const;
 
 private:
+  std::shared_ptr<Bamboo::RN_SpotLight>      m_spCorrespondingRenderingNode;
+  std::shared_ptr<Bamboo::IRenderNode>      m_spCorrespondingRenderingNode_Model;
 
+  std::shared_ptr<Light_SemSceneNode> m_spSemNode;
 };
 
 #endif

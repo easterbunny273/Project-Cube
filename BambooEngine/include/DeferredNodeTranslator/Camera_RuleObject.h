@@ -12,6 +12,7 @@
 #include "common_gl.h"
 #include "Graphic.h"
 #include "DeferredNodeTranslator/DeferredNodeTranslator.h"
+#include "SemanticSceneNodes/Camera_SemSceneNode.h"
 
 #include <memory>
 
@@ -27,7 +28,7 @@ public:
   std::vector<ISemanticSceneNode::t_classID> GetAcceptedNodeIDs() const;
 
 private:
-
+std::shared_ptr<Camera_SemSceneNode> m_spSemNode;
 };
 
 #endif

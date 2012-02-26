@@ -27,7 +27,7 @@ public:
   std::vector<ISemanticSceneNode::t_classID> GetAcceptedNodeIDs() const;
 
 private:
-  std::shared_ptr<Bamboo::IRenderNode>      m_spCorrespondingRenderingNode;
+  std::shared_ptr<Bamboo::RN_Generic>      m_spCorrespondingRenderingNode;
   std::shared_ptr<LoadedModel_SemSceneNode> m_spSemNode;
 };
 

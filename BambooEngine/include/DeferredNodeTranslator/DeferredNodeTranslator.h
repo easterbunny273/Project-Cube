@@ -9,10 +9,8 @@
 #ifndef __BAMBOOENGINE_DEFERREDNODETRANSLATOR_HEADER
 #define __BAMBOOENGINE_DEFERREDNODETRANSLATOR_HEADER
 
-/*#include "common_gl.h"
-#include "Graphic.h"
-#include "RenderNodes/IRenderNode.h"*/
 #include "INodeTranslator.h"
+#include "RenderNodes/RenderNode_Deferred.h"
 
 #include <memory>
 
@@ -58,7 +56,7 @@ public:
 
   /*! \name Construction / Destruction */
   //@{
-      DeferredNodeTranslator();
+      DeferredNodeTranslator(Bamboo *pCore);
       ~DeferredNodeTranslator();
   //@}
 
@@ -88,7 +86,10 @@ private:
 
   std::map<ISemanticSceneNode::t_classID, std::shared_ptr<IRuleObject> > m_mRegisteredRuleObjects;
 
-  std::shared_ptr<Bamboo::IRenderNode>    m_spDeferredNode;
+  std::vector<std::shared_ptr<Bamboo::IRenderNode> > m_vLightNodes;
+  std::vector<std::shared_ptr<Bamboo::IRenderNode> > m_vShadowCasterNodes;
+
+  std::shared_ptr<Bamboo::RN_Deferred>    m_spDeferredNode;
 };
 
 #endif

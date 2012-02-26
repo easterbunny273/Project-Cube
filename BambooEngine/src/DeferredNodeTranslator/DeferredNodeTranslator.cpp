@@ -7,7 +7,7 @@
 
 #include "PC_Logger.h"
 
-DeferredNodeTranslator::DeferredNodeTranslator()
+DeferredNodeTranslator::DeferredNodeTranslator(Bamboo *pCore) : INodeTranslator(pCore)
 {
   std::shared_ptr<IRuleObject> spCameraRule(new Camera_RuleObject());
   std::shared_ptr<IRuleObject> spCubeRule(new Cube_RuleObject());

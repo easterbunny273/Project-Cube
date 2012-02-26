@@ -12,6 +12,7 @@
 #include "common_gl.h"
 #include "Graphic.h"
 #include "DeferredNodeTranslator/DeferredNodeTranslator.h"
+#include "SemanticSceneNodes/Cube_SemSceneNode.h"
 
 #include <memory>
 
@@ -27,7 +28,8 @@ public:
   std::vector<ISemanticSceneNode::t_classID> GetAcceptedNodeIDs() const;
 
 private:
-
+std::shared_ptr<Bamboo::RN_Generic>      m_spCorrespondingRenderingNode;
+std::shared_ptr<Cube_SemSceneNode> m_spSemNode;
 };
 
 #endif

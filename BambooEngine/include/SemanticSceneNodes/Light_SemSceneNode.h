@@ -11,7 +11,9 @@ public:
   /*! \name Creation */
   //@{
     /// static constructor
-    static std::shared_ptr<Light_SemSceneNode> Create(float fFOV,
+    static std::shared_ptr<Light_SemSceneNode> Create(glm::vec3 vPosition,
+                                                      glm::vec3 vLookDirection,
+                                                      float fFOV,
                                                       glm::vec3 vLightColor,
                                                       float fNearplane,
                                                       float fFarplane);
@@ -28,19 +30,18 @@ public:
   /*! \name Public methods */
   //@{
     /// sets the light parameters
-    void  SetLightParameters(float fFOV,
+    void  SetLightParameters(glm::vec3 vPosition,
+                             glm::vec3 vLookDirection,
+                             float fFOV,
                              glm::vec3 vLightColor,
                              float fNearplane,
                              float fFarplane);
 
-    /// sets the transformation matrix (position + rotation) by "look-at" parameters,
-    /// which define the position of the kamera and the look direction
-    void SetTransformationMatrixByLookAtParameters(glm::vec3 vPosition,
-                                                   glm::vec3 vLookDirection,
-                                                   glm::vec3 vUp);
 
     /// returns the perspective projection parameters
-    void  GetLightParameters(float &rfFOV,
+    void  GetLightParameters(glm::vec3 &rvPosition,
+                             glm::vec3 &rvLookDirection,
+                             float &rfFOV,
                              glm::vec3 &rvLightColor,
                              float &rfNearplane,
                              float &rfFarplane);
@@ -56,10 +57,13 @@ private:
     /*! \name Private members */
     //@{
         glm::vec3     m_vLightColor;
+        glm::vec3     m_vLightPosition;
+        glm::vec3     m_vLightLookDirection;
 
         float         m_fFOV,
                       m_fNearplane,
                       m_fFarplane;
+
     //@}
 };
 

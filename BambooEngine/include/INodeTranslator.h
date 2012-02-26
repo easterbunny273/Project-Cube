@@ -32,7 +32,10 @@ public:
   virtual ~INodeTranslator() {};
 
 protected:
+  INodeTranslator(Bamboo *pCore) { m_pCore = pCore; }
+
   std::shared_ptr<Bamboo::IRenderNode> m_spRootNode;
+  Bamboo *m_pCore;
 };
 
 #endif

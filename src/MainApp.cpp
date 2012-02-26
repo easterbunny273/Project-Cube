@@ -97,6 +97,17 @@ void MainApp::StartGraphic_Test2()
   // this method uses the new SemanticSceneNodes
   //
 
+  // create camera
+  m_spCamera = Bamboo::PerspectiveCamera::Create(45.0f, 1.33f, 0.01f, 100.0f, glm::vec3(-0.2f, 0.2f, 0.0f), 90.0f, -50.0f);
+
+  // register itself as listener for camera events
+  GetEventManager()->RegisterEventListener(this, CameraMovementEvent::EventType());
+
+  // load level
+  LuaManager::GetInstance()->ExecuteFile("lua/test.lua");
+
+  Level level = LuaManager::GetInstance()->CallLuaFunction<Level>("GetLevel");
+
   // create scene nodes
   std::shared_ptr<ISemanticSceneNode> spTreppe = LoadedModel_SemSceneNode::Create("models/bunte-treppe3.dae");
   spTreppe->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
@@ -104,22 +115,23 @@ void MainApp::StartGraphic_Test2()
   std::shared_ptr<ISemanticSceneNode> spSphere = LoadedModel_SemSceneNode::Create("models/pool_sphere.dae");
   spSphere->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
 
-  std::shared_ptr<Light_SemSceneNode> spTestLight1 = Light_SemSceneNode::Create(50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
-  spTestLight1->SetTransformationMatrixByLookAtParameters(glm::vec3(-0.2f, 0.10f, 0.14f), glm::vec3(1.0f, -0.4f, -1.0f), glm::vec3(0.0, 1.0, 0.0));
+  std::shared_ptr<ISemanticSceneNode> spCube = Cube_SemSceneNode::Create(level.GetCubeByPosition(0,0,0));
+  //spCube->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
 
-  std::shared_ptr<Light_SemSceneNode> spTestLight2 = Light_SemSceneNode::Create(50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
-  spTestLight2->SetTransformationMatrixByLookAtParameters(glm::vec3(-0.2f, 0.2f, -0.14f), glm::vec3(1.0f, -1.1f, 0.62f), glm::vec3(0.0, 1.0, 0.0));
+  std::shared_ptr<Light_SemSceneNode> spTestLight1 = Light_SemSceneNode::Create(glm::vec3(-0.2f, 0.10f, 0.14f), glm::vec3(1.0f, -0.4f, -1.0f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
+  std::shared_ptr<Light_SemSceneNode> spTestLight2 = Light_SemSceneNode::Create(glm::vec3(-0.2f, 0.2f, -0.14f), glm::vec3(1.0f, -1.1f, 0.62f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
 
-  std::shared_ptr<Camera_SemSceneNode> spCamera = Camera_SemSceneNode::Create(45.0f, 1.33, 0.01, 100.0f);
+  std::shared_ptr<Camera_SemSceneNode> spCamera = Camera_SemSceneNode::Create(m_spCamera);
 
   // link scene graph
   spCamera->AddChild(spTreppe);
   spCamera->AddChild(spSphere);
+  spCamera->AddChild(spCube);
   spCamera->AddChild(spTestLight1);
   spCamera->AddChild(spTestLight2);
 
   // create node translator
-  std::shared_ptr<INodeTranslator> spDeferredTranslator(new DeferredNodeTranslator());
+  std::shared_ptr<INodeTranslator> spDeferredTranslator(new DeferredNodeTranslator(m_pGraphic));
 
   // create glfw window
   std::shared_ptr<Bamboo::GlfwWindow> spWindow = Bamboo::GlfwWindow::Create(1024, 768, "Test");

@@ -21,12 +21,17 @@ void DeferredNodeTranslator::LoadedModel_RuleObject::Action()
   if (m_spCorrespondingRenderingNode)
     {
       // only update values
+      m_spCorrespondingRenderingNode->SetTransformMatrix(m_spSemNode->GetTransformationMatrix());
     }
   else
     {
       // create new node
-      m_spCorrespondingRenderingNode = std::shared_ptr<Bamboo::IRenderNode>(new Bamboo::RN_Generic(AssimpWrapper::LoadModel(m_spSemNode->GetFilename())));
+      m_spCorrespondingRenderingNode = std::shared_ptr<Bamboo::RN_Generic>(new Bamboo::RN_Generic(AssimpWrapper::LoadModel(m_spSemNode->GetFilename())));
       assert (m_spCorrespondingRenderingNode);
+
+      m_pTranslator->m_vShadowCasterNodes.push_back(m_spCorrespondingRenderingNode);
+
+      m_spCorrespondingRenderingNode->SetGraphicCore(m_pTranslator->m_pCore);
 
       // attach to deferred node
       m_pTranslator->m_spDeferredNode->AddChild(m_spCorrespondingRenderingNode);

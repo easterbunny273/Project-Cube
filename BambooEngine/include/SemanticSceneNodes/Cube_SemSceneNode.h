@@ -26,7 +26,7 @@ public:
 
   /*! \name Public methods */
   //@{
-
+    Cube * GetCube() { return m_pCube; }
   //@}
 
 private:

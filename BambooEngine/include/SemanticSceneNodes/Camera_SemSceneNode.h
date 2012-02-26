@@ -2,8 +2,11 @@
 #define __CAMERA_SEMSCENENODE_BAMBOOENGINE
 
 #include "ISemanticSceneNode.h"     // is a ISemanticSceneNode
+#include "Graphic.h"
+
 
 #include <memory>                   // uses shared_ptr
+
 
 class Camera_SemSceneNode : public ISemanticSceneNode
 {
@@ -11,7 +14,7 @@ public:
   /*! \name Creation */
   //@{
     /// static constructor
-    static std::shared_ptr<Camera_SemSceneNode> Create(float fFOV, float fRatio, float fNearplane, float fFarplane);
+    static std::shared_ptr<Camera_SemSceneNode> Create(std::shared_ptr<Bamboo::ICamera> spCamera);
 
     /// destructor
     ~Camera_SemSceneNode();
@@ -24,11 +27,14 @@ public:
 
   /*! \name Public methods */
   //@{
+    /*
     /// sets the perspective projection parameters
     void  SetPerspectiveProjection(float fFOV, float fRatio, float fNearplane, float fFarplane);
 
     /// returns the perspective projection parameters
     void  GetPerspectiveProjection(float &rfFOV, float &rfRatio, float &rfNearplane, float &rfFarplane);
+    */
+    std::shared_ptr<Bamboo::ICamera> GetCamera() { return m_spCamera; }
   //@}
 
 private:
@@ -40,10 +46,11 @@ private:
 
     /*! \name Private members */
     //@{
-        float         m_fFOV,
+       /* float         m_fFOV,
                       m_fRatio,
                       m_fNearplane,
-                      m_fFarplane;
+                      m_fFarplane;*/
+        std::shared_ptr<Bamboo::ICamera> m_spCamera;
     //@}
 };
 

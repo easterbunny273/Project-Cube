@@ -43,16 +43,6 @@ Bamboo::RN_Generic::~RN_Generic()
 
 void Bamboo::RN_Generic::ItlRender()
 {
-    static int i=0;
-
-    i++;
-
-    glm::mat4 oldTrans1;
-
-    oldTrans1 = glm::rotate(glm::mat4(), i / 100.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-
-   // SetTransformMatrix(oldTrans1);
-
     TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
     assert (pTextureManager != NULL);
 
@@ -215,7 +205,7 @@ void Bamboo::RN_Generic::ItlPrepareGLBuffers()
             }
         }
 
-        if (spMesh->GetTexturePath(GeometryData::TextureNames::CUBEMAP).empty() == false)
+      if (spMesh->GetTexturePath(GeometryData::TextureNames::CUBEMAP).empty() == false)
           m_bIsSphere = true;
 
         for (unsigned int i=0; i < 4; i++)

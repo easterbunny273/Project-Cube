@@ -2,20 +2,14 @@
 
 #include <cassert>
 
-std::shared_ptr<Camera_SemSceneNode> Camera_SemSceneNode::Create(float fFOV,
-                                                                 float fRatio,
-                                                                 float fNearplane,
-                                                                 float fFarplane)
+std::shared_ptr<Camera_SemSceneNode> Camera_SemSceneNode::Create(std::shared_ptr<Bamboo::ICamera> spCamera)
 {
   // create new node
   Camera_SemSceneNode * pNewNode = new Camera_SemSceneNode();
   assert (pNewNode != NULL);
 
   // set initial parameters
-  pNewNode->m_fFOV        = fFOV;
-  pNewNode->m_fRatio      = fRatio;
-  pNewNode->m_fNearplane  = fNearplane;
-  pNewNode->m_fFarplane   = fFarplane;
+  pNewNode->m_spCamera    = spCamera;
 
   // create shared_ptr
   std::shared_ptr<Camera_SemSceneNode> spNewNode(pNewNode);
@@ -28,7 +22,7 @@ ISemanticSceneNode::t_classID Camera_SemSceneNode::ClassID()
 {
   return 0;
 }
-
+/*
 void Camera_SemSceneNode::SetPerspectiveProjection(float fFOV,
                                                    float fRatio,
                                                    float fNearplane,
@@ -50,7 +44,7 @@ void Camera_SemSceneNode::GetPerspectiveProjection(float &rfFOV,
   rfNearplane = m_fNearplane;
   rfFarplane  = m_fFarplane;
 }
-
+*/
 Camera_SemSceneNode::Camera_SemSceneNode() : ISemanticSceneNode(ClassID())
 {
 }
