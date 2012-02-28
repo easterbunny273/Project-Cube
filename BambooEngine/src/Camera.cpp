@@ -188,17 +188,32 @@ void Bamboo::ICamera::Move(float fFactor)
 
     m_m4ViewMatrix = glm::lookAt(m_v3CameraPosition, m_v3CameraPosition + v3LookAt, glm::vec3(0,1,0));
 
+    /*m_m4TranslateMatrix = glm::mat4 (1, 0, 0, 0,
+                                     0, 1, 0, 0,
+                                     0, 0, 1, 0,
+                                     m_v3CameraPosition.x, m_v3CameraPosition.y, m_v3CameraPosition.z, 1);*/
+
+    glm::mat4 mTest = glm::inverse(m_m4ViewMatrix);
+
     m_m4TranslateMatrix = glm::mat4 (1, 0, 0, 0,
                                      0, 1, 0, 0,
                                      0, 0, 1, 0,
-                                     -m_v3CameraPosition.x, -m_v3CameraPosition.y, -m_v3CameraPosition.z, 1);
+                                     -mTest[3][0], -mTest[3][1], -mTest[3][2], 1);
+
     //m_m4ViewMatrix = OwnLookAt(m_v3CameraPosition, m_v3CameraPosition + v3LookAt, glm::vec3(0,1,0));
-/*
-    std::cout << std::endl << m_v3CameraPosition.x << "#" << m_v3CameraPosition.y << "#" << m_v3CameraPosition.z << std::endl;
-    std::cout << m_m4ViewMatrix[0][0] << "\t" << m_m4ViewMatrix[0][1] << "\t"<< m_m4ViewMatrix[0][2] << "\t"<< m_m4ViewMatrix[0][3] << std::endl;
-    std::cout << m_m4ViewMatrix[1][0] << "\t" << m_m4ViewMatrix[1][1] << "\t"<< m_m4ViewMatrix[1][2] << "\t"<< m_m4ViewMatrix[1][3] << std::endl;
-    std::cout << m_m4ViewMatrix[2][0] << "\t" << m_m4ViewMatrix[2][1] << "\t"<< m_m4ViewMatrix[2][2] << "\t"<< m_m4ViewMatrix[2][3] << std::endl;
-    std::cout << m_m4ViewMatrix[3][0] << "\t" << m_m4ViewMatrix[3][1] << "\t"<< m_m4ViewMatrix[3][2] << "\t"<< m_m4ViewMatrix[3][3] << std::endl;*/
+
+   /* std::cout << std::endl << m_v3CameraPosition.x << "#" << m_v3CameraPosition.y << "#" << m_v3CameraPosition.z << std::endl;
+    std::cout << mTest[0][0] << "\t" << mTest[0][1] << "\t"<< mTest[0][2] << "\t"<< mTest[0][3] << std::endl;
+    std::cout << mTest[1][0] << "\t" << mTest[1][1] << "\t"<< mTest[1][2] << "\t"<< mTest[1][3] << std::endl;
+    std::cout << mTest[2][0] << "\t" << mTest[2][1] << "\t"<< mTest[2][2] << "\t"<< mTest[2][3] << std::endl;
+    std::cout << mTest[3][0] << "\t" << mTest[3][1] << "\t"<< mTest[3][2] << "\t"<< mTest[3][3] << std::endl;*/
+}
+
+void Bamboo::ICamera::SetPosition(glm::vec3 vPosition)
+{
+  m_v3CameraPosition = vPosition;
+
+  Move(0.0f);
 }
 
 /****************************************************************

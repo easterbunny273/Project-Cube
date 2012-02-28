@@ -64,7 +64,7 @@ public:
     void  SetTransformMatrix(glm::mat4 mTransform) { m_mTransformMatrix = mTransform; }
 
     /// returns the transformation matrix (position + rotation)
-    glm::mat4 GetTransformationMatrix() const { return m_mTransformMatrix; }
+    glm::mat4 GetTransformMatrix() const { return m_mTransformMatrix; }
   //@}
 
 protected:

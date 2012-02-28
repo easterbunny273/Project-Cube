@@ -20,6 +20,8 @@
 // initialize singelton ptr to NULL
 MainApp * MainApp::s_pInstance = NULL;
 
+std::shared_ptr<LoadedModel_SemSceneNode> g_spSphere;
+
 MainApp::MainApp()
 {
     // todo: move in an own init method, because in constructor error handling is shitty
@@ -112,8 +114,12 @@ void MainApp::StartGraphic_Test2()
   std::shared_ptr<ISemanticSceneNode> spTreppe = LoadedModel_SemSceneNode::Create("models/bunte-treppe3.dae");
   spTreppe->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
 
-  std::shared_ptr<ISemanticSceneNode> spSphere = LoadedModel_SemSceneNode::Create("models/pool_sphere.dae");
+  std::shared_ptr<LoadedModel_SemSceneNode> spSphere = LoadedModel_SemSceneNode::Create("models/pool_sphere.dae");
   spSphere->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
+  spSphere->SetTransformMatrix(glm::translate(spSphere->GetTransformMatrix(), glm::vec3(0.0, 2.0, 0.0)));
+  spSphere->ActivateEnvironmentMapping();
+
+  g_spSphere = spSphere;
 
   std::shared_ptr<ISemanticSceneNode> spCube = Cube_SemSceneNode::Create(level.GetCubeByPosition(0,0,0));
   //spCube->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
@@ -225,6 +231,11 @@ void MainApp::Run()
 	GetEventManager()->ProcessEvents();
 
 	LuaTest();
+
+        static int i=0;
+        i++;
+
+        g_spSphere->SetTransformMatrix(glm::translate(g_spSphere->GetTransformMatrix(), glm::vec3(cos(i / 400.0) / 100.0, sin(i / 400.0) / 400.0, sin(i / 400.0) / 100.0)));
 
         GetGraphic()->Render();
     }

@@ -27,6 +27,14 @@ public:
   //@{
     /// returns the filename of the loaded model
     std::string GetFilename();
+
+    bool GetEnvironmentMapping() { return m_bEnvironmentMapping; }
+
+    /// adds environment mapping effect
+    void ActivateEnvironmentMapping();
+
+    /// removes environment mapping effect
+    void DeactivateEnvironmentMapping();
   //@}
 
 private:
@@ -38,7 +46,8 @@ private:
 
     /*! \name Private members */
     //@{
-        std::string m_sFilename;
+        std::string   m_sFilename;
+        bool          m_bEnvironmentMapping;
     //@}
 };
 

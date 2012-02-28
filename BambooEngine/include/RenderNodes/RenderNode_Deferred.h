@@ -41,6 +41,8 @@ public:
     /*! \name xy */
     //@{
         void AddSpotLight(std::shared_ptr<Bamboo::RN_SpotLight> spSpotlight);
+
+        GLuint GetAlbedoTexture() { return m_nAlbedoDrawBuffer; }
     //@}
 
     /*! \name Bamboo::IRenderNode interface */

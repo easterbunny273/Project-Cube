@@ -23,8 +23,8 @@ void DeferredNodeTranslator::Light_RuleObject::Action()
   if (m_spCorrespondingRenderingNode)
     {
       // only update parameters
-      m_spCorrespondingRenderingNode->SetTransformMatrix(m_spSemNode->GetTransformationMatrix());
-      m_spCorrespondingRenderingNode_Model->SetTransformMatrix(m_spSemNode->GetTransformationMatrix());
+      m_spCorrespondingRenderingNode->SetTransformMatrix(m_spSemNode->GetTransformMatrix());
+      m_spCorrespondingRenderingNode_Model->SetTransformMatrix(m_spSemNode->GetTransformMatrix());
 
       m_spCorrespondingRenderingNode->ClearChilds();
       for (unsigned int i=0; i < m_pTranslator->m_vShadowCasterNodes.size(); i++)

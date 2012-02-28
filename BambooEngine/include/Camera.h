@@ -34,6 +34,9 @@ public:
         /// moves the camera along the move vector.
         /// must be called! otherwise, the view matrices are not up to date
         void Move(float fFactor);
+
+        /// sets the position
+        void SetPosition(glm::vec3 vPosition);
     //@}
 
     /*! \name Methods to set up the projection */

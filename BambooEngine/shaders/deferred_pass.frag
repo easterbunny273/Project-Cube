@@ -45,7 +45,7 @@ vec2 GetParallaxOcclusionOffset(vec2 original_Texcoords, bool bDoBinarySearch)
     vec3 vVec2 = vVec;
     vVec2.y = -vVec2.y;
 
-    float dHeightScale = 0.01;
+    float dHeightScale = 0.02;
 
     vec2 vCurrentTexCoords = original_Texcoords;
 

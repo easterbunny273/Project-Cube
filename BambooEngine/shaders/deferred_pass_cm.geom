@@ -69,7 +69,7 @@ void main(void)
 
       gl_Layer = iLayer;
       my_Layer.x = iLayer;
-      gl_Position = ProjectionMatrix * mRotations[iLayer] * ModelMatrix * vec4(in_Position, 1.0);
+      gl_Position = ProjectionMatrix * mRotations[iLayer] * TranslationMatrix * ModelMatrix * vec4(in_Position, 1.0);
 
       my_ObjPosition = in_Position;
       my_ScreenPosition = gl_Position;

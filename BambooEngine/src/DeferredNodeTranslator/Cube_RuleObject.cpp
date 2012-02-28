@@ -20,7 +20,7 @@ void DeferredNodeTranslator::Cube_RuleObject::Action()
   if (m_spCorrespondingRenderingNode)
     {
       // only update values
-      m_spCorrespondingRenderingNode->SetTransformMatrix(m_spSemNode->GetTransformationMatrix());
+      m_spCorrespondingRenderingNode->SetTransformMatrix(m_spSemNode->GetTransformMatrix());
     }
   else
     {

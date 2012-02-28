@@ -141,10 +141,7 @@ private:
 
     /*! \name Internal helper methods */
     //@{
-        /// builds / prepares the render graph for a given renderloop
-        void ItlBuildRenderGraph(TItlRenderLoop &tRenderLoop);
 
-        void ItlBuildDeferredRenderPipeline(TItlRenderLoop &tRenderLoop);
     //@}
 
     /*! \name Private members */
