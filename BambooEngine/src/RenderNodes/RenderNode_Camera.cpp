@@ -120,10 +120,13 @@ void Bamboo::RN_Camera::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderInf
     {
 	glm::mat4 SavedProjectionMatrix = pCurrentRenderInfo->ProjectionMatrix;
 	glm::mat4 SavedViewMatrix = pCurrentRenderInfo->ViewMatrix;
+	glm::mat4 SavedTranslationMatrix = pCurrentRenderInfo->TranslationMatrix;
 	glm::mat4 SavedModelViewProjectionMatrix = pCurrentRenderInfo->ModelViewProjectionMatrix;
+
 
 	pCurrentRenderInfo->ProjectionMatrix = m_pCamera->GetProjectionMatrix();
 	pCurrentRenderInfo->ViewMatrix = m_pCamera->GetViewMatrix();
+	pCurrentRenderInfo->TranslationMatrix = m_pCamera->GetTranslationMatrix();
 	pCurrentRenderInfo->ModelViewProjectionMatrix = m_pCamera->GetProjectionMatrix() * m_pCamera->GetViewMatrix();
 	pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = pCurrentRenderInfo->ModelViewProjectionMatrix;
 
@@ -131,6 +134,7 @@ void Bamboo::RN_Camera::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderInf
 
 	pCurrentRenderInfo->ProjectionMatrix = SavedProjectionMatrix;
 	pCurrentRenderInfo->ViewMatrix = SavedViewMatrix;
+	pCurrentRenderInfo->TranslationMatrix = SavedTranslationMatrix;
 	pCurrentRenderInfo->ModelViewProjectionMatrix = SavedModelViewProjectionMatrix;
 	pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = pCurrentRenderInfo->ModelViewProjectionMatrix;
     }

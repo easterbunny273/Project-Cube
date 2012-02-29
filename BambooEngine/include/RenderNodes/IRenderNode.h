@@ -15,7 +15,7 @@
 #include <iostream>
 
 #include "Graphic.h"
-#include "common_gl.h"
+//#include "common_gl.h"
 
 
 /**
@@ -27,8 +27,6 @@ class TRenderPass;
 
 class Bamboo::IRenderNode
 {
-    friend class Bamboo::Scene;
-
 public:
     /*! \name Public types */
     //@{
@@ -107,6 +105,7 @@ protected:
         {
             glm::mat4 ProjectionMatrix;
             glm::mat4 ViewMatrix;
+            glm::mat4 TranslationMatrix;
             glm::mat4 ModelMatrix;
 
             glm::mat4 ModelViewProjectionMatrix;

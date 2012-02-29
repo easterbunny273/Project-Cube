@@ -8,8 +8,11 @@ class Bamboo::ICamera
 public:
     /*! \name Public attributes */
     //@{
-        /// returns the ModelviewMatrix
+        /// returns the ViewMatrix
         glm::mat4 GetViewMatrix() const;
+
+        /// returns the translation matrix
+        glm::mat4 GetTranslationMatrix() const;
 
         /// returns the projection matrix
         glm::mat4 GetProjectionMatrix() const;
@@ -31,6 +34,9 @@ public:
         /// moves the camera along the move vector.
         /// must be called! otherwise, the view matrices are not up to date
         void Move(float fFactor);
+
+        /// sets the position
+        void SetPosition(glm::vec3 vPosition);
     //@}
 
     /*! \name Methods to set up the projection */
@@ -54,6 +60,7 @@ protected:
         bool        m_bInitialized;         ///< whether the projection matrix was set up
         glm::mat4   m_m4ProjectionMatrix;
         glm::mat4   m_m4ViewMatrix;
+        glm::mat4   m_m4TranslateMatrix;
         glm::vec3   m_v3MoveVector;
         glm::vec3   m_v3CameraPosition;
 

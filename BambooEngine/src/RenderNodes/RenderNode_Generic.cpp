@@ -5,6 +5,9 @@
 #include "ShaderManager.h"
 #include "TextureManager.h"
 
+#include "common_gl.h"
+#include <IL/il.h>
+
 //class specific
 #include "RenderNodes/RenderNode_Generic.h"
 
@@ -24,7 +27,8 @@ Bamboo::RN_Generic::RN_Generic(std::shared_ptr<GeometryData::GenericObject> spOb
       m_pnNormalTexture(NULL),
       m_pnSpecularTexture(NULL),
       m_pnDisplaceTexture(NULL),
-      m_spObject(spObject)
+      m_spObject(spObject),
+      m_bUseEnvironmentMapping(false)
 {
     ItlLoadShader();
     ItlPrepareGLBuffers();
@@ -37,18 +41,14 @@ Bamboo::RN_Generic::~RN_Generic()
     ItlDeleteTextures();
 }
 
+void Bamboo::RN_Generic::SetEnvironmentMap(GLuint nTextureID)
+{
+  m_bUseEnvironmentMapping = true;
+  m_nEnvironmentMap = nTextureID;
+}
+
 void Bamboo::RN_Generic::ItlRender()
 {
-    static int i=0;
-
-    i++;
-
-    glm::mat4 oldTrans1;
-
-    oldTrans1 = glm::rotate(glm::mat4(), i / 100.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-
-   // SetTransformMatrix(oldTrans1);
-
     TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
     assert (pTextureManager != NULL);
 
@@ -59,6 +59,36 @@ void Bamboo::RN_Generic::ItlRender()
 
     std::vector<GLuint> vUsedTextures;
     vUsedTextures.reserve(4);
+
+
+    GLint iLocationIsSphere = pShaderManager->GetUniform("bIsSphere");
+    GLuint iTextureUnitForCubeMap = 15;//pTextureManager->RequestFreeUnit();
+
+   // std::cout << iTextureUnitForCubeMap << std::endl;
+
+    if (iLocationIsSphere != -1)
+      {
+        if (m_bUseEnvironmentMapping == false)
+          glUniform1i(iLocationIsSphere, false);
+        else
+          {
+            //std::cout << "is a sphere" << std::endl;
+            // is a sphere
+            GLint iLocationCubeMap = pShaderManager->GetUniform("cubemap_texture");
+
+            if (iLocationCubeMap != -1)
+              {
+                glActiveTexture(GL_TEXTURE0+iTextureUnitForCubeMap);
+                glBindTexture(GL_TEXTURE_CUBE_MAP, m_nEnvironmentMap);
+                glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+                glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+                glUniform1i(iLocationCubeMap, iTextureUnitForCubeMap);
+                glUniform1i(iLocationIsSphere, true);
+              }
+
+          }
+      }
 
 
     for (unsigned int nMesh = 0; nMesh < m_nNumMeshes; nMesh++)
@@ -81,6 +111,8 @@ void Bamboo::RN_Generic::ItlRender()
                     vUsedTextures.push_back(nTextureID);
                 }
             }
+
+
         }
 
         glBindVertexArray(m_pnVertexArrayObjects[nMesh]);
@@ -92,6 +124,7 @@ void Bamboo::RN_Generic::ItlRender()
         for (unsigned int i=0; i < vUsedTextures.size(); i++)
             pTextureManager->UnuseTexture(vUsedTextures[i]);
 
+        //pTextureManager->ReleaseUnit(iTextureUnitForCubeMap);
         vUsedTextures.clear();
     }
 }
@@ -178,6 +211,9 @@ void Bamboo::RN_Generic::ItlPrepareGLBuffers()
             }
         }
 
+      //if (spMesh->GetTexturePath(GeometryData::TextureNames::CUBEMAP).empty() == false)
+        //  m_bUseEnvironmentMapping = true;
+
         for (unsigned int i=0; i < 4; i++)
         {
             float * pfTexCoords = spMesh->GetTextureCoords(tTextureTypes[i]);
@@ -244,7 +280,8 @@ void Bamboo::RN_Generic::ItlPrepareVAO()
     assert (pShaderManager != NULL);
 
     pShaderManager->PushActiveShader();
-    pShaderManager->ActivateShader("deferred_pass");
+
+    pShaderManager->ActivateShader("deferred_pass_cm");
 
     // generate arrays
     glGenVertexArrays(m_nNumMeshes, m_pnVertexArrayObjects);
@@ -298,7 +335,80 @@ void Bamboo::RN_Generic::ItlPrepareVAO()
 
 void Bamboo::RN_Generic::ItlLoadShader()
 {
-    ItlGetGraphicCore()->GetShaderManager()->AddShader("deferred_pass", new Shader("BambooEngine/shaders/deferred_pass.vert", "BambooEngine/shaders/deferred_pass.frag"));
+    static bool bAlreadyLoaded = false;
+
+    if (bAlreadyLoaded == false)
+    {
+      ItlGetGraphicCore()->GetShaderManager()->AddShader("deferred_pass", new Shader("BambooEngine/shaders/deferred_pass.vert", "BambooEngine/shaders/deferred_pass.frag"));
+      ItlGetGraphicCore()->GetShaderManager()->AddShader("deferred_pass_cm", new Shader("BambooEngine/shaders/deferred_pass_cm.vert", "BambooEngine/shaders/deferred_pass_cm.geom", "BambooEngine/shaders/deferred_pass_cm.frag"));
+
+      bAlreadyLoaded = true;
+
+      GLenum error = glGetError();
+
+      // load test texture
+      ILuint pnTextures[6];
+      std::string sFiles[6];
+      sFiles[0] = std::string("textures/cubemap_debug_left.jpg");
+      sFiles[4] = std::string("textures/cubemap_debug_front.jpg");
+      sFiles[1] = std::string("textures/cubemap_debug_right.jpg");
+      sFiles[5] = std::string("textures/cubemap_debug_back.jpg");
+      sFiles[2] = std::string("textures/cubemap_debug_top.jpg");
+      sFiles[3] = std::string("textures/cubemap_debug_bottom.jpg");
+
+
+      GLuint nNewTexture;
+
+      //generate color texture (=create new opengl id)
+      glGenTextures(1, &nNewTexture);
+
+      std::cout << nNewTexture << std::endl;
+
+      //bind color texture
+      glBindTexture(GL_TEXTURE_CUBE_MAP, nNewTexture);
+
+      error = glGetError();
+      assert (error == GL_NO_ERROR);
+
+      ilInit();
+      ilGenImages(6,&pnTextures[0]);                   // generieren von IL ID für Texturen
+
+      for (unsigned int i=0; i < 6; i++)
+      {
+          ilBindImage(pnTextures[i]);
+
+          std::string sFileName = sFiles[i];
+          bool bOk = ilLoadImage (sFileName.c_str());
+          assert (bOk);
+
+          long int iHeight, iWidth, iFormat;
+          unsigned char *szData=0;
+
+          iWidth=ilGetInteger(IL_IMAGE_WIDTH);		    // Breite des Bildes holen
+          iHeight=ilGetInteger(IL_IMAGE_HEIGHT);	    // Höhe des Bildes holen
+          //bpp=ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL); // Farbtiefe des Bildes
+          iFormat=ilGetInteger(IL_IMAGE_FORMAT);	    // Format des Bildes z.B. RGB RGBA BGR BGRA usw.
+          szData=ilGetData();			    // Zeiger auf Bilddaten holen
+
+          assert (iWidth == iHeight);
+          assert (iWidth == 512);
+
+          glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA32F, 512, 512, 0, iFormat, GL_UNSIGNED_BYTE, szData);
+
+
+      }
+
+      glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+      glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+      glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+      glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+      glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
+
+
+    }
 }
 
 void Bamboo::RN_Generic::ItlPrepareTextures()

@@ -31,7 +31,7 @@ public:
     //@{
 
     /// constructor
-    RN_Deferred(unsigned int nWidth, unsigned int nHeight);
+    RN_Deferred(unsigned int nWidth, unsigned int nHeight, bool bLayered = false);
 
     /// destructor
     virtual ~RN_Deferred();
@@ -41,6 +41,8 @@ public:
     /*! \name xy */
     //@{
         void AddSpotLight(std::shared_ptr<Bamboo::RN_SpotLight> spSpotlight);
+
+        GLuint GetAlbedoTexture() { return m_nAlbedoDrawBuffer; }
     //@}
 
     /*! \name Bamboo::IRenderNode interface */
@@ -60,15 +62,18 @@ private:
     //@{
     /// creates the fbo with the multiple color buffers
     void ItlCreateFBO();
+    void ItlCreateLayeredFBO();
 
     /// cleaning up the fbo
     void ItlDeleteFBO();
 
     /// creates an opengl color texture with the parameters needed for this node
     GLuint ItlCreateColorTexture();
+    GLuint ItlCreateLayeredColorTexture();
 
     /// creates an opengl depth texture with the parameters needed for this node
     GLuint ItlCreateDepthTexture();
+    GLuint ItlCreateLayeredDepthTexture();
 
     void    ItlDeleteTextures();
     //@}
@@ -91,7 +96,8 @@ private:
 
         GLuint      m_nFBO;
 
-        int m_iGeneralViewportParams[4];	//viewport params as it were BEFORE we bind our fbo, used to save and restore these values
+
+        bool    m_bLayeredFBO;
 
         std::vector<std::shared_ptr<Bamboo::RN_SpotLight> > m_vspSpotLights;
     //@}

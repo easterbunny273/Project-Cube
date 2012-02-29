@@ -25,6 +25,7 @@ void Bamboo::IRenderNode::ItlSendTransformMatrices()
     //first, get the positions
     const GLint l_projection_matrix = pShaderManager->GetUniform("ProjectionMatrix");
     const GLint l_view_matrix = pShaderManager->GetUniform("ViewMatrix");
+    const GLint l_translation_matrix = pShaderManager->GetUniform("TranslationMatrix");
     const GLint l_modelviewprojection_matrix = pShaderManager->GetUniform("ModelViewProjectionMatrix");
     const GLint l_normal_matrix = pShaderManager->GetUniform("NormalMatrix");
     const GLint l_model_matrix = pShaderManager->GetUniform("ModelMatrix");
@@ -37,6 +38,9 @@ void Bamboo::IRenderNode::ItlSendTransformMatrices()
 
     if (l_view_matrix != -1)
         glUniformMatrix4fv(l_view_matrix, 1, GL_FALSE, &m_pCurrentRenderInfo->ViewMatrix[0][0]);
+
+    if (l_translation_matrix != -1)
+        glUniformMatrix4fv(l_translation_matrix, 1, GL_FALSE, &m_pCurrentRenderInfo->TranslationMatrix[0][0]);
 
     if (l_model_matrix != -1)
         glUniformMatrix4fv(l_model_matrix, 1, GL_FALSE, &m_pCurrentRenderInfo->ModelMatrix[0][0]);

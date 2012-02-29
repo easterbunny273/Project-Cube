@@ -260,16 +260,6 @@ Bamboo::RN_FBO::~RN_FBO()
  */
 void Bamboo::RN_FBO::ItlPreRenderChildren()
 {
-    static bool bFirstRun = true;
-
-    if (bFirstRun)
-    {
-        //save current viewport params
-        glGetIntegerv(GL_VIEWPORT, m_iGeneralViewportParams);
-
-        bFirstRun = false;
-    }
-
     //bind fbo
     glBindFramebuffer(GL_FRAMEBUFFER, m_nFramebuffer);
 

@@ -13,6 +13,7 @@ uniform mat4 ProjectionMatrix;
 uniform mat4 ViewMatrix;
 uniform mat4 ModelMatrix;
 uniform mat3 NormalMatrix;
+uniform mat4 TranslationMatrix;
 
 in vec3 in_Position;
 in vec3 in_Normal;
@@ -32,10 +33,11 @@ out vec3 my_Normal;
 out vec3 my_Tangent;
 out vec3 my_Color;
 out vec4 my_Position;
+out vec3 my_ViewDir_EM;
+out vec3 my_Normal_EM;
 
 void main(void)
 {
-
   mat4 ModelViewMatrix = ViewMatrix * ModelMatrix;
 
   gl_Position = ModelViewProjectionMatrix * vec4(in_Position, 1.0);
@@ -61,4 +63,7 @@ void main(void)
 
   my_EyeDir = eyeVec;
 
+  //my_ViewDir = -vVertex;//(TranslationMatrix * ModelMatrix * vec4(in_Position, 1.0)).xyz;
+  my_Normal_EM = normalize(in_Normal);
+  my_ViewDir_EM = (TranslationMatrix * ModelMatrix * vec4(in_Position, 1.0)).xyz;
 }

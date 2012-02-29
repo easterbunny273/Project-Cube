@@ -1,24 +1,26 @@
-#include "GL/glfw.h"
-
 #include "MainApp.h"
 #include "PC_Logger.h"
 #include "Graphic-GlfwWindow.h"
-#include "SceneObjects/LoadedModel.h"
-#include "SceneObjects/Cube.h"
-#include "SceneObjects/Light.h"
 #include "Graphic.h"
 #include "Camera.h"
-#include "Scene.h"
 #include "AssimpWrapper.h"
 #include "GeometryData.h"
 #include "LuaManager.h"
+
+#include "SemanticSceneNodes/ISemanticSceneNode.h"
+#include "SemanticSceneNodes/LoadedModel_SemSceneNode.h"
+#include "SemanticSceneNodes/Camera_SemSceneNode.h"
+#include "SemanticSceneNodes/Cube_SemSceneNode.h"
+#include "SemanticSceneNodes/Light_SemSceneNode.h"
+
+#include "DeferredNodeTranslator/DeferredNodeTranslator.h"
 
 #include "Gamelogic/Level.h"
 
 // initialize singelton ptr to NULL
 MainApp * MainApp::s_pInstance = NULL;
 
-std::shared_ptr<Bamboo::ISceneObject> g_spTreppe;
+std::shared_ptr<LoadedModel_SemSceneNode> g_spSphere;
 
 MainApp::MainApp()
 {
@@ -92,15 +94,69 @@ EventManager * MainApp::GetEventManager()
     return &m_EventManager;
 }
 
+void MainApp::StartGraphic_Test2()
+{
+  // this method uses the new SemanticSceneNodes
+  //
+
+  // create camera
+  m_spCamera = Bamboo::PerspectiveCamera::Create(45.0f, 1.33f, 0.01f, 100.0f, glm::vec3(-0.2f, 0.2f, 0.0f), 90.0f, -50.0f);
+
+  // register itself as listener for camera events
+  GetEventManager()->RegisterEventListener(this, CameraMovementEvent::EventType());
+
+  // load level
+  LuaManager::GetInstance()->ExecuteFile("lua/test.lua");
+
+  Level level = LuaManager::GetInstance()->CallLuaFunction<Level>("GetLevel");
+
+  // create scene nodes
+  std::shared_ptr<ISemanticSceneNode> spTreppe = LoadedModel_SemSceneNode::Create("models/bunte-treppe3.dae");
+  spTreppe->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
+
+  std::shared_ptr<LoadedModel_SemSceneNode> spSphere = LoadedModel_SemSceneNode::Create("models/pool_sphere.dae");
+  spSphere->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
+  spSphere->SetTransformMatrix(glm::translate(spSphere->GetTransformMatrix(), glm::vec3(0.0, 2.0, 0.0)));
+  spSphere->ActivateEnvironmentMapping();
+
+  g_spSphere = spSphere;
+
+  std::shared_ptr<ISemanticSceneNode> spCube = Cube_SemSceneNode::Create(level.GetCubeByPosition(0,0,0));
+  //spCube->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
+
+  std::shared_ptr<Light_SemSceneNode> spTestLight1 = Light_SemSceneNode::Create(glm::vec3(-0.2f, 0.10f, 0.14f), glm::vec3(1.0f, -0.4f, -1.0f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
+  std::shared_ptr<Light_SemSceneNode> spTestLight2 = Light_SemSceneNode::Create(glm::vec3(-0.2f, 0.2f, -0.14f), glm::vec3(1.0f, -1.1f, 0.62f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
+
+  std::shared_ptr<Camera_SemSceneNode> spCamera = Camera_SemSceneNode::Create(m_spCamera);
+
+  // link scene graph
+  spCamera->AddChild(spTreppe);
+  spCamera->AddChild(spSphere);
+  spCamera->AddChild(spCube);
+  spCamera->AddChild(spTestLight1);
+  spCamera->AddChild(spTestLight2);
+
+  // create node translator
+  std::shared_ptr<INodeTranslator> spDeferredTranslator(new DeferredNodeTranslator(m_pGraphic));
+
+  // create glfw window
+  std::shared_ptr<Bamboo::GlfwWindow> spWindow = Bamboo::GlfwWindow::Create(1024, 768, "Test");
+  spWindow->SetInputEventListener(m_spInputEventListener);
+
+  // add render loop
+  m_pGraphic->AddRenderLoop(spWindow, spCamera, spDeferredTranslator);
+}
+
 void MainApp::StartGraphic_Test()
 {
+#ifdef something
     // create glfw window
     std::shared_ptr<Bamboo::GlfwWindow> spWindow = Bamboo::GlfwWindow::Create(1024, 768, "Test");
     // set input event listener
     spWindow->SetInputEventListener(m_spInputEventListener);
 
     // create camera
-    m_spCamera = Bamboo::PerspectiveCamera::Create(45.0f, 1.33f, 0.01f, 100.0f, glm::vec3(-0.2f, 0.2f, 0.0f), 90.0f, -50.0f);
+    m_spCamera = Bamboo::PerspectiveCamera::Create(90.0f, 1.0f, 0.01f, 100.0f, glm::vec3(-0.2f, 0.2f, 0.0f), 90.0f, -50.0f);
 
     // create scene
     std::shared_ptr<Bamboo::Scene> spScene = Bamboo::Scene::Create();
@@ -116,9 +172,12 @@ void MainApp::StartGraphic_Test()
 
     //spLight->SetTransformMatrix(glm::translate(0.0f, 1.0f, 0.0f));
 
+
     std::shared_ptr<Bamboo::ISceneObject> spTreppe = Bamboo::SO_LoadedModel::Create("models/bunte-treppe3.dae");
+    std::shared_ptr<Bamboo::ISceneObject> spSphere = Bamboo::SO_LoadedModel::Create("models/pool_sphere.dae");
   //  std::shared_ptr<Bamboo::ISceneObject> spTable = Bamboo::SO_LoadedModel::Create("models/table.dae");
     spTreppe->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
+    spSphere->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
     //spTable->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)) * glm::translate(glm::mat4(), glm::vec3(0.0f, -0.9f, 0.0f)));
 
     g_spTreppe = spTreppe;
@@ -137,22 +196,25 @@ void MainApp::StartGraphic_Test()
 
     // add objects to scene
     spScene->AttachObject(spCube);
-    //spScene->AttachObject(spTable);
     spScene->AttachObject(spTreppe);
+    spScene->AttachObject(spSphere);
 
     // add light to scene
     spScene->AttachObject(spTestLight1);
-    spScene->AttachObject(spTestLight5);
+   // spScene->AttachObject(spTestLight5);
    // spScene->AttachObject(spTestLight6);
     //spScene->AttachObject(spTestLight2);
     spScene->AttachObject(spTestLight3);
-    spScene->AttachObject(spTestLight4);
+    //spScene->AttachObject(spTestLight4);
+
 
     // add render loop
     GetGraphic()->AddRenderLoop(spWindow, m_spCamera, spScene);
 
     // register itself as listener for camera events
     GetEventManager()->RegisterEventListener(this, CameraMovementEvent::EventType());
+
+#endif
 }
 
 void MainApp::Run()
@@ -161,7 +223,7 @@ void MainApp::Run()
 
     GetEventManager()->Initialize();
 
-    StartGraphic_Test();
+    StartGraphic_Test2();
 
     // main loop
     while(GetGame()->GetStop() == false)
@@ -170,12 +232,12 @@ void MainApp::Run()
 
 	LuaTest();
 
+        static int i=0;
+        i++;
+
+        g_spSphere->SetTransformMatrix(glm::translate(g_spSphere->GetTransformMatrix(), glm::vec3(cos(i / 400.0) / 100.0, sin(i / 400.0) / 400.0, sin(i / 400.0) / 100.0)));
+
         GetGraphic()->Render();
-
-        static int count = 0;
-        count+=1;
-
-        g_spTreppe->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)) * glm::translate(glm::mat4(), glm::vec3(0.0, 5.5f, 0.0f)) * glm::rotate(glm::mat4(), 0.1f * count, glm::vec3(1.0f, 0.2f, 0.0f)));
     }
 }
 

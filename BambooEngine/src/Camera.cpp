@@ -5,6 +5,8 @@
 #include <glm/gtx/transform2.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <iostream>
+
 #define PI 3.1415f
 
 /****************************************************************
@@ -65,7 +67,12 @@ glm::mat4 Bamboo::ICamera::GetProjectionMatrix() const
   *************************************************************** */
 glm::mat4 Bamboo::ICamera::GetViewMatrix() const
 {
-    return m_m4ViewMatrix;
+  return m_m4ViewMatrix;
+}
+
+glm::mat4 Bamboo::ICamera::GetTranslationMatrix() const
+{
+  return m_m4TranslateMatrix;
 }
 
 /****************************************************************
@@ -96,7 +103,33 @@ void Bamboo::ICamera::RotateHorizontal(float fValue)
     while (m_fRotationHorizontal >= 360.0f)
         m_fRotationHorizontal -= 360.0f;
 }
+/*
+glm::mat4 OwnLookAt(glm::vec3 vPosition, glm::vec3 vTarget, glm::vec3 up)
+{
+      glm::vec3  zaxis = glm::normalize(vTarget - vPosition);    // The "look-at" vector.
+      glm::vec3  xaxis = glm::normalize(glm::cross(up, zaxis));// The "right" vector.
+      glm::vec3  yaxis = glm::cross(zaxis, xaxis);     // The "up" vector.
 
+      // Create a 4x4 orientation matrix from the right, up, and at vectors
+      glm::mat4  orientation (
+          xaxis.x, yaxis.x, zaxis.x, 0,
+          xaxis.y, yaxis.y, zaxis.y, 0,
+          xaxis.z, yaxis.z, zaxis.z, 0,
+            0,       0,       0,     1
+      );
+
+      // Create a 4x4 translation matrix by negating the eye position.
+      glm::mat4  translation (
+            1,      0,      0,     0,
+            0,      1,      0,     0,
+            0,      0,      1,     0,
+          -vPosition.x, -vPosition.y, -vPosition.z,  1
+      );
+
+      // Combine the orientation and translation to compute the view matrix
+      return ( translation * orientation );
+}
+*/
 /****************************************************************
   *************************************************************** */
 void Bamboo::ICamera::Move(float fFactor)
@@ -154,6 +187,33 @@ void Bamboo::ICamera::Move(float fFactor)
     v3LookAt.z = cos(((m_fRotationHorizontal) / 180.0) * PI);
 
     m_m4ViewMatrix = glm::lookAt(m_v3CameraPosition, m_v3CameraPosition + v3LookAt, glm::vec3(0,1,0));
+
+    /*m_m4TranslateMatrix = glm::mat4 (1, 0, 0, 0,
+                                     0, 1, 0, 0,
+                                     0, 0, 1, 0,
+                                     m_v3CameraPosition.x, m_v3CameraPosition.y, m_v3CameraPosition.z, 1);*/
+
+    glm::mat4 mTest = glm::inverse(m_m4ViewMatrix);
+
+    m_m4TranslateMatrix = glm::mat4 (1, 0, 0, 0,
+                                     0, 1, 0, 0,
+                                     0, 0, 1, 0,
+                                     -mTest[3][0], -mTest[3][1], -mTest[3][2], 1);
+
+    //m_m4ViewMatrix = OwnLookAt(m_v3CameraPosition, m_v3CameraPosition + v3LookAt, glm::vec3(0,1,0));
+
+   /* std::cout << std::endl << m_v3CameraPosition.x << "#" << m_v3CameraPosition.y << "#" << m_v3CameraPosition.z << std::endl;
+    std::cout << mTest[0][0] << "\t" << mTest[0][1] << "\t"<< mTest[0][2] << "\t"<< mTest[0][3] << std::endl;
+    std::cout << mTest[1][0] << "\t" << mTest[1][1] << "\t"<< mTest[1][2] << "\t"<< mTest[1][3] << std::endl;
+    std::cout << mTest[2][0] << "\t" << mTest[2][1] << "\t"<< mTest[2][2] << "\t"<< mTest[2][3] << std::endl;
+    std::cout << mTest[3][0] << "\t" << mTest[3][1] << "\t"<< mTest[3][2] << "\t"<< mTest[3][3] << std::endl;*/
+}
+
+void Bamboo::ICamera::SetPosition(glm::vec3 vPosition)
+{
+  m_v3CameraPosition = vPosition;
+
+  Move(0.0f);
 }
 
 /****************************************************************

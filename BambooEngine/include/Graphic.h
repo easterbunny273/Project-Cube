@@ -8,6 +8,9 @@
 #ifndef __realtime_lu_graphic
 #define __realtime_lu_graphic
 
+// opengl libs
+#include "common_gl.h"
+
 // stl includes
 #include <memory>
 #include <list>
@@ -20,12 +23,16 @@
 // glm includes
 #include <glm/glm.hpp>
 
+// semantic scene node interface
+#include "SemanticSceneNodes/ISemanticSceneNode.h"
+
 // forward declarations
 class SceneObject_RenderTarget;
+class INodeTranslator;
 
 class Bamboo
 {
-private:
+public:
     /*! \name Internal classes, forward declarations */
     //@{
         class Shader;
@@ -37,7 +44,6 @@ private:
 
         class RN_PostEffect;
         class RN_Camera;
-        class RN_Cube;
         class RN_FBO;
         class RN_RenderPass;
         class RN_BoundingBox;
@@ -45,6 +51,7 @@ private:
         class RN_Generic;
         class RN_Deferred;
         class RN_SpotLight;
+        class RN_CubeMap;
         class RN_SpotLight_Model;
     //@}
 
@@ -75,13 +82,6 @@ public:
         class PerspectiveCamera;
         class OrthogonalCamera;
 
-        class ISceneObject;
-        class SO_Cube;
-        class SO_LoadedModel;
-        class SO_ILight;
-        class SO_SpotLight;
-
-        class Scene;
         class LightManager;
     //@}
 
@@ -121,8 +121,8 @@ public:
     //@{
         /// adds a render loop and returns its id
         int AddRenderLoop(std::shared_ptr<IRenderTarget> spRenderTarget,
-                          std::shared_ptr<ICamera> spCamera,
-                          std::shared_ptr<Scene> spScene);
+                          std::shared_ptr<ISemanticSceneNode> spRootNode,
+                          std::shared_ptr<INodeTranslator> spTranslator);
 
         /// removes a render loop
         void RemoveRenderLoop(int iLoopID);
@@ -134,18 +134,14 @@ private:
         struct TItlRenderLoop
         {
             std::shared_ptr<IRenderTarget>      spRenderTarget;
-            std::shared_ptr<ICamera>            spCamera;
-            std::shared_ptr<Scene>              spScene;
-            std::shared_ptr<IRenderNode>        spRenderGraph;
+            std::shared_ptr<ISemanticSceneNode> spSceneRoot;
+            std::shared_ptr<INodeTranslator>    spTranslator;
         };
     //@}
 
     /*! \name Internal helper methods */
     //@{
-        /// builds / prepares the render graph for a given renderloop
-        void ItlBuildRenderGraph(TItlRenderLoop &tRenderLoop);
 
-        void ItlBuildDeferredRenderPipeline(TItlRenderLoop &tRenderLoop);
     //@}
 
     /*! \name Private members */

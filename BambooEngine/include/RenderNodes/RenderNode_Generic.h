@@ -28,6 +28,8 @@ public:
     virtual ~RN_Generic();
     //@}
 
+    void SetEnvironmentMap(GLuint nTextureID);
+
 protected:
 
 
@@ -103,8 +105,11 @@ private:
     GLuint *m_pnSpecularTexture;
     GLuint *m_pnDisplaceTexture;
 
+    GLuint  m_nEnvironmentMap;
+
     std::shared_ptr<GeometryData::GenericObject> m_spObject;
 
+    bool m_bUseEnvironmentMapping;
     //@}
 
     /*! \name Static members */
