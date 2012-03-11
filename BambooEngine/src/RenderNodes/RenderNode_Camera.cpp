@@ -110,7 +110,12 @@ Bamboo::RN_Camera::RN_Camera(Bamboo::ICamera * pCamera, bool bSetMatrices)
     if (error != GL_NO_ERROR)
         Logger::error() << "glGetError: " << TranslateGLerror(error) << Logger::endl;
 
-    Logger::debug() << "SceneObject_Camera created" << Logger::endl;
+    Logger::debug() << "RN_Camera created" << Logger::endl;
+}
+
+Bamboo::RN_Camera::~RN_Camera()
+{
+  Logger::debug() << "RN_Camera destroyed" << Logger::endl;
 }
 
 void Bamboo::RN_Camera::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderInfo)

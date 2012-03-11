@@ -160,7 +160,6 @@ protected:
     /*! \name Internal helper methods */
     //@{
 	void ItlSendTransformMatrices();		///<internal helper function which sends the current transormation matrices to the shader
-	void ItlSendLightPosition();
 
         inline void ItlPushFBO(GLuint nFBO) { s_snBoundFBOs.push(nFBO); }
         inline void ItlPopFBO() { s_snBoundFBOs.pop(); }

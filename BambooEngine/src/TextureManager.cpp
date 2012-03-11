@@ -60,20 +60,14 @@ void Bamboo::TextureManager::TImpl::ItlInitialize()
 {
     ilInit();
 
-    stringstream puffer;	//for debugging output
-    string puffer2;		//for debugging output
-
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &m_iNumTextureUnits);	    //ask opengl how many texture units are available
 
-    puffer << m_iNumTextureUnits;					    //for debugging output, transform integer to string, read integer in stringstream
-    puffer >> puffer2;						    //for debugging output, transform integer to string, write stringstream to string
+    //m_iNumTextureUnits = 32;
 
-
-    m_iNumTextureUnits = 14;
     for (int a=0; a < m_iNumTextureUnits; a++)			    //push them all in the free_units queue
             m_lFreeUnits.push_back(a);
 
-    Logger::debug() << puffer2 << " texture units available" << Logger::endl;
+    Logger::debug() << m_iNumTextureUnits << " texture units available" << Logger::endl;
 
     m_bDevIL_Initialized = true;
 
@@ -148,7 +142,6 @@ GLuint Bamboo::TextureManager::UseTexture(GLuint nTextureID)
         m_pImpl->m_mLastBindedTextures[nFreeUnit] = nTextureID;
     }
 
-
     return nFreeUnit;
 }
 
@@ -186,6 +179,8 @@ GLuint Bamboo::TextureManager::RequestFreeUnit()
     if (m_pImpl->m_bDevIL_Initialized == false)
         m_pImpl->ItlInitialize();
 
+    assert (m_pImpl->m_lFreeUnits.empty() == false);
+
     GLuint nFreeUnit = m_pImpl->m_lFreeUnits.front();	    //get first free unit
 
     m_pImpl->m_lFreeUnits.pop_front();			    //remove unit from free_units queue
@@ -195,6 +190,18 @@ GLuint Bamboo::TextureManager::RequestFreeUnit()
 
 void Bamboo::TextureManager::ReleaseUnit(GLuint nUnit)
 {
+#ifdef DEBUG
+  bool bOk = true;
+   for (auto iter = m_pImpl->m_lFreeUnits.begin(); iter != m_pImpl->m_lFreeUnits.end() && bOk; iter++)
+    {
+        bOk &= (*iter != nUnit);
+    }
+
+   if (!bOk)
+     Logger::fatal() << "Texture unit " << nUnit << " is released without being locked (double release?)" << Logger::endl;
+
+#endif
+
     m_pImpl->m_lFreeUnits.push_back(nUnit);
 }
 

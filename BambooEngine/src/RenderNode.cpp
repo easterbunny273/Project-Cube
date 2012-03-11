@@ -115,7 +115,7 @@ Bamboo::IRenderNode::IRenderNode()
 
 Bamboo::IRenderNode::~IRenderNode()
 {
-
+  ClearChilds();
 }
 
 
@@ -157,6 +157,8 @@ bool Bamboo::IRenderNode::RemoveChild(std::shared_ptr<Bamboo::IRenderNode> spNod
 
 	    break;
 	}
+
+        iterator++;
     }
 
 

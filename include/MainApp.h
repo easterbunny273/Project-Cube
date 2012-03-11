@@ -52,7 +52,6 @@ public:
     /*! \name Testing stuff */
     //@{
 	void LuaTest();
-        void StartGraphic_Test();
         void StartGraphic_Test2();
     //@}
 
@@ -92,7 +91,6 @@ private:
 
     /*! \name Internal helper methods */
     //@{
-	void ItlCreateSceneGraphs();
     //@}
 
     /*! \name Private members */

@@ -33,7 +33,7 @@ Bamboo::RN_SpotLight_Model::RN_SpotLight_Model(glm::vec3 vPosition,
 
 Bamboo::RN_SpotLight_Model::~RN_SpotLight_Model()
 {
-
+  Logger::debug() << "RN_SpotLight_Model destroyed" << Logger::endl;
 }
 
 void Bamboo::RN_SpotLight_Model::ItlCreateVBO()

@@ -28,7 +28,7 @@ public:
     virtual ~RN_Generic();
     //@}
 
-    void SetEnvironmentMap(GLuint nTextureID);
+    void SetEnvironmentMapping(bool bEnabled, GLuint nTextureID = 0);
 
 protected:
 

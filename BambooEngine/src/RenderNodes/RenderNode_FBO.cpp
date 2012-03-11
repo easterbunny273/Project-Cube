@@ -117,7 +117,7 @@ Bamboo::RN_FBO::RN_FBO(int iWidth,
     if(status != GL_FRAMEBUFFER_COMPLETE)
 	Logger::fatal() << "Failed to initialize FBO" << Logger::endl;
     else
-	Logger::debug() << "Initialized FBO" << Logger::endl;
+        Logger::debug() << "RN_FBO created, initialized FBO" << Logger::endl;
 
     //unbind framebuffer
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -226,7 +226,7 @@ Bamboo::RN_FBO::RN_FBO(int iWidth,
     if(status != GL_FRAMEBUFFER_COMPLETE)
 	Logger::fatal() << "Failed to initialize FBO" << Logger::endl;
     else
-	Logger::debug() << "Initialized FBO" << Logger::endl;
+        Logger::debug() << "RN_FBO created, initialized FBO" << Logger::endl;
 
     //release used texture unit
     pTextureManager->ReleaseUnit(textureUnit);
@@ -252,6 +252,8 @@ Bamboo::RN_FBO::~RN_FBO()
 
     //finally, delete the used fbo
     glDeleteFramebuffers(1, &m_nFramebuffer);
+
+    Logger::debug() << "RN_FBO destroyed" << Logger::endl;
 }
 
 /*!

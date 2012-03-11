@@ -29,18 +29,30 @@ void DeferredNodeTranslator::LoadedModel_RuleObject::Action()
       // add rendering nodes, if environment mapping is activated but not handled yet
       if (!m_spCubemapDeferredNode && m_spSemNode->GetEnvironmentMapping())
       {
-          m_spCubemapCamera = Bamboo::PerspectiveCamera::Create(90.0f, 1.0f, 0.01f, 100.0f, glm::vec3(), 0.0f, 0.0f);
+          m_spCubemapCamera = Bamboo::PerspectiveCamera::Create(90.0f, 1.0f, 0.001f, 100.0f, glm::vec3(), 0.0f, 0.0f);
 
           m_spCubemapCameraNode = std::shared_ptr<Bamboo::RN_Camera> (new Bamboo::RN_Camera(m_spCubemapCamera.get()));
 
-          m_spCubemapDeferredNode = std::shared_ptr<Bamboo::RN_Deferred> (new Bamboo::RN_Deferred(256, 256, true));
+          m_spCubemapDeferredNode = std::shared_ptr<Bamboo::RN_Deferred> (new Bamboo::RN_Deferred(128, 128, true));
 
           m_spCubemapCameraNode->AddChild(m_spCubemapDeferredNode);
 
           GLuint nDeferredAlbedoTexture = m_spCubemapDeferredNode->GetAlbedoTexture();
-          m_spCorrespondingRenderingNode->SetEnvironmentMap(nDeferredAlbedoTexture);
+          m_spCorrespondingRenderingNode->SetEnvironmentMapping(true, nDeferredAlbedoTexture);
 
           m_pTranslator->m_spRootNode->AddChild(m_spCubemapCameraNode);
+      }
+
+      // remove rendering nodes, if environment mapping is deactivated but notes created
+      if (m_spCubemapDeferredNode && !m_spSemNode->GetEnvironmentMapping())
+      {
+          m_pTranslator->m_spRootNode->RemoveChild(m_spCubemapCameraNode);
+
+          m_spCubemapCamera.reset();
+          m_spCubemapCameraNode.reset();
+          m_spCubemapDeferredNode.reset();
+
+          m_spCorrespondingRenderingNode->SetEnvironmentMapping(false, 0);
       }
 
       if (m_spCubemapDeferredNode)

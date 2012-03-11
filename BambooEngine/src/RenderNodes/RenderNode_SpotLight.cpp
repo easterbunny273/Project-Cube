@@ -37,6 +37,8 @@ Bamboo::RN_SpotLight::~RN_SpotLight()
 {
     glDeleteFramebuffers(1, &m_nFBO);
     glDeleteTextures(1, &m_nDepthTexture);
+
+    Logger::debug() << "RN_SpotLight destroyed" << Logger::endl;
 }
 
 void Bamboo::RN_SpotLight::ItlCreateVBO()

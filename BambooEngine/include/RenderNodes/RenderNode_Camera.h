@@ -16,6 +16,7 @@ class Bamboo::RN_Camera : public Bamboo::IRenderNode
 {
 public:
     RN_Camera(Bamboo::ICamera *pCamera, bool bSetMatrices=true);
+    ~RN_Camera();
 
     /*! \name Operations */
     //@{

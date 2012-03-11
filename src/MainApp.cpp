@@ -21,6 +21,7 @@
 MainApp * MainApp::s_pInstance = NULL;
 
 std::shared_ptr<LoadedModel_SemSceneNode> g_spSphere;
+std::shared_ptr<LoadedModel_SemSceneNode> g_spTreppe;
 
 MainApp::MainApp()
 {
@@ -111,15 +112,18 @@ void MainApp::StartGraphic_Test2()
   Level level = LuaManager::GetInstance()->CallLuaFunction<Level>("GetLevel");
 
   // create scene nodes
-  std::shared_ptr<ISemanticSceneNode> spTreppe = LoadedModel_SemSceneNode::Create("models/bunte-treppe3.dae");
+  std::shared_ptr<LoadedModel_SemSceneNode> spTreppe = LoadedModel_SemSceneNode::Create("models/bunte-treppe3.dae");
   spTreppe->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
 
   std::shared_ptr<LoadedModel_SemSceneNode> spSphere = LoadedModel_SemSceneNode::Create("models/pool_sphere.dae");
   spSphere->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
   spSphere->SetTransformMatrix(glm::translate(spSphere->GetTransformMatrix(), glm::vec3(0.0, 2.0, 0.0)));
+  //spTreppe->ActivateEnvironmentMapping();
   spSphere->ActivateEnvironmentMapping();
 
   g_spSphere = spSphere;
+
+  g_spTreppe = spTreppe;
 
   std::shared_ptr<ISemanticSceneNode> spCube = Cube_SemSceneNode::Create(level.GetCubeByPosition(0,0,0));
   //spCube->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
@@ -147,76 +151,6 @@ void MainApp::StartGraphic_Test2()
   m_pGraphic->AddRenderLoop(spWindow, spCamera, spDeferredTranslator);
 }
 
-void MainApp::StartGraphic_Test()
-{
-#ifdef something
-    // create glfw window
-    std::shared_ptr<Bamboo::GlfwWindow> spWindow = Bamboo::GlfwWindow::Create(1024, 768, "Test");
-    // set input event listener
-    spWindow->SetInputEventListener(m_spInputEventListener);
-
-    // create camera
-    m_spCamera = Bamboo::PerspectiveCamera::Create(90.0f, 1.0f, 0.01f, 100.0f, glm::vec3(-0.2f, 0.2f, 0.0f), 90.0f, -50.0f);
-
-    // create scene
-    std::shared_ptr<Bamboo::Scene> spScene = Bamboo::Scene::Create();
-
-    // create objects
-
-    std::shared_ptr<Bamboo::ISceneObject> spTestLight1 = Bamboo::SO_SpotLight::Create(glm::vec3(-0.2f, 0.10f, 0.14f), glm::vec3(1.0f, -0.4f, -1.0f), 45.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-    //std::shared_ptr<Bamboo::ISceneObject> spTestLight2 = Bamboo::SO_SpotLight::Create(glm::vec3(0.0f, 0.25f, -0.09f), glm::vec3(0.0f, -2.0f, 1.0f), 5.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-    std::shared_ptr<Bamboo::ISceneObject> spTestLight3 = Bamboo::SO_SpotLight::Create(glm::vec3(-0.2f, 0.2f, -0.14f), glm::vec3(1.0f, -1.1f, 0.62f), 45.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-    std::shared_ptr<Bamboo::ISceneObject> spTestLight4 = Bamboo::SO_SpotLight::Create(glm::vec3(0.0f, 0.3f, 0.0f), glm::vec3(0.2f, -1.0f, 0.0f), 45.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-    std::shared_ptr<Bamboo::ISceneObject> spTestLight5 = Bamboo::SO_SpotLight::Create(glm::vec3(-0.2f, 0.20f, 0.16f), glm::vec3(1.0f, -0.9f, -1.0f), 45.0f, glm::vec3(0.5f, 0.5f, 0.5f));
-    std::shared_ptr<Bamboo::ISceneObject> spTestLight6 = Bamboo::SO_SpotLight::Create(glm::vec3(-0.2f, 0.20f, 0.18f), glm::vec3(1.0f, -0.9f, -1.0f), 45.0f, glm::vec3(0.5f, 0.5f, 0.5f));
-
-    //spLight->SetTransformMatrix(glm::translate(0.0f, 1.0f, 0.0f));
-
-
-    std::shared_ptr<Bamboo::ISceneObject> spTreppe = Bamboo::SO_LoadedModel::Create("models/bunte-treppe3.dae");
-    std::shared_ptr<Bamboo::ISceneObject> spSphere = Bamboo::SO_LoadedModel::Create("models/pool_sphere.dae");
-  //  std::shared_ptr<Bamboo::ISceneObject> spTable = Bamboo::SO_LoadedModel::Create("models/table.dae");
-    spTreppe->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
-    spSphere->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
-    //spTable->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)) * glm::translate(glm::mat4(), glm::vec3(0.0f, -0.9f, 0.0f)));
-
-    g_spTreppe = spTreppe;
-
-    // load level
-    LuaManager::GetInstance()->ExecuteFile("lua/test.lua");
-
-    Level level = LuaManager::GetInstance()->CallLuaFunction<Level>("GetLevel");
-
-    // add doors
-   /* level.GetCubeByPosition(0,0,0)->GetGrid(3).AddDoor(5,2);
-    level.GetCubeByPosition(0,0,0)->GetGrid(3).AddDoor(5,9);
-    level.GetCubeByPosition(0,0,0)->GetGrid(3).AddDoor(3,3);*/
-
-    std::shared_ptr<Bamboo::ISceneObject> spCube = Bamboo::SO_Cube::Create(level.GetCubeByPosition(0,0,0));
-
-    // add objects to scene
-    spScene->AttachObject(spCube);
-    spScene->AttachObject(spTreppe);
-    spScene->AttachObject(spSphere);
-
-    // add light to scene
-    spScene->AttachObject(spTestLight1);
-   // spScene->AttachObject(spTestLight5);
-   // spScene->AttachObject(spTestLight6);
-    //spScene->AttachObject(spTestLight2);
-    spScene->AttachObject(spTestLight3);
-    //spScene->AttachObject(spTestLight4);
-
-
-    // add render loop
-    GetGraphic()->AddRenderLoop(spWindow, m_spCamera, spScene);
-
-    // register itself as listener for camera events
-    GetEventManager()->RegisterEventListener(this, CameraMovementEvent::EventType());
-
-#endif
-}
-
 void MainApp::Run()
 {
     // init game logic, graphics, do main loop, all this nasty stuff.
@@ -236,9 +170,17 @@ void MainApp::Run()
         i++;
 
         g_spSphere->SetTransformMatrix(glm::translate(g_spSphere->GetTransformMatrix(), glm::vec3(cos(i / 400.0) / 100.0, sin(i / 400.0) / 400.0, sin(i / 400.0) / 100.0)));
+        g_spTreppe->SetTransformMatrix(glm::rotate(g_spTreppe->GetTransformMatrix(), 0.04f, glm::vec3(1.0, 1.0, 0.0)));
+
+        if (i == 2000)
+          g_spSphere->DeactivateEnvironmentMapping();
+        if (i==3000)
+          g_spSphere->ActivateEnvironmentMapping();
 
         GetGraphic()->Render();
     }
+
+
 }
 
 Bamboo * MainApp::GetGraphic()
@@ -257,11 +199,6 @@ DummyGame * MainApp::GetGame()
 
     assert (m_pGame != NULL);
     return m_pGame;
-}
-
-void MainApp::ItlCreateSceneGraphs()
-{
-
 }
 
 lua_State * MainApp::GetLuaState()
