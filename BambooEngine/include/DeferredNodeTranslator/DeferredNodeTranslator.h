@@ -66,7 +66,7 @@ public:
       class Cube_RuleObject;
       class LoadedModel_RuleObject;
       class Light_RuleObject;
-
+      class FractalTerrain_RuleObject;
   //@}
 
   /*! \name INodeTranslator interface */

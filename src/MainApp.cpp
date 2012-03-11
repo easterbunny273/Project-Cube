@@ -12,6 +12,7 @@
 #include "SemanticSceneNodes/Camera_SemSceneNode.h"
 #include "SemanticSceneNodes/Cube_SemSceneNode.h"
 #include "SemanticSceneNodes/Light_SemSceneNode.h"
+#include "SemanticSceneNodes/FractalTerrain_SemSceneNode.h"
 
 #include "DeferredNodeTranslator/DeferredNodeTranslator.h"
 
@@ -19,9 +20,6 @@
 
 // initialize singelton ptr to NULL
 MainApp * MainApp::s_pInstance = NULL;
-
-std::shared_ptr<LoadedModel_SemSceneNode> g_spSphere;
-std::shared_ptr<LoadedModel_SemSceneNode> g_spTreppe;
 
 MainApp::MainApp()
 {
@@ -111,32 +109,18 @@ void MainApp::StartGraphic_Test2()
 
   Level level = LuaManager::GetInstance()->CallLuaFunction<Level>("GetLevel");
 
-  // create scene nodes
-  std::shared_ptr<LoadedModel_SemSceneNode> spTreppe = LoadedModel_SemSceneNode::Create("models/bunte-treppe3.dae");
-  spTreppe->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
-
-  std::shared_ptr<LoadedModel_SemSceneNode> spSphere = LoadedModel_SemSceneNode::Create("models/pool_sphere.dae");
-  spSphere->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
-  spSphere->SetTransformMatrix(glm::translate(spSphere->GetTransformMatrix(), glm::vec3(0.0, 2.0, 0.0)));
-  //spTreppe->ActivateEnvironmentMapping();
-  spSphere->ActivateEnvironmentMapping();
-
-  g_spSphere = spSphere;
-
-  g_spTreppe = spTreppe;
-
   std::shared_ptr<ISemanticSceneNode> spCube = Cube_SemSceneNode::Create(level.GetCubeByPosition(0,0,0));
   //spCube->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
 
+  std::shared_ptr<FractalTerrain_SemSceneNode> spTerrain = FractalTerrain_SemSceneNode::Create("textures/fractal_terrain_test1.png");
   std::shared_ptr<Light_SemSceneNode> spTestLight1 = Light_SemSceneNode::Create(glm::vec3(-0.2f, 0.10f, 0.14f), glm::vec3(1.0f, -0.4f, -1.0f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
   std::shared_ptr<Light_SemSceneNode> spTestLight2 = Light_SemSceneNode::Create(glm::vec3(-0.2f, 0.2f, -0.14f), glm::vec3(1.0f, -1.1f, 0.62f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
 
   std::shared_ptr<Camera_SemSceneNode> spCamera = Camera_SemSceneNode::Create(m_spCamera);
 
   // link scene graph
-  spCamera->AddChild(spTreppe);
-  spCamera->AddChild(spSphere);
   spCamera->AddChild(spCube);
+  spCamera->AddChild(spTerrain);
   spCamera->AddChild(spTestLight1);
   spCamera->AddChild(spTestLight2);
 
@@ -168,14 +152,6 @@ void MainApp::Run()
 
         static int i=0;
         i++;
-
-        g_spSphere->SetTransformMatrix(glm::translate(g_spSphere->GetTransformMatrix(), glm::vec3(cos(i / 400.0) / 100.0, sin(i / 400.0) / 400.0, sin(i / 400.0) / 100.0)));
-        g_spTreppe->SetTransformMatrix(glm::rotate(g_spTreppe->GetTransformMatrix(), 0.04f, glm::vec3(1.0, 1.0, 0.0)));
-
-        if (i == 2000)
-          g_spSphere->DeactivateEnvironmentMapping();
-        if (i==3000)
-          g_spSphere->ActivateEnvironmentMapping();
 
         GetGraphic()->Render();
     }

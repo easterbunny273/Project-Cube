@@ -4,6 +4,7 @@
 #include "DeferredNodeTranslator/Cube_RuleObject.h"
 #include "DeferredNodeTranslator/Light_RuleObject.h"
 #include "DeferredNodeTranslator/LoadedModel_RuleObject.h"
+#include "DeferredNodeTranslator/FractalTerrain_RuleObject.h"
 
 #include "PC_Logger.h"
 
@@ -13,11 +14,13 @@ DeferredNodeTranslator::DeferredNodeTranslator(Bamboo *pCore) : INodeTranslator(
   std::shared_ptr<IRuleObject> spCubeRule(new Cube_RuleObject());
   std::shared_ptr<IRuleObject> spLightRule(new Light_RuleObject());
   std::shared_ptr<IRuleObject> spLoadedModelRule(new LoadedModel_RuleObject());
+  std::shared_ptr<IRuleObject> spFractalTerrain(new FractalTerrain_RuleObject());
 
   ItlRegisterRuleObjectPrototype(spCameraRule);
   ItlRegisterRuleObjectPrototype(spCubeRule);
   ItlRegisterRuleObjectPrototype(spLightRule);
   ItlRegisterRuleObjectPrototype(spLoadedModelRule);
+  ItlRegisterRuleObjectPrototype(spFractalTerrain);
 }
 
 DeferredNodeTranslator::~DeferredNodeTranslator()
