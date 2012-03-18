@@ -179,6 +179,7 @@ void main(void)
    // out_Albedo = vec4(texcoord_offset, 0.0, 1.0);
 
    // write depth into alpha
+  out_Albedo = vec4(my_ObjPosition, 1.0);
    out_Albedo.a = my_ScreenPosition.z / my_ScreenPosition.w;
 
    out_Normal = vec4(my_Normal, 1.0);

@@ -45,6 +45,14 @@ Bamboo::RN_Generic::~RN_Generic()
     Logger::debug() << "RN_Generic destroyed" << Logger::endl;
 }
 
+void Bamboo::RN_Generic::UpdateGenericObject(std::shared_ptr<GeometryData::GenericObject> spObject)
+{
+  m_spObject = spObject;
+  ItlDeleteBuffers();
+  ItlPrepareGLBuffers();
+  ItlPrepareVAO();
+}
+
 void Bamboo::RN_Generic::SetEnvironmentMapping(bool bEnabled, GLuint nTextureID /* = 0*/)
 {
   m_bUseEnvironmentMapping = bEnabled;
@@ -273,8 +281,13 @@ void Bamboo::RN_Generic::ItlDeleteBuffers()
 
         delete [] m_pvnAttributeOffsets;
         m_pvnAttributeOffsets = NULL;
+
+        delete [] m_pnNumIndices;
+        m_pnNumIndices = NULL;
+
     }
 
+    m_nNumMeshes = 0;
 }
 
 void Bamboo::RN_Generic::ItlPrepareVAO()

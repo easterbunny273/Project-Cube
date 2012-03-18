@@ -1,11 +1,11 @@
 /*
- * header file for SceneObject_AssimpImport class
+ * header file for RenderNode_Terrain class
  * written by: christian moellinger <ch.moellinger@gmail.com>
- * 03 / 2011
+ * 03 / 2012
  */
 
-#ifndef __BAMBOO_RENDERNODE_GENERIC_HEADER
-#define __BAMBOO_RENDERNODE_GENERIC_HEADER
+#ifndef __BAMBOO_RENDERNODE_TERRAIN_HEADER
+#define __BAMBOO_RENDERNODE_TERRAIN_HEADER
 
 #include <string>
 #include <vector>
@@ -18,19 +18,15 @@
     tbd
 */
 
-class Bamboo::RN_Generic : public Bamboo::IRenderNode
+class Bamboo::RN_Terrain : public Bamboo::IRenderNode
 {
 public:
     /*! \name Constructor / Destructor */
     //@{
     /// constructor, creates scene object and imports model from given file
-    RN_Generic(std::shared_ptr<GeometryData::GenericObject> spObject);
-    virtual ~RN_Generic();
+    RN_Terrain(std::string sFilename);
+    virtual ~RN_Terrain();
     //@}
-
-    void UpdateGenericObject(std::shared_ptr<GeometryData::GenericObject> spObject);
-
-    void SetEnvironmentMapping(bool bEnabled, GLuint nTextureID = 0);
 
 protected:
 
@@ -65,53 +61,24 @@ private:
 
 
     /*! \name Internal types */
-    //@{
-//    struct TItlTextureInformation
-//    {
-//        GeometryData::TextureType   tTextureType;
-//        std::string                 sTextureName;
-//        unsigned int                nVBOOffset;
-//    };
-    //@}
 
     /*! \name Internal helper methods */
     //@{
         void ItlLoadShader();
+
+        void ItlCreateBuffers();
         void ItlDeleteBuffers();
-        void ItlPrepareGLBuffers();
-        void ItlPrepareTextures();
-        void ItlDeleteTextures();
+
         void ItlPrepareVAO();
     //@}
 
     /*! \name Private members */
     //@{
-    GLuint *m_pnVertexArrayObjects;
+    GLuint  m_nVertexArrayObject;
+    GLuint  m_nVertexBufferObject;
+    GLuint  m_nVertexIndexObject;
 
-    GLuint *m_pnVertexBufferObjects;
-    GLuint *m_pnIndexBufferObjects;
-
-    std::vector<std::string> * m_pvsAttributeNames;
-    std::vector<unsigned int> * m_pvnAttributeOffsets;
-
-    //std::vector<std::vector<TItlTextureInformation> > m_vvTexureInformationPerMesh;
-    std::vector<std::map<std::string, unsigned int> > m_vmTextureInformations;
-
-
-
-    unsigned int *m_pnNumIndices;
-    unsigned int m_nNumMeshes;
-
-    GLuint *m_pnColorTexture;
-    GLuint *m_pnNormalTexture;
-    GLuint *m_pnSpecularTexture;
-    GLuint *m_pnDisplaceTexture;
-
-    GLuint  m_nEnvironmentMap;
-
-    std::shared_ptr<GeometryData::GenericObject> m_spObject;
-
-    bool m_bUseEnvironmentMapping;
+    std::string m_sFilename;
     //@}
 
     /*! \name Static members */

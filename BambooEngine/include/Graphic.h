@@ -53,6 +53,7 @@ public:
         class RN_SpotLight;
         class RN_CubeMap;
         class RN_SpotLight_Model;
+        class RN_Terrain;
     //@}
 
 public:

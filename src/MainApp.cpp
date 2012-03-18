@@ -18,6 +18,8 @@
 
 #include "Gamelogic/Level.h"
 
+bool g_bLockedMouse = true;
+
 // initialize singelton ptr to NULL
 MainApp * MainApp::s_pInstance = NULL;
 
@@ -113,16 +115,16 @@ void MainApp::StartGraphic_Test2()
   //spCube->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
 
   std::shared_ptr<FractalTerrain_SemSceneNode> spTerrain = FractalTerrain_SemSceneNode::Create("textures/fractal_terrain_test1.png");
-  std::shared_ptr<Light_SemSceneNode> spTestLight1 = Light_SemSceneNode::Create(glm::vec3(-0.2f, 0.10f, 0.14f), glm::vec3(1.0f, -0.4f, -1.0f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
+  std::shared_ptr<Light_SemSceneNode> spTestLight1 = Light_SemSceneNode::Create(glm::vec3(-0.5f, 0.2f, 0.3f), glm::vec3(1.0f, -0.4f, -1.0f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
   std::shared_ptr<Light_SemSceneNode> spTestLight2 = Light_SemSceneNode::Create(glm::vec3(-0.2f, 0.2f, -0.14f), glm::vec3(1.0f, -1.1f, 0.62f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
 
   std::shared_ptr<Camera_SemSceneNode> spCamera = Camera_SemSceneNode::Create(m_spCamera);
 
   // link scene graph
-  spCamera->AddChild(spCube);
+//  spCamera->AddChild(spCube);
   spCamera->AddChild(spTerrain);
   spCamera->AddChild(spTestLight1);
-  spCamera->AddChild(spTestLight2);
+ // spCamera->AddChild(spTestLight2);
 
   // create node translator
   std::shared_ptr<INodeTranslator> spDeferredTranslator(new DeferredNodeTranslator(m_pGraphic));
@@ -268,24 +270,27 @@ void MainApp::InputEventListener::ItlHandleKeyboardEvent(int iKeyIdentifier, int
 
 void MainApp::InputEventListener::ItlHandleMousePos(int iX, int iY)
 {
-    //TODO
-    int m_iWidth = 1024;
-    int m_iHeight = 768;
+    if (g_bLockedMouse)
+      {
+        //TODO
+        int m_iWidth = 1024;
+        int m_iHeight = 768;
 
-    // only deliver relative mouse position to center
-    int iRelX = iX - m_iWidth / 2;
-    int iRelY = iY - m_iHeight / 2;
+        // only deliver relative mouse position to center
+        int iRelX = iX - m_iWidth / 2;
+        int iRelY = iY - m_iHeight / 2;
 
-    // issue 7 - workaround
-    iRelX = -iRelX;
-    iRelY = -iRelY;
+        // issue 7 - workaround
+        iRelX = -iRelX;
+        iRelY = -iRelY;
 
-    EventManager *pEventManager = MainApp::GetInstance()->GetEventManager();
-    assert (pEventManager != NULL);
+        EventManager *pEventManager = MainApp::GetInstance()->GetEventManager();
+        assert (pEventManager != NULL);
 
-    pEventManager->QueueEvent(InputMouseMoveEvent::Create(iRelX, iRelY));
+        pEventManager->QueueEvent(InputMouseMoveEvent::Create(iRelX, iRelY));
 
-    glfwSetMousePos(m_iWidth / 2, m_iHeight / 2);
+        glfwSetMousePos(m_iWidth / 2, m_iHeight / 2);
+      }
 }
 
 void MainApp::InputEventListener::ItlHandleMouseWheel(int iPosition)
@@ -314,9 +319,17 @@ void MainApp::InputEventListener::ItlHandleMouseButton(int iButton, int iAction)
     assert (pEventManager != NULL);
 
     if (iAction == GLFW_PRESS)
+      {
+        g_bLockedMouse = true;
+        glfwSetMousePos(1024 / 2, 768 / 2);
+
         pEventManager->QueueEvent(InputMouseButtonEvent::Create(eMouseButton, InputMouseButtonEvent::EVENT_DOWN));
+      }
     else
+      {
+        g_bLockedMouse = false;
         pEventManager->QueueEvent(InputMouseButtonEvent::Create(eMouseButton, InputMouseButtonEvent::EVENT_UP));
+      }
     }
 }
 

@@ -234,7 +234,8 @@ void main(void)
 
 
 
-   out_Albedo = vec4(texture2D(color_texture, my_Texcoord.xy + vTexOffset).rgb, 1.0) * 0.1;
+   //out_Albedo = vec4(texture2D(color_texture, my_Texcoord.xy + vTexOffset).rgb, 1.0) * 0.1;
+   out_Albedo = vec4(my_ObjPosition, 1.0);
    //out_Albedo = vec4(vec3(normalize(my_EyeDir).z , 0.0, 0.0), 1.0);
    // out_Albedo = vec4(texcoord_offset, 0.0, 1.0);
 

@@ -143,7 +143,7 @@ void main()
 
 
 
-    float fLitFactor = GetLitFactor(fDepth, vTexCoordsShadowMap);
+	float fLitFactor = GetLitFactor(fDepth, vTexCoordsShadowMap);
 
     if (fLitFactor > 0.0)
     {
@@ -194,7 +194,7 @@ void main()
         float specular_factor_texture = texture(specular_texture, vTexCoords).r;
 
         float specular = pow(clamp(dot(reflect(-lVec, bump), vVec), 0.0, 1.0),
-                         100.0 ) * specular_factor_texture;
+						 10.0 ) * specular_factor_texture * 0.3;
 
 
         vec4 vSpecular = vec4(vLightColor * specular, 1.0);

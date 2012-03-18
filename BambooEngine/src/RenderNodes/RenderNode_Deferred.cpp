@@ -335,6 +335,7 @@ void Bamboo::RN_Deferred::ItlPreRenderChildren()
 
     ItlPushFBO(m_nFBO);
 
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     //set viewport size
     glViewport(0,0, m_nWidth, m_nHeight);
 
@@ -353,6 +354,8 @@ void Bamboo::RN_Deferred::ItlPreRenderChildren()
 
     assert (l_nUseParallax != -1);
     glUniform1i(l_nUseParallax, s_nUseParallax % 2);
+
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     ItlPushViewportInformation(m_nWidth, m_nHeight);
 
@@ -484,6 +487,7 @@ void Bamboo::RN_Deferred::ItlRender()
           break;
       }
 
+      nTextureToShow = m_nAlbedoDrawBuffer;
       rPostEffectNode.SetTexture("texture1", nTextureToShow );
 
       rPostEffectNode.Render();
