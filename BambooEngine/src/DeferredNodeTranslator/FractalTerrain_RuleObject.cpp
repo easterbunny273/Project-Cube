@@ -3,11 +3,13 @@
 #include "RenderNodes/RenderNode_Generic.h"
 #include "RenderNodes/RenderNode_Camera.h"
 #include "RenderNodes/RenderNode_Deferred.h"
+#include "Graphic.h"
 #include "Camera.h"
 #include <IL/il.h>
 #include <assert.h>
 #include "PC_Logger.h"
 #include <fstream>
+#include <glm/gtc/matrix_transform.hpp>
 
 std::vector<ISemanticSceneNode::t_classID> DeferredNodeTranslator::FractalTerrain_RuleObject::GetAcceptedNodeIDs() const
 {
@@ -65,10 +67,14 @@ std::shared_ptr<GeometryData::GenericObject> DeferredNodeTranslator::FractalTerr
       for (unsigned int iX = 0; iX < iWidth; iX++)
         for (unsigned int iY = 0; iY < iHeight; iY++)
         {
-            vfVertices.push_back((iX - iWidth*0.5) / (double)iWidth);
-            //vfVertices.push_back(0.0f);
-            vfVertices.push_back(0.1 * piHeight[iX + iY*iWidth] / 255.0);
-            vfVertices.push_back((iY - iHeight*0.5) / (double)iHeight);
+            vfVertices.push_back(0.5 * (iX - iWidth*0.5) / (double)iWidth);
+
+            if (piHeight[iX + iY*iWidth] > 0)
+              vfVertices.push_back(piHeight[iX + iY*iWidth] / 255.0);
+            else
+              vfVertices.push_back(0.0);
+
+            vfVertices.push_back(0.5 * (iY - iHeight*0.5) / (double)iHeight);
 
             if (iX < iWidth - 1)
               {
@@ -131,7 +137,7 @@ std::shared_ptr<GeometryData::GenericObject> DeferredNodeTranslator::FractalTerr
                                    &vfNormals[0]);
       spNewMesh->AddIndices(viIndices.size(), &viIndices[0]);
 
-      spNewMesh->SetTexturePath(GeometryData::TextureNames::ALBEDO, sFilename.c_str());
+      spNewMesh->SetTexturePath(GeometryData::TextureNames::ALBEDO, "../textures/terrain_colors.png");
       spNewMesh->SetTexturePath(GeometryData::TextureNames::NORMAL, sFilename.c_str());
 
       spNewMesh->SetTextureCoords(GeometryData::TextureNames::ALBEDO, vfTexcoords.size(), &vfTexcoords[0]);
@@ -181,6 +187,8 @@ void DeferredNodeTranslator::FractalTerrain_RuleObject::Action()
       // create new node
       m_spCorrespondingRenderingNode = std::shared_ptr<Bamboo::RN_Generic>(new Bamboo::RN_Generic(ItlGenerateMeshFromFile(m_spSemNode->GetFilename())));
       assert (m_spCorrespondingRenderingNode);
+
+      m_spCorrespondingRenderingNode->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(1.0, 0.05, 1.0)));
 
       m_pTranslator->m_vShadowCasterNodes.push_back(m_spCorrespondingRenderingNode);
 

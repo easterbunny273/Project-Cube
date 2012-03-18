@@ -136,8 +136,8 @@ void main()
     vec3 vMaskValue = texture(spotmask, vTexCoordsShadowMap).rgb;
 
 
-    if (vMaskValue.r < 0.001)
-        discard;
+	if (vMaskValue.r < 0.001)
+		discard;
 
     //FragColor = texture(shadowmap, vTexCoordsShadowMap);
 
@@ -149,8 +149,8 @@ void main()
     {
         vec3 vAlbedo = texture(color_texture, vTexCoords).rgb * 9;
 
-        vec3 vNormal = texture(normal_texture, vTexCoords).rgb;
-        vec3 vTangent = texture(tangent_texture, vTexCoords).rgb;
+		vec3 vNormal = texture(normal_texture, vTexCoords).rgb;
+		vec3 vTangent = texture(tangent_texture, vTexCoords).rgb;
         vec3 vBitangent = cross(vNormal, vTangent);
 
         vec4 vVertexVS = (ViewMatrix * v4Position);
@@ -183,7 +183,7 @@ void main()
         vec4 base = vec4(max(vAlbedo.r, fMinColorReflection), max(vAlbedo.g, fMinColorReflection), max(vAlbedo.b, fMinColorReflection), 1.0);
         //vec4 base = vec4(vAlbedo, 1.0);
 
-        vec3 bump = normalize( texture(normalmap_texture, vTexCoords).xyz * 2.0 - 1.0);
+		vec3 bump = normalize( texture(normalmap_texture, vTexCoords).xyz * 2.0 - 1.0);
 
         vec4 vAmbient = vec4(0.0);
 
@@ -191,10 +191,11 @@ void main()
 
         vec4 vDiffuse = vec4(vLightColor * diffuse, 1.0);
 
-        float specular_factor_texture = texture(specular_texture, vTexCoords).r;
+	   // float specular_factor_texture = texture(specular_texture, vTexCoords).r;
 
-        float specular = pow(clamp(dot(reflect(-lVec, bump), vVec), 0.0, 1.0),
-						 10.0 ) * specular_factor_texture * 0.3;
+		//float specular = pow(clamp(dot(reflect(-lVec, bump), vVec), 0.0, 1.0),
+		//						 20.0 ) * specular_factor_texture * 0.0;
+		float specular = 0.0;
 
 
         vec4 vSpecular = vec4(vLightColor * specular, 1.0);

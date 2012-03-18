@@ -335,7 +335,6 @@ void Bamboo::RN_Deferred::ItlPreRenderChildren()
 
     ItlPushFBO(m_nFBO);
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     //set viewport size
     glViewport(0,0, m_nWidth, m_nHeight);
 
@@ -352,10 +351,11 @@ void Bamboo::RN_Deferred::ItlPreRenderChildren()
 
     GLuint l_nUseParallax = ItlGetGraphicCore()->GetShaderManager()->GetUniform("nUseParallax");
 
-    assert (l_nUseParallax != -1);
+    if (l_nUseParallax != -1)
+    {
     glUniform1i(l_nUseParallax, s_nUseParallax % 2);
+    }
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     ItlPushViewportInformation(m_nWidth, m_nHeight);
 

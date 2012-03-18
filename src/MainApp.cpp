@@ -115,8 +115,8 @@ void MainApp::StartGraphic_Test2()
   //spCube->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
 
   std::shared_ptr<FractalTerrain_SemSceneNode> spTerrain = FractalTerrain_SemSceneNode::Create("textures/fractal_terrain_test1.png");
-  std::shared_ptr<Light_SemSceneNode> spTestLight1 = Light_SemSceneNode::Create(glm::vec3(-0.5f, 0.2f, 0.3f), glm::vec3(1.0f, -0.4f, -1.0f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
-  std::shared_ptr<Light_SemSceneNode> spTestLight2 = Light_SemSceneNode::Create(glm::vec3(-0.2f, 0.2f, -0.14f), glm::vec3(1.0f, -1.1f, 0.62f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
+  std::shared_ptr<Light_SemSceneNode> spTestLight1 = Light_SemSceneNode::Create(glm::vec3(-0.5f, 0.2f, 0.3f), glm::vec3(1.5f, -0.4f, -1.0f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.5, 20.0f);
+  std::shared_ptr<Light_SemSceneNode> spTestLight2 = Light_SemSceneNode::Create(glm::vec3(-0.5f, 0.4f, 0.3f), glm::vec3(1.5f, -0.9f, -1.0f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.5, 20.0f);
 
   std::shared_ptr<Camera_SemSceneNode> spCamera = Camera_SemSceneNode::Create(m_spCamera);
 
@@ -124,7 +124,7 @@ void MainApp::StartGraphic_Test2()
 //  spCamera->AddChild(spCube);
   spCamera->AddChild(spTerrain);
   spCamera->AddChild(spTestLight1);
- // spCamera->AddChild(spTestLight2);
+  spCamera->AddChild(spTestLight2);
 
   // create node translator
   std::shared_ptr<INodeTranslator> spDeferredTranslator(new DeferredNodeTranslator(m_pGraphic));
