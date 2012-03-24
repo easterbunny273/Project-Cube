@@ -127,7 +127,12 @@ unsigned int GeometryData::GenericObject::NumMeshes() const
 
 std::weak_ptr<GeometryData::GenericMesh> GeometryData::GenericObject::GetMesh(unsigned int nIndex)
 {
-    return std::weak_ptr<GeometryData::GenericMesh>(m_vspMeshes[nIndex]);
+  return std::weak_ptr<GeometryData::GenericMesh>(m_vspMeshes[nIndex]);
+}
+
+GeometryData::GenericMesh *GeometryData::GenericObject::GetMeshPtr(unsigned int nIndex)
+{
+  return m_vspMeshes[nIndex].get();
 }
 
 void GeometryData::GenericMesh::Debug()
@@ -207,7 +212,22 @@ void GeometryData::GenericMesh::SetTextureCoords(GeometryData::TextureType tText
         assert (m_nNumVertices == (nNumEntries / 2));
 
     for (int i=0; i < nNumEntries; i++)
-        m_mTextureCoords[tTextureType].push_back(pArray[i]);
+      m_mTextureCoords[tTextureType].push_back(pArray[i]);
+}
+
+void GeometryData::GenericMesh::SetModelMatrix(float *pfMatrix)
+{
+  m_vfMatrix.resize(16);
+
+  for (unsigned int i=0; i < 16; i++)
+    m_vfMatrix[i] = pfMatrix[i];
+
+
+}
+
+float *GeometryData::GenericMesh::GetModelMatrix()
+{
+  return &(m_vfMatrix[0]);
 }
 
 unsigned int GeometryData::GenericMesh::NumVertices() const

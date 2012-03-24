@@ -11,6 +11,7 @@
 //class specific
 #include "RenderNodes/RenderNode_Generic.h"
 
+static int iCount = 0;
 GeometryData::TextureType tTextureTypes[4] = { GeometryData::TextureNames::ALBEDO,
                                                GeometryData::TextureNames::NORMAL,
                                                GeometryData::TextureNames::SPECULAR,
@@ -30,9 +31,12 @@ Bamboo::RN_Generic::RN_Generic(std::shared_ptr<GeometryData::GenericObject> spOb
       m_spObject(spObject),
       m_bUseEnvironmentMapping(false)
 {
+  m_iCount = iCount++;
     ItlLoadShader();
     ItlPrepareGLBuffers();
     ItlPrepareTextures();
+
+    m_bUseEnvironmentMapping = false;
 
     Logger::debug() << "RN_Generic created" << Logger::endl;
 }
@@ -53,6 +57,9 @@ void Bamboo::RN_Generic::SetEnvironmentMapping(bool bEnabled, GLuint nTextureID 
 
 void Bamboo::RN_Generic::ItlRender()
 {
+  //std::cout << "draw " << m_iCount << std::endl;
+  assert (m_bUseEnvironmentMapping == false);
+
     TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
     assert (pTextureManager != NULL);
 
@@ -116,6 +123,8 @@ void Bamboo::RN_Generic::ItlRender()
 
 
         }
+
+//        glDisable(GL_CULL_FACE);
 
         glBindVertexArray(m_pnVertexArrayObjects[nMesh]);
         glBindBuffer(GL_ARRAY_BUFFER, m_pnVertexBufferObjects[nMesh]);

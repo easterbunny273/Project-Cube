@@ -39,6 +39,9 @@ struct Bamboo::TextureManager::TImpl
 
         std::map<std::string, GLuint>   m_mTextureNames;    /// maps a texture name (string) to a opengl id (GLuint)
 
+        //std::map<std::string, std::string> m_mAlreadyLoaded; ///maps already loaded textures (filename) to internal names
+        std::map<std::string, GLuint> m_mAlreadyLoaded; ///maps already loaded textures (filename) to internal names
+
         std::map<GLuint, GLuint> m_mLastBindedTextures;
 
         GLuint m_pSamplerObjects[NUM_PROVIDED_SAMPLER_OBJECTS];
@@ -80,18 +83,34 @@ bool Bamboo::TextureManager::LoadTexture(std::string sTextureName,
                                          std::string sFilename,
                                          bool bAlreadyGammaCorrected)
 {
+    bool bOk = false;
+
     // initialize devIl if necessary
     if (m_pImpl->m_bDevIL_Initialized == false)
         m_pImpl->ItlInitialize();
 
-    GLuint nOpenGLID;
+    bool bAlreadyLoaded = m_pImpl->m_mAlreadyLoaded.find(sFilename) != m_pImpl->m_mAlreadyLoaded.end();
 
-    // load texture from file
-    bool bOk = m_pImpl->ItlLoadTextureFromFile(nOpenGLID, sFilename, bAlreadyGammaCorrected);
+   /* if (bAlreadyLoaded)
+    {
+      GLuint nTextureID = m_pImpl->m_mTextureNames[m_pImpl->m_mAlreadyLoaded[sFilename]];
 
-    // if successfull, store opengl id
-    if (bOk)
-        m_pImpl->m_mTextureNames[sTextureName] = nOpenGLID;
+      m_pImpl->m_mTextureNames[sTextureName] = nTextureID;
+
+      bOk = true;
+    }
+    else
+    {*/
+      GLuint nOpenGLID;
+
+      // load texture from file
+      bOk = m_pImpl->ItlLoadTextureFromFile(nOpenGLID, sFilename, bAlreadyGammaCorrected);
+
+      // if successfull, store opengl id
+      if (bOk)
+          m_pImpl->m_mTextureNames[sTextureName] = nOpenGLID;
+   // }
+
 
     return bOk;
 }
@@ -106,9 +125,25 @@ bool Bamboo::TextureManager::LoadTexture(GLuint &rnTextureID,
             m_pImpl->ItlInitialize();
         }
 
-        bool bOk = m_pImpl->ItlLoadTextureFromFile(rnTextureID, sFilename, bAlreadyGammaCorrected);
+        bool bAlreadyLoaded = m_pImpl->m_mAlreadyLoaded.find(sFilename) != m_pImpl->m_mAlreadyLoaded.end();
 
-        return bOk;
+        if (bAlreadyLoaded)
+        {
+          GLuint nTextureID = m_pImpl->m_mAlreadyLoaded[sFilename];
+
+          rnTextureID = nTextureID;
+
+          return true;
+        }
+        else
+          {
+            bool bOk = m_pImpl->ItlLoadTextureFromFile(rnTextureID, sFilename, bAlreadyGammaCorrected);
+
+            m_pImpl->m_mAlreadyLoaded[sFilename] = rnTextureID;
+
+            return bOk;
+          }
+
 }
 
 

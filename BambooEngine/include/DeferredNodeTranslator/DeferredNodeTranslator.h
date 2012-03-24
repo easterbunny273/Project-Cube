@@ -26,7 +26,7 @@ class DeferredNodeTranslator : public INodeTranslator
 public:
   /*! \name Public types */
   //@{
-    class IRuleObject
+    class IRuleObject : public ISemanticSceneNode::IListener
     {
     public:
       virtual IRuleObject * CloneFor(std::shared_ptr<ISemanticSceneNode> spSemNode, DeferredNodeTranslator *pTranslator) = 0;
@@ -48,7 +48,15 @@ public:
         return false;
       }
 
+      // IDeleteListener interface
+      virtual void OnDelete(ISemanticSceneNode *pNode) {};
+      virtual void OnRemovedFromParent(ISemanticSceneNode *pParent, ISemanticSceneNode *pNode) {};
+
+      virtual ~IRuleObject() { std::cout << "del1" << std::flush << std::endl; };
+
     protected:
+
+
       DeferredNodeTranslator * m_pTranslator;
       std::shared_ptr<ISemanticSceneNode> m_spSemNode;
     };
@@ -66,6 +74,7 @@ public:
       class Cube_RuleObject;
       class LoadedModel_RuleObject;
       class Light_RuleObject;
+      class GenericObject_RuleObject;
 
   //@}
 

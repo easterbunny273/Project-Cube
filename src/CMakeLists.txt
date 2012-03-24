@@ -31,6 +31,7 @@ include_directories(../test/)
 
 #define headers, not for compile time, only for QtCreator
 file(GLOB H_BAMBOO "../BambooEngine/include/*.h")
+file(GLOB H_BAMBOO_RE "../BambooEngine/include/RenderEngine-UE/*.h")
 file(GLOB H_BAMBOO_RN "../BambooEngine/include/RenderNodes/*.h")
 file(GLOB H_BAMBOO_SSN "../BambooEngine/include/SemanticSceneNodes/*.h")
 file(GLOB H_BAMBOO_DNT "../BambooEngine/include/DeferredNodeTranslator/*.h")
@@ -39,10 +40,11 @@ file(GLOB H_DUMMYGAME "../include/DummyGame/*.h")
 #add test headers
 file(GLOB H_TEST "../test/*.h")
 #combine headers
-file(GLOB HEADERS "../include/*.h" ${H_BAMBOO} ${H_BAMBOO_RN} ${H_BAMBOO_DNT} ${H_BAMBOO_SSN} ${H_GAMELOGIC} ${H_DUMMYGAME} ${H_TEST})
+file(GLOB HEADERS "../include/*.h" ${H_BAMBOO} ${H_BAMBOO_RE} ${H_BAMBOO_RN} ${H_BAMBOO_DNT} ${H_BAMBOO_SSN} ${H_GAMELOGIC} ${H_DUMMYGAME} ${H_TEST})
 
 #define sources
 file(GLOB S_BAMBOO "../BambooEngine/src/*.cpp")
+file(GLOB S_BAMBOO_RE "../BambooEngine/src/RenderEngine-UE/*.cpp")
 file(GLOB S_BAMBOO_RN "../BambooEngine/src/RenderNodes/*.cpp")
 file(GLOB S_BAMBOO_SSN "../BambooEngine/src/SemanticSceneNodes/*.cpp")
 file(GLOB S_BAMBOO_DNT "../BambooEngine/src/DeferredNodeTranslator/*.cpp")
@@ -51,7 +53,7 @@ file(GLOB S_DUMMYGAME "../src/DummyGame/*.cpp")
 #add test sources
 file(GLOB S_TEST "../test/*.cpp")
 #combine sources
-file(GLOB SOURCES "../src/*.cpp" ${S_BAMBOO} ${S_BAMBOO_RN} ${S_BAMBOO_SSN} ${S_BAMBOO_DNT} ${S_GAMELOGIC} ${S_DUMMYGAME} ${S_TEST})
+file(GLOB SOURCES "../src/*.cpp" ${S_BAMBOO} ${S_BAMBOO_RE} ${S_BAMBOO_RN} ${S_BAMBOO_SSN} ${S_BAMBOO_DNT} ${S_GAMELOGIC} ${S_DUMMYGAME} ${S_TEST})
 
 
 if(WIN32)

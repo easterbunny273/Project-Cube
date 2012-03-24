@@ -27,6 +27,7 @@ public:
         static const char * DATA_TANGENTS;
         static const char * DATA_BITANGENTS;
         static const char * DATA_TEXCOORDS[8];
+        static const char * DATA_MODELMATRIX;
 
         static const char * DATA_MATERIAL_COLOR_DIFFUSE;
         static const char * DATA_MATERIAL_COLOR_SPECULAR;
@@ -63,6 +64,9 @@ public:
         float * GetTextureCoords(TextureType tTextureType);
         void    SetTextureCoords(TextureType tTextureType, unsigned int nNumEntries, float *pArray);
 
+        void  SetModelMatrix(float *pfMatrix);
+        float *GetModelMatrix();
+
         std::string GetTexturePath(TextureType tTextureType);
 
         unsigned int NumAttributes() const;
@@ -73,6 +77,7 @@ public:
 
     private:
         std::map<std::string, std::vector<float> >      m_mAttributeMap;
+        std::vector<float>  m_vfMatrix;
 
         std::string         m_sTexturePath;
 
@@ -91,6 +96,7 @@ public:
 
         unsigned int NumMeshes() const;
         std::weak_ptr<GenericMesh> GetMesh(unsigned int nIndex);
+        GenericMesh *GetMeshPtr(unsigned int nIndex);
 
     private:
         std::vector<std::shared_ptr<GenericMesh> >    m_vspMeshes;

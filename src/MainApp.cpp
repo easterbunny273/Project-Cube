@@ -8,6 +8,7 @@
 #include "LuaManager.h"
 
 #include "SemanticSceneNodes/ISemanticSceneNode.h"
+#include "SemanticSceneNodes/GenericObject_SemSceneNode.h"
 #include "SemanticSceneNodes/LoadedModel_SemSceneNode.h"
 #include "SemanticSceneNodes/Camera_SemSceneNode.h"
 #include "SemanticSceneNodes/Cube_SemSceneNode.h"
@@ -17,11 +18,20 @@
 
 #include "Gamelogic/Level.h"
 
+#include "RenderEngine-UE/Generate.h"
+#include "RenderEngine-UE/OctTree.h"
+
+#include <set>
+
 // initialize singelton ptr to NULL
 MainApp * MainApp::s_pInstance = NULL;
 
 std::shared_ptr<LoadedModel_SemSceneNode> g_spSphere;
 std::shared_ptr<LoadedModel_SemSceneNode> g_spTreppe;
+std::shared_ptr<Camera_SemSceneNode> g_spCamera;
+std::shared_ptr<Cube_SemSceneNode> g_spCube;
+std::shared_ptr<Light_SemSceneNode> g_spTestLight1;
+std::shared_ptr<Light_SemSceneNode> g_spTestLight2;
 
 MainApp::MainApp()
 {
@@ -125,7 +135,7 @@ void MainApp::StartGraphic_Test2()
 
   g_spTreppe = spTreppe;
 
-  std::shared_ptr<ISemanticSceneNode> spCube = Cube_SemSceneNode::Create(level.GetCubeByPosition(0,0,0));
+  std::shared_ptr<Cube_SemSceneNode> spCube = Cube_SemSceneNode::Create(level.GetCubeByPosition(0,0,0));
   //spCube->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
 
   std::shared_ptr<Light_SemSceneNode> spTestLight1 = Light_SemSceneNode::Create(glm::vec3(-0.2f, 0.10f, 0.14f), glm::vec3(1.0f, -0.4f, -1.0f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
@@ -133,9 +143,14 @@ void MainApp::StartGraphic_Test2()
 
   std::shared_ptr<Camera_SemSceneNode> spCamera = Camera_SemSceneNode::Create(m_spCamera);
 
+  g_spCamera = spCamera;
+  g_spCube = spCube;
+  g_spTestLight1 = spTestLight1;
+  g_spTestLight2 = spTestLight2;
+
   // link scene graph
-  spCamera->AddChild(spTreppe);
-  spCamera->AddChild(spSphere);
+  //spCamera->AddChild(spTreppe);
+  //spCamera->AddChild(spSphere);
   spCamera->AddChild(spCube);
   spCamera->AddChild(spTestLight1);
   spCamera->AddChild(spTestLight2);
@@ -151,11 +166,66 @@ void MainApp::StartGraphic_Test2()
   m_pGraphic->AddRenderLoop(spWindow, spCamera, spDeferredTranslator);
 }
 
+void MainApp::StartRenderingUE_Stuff()
+{
+  static RenderEngineUE_Generation Generator;
+  static std::vector<GeometryData::GenericObject *> vpSpheres = Generator.GenerateSpheres(1000);
+
+/*  static bool bInitialized = false;
+  if (bInitialized == false)
+    {
+      for (int i=0; i < 100; i++)
+        g_spCamera->AddChild(GenericObject_SemSceneNode::Create(vpSpheres[i]));
+
+      bInitialized = true;
+    }*/
+
+  static std::map<GeometryData::GenericObject *, std::shared_ptr<ISemanticSceneNode> > mCachedSemNodes;
+
+  static RenderEngineUE_OctTree OctTree;
+  std::vector<GeometryData::GenericObject *> vpVisibleSpheres = OctTree.GetVisibleSpheres(vpSpheres, m_spCamera.get());
+
+  std::set<GeometryData::GenericObject *> spVisibleSpheres;
+
+  for (unsigned int i=0; i < vpVisibleSpheres.size(); i++)
+    spVisibleSpheres.insert(vpVisibleSpheres[i]);
+
+  g_spCamera->ClearChildren();
+  g_spCamera->AddChild(g_spCube);
+  g_spCamera->AddChild(g_spTestLight1);
+  g_spCamera->AddChild(g_spTestLight2);
+
+  for (std::set<GeometryData::GenericObject *>::iterator iter=spVisibleSpheres.begin();
+       iter != spVisibleSpheres.end();
+       iter++)
+    {
+      std::map<GeometryData::GenericObject *, std::shared_ptr<ISemanticSceneNode> >::iterator cachedSemNode = mCachedSemNodes.find(*iter);
+
+      if (cachedSemNode != mCachedSemNodes.end())
+        {
+          g_spCamera->AddChild(cachedSemNode->second);
+        }
+      else
+        {
+          std::shared_ptr<ISemanticSceneNode> spNewSemNode(GenericObject_SemSceneNode::Create(*iter));
+
+          mCachedSemNodes[*iter] = spNewSemNode;
+
+          g_spCamera->AddChild(spNewSemNode);
+        }
+
+    }
+
+}
+
 void MainApp::Run()
 {
+    Logger::SetLogLevelForConsole(Logger::ERROR);
     // init game logic, graphics, do main loop, all this nasty stuff.
 
     GetEventManager()->Initialize();
+
+
 
     StartGraphic_Test2();
 
@@ -168,6 +238,8 @@ void MainApp::Run()
 
         static int i=0;
         i++;
+
+        StartRenderingUE_Stuff();
 
         g_spSphere->SetTransformMatrix(glm::translate(g_spSphere->GetTransformMatrix(), glm::vec3(cos(i / 400.0) / 100.0, sin(i / 400.0) / 400.0, sin(i / 400.0) / 100.0)));
         g_spTreppe->SetTransformMatrix(glm::rotate(g_spTreppe->GetTransformMatrix(), 0.04f, glm::vec3(1.0, 1.0, 0.0)));

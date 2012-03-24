@@ -107,6 +107,8 @@ private:
 
     GLuint  m_nEnvironmentMap;
 
+    int m_iCount;
+
     std::shared_ptr<GeometryData::GenericObject> m_spObject;
 
     bool m_bUseEnvironmentMapping;
