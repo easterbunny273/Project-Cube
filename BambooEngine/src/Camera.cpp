@@ -5,6 +5,9 @@
 #include <glm/gtx/transform2.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "PC_Logger.h"
+#include "GL/glfw.h"
+
 #include <iostream>
 
 #define PI 3.1415f
@@ -134,7 +137,13 @@ glm::mat4 OwnLookAt(glm::vec3 vPosition, glm::vec3 vTarget, glm::vec3 up)
   *************************************************************** */
 void Bamboo::ICamera::Move(float fFactor)
 {
-    //Logger::debug() << m_fRotationHorizontal << ":" << m_fRotationVertical << Logger::endl;
+  // hack: make camera movement independent from fps
+  double dTime = glfwGetTime();
+  double dTimeDiff = dTime - m_dLastMove;
+  fFactor = dTimeDiff * 50 * fFactor;
+  m_dLastMove = dTime;
+
+   // Logger::debug() << m_v3CameraPosition.x << ":" << m_v3CameraPosition.y << ":" << m_v3CameraPosition.z << Logger::endl;
 
     glm::vec3 v3MoveX;
     glm::vec3 v3MoveZ;

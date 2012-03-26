@@ -76,6 +76,11 @@ private:
         std::shared_ptr<IInputEventListener>   m_spInputEventListener;
         int                                    m_iWidth;
         int                                    m_iHeight;
+
+        int                                    m_iFrames;
+        int                                    m_iFPS;
+        double                                 m_dLastTimeStamp;
+
         std::string                            m_sWindowTitle;
     //@}
 

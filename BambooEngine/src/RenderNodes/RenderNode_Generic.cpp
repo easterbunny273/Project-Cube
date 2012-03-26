@@ -11,7 +11,6 @@
 //class specific
 #include "RenderNodes/RenderNode_Generic.h"
 
-static int iCount = 0;
 GeometryData::TextureType tTextureTypes[4] = { GeometryData::TextureNames::ALBEDO,
                                                GeometryData::TextureNames::NORMAL,
                                                GeometryData::TextureNames::SPECULAR,
@@ -31,7 +30,6 @@ Bamboo::RN_Generic::RN_Generic(std::shared_ptr<GeometryData::GenericObject> spOb
       m_spObject(spObject),
       m_bUseEnvironmentMapping(false)
 {
-  m_iCount = iCount++;
     ItlLoadShader();
     ItlPrepareGLBuffers();
     ItlPrepareTextures();

@@ -78,7 +78,7 @@ void Bamboo::IRenderNode::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderI
 
 	if (ItlTestIfVisible())
 	{
-	    if (m_bHasChildren)
+	    //if (m_bHasChildren)
 	    {
 		//now recursively render children and scenenode
 		ItlPreRenderChildren();

@@ -130,60 +130,14 @@ vec2 GetParallaxOffset(vec2 original_Texcoords)
 
 void main(void)
 {
-
-   /*vec2 vTexOffset;
-
-   float fDepth = my_ScreenPosition.z / my_ScreenPosition.w;
-
-   float fNear = 0.8;
-   float fFar = 0.9;
-
-   if (fDepth < fNear)
-    vTexOffset = GetParallaxOcclusionOffset(my_Texcoord.xy, true);
-   else if (fDepth >= fNear && fDepth <= fFar)
-   {
-       float f2 = (fDepth - fNear) / (fFar - fNear);
-       float f1 = 1.0 - f2;
-
-    vTexOffset = GetParallaxOcclusionOffset(my_Texcoord.xy, true) * f1 + GetParallaxOffset(my_Texcoord.xy) * f2;
-   }
-   else*/
-
-    vec2 vTexOffset;
-
-    /*if (nUseParallax == 3)
-        vTexOffset = GetParallaxOcclusionOffset2(my_Texcoord.xy, true);*/
-    if (nUseParallax == 1)
-        vTexOffset = GetParallaxOcclusionOffset(my_Texcoord.xy, true);
-   /* else if (nUseParallax == 1)
-        vTexOffset = GetParallaxOffset(my_Texcoord.xy);*/
-   else if (nUseParallax == 0)
-       vTexOffset = vec2(0.0);
-
-
-    if (bIsSphere)
-    {
-      vec3 modified_Normal = my_Normal_EM;
-      //modified_Normal.x = - modified_Normal.x;
-
-      vec3 reflectVector = normalize(reflect(normalize(my_ViewDir_EM), normalize(modified_Normal)));
-
-      out_Albedo = vec4(texture(cubemap_texture, reflectVector).rgb, 1.0);
-      //out_Albedo += vec4(reflect(my_EyeDir, normalize(my_Normal)).rgb, 1.0) * 0.01;
-      //out_Albedo += vec4(normalize(my_Normal), 1.0);
-    }
-      //out_Albedo = vec4(texture(cubemap_texture, vec3(0.0, 1.0, 0.0)).rgb, 1.0);
-    else
-      out_Albedo = vec4(texture2D(color_texture, my_Texcoord.xy + vTexOffset).rgb, 1.0) * 0.1;
-   //out_Albedo = vec4(vec3(normalize(my_EyeDir).z , 0.0, 0.0), 1.0);
-   // out_Albedo = vec4(texcoord_offset, 0.0, 1.0);
+   out_Albedo = vec4(0.1);
 
    // write depth into alpha
    out_Albedo.a = my_ScreenPosition.z / my_ScreenPosition.w;
 
    out_Normal = vec4(my_Normal, 1.0);
-   out_NormalMap = texture2D(normal_texture, my_Texcoord.xy + vTexOffset);
+   out_NormalMap = vec4(0.5, 0.6, 0.5, 1.0);
    out_Tangent = vec4(my_Tangent, 1.0);
-   out_Specular = vec4(texture2D(color_texture, my_Texcoord.xy  + vTexOffset).a);
+   out_Specular = vec4(0.0);
    out_Position = (my_Position / my_Position.w);
 }

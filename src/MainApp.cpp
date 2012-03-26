@@ -19,12 +19,16 @@
 #include "Gamelogic/Level.h"
 
 #include "RenderEngine-UE/Generate.h"
+#include "RenderEngine-UE/Render.h"
 #include "RenderEngine-UE/OctTree.h"
 
 #include <set>
 
 // initialize singelton ptr to NULL
 MainApp * MainApp::s_pInstance = NULL;
+
+extern int s_nUseParallax;
+unsigned int g_SpheresRendered;
 
 std::shared_ptr<LoadedModel_SemSceneNode> g_spSphere;
 std::shared_ptr<LoadedModel_SemSceneNode> g_spTreppe;
@@ -169,58 +173,36 @@ void MainApp::StartGraphic_Test2()
 void MainApp::StartRenderingUE_Stuff()
 {
   static RenderEngineUE_Generation Generator;
-  static std::vector<GeometryData::GenericObject *> vpSpheres = Generator.GenerateSpheres(1000);
-
-/*  static bool bInitialized = false;
-  if (bInitialized == false)
-    {
-      for (int i=0; i < 100; i++)
-        g_spCamera->AddChild(GenericObject_SemSceneNode::Create(vpSpheres[i]));
-
-      bInitialized = true;
-    }*/
-
-  static std::map<GeometryData::GenericObject *, std::shared_ptr<ISemanticSceneNode> > mCachedSemNodes;
+  static std::vector<GeometryData::GenericObject *> vpSpheres = Generator.GenerateSpheres(5000);
 
   static RenderEngineUE_OctTree OctTree;
-  std::vector<GeometryData::GenericObject *> vpVisibleSpheres = OctTree.GetVisibleSpheres(vpSpheres, m_spCamera.get());
+
+  bool bUseOctTree = s_nUseParallax % 2;
 
   std::set<GeometryData::GenericObject *> spVisibleSpheres;
 
-  for (unsigned int i=0; i < vpVisibleSpheres.size(); i++)
-    spVisibleSpheres.insert(vpVisibleSpheres[i]);
-
-  g_spCamera->ClearChildren();
-  g_spCamera->AddChild(g_spCube);
-  g_spCamera->AddChild(g_spTestLight1);
-  g_spCamera->AddChild(g_spTestLight2);
-
-  for (std::set<GeometryData::GenericObject *>::iterator iter=spVisibleSpheres.begin();
-       iter != spVisibleSpheres.end();
-       iter++)
+  if (bUseOctTree)
     {
-      std::map<GeometryData::GenericObject *, std::shared_ptr<ISemanticSceneNode> >::iterator cachedSemNode = mCachedSemNodes.find(*iter);
+      std::vector<GeometryData::GenericObject *> vpVisibleSpheres = OctTree.GetVisibleSpheres(vpSpheres, m_spCamera.get());
 
-      if (cachedSemNode != mCachedSemNodes.end())
-        {
-          g_spCamera->AddChild(cachedSemNode->second);
-        }
-      else
-        {
-          std::shared_ptr<ISemanticSceneNode> spNewSemNode(GenericObject_SemSceneNode::Create(*iter));
-
-          mCachedSemNodes[*iter] = spNewSemNode;
-
-          g_spCamera->AddChild(spNewSemNode);
-        }
-
+      for (unsigned int i=0; i < vpVisibleSpheres.size(); i++)
+        spVisibleSpheres.insert(vpVisibleSpheres[i]);
+    }
+  else
+    {
+      for (unsigned int i=0; i < vpSpheres.size(); i++)
+        spVisibleSpheres.insert(vpSpheres[i]);
     }
 
+  g_SpheresRendered = spVisibleSpheres.size();
+
+  static RenderEngineUE_Rendering RenderModul;
+  RenderModul.UpdateSemanticSceneGraph(spVisibleSpheres, g_spCamera);
 }
 
 void MainApp::Run()
 {
-    Logger::SetLogLevelForConsole(Logger::ERROR);
+   // Logger::SetLogLevelForConsole(Logger::ERROR);
     // init game logic, graphics, do main loop, all this nasty stuff.
 
     GetEventManager()->Initialize();

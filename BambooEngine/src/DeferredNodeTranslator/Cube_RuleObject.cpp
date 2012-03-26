@@ -31,7 +31,7 @@ void DeferredNodeTranslator::Cube_RuleObject::Action()
       m_spCorrespondingRenderingNode = std::shared_ptr<Bamboo::RN_Generic>(new Bamboo::RN_Generic(spGenericObject));
       assert (m_spCorrespondingRenderingNode);
 
-      m_pTranslator->m_vShadowCasterNodes.push_back(m_spCorrespondingRenderingNode);
+      m_pTranslator->m_vShadowCasterNodes.insert(m_spCorrespondingRenderingNode);
 
       // set graphic core
       m_spCorrespondingRenderingNode->SetGraphicCore(m_pTranslator->m_pCore);

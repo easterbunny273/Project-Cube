@@ -23,11 +23,17 @@ Bamboo::GlfwWindow *Bamboo::GlfwWindow::s_pInstance = NULL;
 int s_DebugDeferredTexture = 0;
 int s_nUseParallax = 0;
 
+extern unsigned int g_SpheresRendered;
+
 /****************************************************************
   *************************************************************** */
 Bamboo::GlfwWindow::GlfwWindow()
 {
     // construction is done in Create()
+
+  m_iFrames = 0;
+  m_dLastTimeStamp = 0;
+  m_iFPS    = 0;
 }
 
 /****************************************************************
@@ -257,6 +263,23 @@ void Bamboo::GlfwWindow::ItlStaticHandleMouseButton(int iButton, int iAction)
 void Bamboo::GlfwWindow::SwapBuffers()
 {
     glfwSwapBuffers();
+
+    m_iFrames++;
+
+    double dCurTime = glfwGetTime();
+    if (dCurTime - m_dLastTimeStamp > 0.5)
+      {
+        m_iFPS = m_iFrames / 0.5;
+        m_iFrames = 0;
+        m_dLastTimeStamp = dCurTime;
+
+        char szBuffer[255];
+        sprintf(szBuffer, "%s (%d FPS, %d Spheres rendered)", m_sWindowTitle.c_str(), m_iFPS, g_SpheresRendered);
+
+        glfwSetWindowTitle(szBuffer);
+      }
+
+  //  std::cout << "swap" << std::endl;
 }
 
 /****************************************************************

@@ -64,11 +64,8 @@ void DeferredNodeTranslator::LoadedModel_RuleObject::Action()
          // m_spCubemapCamera->SetPosition(glm::vec3(0.0, 0.0, 0.0));
 
         m_spCubemapDeferredNode->ClearChilds();
-        for (unsigned int i=0; i < m_pTranslator->m_vShadowCasterNodes.size(); i++)
-        {
-            if (m_pTranslator->m_vShadowCasterNodes[i].get() != m_spCorrespondingRenderingNode.get())
-              m_spCubemapDeferredNode->AddChild(m_pTranslator->m_vShadowCasterNodes[i]);
-        }
+        for (auto iter = m_pTranslator->m_vShadowCasterNodes.begin(); iter != m_pTranslator->m_vShadowCasterNodes.end(); iter++)
+          m_spCubemapDeferredNode->AddChild(*iter);
       }
     }
   else
@@ -77,7 +74,7 @@ void DeferredNodeTranslator::LoadedModel_RuleObject::Action()
       m_spCorrespondingRenderingNode = std::shared_ptr<Bamboo::RN_Generic>(new Bamboo::RN_Generic(AssimpWrapper::LoadModel(m_spSemNode->GetFilename())));
       assert (m_spCorrespondingRenderingNode);
 
-      m_pTranslator->m_vShadowCasterNodes.push_back(m_spCorrespondingRenderingNode);
+      m_pTranslator->m_vShadowCasterNodes.insert(m_spCorrespondingRenderingNode);
 
       m_spCorrespondingRenderingNode->SetGraphicCore(m_pTranslator->m_pCore);
 

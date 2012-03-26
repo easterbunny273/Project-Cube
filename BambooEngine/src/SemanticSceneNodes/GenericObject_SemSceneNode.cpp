@@ -1,6 +1,5 @@
 #include "SemanticSceneNodes/GenericObject_SemSceneNode.h"
 #include <iostream>
-int i=0;
 
 std::shared_ptr<GenericObject_SemSceneNode> GenericObject_SemSceneNode::Create(GeometryData::GenericObject *pObject)
 {
@@ -13,7 +12,6 @@ std::shared_ptr<GenericObject_SemSceneNode> GenericObject_SemSceneNode::Create(G
   // create shared_ptr
   std::shared_ptr<GenericObject_SemSceneNode> spNode(pNode);
 
-  std::cout << "create node " << i++ << std::endl;
   return spNode;
 }
 

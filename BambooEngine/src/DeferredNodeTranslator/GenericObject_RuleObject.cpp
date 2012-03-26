@@ -31,6 +31,7 @@ void DeferredNodeTranslator::GenericObject_RuleObject::Action()
       if (m_bActive == false)
         {
         m_pTranslator->m_spDeferredNode->AddChild(m_spCorrespondingRenderingNode);
+        m_pTranslator->m_vShadowCasterNodes.insert(m_spCorrespondingRenderingNode);
         m_bActive = true;
         }
 
@@ -38,7 +39,6 @@ void DeferredNodeTranslator::GenericObject_RuleObject::Action()
   else
     {
       m_spCorrespondingRenderingNode = std::shared_ptr<Bamboo::RN_Generic>(new Bamboo::RN_Generic(m_spSemNode->GetObjectSP()));
-
       m_spCorrespondingRenderingNode->SetEnvironmentMapping(false);
 
       glm::mat4 * pmModelMatrix = (glm::mat4 *) m_spSemNode->GetObject()->GetMeshPtr(0)->GetModelMatrix();
@@ -46,8 +46,10 @@ void DeferredNodeTranslator::GenericObject_RuleObject::Action()
       m_spCorrespondingRenderingNode->SetTransformMatrix(*pmModelMatrix);
 
       m_pTranslator->m_spDeferredNode->AddChild(m_spCorrespondingRenderingNode);
+      m_pTranslator->m_vShadowCasterNodes.insert(m_spCorrespondingRenderingNode);
+
       m_bActive = true;
-     // m_pTranslator->m_vShadowCasterNodes.push_back(m_spCorrespondingRenderingNode);
+
     }
 
 }
@@ -75,6 +77,7 @@ void DeferredNodeTranslator::GenericObject_RuleObject::OnDelete(ISemanticSceneNo
   assert (pNode == m_spSemNode.get());
 
   m_pTranslator->m_spDeferredNode->RemoveChild(m_spCorrespondingRenderingNode);
+  m_pTranslator->m_vShadowCasterNodes.erase(m_spCorrespondingRenderingNode);
 
   m_spCorrespondingRenderingNode = std::shared_ptr<Bamboo::RN_Generic>();
 }
@@ -89,6 +92,12 @@ void DeferredNodeTranslator::GenericObject_RuleObject::OnRemovedFromParent(ISema
   assert (m_spCorrespondingRenderingNode);
 
   m_pTranslator->m_spDeferredNode->RemoveChild(m_spCorrespondingRenderingNode);
+
+  unsigned int nOldSize = m_pTranslator->m_vShadowCasterNodes.size();
+  m_pTranslator->m_vShadowCasterNodes.erase(m_spCorrespondingRenderingNode);
+
+  assert (nOldSize == m_pTranslator->m_vShadowCasterNodes.size() + 1);
+
   m_bActive = false;
 
   //m_spCorrespondingRenderingNode = std::shared_ptr<Bamboo::RN_Generic>();

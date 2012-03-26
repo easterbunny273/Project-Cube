@@ -13,6 +13,7 @@
 #include "RenderNodes/RenderNode_Deferred.h"
 
 #include <memory>
+#include <set>
 
 /* A node translator generates pieces of render scene graph nodes or rather a
   rendering scene graph from a semantic scene graph, caches the results, and updates
@@ -96,7 +97,7 @@ private:
   std::map<ISemanticSceneNode::t_classID, std::shared_ptr<IRuleObject> > m_mRegisteredRuleObjects;
 
   std::vector<std::shared_ptr<Bamboo::IRenderNode> > m_vLightNodes;
-  std::vector<std::shared_ptr<Bamboo::IRenderNode> > m_vShadowCasterNodes;
+  std::set<std::shared_ptr<Bamboo::IRenderNode> > m_vShadowCasterNodes;
 
   std::shared_ptr<Bamboo::RN_Deferred>    m_spDeferredNode;
 };

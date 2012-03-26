@@ -64,6 +64,7 @@ protected:
         glm::vec3   m_v3MoveVector;
         glm::vec3   m_v3CameraPosition;
 
+        double      m_dLastMove;
         float       m_fRotationHorizontal;
         float       m_fRotationVertical;
     //@}

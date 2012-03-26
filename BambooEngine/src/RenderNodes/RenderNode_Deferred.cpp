@@ -349,11 +349,6 @@ void Bamboo::RN_Deferred::ItlPreRenderChildren()
     else
       ItlGetGraphicCore()->GetShaderManager()->ActivateShader("deferred_pass");
 
-    GLuint l_nUseParallax = ItlGetGraphicCore()->GetShaderManager()->GetUniform("nUseParallax");
-
-    assert (l_nUseParallax != -1);
-    glUniform1i(l_nUseParallax, s_nUseParallax % 2);
-
     ItlPushViewportInformation(m_nWidth, m_nHeight);
 
 }

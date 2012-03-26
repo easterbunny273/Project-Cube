@@ -5,15 +5,15 @@
 #include <glm/gtx/transform2.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#define POSITION_MIN_X -0.1f
-#define POSITION_MAX_X 0.1f
-#define POSITION_MIN_Y -0.1f
-#define POSITION_MAX_Y 0.1f
-#define POSITION_MIN_Z -0.1f
-#define POSITION_MAX_Z 0.1f
+#define POSITION_MIN_X -1.0f
+#define POSITION_MAX_X 1.0f
+#define POSITION_MIN_Y -1.0f
+#define POSITION_MAX_Y 1.0f
+#define POSITION_MIN_Z -1.0f
+#define POSITION_MAX_Z 1.0f
 
 #define RADIUS_MIN  0.0005f
-#define RADIUS_MAX 0.006f
+#define RADIUS_MAX 0.01f
 
 #define PI 3.14159265
 

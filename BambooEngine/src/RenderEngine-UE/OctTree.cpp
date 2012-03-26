@@ -1,7 +1,9 @@
 #include "RenderEngine-UE/OctTree.h"
 
 #define MAX_SPHERES_PER_NODE 10
-#define MAX_OCTTREE_LEVELS 5
+#define MAX_OCTTREE_LEVELS 20
+
+#include <iostream>
 
 RenderEngineUE_OctTree::TBoundingBox RenderEngineUE_OctTree::TNode::ItlCalcBoundingBox(GeometryData::GenericObject *pObject)
 {
@@ -95,8 +97,11 @@ std::vector<GeometryData::GenericObject*> RenderEngineUE_OctTree::GetVisibleSphe
 {
   if (m_pRoot == NULL)
   {
-      TBoundingBox tRoot(-0.1f, 0.1f, -0.1f, 0.1f, -0.1f, 0.1f);
+      std::cout << "create octtree" << std::endl;
+      TBoundingBox tRoot(-1.1f, 1.1f, -1.1f, 1.1f, -1.1f, 1.1f);
       m_pRoot = new TNode(tRoot, vpInputSpheres, 1);
+
+      std::cout << "octtree created" << std::endl;
       //m_pRoot->Update();
   }
 
@@ -278,18 +283,26 @@ std::vector<GeometryData::GenericObject *> RenderEngineUE_OctTree::TNode::GetVis
 
   // test if all points are outside the view frame
 
-  bool bOutsideX = true;
-  bool bOutsideY = true;
-  bool bOutsideZ = true;
+  bool bOutsideXLeft = true;
+  bool bOutsideXRight = true;
+  bool bOutsideYUp = true;
+  bool bOutsideYDown = true;
+  bool bOutsideZBack = true;
+  bool bOutsideZFront = true;
 
   for (unsigned int i=0; i < 8; i++)
     {
-      bOutsideX &= (vTransformedPoints[i].x < -1.0 || vTransformedPoints[i].x > 1.0);
-      bOutsideY &= (vTransformedPoints[i].y < -1.0 || vTransformedPoints[i].y > 1.0);
-      bOutsideZ &= (vTransformedPoints[i].z < -1.0 || vTransformedPoints[i].z > 1.0);
+      bOutsideXLeft   &= vTransformedPoints[i].x < -1.0;
+      bOutsideXRight  &= vTransformedPoints[i].x > 1.0;
+
+      bOutsideYUp   &= vTransformedPoints[i].y < -1.0;
+      bOutsideYDown  &= vTransformedPoints[i].y > 1.0;
+
+      bOutsideZFront   &= vTransformedPoints[i].z < -1.0;
+      bOutsideZBack  &= vTransformedPoints[i].z > 1.0;
     }
 
-  bool bNotVisible = (bOutsideX || bOutsideY || bOutsideZ);
+  bool bNotVisible = (bOutsideXLeft || bOutsideXRight || bOutsideYUp || bOutsideYDown || bOutsideZBack || bOutsideZFront);
 
   if (bNotVisible == false)
     {
@@ -301,9 +314,9 @@ std::vector<GeometryData::GenericObject *> RenderEngineUE_OctTree::TNode::GetVis
 
       for (unsigned int i=0; i < 8; i++)
         {
-          bInsideX &= (vTransformedPoints[i].x > -1.0 && vTransformedPoints[i].x < 1.0);
-          bInsideY &= (vTransformedPoints[i].y > -1.0 && vTransformedPoints[i].y < 1.0);
-          bInsideZ &= (vTransformedPoints[i].z > -1.0 && vTransformedPoints[i].z < 1.0);
+          bInsideX &= (vTransformedPoints[i].x >= -1.0 && vTransformedPoints[i].x <= 1.0);
+          bInsideY &= (vTransformedPoints[i].y >= -1.0 && vTransformedPoints[i].y <= 1.0);
+          bInsideZ &= (vTransformedPoints[i].z >= -1.0 && vTransformedPoints[i].z <= 1.0);
         }
 
       bool bFullVisible = (bInsideX && bInsideY && bInsideZ);
