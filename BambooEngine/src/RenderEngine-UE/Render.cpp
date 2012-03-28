@@ -1,7 +1,10 @@
 #include "RenderEngine-UE/Render.h"
 #include "SemanticSceneNodes/GenericObject_SemSceneNode.h"
+#include "SemanticSceneNodes/Light_SemSceneNode.h"
 
 #include <iostream>
+
+extern std::shared_ptr<Light_SemSceneNode> g_spTestLight1;
 
 void RenderEngineUE_Rendering::UpdateSemanticSceneGraph(std::set<GeometryData::GenericObject *> spObjects, std::shared_ptr<ISemanticSceneNode> spParentNode)
 {
@@ -9,7 +12,6 @@ void RenderEngineUE_Rendering::UpdateSemanticSceneGraph(std::set<GeometryData::G
 
   // remove all children from given node in scene graph
   spParentNode->ClearChildren();
-
 
   // add objects to semantic scene graph, create new semantic scene node if not cached yet, else only use the already cached node
 

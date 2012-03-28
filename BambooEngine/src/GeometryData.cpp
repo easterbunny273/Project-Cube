@@ -10,6 +10,10 @@
 #include <algorithm>
 #include <iostream>
 
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
+
 const char * GeometryData::GenericData::DATA_VERTICES   = "in_Position";
 const char * GeometryData::GenericData::DATA_NORMALS    = "in_Normal";
 const char * GeometryData::GenericData::DATA_COLORS     = "in_Color";
@@ -30,55 +34,74 @@ GeometryData::TextureType GeometryData::TextureNames::CUBEMAP  = "cubemap_textur
 GeometryData::GenericMesh::GenericMesh()
 {
     m_nNumVertices = 0;
+    m_pnIndices = NULL;
+    m_bVisible = true;
 }
+
+std::map<GeometryData::TGenericData, std::vector<float> > mBigArrays;
+std::vector<unsigned int> mBigIndexArray;
 
 void GeometryData::GenericMesh::AddAttributeValues(const char *szName,
                                              unsigned int nNumEntries,
                                              float *pArray)
 {
-    if (m_nNumVertices == 0)
-        m_nNumVertices = (nNumEntries / 3);
-    else
-        assert (m_nNumVertices == (nNumEntries / 3));
-
-    // assert that this attribute was not set before
-    assert (nNumEntries > 0);
-
-    std::vector<float> * pfValues = &(m_mAttributeMap[szName]);
-
-    // allocate new float array
-    pfValues->reserve(pfValues->size() + nNumEntries);
-
-    // copy data
-    for (unsigned int i=0; i < nNumEntries; i++)
-        pfValues->push_back(pArray[i]);
-
-    // TODO: the underlying data structure of GenericMesh should be changed
-    // TODO: in a way that all values of one attribute, even from different
-    // TODO: objects, are in a big float array (cache efficiency!), and the
-    // TODO: GenericMesh holds pointers to the corresponding part of that big
-    // TODO: array (so the interface must stay the same!)
+  assert(!"do not use this method in rendering-ue-branch");
 }
 
-float * GeometryData::GenericMesh::GetAttribute(const char *szName,
-                                                unsigned int &rnNumEntries)
+float *GeometryData::GenericMesh::AllocForAttribute(GeometryData::TGenericData tData, unsigned int nNumEntries)
 {
-    auto iterator_Attribute = m_mAttributeMap.find(szName);
+  unsigned int nOldSize = mBigArrays[tData].size();
+  unsigned int nNewSize = nOldSize + nNumEntries;
 
-    bool bAttributeExists = ( iterator_Attribute != m_mAttributeMap.end());
+  assert (nNewSize < mBigArrays[tData].max_size());
+
+  //std::cout << "resize attribute " << szName << " to " << nNewSize << std::endl;
+
+  mBigArrays[tData].resize(nNewSize);
+
+  float *pfAllocatedArray = &(mBigArrays[tData][nOldSize]);
+
+  m_mAttributeOffsetsInBigMap[tData] = nOldSize;
+
+  assert (nNumEntries % 3 == 0);
+  m_nNumVertices = nNumEntries / 3;
+
+  return pfAllocatedArray;
+}
+
+unsigned int *GeometryData::GenericMesh::AllocForIndices(unsigned int nNumIndices)
+{
+  assert (m_pnIndices == NULL);
+
+  /*unsigned int nOldSize = mBigIndexArray.size();
+  unsigned int nNewSize = nOldSize + nNumIndices;
+
+  assert (nNewSize < mBigIndexArray.max_size());
+
+  mBigIndexArray.resize(nNewSize);*/
+
+  m_pnIndices = new unsigned int[nNumIndices];// &mBigIndexArray[nOldSize];
+
+  m_nNumIndices = nNumIndices;
+
+  return m_pnIndices;
+}
+
+float * GeometryData::GenericMesh::GetAttribute(GeometryData::TGenericData tData)
+{
+    auto iterator_Attribute = m_mAttributeOffsetsInBigMap.find(tData);
+
+    bool bAttributeExists = ( iterator_Attribute != m_mAttributeOffsetsInBigMap.end());
 
     float *pfReturn = NULL;
 
+    unsigned int nOffsetInBigMem = m_mAttributeOffsetsInBigMap[tData];
+
+    assert (mBigArrays.find(tData) != mBigArrays.end());
+
     if (bAttributeExists)
-    {
-
-        std::vector<float> *pfVector = &(m_mAttributeMap[szName]);
-
-        rnNumEntries = pfVector->size();
-        pfReturn = &(pfVector->at(0));
-    }
-    else
-        rnNumEntries = 0;
+      pfReturn = &(mBigArrays[tData][nOffsetInBigMem]);
+            //pfReturn =  m_mAttributeMap[szName];
 
     return pfReturn;
 }
@@ -86,19 +109,13 @@ float * GeometryData::GenericMesh::GetAttribute(const char *szName,
 void GeometryData::GenericMesh::AddIndices(unsigned int nNumEntries,
                                            unsigned int *pArray)
 {
-    m_vIndices.reserve(m_vIndices.size() + nNumEntries);
+    assert (!" should not be used in rendering-ue!");
 
-    // allocate memory
+    AllocForIndices(nNumEntries);
 
-    // copy data
-    for (unsigned int i=0; i < nNumEntries; i++)
-        m_vIndices.push_back(pArray[i]);
+    assert (m_pnIndices != NULL);
 
-    // TODO: the underlying data structure of GenericMesh should be changed
-    // TODO: in a way that all values of one attribute, even from different
-    // TODO: objects, are in a big float array (cache efficiency!), and the
-    // TODO: GenericMesh holds pointers to the corresponding part of that big
-    // TODO: array (so the interface must stay the same!)
+    memcpy(m_pnIndices, pArray, nNumEntries * sizeof(unsigned int));
 }
 
 GeometryData::GenericMesh::~GenericMesh()
@@ -108,8 +125,9 @@ GeometryData::GenericMesh::~GenericMesh()
 
 unsigned int * GeometryData::GenericMesh::GetIndices(unsigned int &rnNumIndices)
 {
-    rnNumIndices = m_vIndices.size();
-    return &(m_vIndices[0]);
+    rnNumIndices = m_nNumIndices;
+
+    return m_pnIndices;
 }
 
 GeometryData::GenericObject::GenericObject(unsigned int nNumMeshes)
@@ -137,7 +155,9 @@ GeometryData::GenericMesh *GeometryData::GenericObject::GetMeshPtr(unsigned int 
 
 void GeometryData::GenericMesh::Debug()
 {
-    for (auto iter=m_mAttributeMap.begin(); iter != m_mAttributeMap.end(); iter++)
+  assert (!"not implemented");
+
+ /*   for (auto iter=m_mAttributeMap.begin(); iter != m_mAttributeMap.end(); iter++)
     {
         std::cout << std::endl << "ATTRIBUTE #" << iter->first << "#" << std::endl;
 
@@ -147,7 +167,7 @@ void GeometryData::GenericMesh::Debug()
         {
             std::cout << pArray[i] << " ";
         }
-    }
+    }*/
 }
 
 void GeometryData::GenericMesh::SetTexturePath(TextureType tTextureType,
@@ -158,19 +178,31 @@ void GeometryData::GenericMesh::SetTexturePath(TextureType tTextureType,
 
 unsigned int GeometryData::GenericMesh::NumAttributes() const
 {
-    return m_mAttributeMap.size();
+  return m_mAttributeOffsetsInBigMap.size();
 }
 
-std::vector<std::pair<std::string, std::vector<float> > > GeometryData::GenericMesh::GetAttributeList()
+std::vector<std::pair<GeometryData::TGenericData, float *> > GeometryData::GenericMesh::GetAttributeList()
 {
-    std::vector<std::pair<std::string, std::vector<float> > > vAttributeList;
+    std::vector<std::pair<GeometryData::TGenericData, float *> > vAttributeList;
 
     for (auto iter=m_mAttributeMap.begin(); iter != m_mAttributeMap.end(); iter++)
     {
-        vAttributeList.push_back(std::pair<std::string, std::vector<float> >(iter->first, iter->second));
+        vAttributeList.push_back(std::pair<GeometryData::TGenericData, float *>(iter->first, iter->second));
     }
 
     return vAttributeList;
+}
+
+std::set<GeometryData::TGenericData> GeometryData::GenericMesh::GetUsedAttributes()
+{
+  std::set<GeometryData::TGenericData> vAttributeList;
+
+  for (auto iter=m_mAttributeOffsetsInBigMap.begin(); iter != m_mAttributeOffsetsInBigMap.end(); iter++)
+  {
+      vAttributeList.insert(iter->first);
+  }
+
+  return vAttributeList;
 }
 
 std::string GeometryData::GenericMesh::GetTexturePath(GeometryData::TextureType tTextureType)
@@ -203,6 +235,20 @@ float * GeometryData::GenericMesh::GetTextureCoords(GeometryData::TextureType tT
 
 }
 
+std::string GeometryData::GenericMesh::GetAttributeString(GeometryData::TGenericData tData)
+{
+  switch (tData)
+    {
+    case TDATA_VERTICES:
+      return std::string(GeometryData::GenericData::DATA_VERTICES);
+    case TDATA_TANGENTS:
+      return std::string(GeometryData::GenericData::DATA_VERTICES);
+    default:
+      assert(!"not implemented yet - just for rendering ue");
+
+    }
+}
+
 void GeometryData::GenericMesh::SetTextureCoords(GeometryData::TextureType tTextureType, unsigned int nNumEntries, float *pArray)
 {
     assert (nNumEntries > 0);
@@ -232,7 +278,17 @@ float *GeometryData::GenericMesh::GetModelMatrix()
 
 unsigned int GeometryData::GenericMesh::NumVertices() const
 {
-    return m_nNumVertices;
+  return m_nNumVertices;
+}
+
+unsigned int GeometryData::GenericMesh::NumIndices() const
+{
+  return m_nNumIndices;
+}
+
+GeometryData::GenericMesh_VerticesFacade::GenericMesh_VerticesFacade(GeometryData::GenericMesh *pActualObject)
+{
+  m_pActualObject = pActualObject;
 }
 
 /*

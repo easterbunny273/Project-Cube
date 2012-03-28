@@ -8,6 +8,8 @@
 #include "common_gl.h"
 #include <IL/il.h>
 
+#include <cstring>
+
 //class specific
 #include "RenderNodes/RenderNode_Generic.h"
 
@@ -208,7 +210,7 @@ void Bamboo::RN_Generic::ItlPrepareGLBuffers()
         std::vector<unsigned int> vOffsets;
         std::vector<std::string> vsAttributeNames;
 
-        std::vector<std::pair<std::string, std::vector<float> > > vAttributeList = spMesh->GetAttributeList();
+/*        std::vector<std::pair<std::string, std::vector<float> > > vAttributeList = spMesh->GetAttributeList();
 
         for (unsigned int i=0; i < vAttributeList.size(); i++)
         {
@@ -219,7 +221,27 @@ void Bamboo::RN_Generic::ItlPrepareGLBuffers()
             {
                 vBufferData.push_back(vAttributeList[i].second[j]);
             }
-        }
+        }*/
+
+
+        std::set<GeometryData::TGenericData> vAttributeList = spMesh->GetUsedAttributes();
+
+        for (auto iter = vAttributeList.begin(); iter != vAttributeList.end(); iter++)
+               {
+                  unsigned int nOffset = vBufferData.size();
+                   vOffsets.push_back(nOffset);
+
+                   vsAttributeNames.push_back(spMesh->GetAttributeString(*iter));
+
+                   unsigned int nNumEntries = spMesh->NumVertices() * 3;
+
+                   vBufferData.resize(nNumEntries);
+
+                   float *pSrc = spMesh->GetAttribute(*iter);
+                   assert (pSrc != NULL);
+
+                   memcpy(&vBufferData[nOffset], pSrc, nNumEntries * sizeof(float));
+               }
 
       //if (spMesh->GetTexturePath(GeometryData::TextureNames::CUBEMAP).empty() == false)
         //  m_bUseEnvironmentMapping = true;

@@ -1,7 +1,7 @@
 #include "RenderEngine-UE/OctTree.h"
 
 #define MAX_SPHERES_PER_NODE 10
-#define MAX_OCTTREE_LEVELS 20
+#define MAX_OCTTREE_LEVELS 15
 
 #include <iostream>
 
@@ -18,8 +18,8 @@ RenderEngineUE_OctTree::TBoundingBox RenderEngineUE_OctTree::TNode::ItlCalcBound
       glm::mat4 *pmModelMatrix = (glm::mat4 *) pMesh->GetModelMatrix();
 
       // get vertices data
-      unsigned int nNumEntries;
-      float *pfVertices = pMesh->GetAttribute(GeometryData::GenericData::DATA_VERTICES, nNumEntries);
+      unsigned int nNumEntries = pMesh->NumVertices() * 3;
+      float *pfVertices = pMesh->GetAttribute(GeometryData::TDATA_VERTICES);
 
       // must be x*3
       assert (nNumEntries % 3 == 0);

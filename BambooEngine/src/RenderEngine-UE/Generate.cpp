@@ -13,7 +13,7 @@
 #define POSITION_MAX_Z 1.0f
 
 #define RADIUS_MIN  0.0005f
-#define RADIUS_MAX 0.01f
+#define RADIUS_MAX 0.0015f
 
 #define PI 3.14159265
 
@@ -30,7 +30,7 @@ inline float randf(float fMin, float fMax)
   return fRand;
 }
 
-std::vector<GeometryData::GenericObject*> RenderEngineUE_Generation::GenerateSpheres(unsigned int nNum)
+std::vector<GeometryData::GenericObject*> RenderEngineUE_Generation::GenerateSpheres(unsigned int nNum, unsigned int nLats, unsigned int nLongs)
 {
   std::vector<GeometryData::GenericObject *> vpSpheres;
   vpSpheres.resize(nNum);
@@ -40,97 +40,52 @@ std::vector<GeometryData::GenericObject*> RenderEngineUE_Generation::GenerateSph
       GeometryData::GenericObject *pNewObject = new GeometryData::GenericObject(1);
       GeometryData::GenericMesh *pNewMesh = pNewObject->GetMeshPtr(0);
 
-      std::vector<float> vfVertices;
-      std::vector<float> vfTangents;
-      std::vector<float> vfTexCoords;
-      std::vector<unsigned int>vnIndices;
+      unsigned int nNumVertices = nLats * (nLongs+1) * 6;
+      unsigned int nNumIndices = nLats * (nLongs+1) * 6;
+
+      float *pfVertices = pNewMesh->AllocForAttribute(GeometryData::TDATA_VERTICES, nNumVertices);
+      unsigned int *pnIndices = pNewMesh->AllocForIndices(nNumIndices);
 
          int t=0;	//for index array
-         const int lats=16;
-         const int longs=16;
 
-         for(int i = 1; i <= lats; i++)
+         for(int i = 1; i <= nLats; i++)
          {
-                 double lat_n1 = PI * (-0.5 + (double) (i - 2) / lats);
-                 double z_n1  = sin(lat_n1);
-                 double zr_n1 =  cos(lat_n1);
-
-                 double lat0 = PI * (-0.5 + (double) (i - 1) / lats);
+                 double lat0 = PI * (-0.5 + (double) (i - 1) / nLats);
                  double z0  = sin(lat0);
                  double zr0 =  cos(lat0);
 
-                 double lat1 = PI * (-0.5 + (double) i / lats);
+                 double lat1 = PI * (-0.5 + (double) i / nLats);
                  double z1 = sin(lat1);
                  double zr1 = cos(lat1);
 
-                 double lat2 = PI * (-0.5 + (double) (i+1) / lats);
-                 double z2 = sin(lat2);
-                 double zr2 = cos(lat2);
-
-                 for(int j = 0; j <= longs; j++)
+                 for(int j = 0; j <= nLongs; j++)
                  {
-                         double lng = 2 * PI * (double) (j - 1) / longs;
-                         double x = cos(lng);
-                         double y = sin(lng);
+                     double lng = 2 * PI * (double) (j - 1) / nLongs;
+                     double x = cos(lng);
+                     double y = sin(lng);
 
-                         vfVertices.push_back(x * zr0);	    //x
-                         vfVertices.push_back(y * zr0);	    //y
-                         vfVertices.push_back(-z0);	    //z
+                     *pfVertices++ = x*zr0;
+                     *pfVertices++ = y*zr0;
+                     *pfVertices++ = -z0;
 
-                         //calculate tangent
-                         glm::vec3 tangent;
-                         tangent = glm::normalize(glm::vec3((x*zr1 - x*zr_n1), y*zr1 - y*zr_n1, (-z1) - (-z_n1)));
+                     /* next longitude */
+                     *pfVertices++ = x*zr1;
+                     *pfVertices++ = y*zr1;
+                     *pfVertices++ = -z1;
 
-                         vfTangents.push_back(tangent.x);
-                         vfTangents.push_back(tangent.y);
-                         vfTangents.push_back(tangent.z);
-
-                         //now add texture coordinates
-
-                         vfTexCoords.push_back((float)j / longs);	    //z
-                         vfTexCoords.push_back((float)(i-1) / lats);	    //u
+                     *pnIndices++ = t;
+                     *pnIndices++ = t+1;
+                     *pnIndices++ = t+2;
 
 
-                         /* next longitude */
-                         vfVertices.push_back(x * zr1);
-                         vfVertices.push_back(y * zr1);
-                         vfVertices.push_back(-z1);
+                     *pnIndices++ = t+2;
+                     *pnIndices++ = t+1;
+                     *pnIndices++ = t+3;
 
-                         //calculate tangent
-                         tangent = glm::normalize(glm::vec3(x*zr2 - x*zr0, y*zr2 - y*zr0, (-z2) - (-z0)));
-
-                         vfTangents.push_back(tangent.x);
-                         vfTangents.push_back(tangent.y);
-                         vfTangents.push_back(tangent.z);
-
-                         vfTexCoords.push_back((float)(j) / longs);	    //u
-                         vfTexCoords.push_back((float)(i) / lats);	    //z
-
-                        // if (j % 2 == 0)
-                           {
-                             vnIndices.push_back(t);	    //add index
-                             vnIndices.push_back(t+1);
-                             vnIndices.push_back(t+2);
-
-                             vnIndices.push_back(t+2);	    //add index
-                             vnIndices.push_back(t+1);
-                             vnIndices.push_back(t+3);
-
-                             t+=2;
-                           }
-
+                     t+= 2;
                  }
          }
 
-         pNewMesh->AddAttributeValues(GeometryData::GenericData::DATA_VERTICES, vfVertices.size(), &(vfVertices[0]));
-         pNewMesh->AddAttributeValues(GeometryData::GenericData::DATA_NORMALS, vfVertices.size(), &(vfVertices[0]));
-         pNewMesh->AddAttributeValues(GeometryData::GenericData::DATA_TANGENTS, vfTangents.size(), &(vfTangents[0]));
-         pNewMesh->SetTexturePath(GeometryData::TextureNames::ALBEDO, "sphere12.png");
-         pNewMesh->SetTexturePath(GeometryData::TextureNames::SPECULAR, "sphere12_n.png");
-         pNewMesh->SetTextureCoords(GeometryData::TextureNames::ALBEDO, vfTexCoords.size(), &(vfTexCoords[0]));
-         pNewMesh->SetTextureCoords(GeometryData::TextureNames::SPECULAR, vfTexCoords.size(), &(vfTexCoords[0]));
-
-         pNewMesh->AddIndices(vnIndices.size(), &(vnIndices[0]));
 
          glm::vec3 fRandomPosition = glm::vec3(randf(POSITION_MIN_X, POSITION_MAX_X),
                                                randf(POSITION_MIN_Y, POSITION_MAX_Y),

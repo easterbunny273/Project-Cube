@@ -8,7 +8,7 @@
 class RenderEngineUE_Generation
 {
 public:
-  std::vector<GeometryData::GenericObject *> GenerateSpheres(unsigned int nNum);
+  std::vector<GeometryData::GenericObject *> GenerateSpheres(unsigned int nNum, unsigned int nLats, unsigned int nLongs);
 };
 
 #endif

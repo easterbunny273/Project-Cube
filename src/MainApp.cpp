@@ -173,7 +173,7 @@ void MainApp::StartGraphic_Test2()
 void MainApp::StartRenderingUE_Stuff()
 {
   static RenderEngineUE_Generation Generator;
-  static std::vector<GeometryData::GenericObject *> vpSpheres = Generator.GenerateSpheres(5000);
+  static std::vector<GeometryData::GenericObject *> vpSpheres = Generator.GenerateSpheres(10000, 8, 8);
 
   static RenderEngineUE_OctTree OctTree;
 
