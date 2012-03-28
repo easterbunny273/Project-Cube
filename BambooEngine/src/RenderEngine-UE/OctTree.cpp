@@ -1,71 +1,70 @@
 #include "RenderEngine-UE/OctTree.h"
 
-#define MAX_SPHERES_PER_NODE 10
-#define MAX_OCTTREE_LEVELS 15
+#define MAX_SPHERES_PER_NODE 5
+#define MAX_OCTTREE_LEVELS 20
 
 #include <iostream>
+#include <algorithm>
 
-RenderEngineUE_OctTree::TBoundingBox RenderEngineUE_OctTree::TNode::ItlCalcBoundingBox(GeometryData::GenericObject *pObject)
+inline RenderEngineUE_OctTree::TBoundingBox RenderEngineUE_OctTree::TNode::ItlCalcBoundingBox(GeometryData::GenericObject *pObject)
 {
   TBoundingBox tBoundingBox;
 
-  for (unsigned int nMesh = 0; nMesh < pObject->NumMeshes(); nMesh++)
-    {
-      // get mesh
-      GeometryData::GenericMesh *pMesh = pObject->GetMeshPtr(0);
+  // we only support 1 mesh at the moment
+  assert (pObject->NumMeshes() == 1);
 
-      // get model matrix
-      glm::mat4 *pmModelMatrix = (glm::mat4 *) pMesh->GetModelMatrix();
+  // get mesh
+  GeometryData::GenericMesh *pMesh = pObject->GetMeshPtr(0);
 
-      // get vertices data
-      unsigned int nNumEntries = pMesh->NumVertices() * 3;
-      float *pfVertices = pMesh->GetAttribute(GeometryData::TDATA_VERTICES);
+  // get model matrix
+  glm::mat4 *pmModelMatrix = (glm::mat4 *) pMesh->GetModelMatrix();
 
-      // must be x*3
-      assert (nNumEntries % 3 == 0);
-      assert (nNumEntries >= 3);
+  // get vertices data
+  unsigned int nNumEntries = pMesh->NumVertices() * 3;
+  float *pfVertices = pMesh->GetAttribute(GeometryData::TDATA_VERTICES);
 
-      if (nMesh==0)
-      {
-        glm::vec4 v(pfVertices[0], pfVertices[1], pfVertices[2], 1.0);
+  // must be x*3
+  assert (nNumEntries % 3 == 0);
+  assert (nNumEntries >= 3);
 
-        glm::vec4 vTransformed = (*pmModelMatrix) * v;
+  // initialize bounding box
+  glm::vec4 v(pfVertices[0], pfVertices[1], pfVertices[2], 1.0);
+  glm::vec4 vTransformed = (*pmModelMatrix) * v;
 
-        tBoundingBox.fMinX = tBoundingBox.fMaxX = vTransformed.x;
-        tBoundingBox.fMinY = tBoundingBox.fMaxY = vTransformed.y;
-        tBoundingBox.fMinZ = tBoundingBox.fMaxZ = vTransformed.z;
-      }
+  tBoundingBox.fMinX = tBoundingBox.fMaxX = vTransformed.x;
+  tBoundingBox.fMinY = tBoundingBox.fMaxY = vTransformed.y;
+  tBoundingBox.fMinZ = tBoundingBox.fMaxZ = vTransformed.z;
 
-      for (unsigned int i=0; i < nNumEntries; i+=3)
-      {
-          glm::vec4 v(pfVertices[i], pfVertices[i+1], pfVertices[i+2], 1.0);
+  // resize bounding box so that it contains ALL transformed points
+  for (unsigned int i=0; i < nNumEntries; i+=3)
+  {
+      glm::vec4 v(pfVertices[i], pfVertices[i+1], pfVertices[i+2], 1.0);
 
-          glm::vec4 vTransformed = (*pmModelMatrix) * v;
+      glm::vec4 vTransformed = (*pmModelMatrix) * v;
 
-          if (vTransformed.x < tBoundingBox.fMinX)
-            tBoundingBox.fMinX = vTransformed.x;
+      if (vTransformed.x < tBoundingBox.fMinX)
+        tBoundingBox.fMinX = vTransformed.x;
 
-          if (vTransformed.x > tBoundingBox.fMaxX)
-            tBoundingBox.fMaxX = vTransformed.x;
+      if (vTransformed.x > tBoundingBox.fMaxX)
+        tBoundingBox.fMaxX = vTransformed.x;
 
-          if (vTransformed.y < tBoundingBox.fMinY)
-            tBoundingBox.fMinY = vTransformed.y;
+      if (vTransformed.y < tBoundingBox.fMinY)
+        tBoundingBox.fMinY = vTransformed.y;
 
-          if (vTransformed.y > tBoundingBox.fMaxY)
-            tBoundingBox.fMaxY = vTransformed.y;
+      if (vTransformed.y > tBoundingBox.fMaxY)
+        tBoundingBox.fMaxY = vTransformed.y;
 
-          if (vTransformed.z < tBoundingBox.fMinZ)
-            tBoundingBox.fMinZ = vTransformed.z;
+      if (vTransformed.z < tBoundingBox.fMinZ)
+        tBoundingBox.fMinZ = vTransformed.z;
 
-          if (vTransformed.z > tBoundingBox.fMaxZ)
-            tBoundingBox.fMaxZ = vTransformed.z;
-      }
-    }
+      if (vTransformed.z > tBoundingBox.fMaxZ)
+        tBoundingBox.fMaxZ = vTransformed.z;
+  }
 
   return tBoundingBox;
 }
 
-bool RenderEngineUE_OctTree::TNode::ItlTestMatching(RenderEngineUE_OctTree::TBoundingBox tBoxNode,
+inline bool RenderEngineUE_OctTree::TNode::ItlTestMatching(RenderEngineUE_OctTree::TBoundingBox tBoxNode,
                                                    RenderEngineUE_OctTree::TBoundingBox tSphere,
                                                    bool bMustBeFullIncluded)
 {
@@ -81,7 +80,7 @@ bool RenderEngineUE_OctTree::TNode::ItlTestMatching(RenderEngineUE_OctTree::TBou
     }
   else
     {
-      assert(!"not implemented yet");
+      assert(!"this mode is not implemented yet");
     }
 
   return !bOutSide;
@@ -102,7 +101,6 @@ std::vector<GeometryData::GenericObject*> RenderEngineUE_OctTree::GetVisibleSphe
       m_pRoot = new TNode(tRoot, vpInputSpheres, 1);
 
       std::cout << "octtree created" << std::endl;
-      //m_pRoot->Update();
   }
 
   return m_pRoot->GetVisibleNodes(pCamera);
@@ -112,11 +110,16 @@ RenderEngineUE_OctTree::TNode::TNode(TBoundingBox tBoundingBox,
                                     std::vector<GeometryData::GenericObject*> vpInputSpheres,
                                      unsigned int nLevel)
 {
+  // set bounding box
   m_tBoundingBox = tBoundingBox;
+
+  // set level
   m_nLevel = nLevel;
 
+  // split node, if possible
   if (vpInputSpheres.size() > MAX_SPHERES_PER_NODE && nLevel < MAX_OCTTREE_LEVELS)
     {
+      // create child nodes
       TBoundingBox tLeftUpperFront = TBoundingBox(tBoundingBox.fMinX,
                                                (tBoundingBox.fMaxX - tBoundingBox.fMinX) * 0.5f + tBoundingBox.fMinX,
                                                (tBoundingBox.fMaxY - tBoundingBox.fMinY) * 0.5f + tBoundingBox.fMinY,
@@ -186,6 +189,7 @@ RenderEngineUE_OctTree::TNode::TNode(TBoundingBox tBoundingBox,
 
       std::vector<GeometryData::GenericObject *> vObjectsInChildNodes[8];
 
+      // assing spheres to child nodes
       for (unsigned int iChildNode = 0; iChildNode < 8; iChildNode++)
         {
           for (unsigned int iObject = 0; iObject < vpInputSpheres.size(); iObject++)
@@ -298,7 +302,7 @@ std::vector<GeometryData::GenericObject *> RenderEngineUE_OctTree::TNode::GetVis
       bOutsideYUp   &= vTransformedPoints[i].y < -1.0;
       bOutsideYDown  &= vTransformedPoints[i].y > 1.0;
 
-      bOutsideZFront   &= vTransformedPoints[i].z < -1.0;
+      bOutsideZFront &= vTransformedPoints[i].z < -1.0;
       bOutsideZBack  &= vTransformedPoints[i].z > 1.0;
     }
 
@@ -329,8 +333,7 @@ std::vector<GeometryData::GenericObject *> RenderEngineUE_OctTree::TNode::GetVis
 
               vpVisibleObjectsInSubNode = m_pChildNodes[iNode]->GetVisibleNodes(pCamera);
 
-              for (unsigned int nVisibleObjects=0; nVisibleObjects < vpVisibleObjectsInSubNode.size(); nVisibleObjects++)
-                vVisibleObjects.push_back(vpVisibleObjectsInSubNode[nVisibleObjects]);
+              std::for_each(begin(vpVisibleObjectsInSubNode), end(vpVisibleObjectsInSubNode), [&vVisibleObjects](GeometryData::GenericObject *p) {vVisibleObjects.push_back(p); });
             }
       }
       else

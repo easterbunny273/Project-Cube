@@ -120,6 +120,8 @@ Bamboo::RN_Camera::~RN_Camera()
 
 void Bamboo::RN_Camera::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderInfo)
 {
+    m_bSetMatrices = m_pCamera->GetActive();
+
     //store old matrices
     if (m_bSetMatrices)// || !bUseCamera1)
     {
@@ -153,8 +155,8 @@ void Bamboo::RN_Camera::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderInf
 
 void Bamboo::RN_Camera::ItlRender()
 {
-   /* const GLint l_in_Position(ShaderManager::instance()->GetAttribute("in_Position"));
-    const GLint l_cameraInverse_Position = ShaderManager::instance()->GetUniform("Camera_InverseMatrix");
+    const GLint l_in_Position(m_pGraphicCore->GetShaderManager()->GetAttribute("in_Position"));
+    const GLint l_cameraInverse_Position = m_pGraphicCore->GetShaderManager()->GetUniform("Camera_InverseMatrix");
 
     glm::mat4 mInverseViewProjectionMatrix = glm::inverse(m_pCamera->GetProjectionMatrix() * m_pCamera->GetViewMatrix());
 
@@ -173,6 +175,8 @@ void Bamboo::RN_Camera::ItlRender()
     //glGetFloatv(GL_LINE_WIDTH, &fPreviousLineWidth);
     //glGetIntegerv(GL_POLYGON_MODE, &iPreviousPolygonMode);
 
+    glDisable(GL_DEPTH_TEST);
+
     glLineWidth(1.0f);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -181,23 +185,31 @@ void Bamboo::RN_Camera::ItlRender()
 
    // glLineWidth(fPreviousLineWidth);
     //glPolygonMode(GL_FRONT_AND_BACK, iPreviousPolygonMode);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);*/
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+    glEnable(GL_DEPTH_TEST);
 }
 
 void Bamboo::RN_Camera::ItlPreRender()
 {
-   /* glBindVertexArray(m_nVertexArrayObject);
+  bool bInitialized = false;
+
+  if (!bInitialized)
+    {
+    ItlGetGraphicCore()->GetShaderManager()->AddShader("camera-debug", new Shader("BambooEngine/shaders/camera-debug2.vs", "BambooEngine/shaders/camera-debug2.fs"));
+    bInitialized = true;
+    }
+
+    glBindVertexArray(m_nVertexArrayObject);
     glBindBuffer(GL_ARRAY_BUFFER, m_nVertexBufferObject);
 
-    ShaderManager::instance()->PushActiveShader();
-    if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_SHADOWMAP)
-	ShaderManager::instance()->ActivateShader("camera-debug");
-    else
-        ShaderManager::instance()->ActivateShader("camera-debug");*/
+    m_pGraphicCore->GetShaderManager()->PushActiveShader();
+    m_pGraphicCore->GetShaderManager()->ActivateShader("camera-debug");
 }
 
 void Bamboo::RN_Camera::ItlPostRender()
 {
-   // ShaderManager::instance()->PopActiveShader();
+
+    m_pGraphicCore->GetShaderManager()->PopActiveShader();
 }
 

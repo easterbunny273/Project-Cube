@@ -5,6 +5,8 @@
 #include "RenderNodes/RenderNode_Deferred.h"
 #include "Camera.h"
 
+extern std::shared_ptr<Camera_SemSceneNode> g_spCamera1, g_spCamera2;
+
 std::vector<ISemanticSceneNode::t_classID> DeferredNodeTranslator::Camera_RuleObject::GetAcceptedNodeIDs() const
 {
   std::vector<ISemanticSceneNode::t_classID> vAcceptedIDs;
@@ -17,25 +19,32 @@ std::vector<ISemanticSceneNode::t_classID> DeferredNodeTranslator::Camera_RuleOb
 
 void DeferredNodeTranslator::Camera_RuleObject::Action()
 {
-  bool bRootAlreadyCreated = (m_pTranslator->m_spRootNode.get() != NULL);
+      bool bRootAlreadyCreated = (m_pTranslator->m_spRootNode.get() != NULL);
 
-  if (!bRootAlreadyCreated)
-  {
-      std::shared_ptr<Bamboo::ICamera> spCamera = m_spSemNode->GetCamera();
+      if (!bRootAlreadyCreated)
+      {
+          std::shared_ptr<Bamboo::ICamera> spCamera1 = g_spCamera1->GetCamera();
+          std::shared_ptr<Bamboo::ICamera> spCamera2 = g_spCamera2->GetCamera();
 
-      m_pTranslator->m_spRootNode = std::shared_ptr<Bamboo::IRenderNode>(new Bamboo::RN_Camera(spCamera.get()));
+          m_pTranslator->m_spRootNode = std::shared_ptr<Bamboo::IRenderNode>(new Bamboo::RN_Camera(spCamera1.get()));
+          m_pTranslator->m_spSecondRootNode = std::shared_ptr<Bamboo::IRenderNode>(new Bamboo::RN_Camera(spCamera2.get()));
 
-      m_pTranslator->m_spRootNode->SetInitialViewportInformation(1024,768);
+          m_pTranslator->m_spRootNode->SetInitialViewportInformation(1024,768);
 
-      std::shared_ptr<Bamboo::RN_Deferred> spDeferredNode(new Bamboo::RN_Deferred(1024,768, false));
+          std::shared_ptr<Bamboo::RN_Deferred> spDeferredNode(new Bamboo::RN_Deferred(1024,768, false));
 
-      spDeferredNode->SetGraphicCore(m_pTranslator->m_pCore);
+          m_pTranslator->m_spRootNode->SetGraphicCore(m_pTranslator->m_pCore);
+          m_pTranslator->m_spSecondRootNode->SetGraphicCore(m_pTranslator->m_pCore);
 
-      m_pTranslator->m_spDeferredNode = spDeferredNode;
-      m_pTranslator->m_spRootNode->AddChild(spDeferredNode);
-  }
+          m_pTranslator->m_spDeferredNode = spDeferredNode;
 
-  m_spSemNode->GetCamera()->Move(0.0001f);
+          m_pTranslator->m_spRootNode->AddChild(m_pTranslator->m_spSecondRootNode);
+          m_pTranslator->m_spSecondRootNode->AddChild(spDeferredNode);
+      }
+
+      g_spCamera1->GetCamera()->Move(0.0001f);
+      g_spCamera2->GetCamera()->Move(0.0001f);
+
 }
 
 DeferredNodeTranslator::IRuleObject *DeferredNodeTranslator::Camera_RuleObject::CloneFor(std::shared_ptr<ISemanticSceneNode> spSemNode, DeferredNodeTranslator *pTranslator)
@@ -47,3 +56,4 @@ DeferredNodeTranslator::IRuleObject *DeferredNodeTranslator::Camera_RuleObject::
 
   return pNewObject;
 }
+

@@ -27,12 +27,17 @@
 // initialize singelton ptr to NULL
 MainApp * MainApp::s_pInstance = NULL;
 
+extern bool g_bRecreate;
+extern int g_nNumSpheres;
+extern int g_nLOD;
+bool g_bUseCamera1 = true;
+
 extern int s_nUseParallax;
 unsigned int g_SpheresRendered;
 
 std::shared_ptr<LoadedModel_SemSceneNode> g_spSphere;
 std::shared_ptr<LoadedModel_SemSceneNode> g_spTreppe;
-std::shared_ptr<Camera_SemSceneNode> g_spCamera;
+std::shared_ptr<Camera_SemSceneNode> g_spCamera1, g_spCamera2;
 std::shared_ptr<Cube_SemSceneNode> g_spCube;
 std::shared_ptr<Light_SemSceneNode> g_spTestLight1;
 std::shared_ptr<Light_SemSceneNode> g_spTestLight2;
@@ -115,7 +120,11 @@ void MainApp::StartGraphic_Test2()
   //
 
   // create camera
-  m_spCamera = Bamboo::PerspectiveCamera::Create(45.0f, 1.33f, 0.01f, 100.0f, glm::vec3(-0.2f, 0.2f, 0.0f), 90.0f, -50.0f);
+  m_spCamera1 = Bamboo::PerspectiveCamera::Create(45.0f, 1.33f, 0.1f, 100.0f, glm::vec3(-0.2f, 0.2f, 0.0f), 90.0f, -50.0f);
+  m_spCamera2 = Bamboo::PerspectiveCamera::Create(30.0f, 1.33f, 0.1f, 50.0f, glm::vec3(-0.2f, 0.2f, 0.0f), 90.0f, -50.0f);
+
+  m_spCamera1->SetActive(true);
+  m_spCamera2->SetActive(false);
 
   // register itself as listener for camera events
   GetEventManager()->RegisterEventListener(this, CameraMovementEvent::EventType());
@@ -143,11 +152,13 @@ void MainApp::StartGraphic_Test2()
   //spCube->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
 
   std::shared_ptr<Light_SemSceneNode> spTestLight1 = Light_SemSceneNode::Create(glm::vec3(-0.2f, 0.10f, 0.14f), glm::vec3(1.0f, -0.4f, -1.0f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
-  std::shared_ptr<Light_SemSceneNode> spTestLight2 = Light_SemSceneNode::Create(glm::vec3(-0.2f, 0.2f, -0.14f), glm::vec3(1.0f, -1.1f, 0.62f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
+  std::shared_ptr<Light_SemSceneNode> spTestLight2 = Light_SemSceneNode::Create(glm::vec3(-0.2f, 0.2f, -0.14f), glm::vec3(1.0f, -1.1f, 0.62f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 20.0f);
 
-  std::shared_ptr<Camera_SemSceneNode> spCamera = Camera_SemSceneNode::Create(m_spCamera);
+  std::shared_ptr<Camera_SemSceneNode> spCamera1 = Camera_SemSceneNode::Create(m_spCamera1);
+  std::shared_ptr<Camera_SemSceneNode> spCamera2 = Camera_SemSceneNode::Create(m_spCamera2);
 
-  g_spCamera = spCamera;
+  g_spCamera1 = spCamera1;
+  g_spCamera2 = spCamera2;
   g_spCube = spCube;
   g_spTestLight1 = spTestLight1;
   g_spTestLight2 = spTestLight2;
@@ -155,9 +166,11 @@ void MainApp::StartGraphic_Test2()
   // link scene graph
   //spCamera->AddChild(spTreppe);
   //spCamera->AddChild(spSphere);
-  spCamera->AddChild(spCube);
-  spCamera->AddChild(spTestLight1);
-  spCamera->AddChild(spTestLight2);
+  spCamera1->AddChild(spCamera2);
+
+  spCamera2->AddChild(spCube);
+  spCamera2->AddChild(spTestLight1);
+  spCamera2->AddChild(spTestLight2);
 
   // create node translator
   std::shared_ptr<INodeTranslator> spDeferredTranslator(new DeferredNodeTranslator(m_pGraphic));
@@ -167,37 +180,50 @@ void MainApp::StartGraphic_Test2()
   spWindow->SetInputEventListener(m_spInputEventListener);
 
   // add render loop
-  m_pGraphic->AddRenderLoop(spWindow, spCamera, spDeferredTranslator);
+  m_pGraphic->AddRenderLoop(spWindow, spCamera1, spDeferredTranslator);
 }
 
 void MainApp::StartRenderingUE_Stuff()
 {
   static RenderEngineUE_Generation Generator;
-  static std::vector<GeometryData::GenericObject *> vpSpheres = Generator.GenerateSpheres(10000, 8, 8);
-
   static RenderEngineUE_OctTree OctTree;
+  static RenderEngineUE_Rendering RenderModul;
 
+  // create spheres
+  static std::vector<GeometryData::GenericObject *> vpSpheres = Generator.GenerateSpheres(5000, 8, 8);
+
+  // recreate necessary things if triggered
+  if (g_bRecreate)
+    {
+      vpSpheres = Generator.GenerateSpheres(g_nNumSpheres, g_nLOD, g_nLOD);
+
+      OctTree = RenderEngineUE_OctTree();
+
+      g_bRecreate = false;
+    }
+
+  // get state of "use oct tree"
   bool bUseOctTree = s_nUseParallax % 2;
 
+  // define a set of visible spheres
   std::set<GeometryData::GenericObject *> spVisibleSpheres;
 
+  // if the octtree should be used, send data through octtree module, else use directly from vpSpheres
   if (bUseOctTree)
     {
-      std::vector<GeometryData::GenericObject *> vpVisibleSpheres = OctTree.GetVisibleSpheres(vpSpheres, m_spCamera.get());
+      std::vector<GeometryData::GenericObject *> vpVisibleSpheres = OctTree.GetVisibleSpheres(vpSpheres, m_spCamera2.get());
 
-      for (unsigned int i=0; i < vpVisibleSpheres.size(); i++)
-        spVisibleSpheres.insert(vpVisibleSpheres[i]);
+      std::for_each(begin(vpVisibleSpheres), end(vpVisibleSpheres), [&spVisibleSpheres](GeometryData::GenericObject *p) {spVisibleSpheres.insert(p); });
     }
   else
     {
-      for (unsigned int i=0; i < vpSpheres.size(); i++)
-        spVisibleSpheres.insert(vpSpheres[i]);
+      std::for_each(begin(vpSpheres), end(vpSpheres), [&spVisibleSpheres](GeometryData::GenericObject *p) {spVisibleSpheres.insert(p); });
     }
 
   g_SpheresRendered = spVisibleSpheres.size();
 
-  static RenderEngineUE_Rendering RenderModul;
-  RenderModul.UpdateSemanticSceneGraph(spVisibleSpheres, g_spCamera);
+  // update the render graph
+  RenderModul.UpdateSemanticSceneGraph(spVisibleSpheres, g_spCamera2);
 }
 
 void MainApp::Run()
@@ -400,7 +426,12 @@ void MainApp::InputEventListener::ItlHandleMouseButton(int iButton, int iAction)
 
 bool MainApp::OnEvent(std::shared_ptr<EventManager::IEvent> spEvent)
 {
-    std::shared_ptr<Bamboo::ICamera> spCamera = m_spCamera;
+    std::shared_ptr<Bamboo::ICamera> spCamera;
+
+    if (g_bUseCamera1)
+      spCamera = m_spCamera1;
+    else
+      spCamera = m_spCamera2;
 
     assert (spCamera);
 

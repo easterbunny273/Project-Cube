@@ -36,9 +36,11 @@ GeometryData::GenericMesh::GenericMesh()
     m_nNumVertices = 0;
     m_pnIndices = NULL;
     m_bVisible = true;
+    m_iMatrixOffset = -1;
 }
 
 std::map<GeometryData::TGenericData, std::vector<float> > mBigArrays;
+std::vector<float> mModelMatricesArray;
 std::vector<unsigned int> mBigIndexArray;
 
 void GeometryData::GenericMesh::AddAttributeValues(const char *szName,
@@ -263,6 +265,7 @@ void GeometryData::GenericMesh::SetTextureCoords(GeometryData::TextureType tText
 
 void GeometryData::GenericMesh::SetModelMatrix(float *pfMatrix)
 {
+  assert(!"do not use!");
   m_vfMatrix.resize(16);
 
   for (unsigned int i=0; i < 16; i++)
@@ -273,7 +276,13 @@ void GeometryData::GenericMesh::SetModelMatrix(float *pfMatrix)
 
 float *GeometryData::GenericMesh::GetModelMatrix()
 {
-  return &(m_vfMatrix[0]);
+  if (m_iMatrixOffset == -1)
+  {
+    m_iMatrixOffset = (unsigned int) mModelMatricesArray.size();
+    mModelMatricesArray.resize(m_iMatrixOffset+16);
+  }
+
+  return &(mModelMatricesArray[m_iMatrixOffset]);
 }
 
 unsigned int GeometryData::GenericMesh::NumVertices() const

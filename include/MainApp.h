@@ -103,7 +103,8 @@ private:
         DummyGame *m_pGame;
         lua_State * m_pLuaState;
         std::shared_ptr<InputEventListener> m_spInputEventListener;
-        std::shared_ptr<Bamboo::ICamera> m_spCamera;
+        std::shared_ptr<Bamboo::ICamera> m_spCamera1;
+        std::shared_ptr<Bamboo::ICamera> m_spCamera2;
     //@}
 
     /*! \name Static members */

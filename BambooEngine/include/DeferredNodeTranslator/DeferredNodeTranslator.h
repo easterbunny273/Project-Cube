@@ -99,6 +99,8 @@ private:
   std::vector<std::shared_ptr<Bamboo::IRenderNode> > m_vLightNodes;
   std::set<std::shared_ptr<Bamboo::IRenderNode> > m_vShadowCasterNodes;
 
+  std::shared_ptr<Bamboo::IRenderNode>    m_spSecondRootNode;
+
   std::shared_ptr<Bamboo::RN_Deferred>    m_spDeferredNode;
 };
 

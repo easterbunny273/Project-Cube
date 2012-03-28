@@ -19,6 +19,8 @@
 
 Bamboo::GlfwWindow *Bamboo::GlfwWindow::s_pInstance = NULL;
 
+extern int g_nNumSpheres;
+extern int g_nLOD;
 
 int s_DebugDeferredTexture = 0;
 int s_nUseParallax = 0;
@@ -267,14 +269,14 @@ void Bamboo::GlfwWindow::SwapBuffers()
     m_iFrames++;
 
     double dCurTime = glfwGetTime();
-    if (dCurTime - m_dLastTimeStamp > 0.5)
+    if (dCurTime - m_dLastTimeStamp > 0.1)
       {
-        m_iFPS = m_iFrames / 0.5;
+        m_iFPS = m_iFrames / 0.1;
         m_iFrames = 0;
         m_dLastTimeStamp = dCurTime;
 
         char szBuffer[255];
-        sprintf(szBuffer, "%s (%d FPS, %d Spheres rendered)", m_sWindowTitle.c_str(), m_iFPS, g_SpheresRendered);
+        sprintf(szBuffer, "%s (%d FPS, %d/%d Spheres, %d Long/Lats)", m_sWindowTitle.c_str(), m_iFPS, g_nNumSpheres, g_SpheresRendered, g_nLOD);
 
         glfwSetWindowTitle(szBuffer);
       }

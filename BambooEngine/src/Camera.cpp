@@ -18,6 +18,7 @@
 Bamboo::ICamera::ICamera()
 {
     m_bInitialized = false;
+    m_bActive     = true;
     m_m4ProjectionMatrix = glm::mat4();
 
     m_fRotationHorizontal = 160;

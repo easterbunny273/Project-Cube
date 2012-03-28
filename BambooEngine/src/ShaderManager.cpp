@@ -19,6 +19,8 @@ Bamboo::ShaderManager::~ShaderManager()
     for_each(m_vpShaders.begin(), m_vpShaders.end(), [](Shader *pShader) { delete pShader; });
 }
 
+
+
 void Bamboo::ShaderManager::AddShader(std::string sName, Shader *pShader)
 {
     m_vpShaders.push_back(pShader);

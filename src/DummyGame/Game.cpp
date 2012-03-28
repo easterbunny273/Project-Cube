@@ -1,10 +1,19 @@
 #include "DummyGame/Game.h"
 #include "DummyGame/SampleObject.h"
+#include "SemanticSceneNodes/Camera_SemSceneNode.h"
+#include "Camera.h"
 
 #include "MainApp.h"
 #include "PC_Logger.h"
 #include "EventManager.h"
 #include "Events.h"
+
+bool g_bRecreate = false;
+int g_nNumSpheres = 5000;
+int g_nLOD = 8;
+extern bool g_bUseCamera1;
+
+extern std::shared_ptr<Camera_SemSceneNode> g_spCamera1, g_spCamera2;
 
 std::list<IObject *> DummyGame::GetObjectsInCube()
 {
@@ -70,6 +79,38 @@ void DummyGame::ItlOnKeyUp(InputKeyEvent::TKey eKey)
     pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_Y, 3.0f));
     else if (eKey == InputKeyEvent::KEY_SPACE)
     pEventManager->QueueEvent(CameraMovementEvent::Create(CameraMovementEvent::CAMERA_MOVE_Y, -3.0f));
+    else if (eKey == InputKeyEvent::KEY_RCTRL)
+      {
+        g_spCamera1->GetCamera()->SetActive(!g_spCamera1->GetCamera()->GetActive());
+        g_spCamera2->GetCamera()->SetActive(!g_spCamera2->GetCamera()->GetActive());
+
+        assert (g_spCamera1->GetCamera()->GetActive() || g_spCamera2->GetCamera()->GetActive());
+        assert (!g_spCamera1->GetCamera()->GetActive() || !g_spCamera2->GetCamera()->GetActive());
+      }
+    else if (eKey == InputKeyEvent::KEY_RSHIFT)
+      {
+        g_bUseCamera1 = !g_bUseCamera1;
+      }
+    else if (eKey == InputKeyEvent::KEY_UP)
+      {
+      g_bRecreate = true;
+      g_nNumSpheres *= 2;
+      }
+    else if (eKey == InputKeyEvent::KEY_DOWN)
+      {
+      g_bRecreate = true;
+      g_nNumSpheres /= 2;
+      }
+    else if (eKey == InputKeyEvent::KEY_RIGHT)
+      {
+      g_bRecreate = true;
+      g_nLOD *= 2;
+      }
+    else if (eKey == InputKeyEvent::KEY_LEFT)
+      {
+      g_bRecreate = true;
+      g_nLOD /= 2;
+      }
     else if (eKey == InputKeyEvent::KEY_ESC)
 	m_bStop = true;
 }

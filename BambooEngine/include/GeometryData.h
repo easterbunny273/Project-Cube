@@ -114,6 +114,7 @@ public:
         std::map<std::string, std::vector<float> >  m_mTextureCoords;
         std::map<std::string, std::string>          m_mTexturePaths;
 
+        int m_iMatrixOffset;
         unsigned int m_nNumVertices;
         unsigned int m_nNumIndices;
 

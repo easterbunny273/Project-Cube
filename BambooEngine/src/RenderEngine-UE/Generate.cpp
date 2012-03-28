@@ -13,7 +13,7 @@
 #define POSITION_MAX_Z 1.0f
 
 #define RADIUS_MIN  0.0005f
-#define RADIUS_MAX 0.0015f
+#define RADIUS_MAX 0.005f
 
 #define PI 3.14159265
 
@@ -32,17 +32,22 @@ inline float randf(float fMin, float fMax)
 
 std::vector<GeometryData::GenericObject*> RenderEngineUE_Generation::GenerateSpheres(unsigned int nNum, unsigned int nLats, unsigned int nLongs)
 {
+  // prepare vector for generated spheres
   std::vector<GeometryData::GenericObject *> vpSpheres;
   vpSpheres.resize(nNum);
 
+
   for (unsigned int nSphere=0; nSphere < nNum; nSphere++)
     {
+      // generate new object
       GeometryData::GenericObject *pNewObject = new GeometryData::GenericObject(1);
       GeometryData::GenericMesh *pNewMesh = pNewObject->GetMeshPtr(0);
 
+      // calculate number of vertices and indices
       unsigned int nNumVertices = nLats * (nLongs+1) * 6;
       unsigned int nNumIndices = nLats * (nLongs+1) * 6;
 
+      // allocate memory for vertices & indices
       float *pfVertices = pNewMesh->AllocForAttribute(GeometryData::TDATA_VERTICES, nNumVertices);
       unsigned int *pnIndices = pNewMesh->AllocForIndices(nNumIndices);
 
@@ -86,18 +91,23 @@ std::vector<GeometryData::GenericObject*> RenderEngineUE_Generation::GenerateSph
                  }
          }
 
-
+         // calculate a random position
          glm::vec3 fRandomPosition = glm::vec3(randf(POSITION_MIN_X, POSITION_MAX_X),
                                                randf(POSITION_MIN_Y, POSITION_MAX_Y),
                                                randf(POSITION_MIN_Z, POSITION_MAX_Z));
 
+         // calculate a random radius
          float fRadius = randf(RADIUS_MIN, RADIUS_MAX);
 
+         // calculate model matrix
          glm::mat4 mModelMatrix = glm::translate(glm::mat4(), fRandomPosition);
          mModelMatrix = glm::scale(mModelMatrix, glm::vec3(fRadius, fRadius, fRadius));
 
-         pNewMesh->SetModelMatrix(&mModelMatrix[0][0]);
+         // get memory for modelmatrix, and copy
+         float *pfModelMatrix = pNewMesh->GetModelMatrix();
+         memcpy(pfModelMatrix, &mModelMatrix[0][0], 16*sizeof(float));
 
+         // insert generated sphere
          vpSpheres[nSphere] = pNewObject;
     }
 

@@ -16,6 +16,8 @@ public:
 
         /// returns the projection matrix
         glm::mat4 GetProjectionMatrix() const;
+
+        bool GetActive() const { return m_bActive; }
     //@}
 
     /*! \name Methods to manipulate the camera view direction or position */
@@ -37,6 +39,8 @@ public:
 
         /// sets the position
         void SetPosition(glm::vec3 vPosition);
+
+        void SetActive(bool bActive) { m_bActive = bActive; }
     //@}
 
     /*! \name Methods to set up the projection */
@@ -58,6 +62,7 @@ protected:
     /*! \name Protected members */
     //@{
         bool        m_bInitialized;         ///< whether the projection matrix was set up
+        bool        m_bActive;
         glm::mat4   m_m4ProjectionMatrix;
         glm::mat4   m_m4ViewMatrix;
         glm::mat4   m_m4TranslateMatrix;
