@@ -1,7 +1,7 @@
 #include "RenderEngine-UE/OctTree.h"
 
 #define MAX_SPHERES_PER_NODE 5
-#define MAX_OCTTREE_LEVELS 20
+#define MAX_OCTTREE_LEVELS 30
 
 #include <iostream>
 #include <algorithm>
@@ -30,6 +30,7 @@ inline RenderEngineUE_OctTree::TBoundingBox RenderEngineUE_OctTree::TNode::ItlCa
   // initialize bounding box
   glm::vec4 v(pfVertices[0], pfVertices[1], pfVertices[2], 1.0);
   glm::vec4 vTransformed = (*pmModelMatrix) * v;
+  vTransformed /= vTransformed.w;
 
   tBoundingBox.fMinX = tBoundingBox.fMaxX = vTransformed.x;
   tBoundingBox.fMinY = tBoundingBox.fMaxY = vTransformed.y;
@@ -41,6 +42,7 @@ inline RenderEngineUE_OctTree::TBoundingBox RenderEngineUE_OctTree::TNode::ItlCa
       glm::vec4 v(pfVertices[i], pfVertices[i+1], pfVertices[i+2], 1.0);
 
       glm::vec4 vTransformed = (*pmModelMatrix) * v;
+      vTransformed /= vTransformed.w;
 
       if (vTransformed.x < tBoundingBox.fMinX)
         tBoundingBox.fMinX = vTransformed.x;
@@ -72,9 +74,9 @@ inline bool RenderEngineUE_OctTree::TNode::ItlTestMatching(RenderEngineUE_OctTre
 
   if (bMustBeFullIncluded == false)
     {
-      bool bXDiffers = (tSphere.fMinX > tBoxNode.fMaxX || tSphere.fMaxX < tBoxNode.fMinX);
-      bool bYDiffers = (tSphere.fMinY > tBoxNode.fMaxY || tSphere.fMaxY < tBoxNode.fMinY);
-      bool bZDiffers = (tSphere.fMinZ > tBoxNode.fMaxZ || tSphere.fMaxZ < tBoxNode.fMinZ);
+      bool bXDiffers = (tSphere.fMinX >= tBoxNode.fMaxX || tSphere.fMaxX <= tBoxNode.fMinX);
+      bool bYDiffers = (tSphere.fMinY >= tBoxNode.fMaxY || tSphere.fMaxY <= tBoxNode.fMinY);
+      bool bZDiffers = (tSphere.fMinZ >= tBoxNode.fMaxZ || tSphere.fMaxZ <= tBoxNode.fMinZ);
 
       bOutSide = (bXDiffers || bYDiffers || bZDiffers);
     }
@@ -296,14 +298,14 @@ std::vector<GeometryData::GenericObject *> RenderEngineUE_OctTree::TNode::GetVis
 
   for (unsigned int i=0; i < 8; i++)
     {
-      bOutsideXLeft   &= vTransformedPoints[i].x < -1.0;
-      bOutsideXRight  &= vTransformedPoints[i].x > 1.0;
+      bOutsideXLeft   &= vTransformedPoints[i].x <= -1.0;
+      bOutsideXRight  &= vTransformedPoints[i].x >= 1.0;
 
-      bOutsideYUp   &= vTransformedPoints[i].y < -1.0;
-      bOutsideYDown  &= vTransformedPoints[i].y > 1.0;
+      bOutsideYUp   &= vTransformedPoints[i].y <= -1.0;
+      bOutsideYDown  &= vTransformedPoints[i].y >= 1.0;
 
-      bOutsideZFront &= vTransformedPoints[i].z < -1.0;
-      bOutsideZBack  &= vTransformedPoints[i].z > 1.0;
+      bOutsideZFront &= vTransformedPoints[i].z <= -1.0;
+      bOutsideZBack  &= vTransformedPoints[i].z >= 1.0;
     }
 
   bool bNotVisible = (bOutsideXLeft || bOutsideXRight || bOutsideYUp || bOutsideYDown || bOutsideZBack || bOutsideZFront);

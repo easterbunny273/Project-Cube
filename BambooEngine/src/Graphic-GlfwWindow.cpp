@@ -14,11 +14,16 @@
 #include <glm/gtx/transform2.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "SemanticSceneNodes/Camera_SemSceneNode.h"
+#include "Camera.h"
+
 #include "common_gl.h"
 #include "PC_Logger.h"
 
 Bamboo::GlfwWindow *Bamboo::GlfwWindow::s_pInstance = NULL;
 
+extern std::shared_ptr<Camera_SemSceneNode> g_spCamera1, g_spCamera2;
+extern bool g_bUseCamera1;
 extern int g_nNumSpheres;
 extern int g_nLOD;
 
@@ -275,8 +280,24 @@ void Bamboo::GlfwWindow::SwapBuffers()
         m_iFrames = 0;
         m_dLastTimeStamp = dCurTime;
 
+        const char * szCam1 = "real Camera";
+        const char * szCam2 = "debug Camera";
+
+        const char *szStearCam = NULL;
+        const char *szViewCam = NULL;
+
+        if (!g_bUseCamera1)
+          szStearCam = szCam1;
+        else
+          szStearCam = szCam2;
+
+        if (!g_spCamera1->GetCamera()->GetActive())
+          szViewCam = szCam1;
+        else
+          szViewCam = szCam2;
+
         char szBuffer[255];
-        sprintf(szBuffer, "%s (%d FPS, %d/%d Spheres, %d Long/Lats)", m_sWindowTitle.c_str(), m_iFPS, g_nNumSpheres, g_SpheresRendered, g_nLOD);
+        sprintf(szBuffer, "%s (%d FPS, %d/%d Spheres, %d Long/Lats, steering %s, using %s)", m_sWindowTitle.c_str(), m_iFPS, g_nNumSpheres, g_SpheresRendered, g_nLOD, szStearCam, szViewCam);
 
         glfwSetWindowTitle(szBuffer);
       }

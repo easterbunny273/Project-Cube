@@ -3,9 +3,11 @@
 #include "ShaderManager.h"
 #include "RenderNodes/RenderNode_RenderPass.h"
 #include "RenderNodes/RenderNode_Camera.h"
+#include "SemanticSceneNodes/Camera_SemSceneNode.h"
 #include "Camera.h"
 
-extern bool bUseCamera1;
+extern bool g_bUseCamera1;
+extern std::shared_ptr<Camera_SemSceneNode> g_spCamera1, g_spCamera2;
 
 Bamboo::RN_Camera::RN_Camera(Bamboo::ICamera * pCamera, bool bSetMatrices)
     : m_pCamera(pCamera), m_bSetMatrices(bSetMatrices)
@@ -155,44 +157,48 @@ void Bamboo::RN_Camera::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderInf
 
 void Bamboo::RN_Camera::ItlRender()
 {
-    const GLint l_in_Position(m_pGraphicCore->GetShaderManager()->GetAttribute("in_Position"));
-    const GLint l_cameraInverse_Position = m_pGraphicCore->GetShaderManager()->GetUniform("Camera_InverseMatrix");
+      if (g_spCamera1->GetCamera()->GetActive())
+      {
+        const GLint l_in_Position(m_pGraphicCore->GetShaderManager()->GetAttribute("in_Position"));
+        const GLint l_cameraInverse_Position = m_pGraphicCore->GetShaderManager()->GetUniform("Camera_InverseMatrix");
 
-    glm::mat4 mInverseViewProjectionMatrix = glm::inverse(m_pCamera->GetProjectionMatrix() * m_pCamera->GetViewMatrix());
+        glm::mat4 mInverseViewProjectionMatrix = glm::inverse(m_pCamera->GetProjectionMatrix() * m_pCamera->GetViewMatrix());
 
-    if (l_cameraInverse_Position != -1)
-	glUniformMatrix4fv(l_cameraInverse_Position, 1, GL_FALSE, &mInverseViewProjectionMatrix[0][0]);
+        if (l_cameraInverse_Position != -1)
+            glUniformMatrix4fv(l_cameraInverse_Position, 1, GL_FALSE, &mInverseViewProjectionMatrix[0][0]);
 
-    if (l_in_Position != -1)
-    {
-	glVertexAttribPointer(l_in_Position, 3, GL_DOUBLE, GL_FALSE, 3 * sizeof(GLdouble), NULL);
-	glEnableVertexAttribArray(l_in_Position);
-    }
+        if (l_in_Position != -1)
+        {
+            glVertexAttribPointer(l_in_Position, 3, GL_DOUBLE, GL_FALSE, 3 * sizeof(GLdouble), NULL);
+            glEnableVertexAttribArray(l_in_Position);
+        }
 
-    //float fPreviousLineWidth;
-    //int iPreviousPolygonMode;
+        //float fPreviousLineWidth;
+        //int iPreviousPolygonMode;
 
-    //glGetFloatv(GL_LINE_WIDTH, &fPreviousLineWidth);
-    //glGetIntegerv(GL_POLYGON_MODE, &iPreviousPolygonMode);
+        //glGetFloatv(GL_LINE_WIDTH, &fPreviousLineWidth);
+        //glGetIntegerv(GL_POLYGON_MODE, &iPreviousPolygonMode);
 
-    glDisable(GL_DEPTH_TEST);
+        glDisable(GL_DEPTH_TEST);
 
-    glLineWidth(1.0f);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glLineWidth(1.0f);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_nIndexBufferObject);
-    glDrawElements(GL_LINES, m_iIndexArraySize, GL_UNSIGNED_INT, NULL);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_nIndexBufferObject);
+        glDrawElements(GL_LINES, m_iIndexArraySize, GL_UNSIGNED_INT, NULL);
 
-   // glLineWidth(fPreviousLineWidth);
-    //glPolygonMode(GL_FRONT_AND_BACK, iPreviousPolygonMode);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+       // glLineWidth(fPreviousLineWidth);
+        //glPolygonMode(GL_FRONT_AND_BACK, iPreviousPolygonMode);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    glEnable(GL_DEPTH_TEST);
+        glEnable(GL_DEPTH_TEST);
+      }
+
 }
 
 void Bamboo::RN_Camera::ItlPreRender()
 {
-  bool bInitialized = false;
+  static bool bInitialized = false;
 
   if (!bInitialized)
     {

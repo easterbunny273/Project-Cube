@@ -30,7 +30,7 @@ MainApp * MainApp::s_pInstance = NULL;
 extern bool g_bRecreate;
 extern int g_nNumSpheres;
 extern int g_nLOD;
-bool g_bUseCamera1 = true;
+bool g_bUseCamera1 = false;
 
 extern int s_nUseParallax;
 unsigned int g_SpheresRendered;
@@ -121,10 +121,10 @@ void MainApp::StartGraphic_Test2()
 
   // create camera
   m_spCamera1 = Bamboo::PerspectiveCamera::Create(45.0f, 1.33f, 0.1f, 100.0f, glm::vec3(-0.2f, 0.2f, 0.0f), 90.0f, -50.0f);
-  m_spCamera2 = Bamboo::PerspectiveCamera::Create(30.0f, 1.33f, 0.1f, 50.0f, glm::vec3(-0.2f, 0.2f, 0.0f), 90.0f, -50.0f);
+  m_spCamera2 = Bamboo::PerspectiveCamera::Create(30.0f, 1.33f, 0.1f, 100.0f, glm::vec3(-0.2f, 0.2f, 0.0f), 90.0f, -50.0f);
 
-  m_spCamera1->SetActive(true);
-  m_spCamera2->SetActive(false);
+  m_spCamera1->SetActive(false);
+  m_spCamera2->SetActive(true);
 
   // register itself as listener for camera events
   GetEventManager()->RegisterEventListener(this, CameraMovementEvent::EventType());

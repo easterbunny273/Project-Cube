@@ -130,7 +130,11 @@ vec2 GetParallaxOffset(vec2 original_Texcoords)
 
 void main(void)
 {
-   out_Albedo = vec4(0.1);
+  float f=100.0;
+  float n = 0.1;
+  float z = (2 * n) / (f + n - (my_ScreenPosition.z / my_ScreenPosition.w) * (f - n));
+
+   out_Albedo = vec4(vec3(1.0 - 50*z), 0.1);
 
    // write depth into alpha
    out_Albedo.a = my_ScreenPosition.z / my_ScreenPosition.w;

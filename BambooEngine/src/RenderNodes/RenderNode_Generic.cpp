@@ -130,7 +130,11 @@ void Bamboo::RN_Generic::ItlRender()
         glBindBuffer(GL_ARRAY_BUFFER, m_pnVertexBufferObjects[nMesh]);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_pnIndexBufferObjects[nMesh]);
 
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
         glDrawElements(GL_TRIANGLES, m_pnNumIndices[nMesh], GL_UNSIGNED_INT, (const GLvoid *) 0 );
+
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         for (unsigned int i=0; i < vUsedTextures.size(); i++)
             pTextureManager->UnuseTexture(vUsedTextures[i]);
