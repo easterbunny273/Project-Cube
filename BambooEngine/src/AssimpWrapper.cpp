@@ -22,7 +22,7 @@ std::shared_ptr<GeometryData::GenericObject> AssimpWrapper::LoadModel(std::strin
                                              aiProcess_CalcTangentSpace	|
                                              aiProcess_ValidateDataStructure	|
                                              aiProcess_Triangulate		|
-                                             aiProcess_PreTransformVertices	|
+                                            // aiProcess_PreTransformVertices	|
                                              //aiProcess_JoinIdenticalVertices	|
                                              aiProcess_GenSmoothNormals		|
                                              aiProcess_ImproveCacheLocality |

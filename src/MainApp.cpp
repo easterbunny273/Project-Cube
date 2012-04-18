@@ -107,9 +107,9 @@ void MainApp::StartGraphic_Test2()
   GetEventManager()->RegisterEventListener(this, CameraMovementEvent::EventType());
 
   // load level
-  LuaManager::GetInstance()->ExecuteFile("lua/test.lua");
+ // LuaManager::GetInstance()->ExecuteFile("lua/test.lua");
 
-  Level level = LuaManager::GetInstance()->CallLuaFunction<Level>("GetLevel");
+ // Level level = LuaManager::GetInstance()->CallLuaFunction<Level>("GetLevel");
 
   // create scene nodes
   std::shared_ptr<LoadedModel_SemSceneNode> spTreppe = LoadedModel_SemSceneNode::Create("models/bunte-treppe3.dae");
@@ -125,7 +125,7 @@ void MainApp::StartGraphic_Test2()
 
   g_spTreppe = spTreppe;
 
-  std::shared_ptr<ISemanticSceneNode> spCube = Cube_SemSceneNode::Create(level.GetCubeByPosition(0,0,0));
+  //std::shared_ptr<ISemanticSceneNode> spCube = Cube_SemSceneNode::Create(level.GetCubeByPosition(0,0,0));
   //spCube->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
 
   std::shared_ptr<Light_SemSceneNode> spTestLight1 = Light_SemSceneNode::Create(glm::vec3(-0.2f, 0.10f, 0.14f), glm::vec3(1.0f, -0.4f, -1.0f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
@@ -136,7 +136,7 @@ void MainApp::StartGraphic_Test2()
   // link scene graph
   spCamera->AddChild(spTreppe);
   spCamera->AddChild(spSphere);
-  spCamera->AddChild(spCube);
+  //spCamera->AddChild(spCube);
   spCamera->AddChild(spTestLight1);
   spCamera->AddChild(spTestLight2);
 
