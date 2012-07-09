@@ -25,7 +25,7 @@ LuaManager::LuaManager()
 
 void LuaManager::InitLua()
 {
-	m_LuaState = lua_open();
+	m_LuaState = luaL_newstate();
 
 	luaL_openlibs(m_LuaState);
 
