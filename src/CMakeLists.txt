@@ -24,7 +24,7 @@ else(WIN32)
 endif(WIN32)
 
 #add include directories for compiler
-include_directories(../BambooEngine/include)
+include_directories(../BambooEngine/include/)
 include_directories(../include/)
 include_directories(../include/tinyxml/)
 include_directories(../test/)
