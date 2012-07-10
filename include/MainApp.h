@@ -16,8 +16,6 @@
 #include "Graphic-GlfwWindow.h"
 #include "DummyGame/Game.h"
 
-#include "lua_include.h"
-
 class MainApp : public EventManager::IEventListener
 {
 public:
@@ -35,8 +33,6 @@ public:
         // dummy
 	DummyGame * GetGame();
 
-	// get app wide lua state
-	lua_State * GetLuaState();
     //@}
 
     /*! \name The MainApp gets the camera events and call the camera methods */
@@ -51,7 +47,6 @@ public:
 
     /*! \name Testing stuff */
     //@{
-	void LuaTest();
         void StartGraphic_Test();
         void StartGraphic_Test2();
     //@}
@@ -102,7 +97,6 @@ private:
 
         Bamboo *m_pGraphic;
         DummyGame *m_pGame;
-        lua_State * m_pLuaState;
         std::shared_ptr<InputEventListener> m_spInputEventListener;
         std::shared_ptr<Bamboo::ICamera> m_spCamera;
     //@}

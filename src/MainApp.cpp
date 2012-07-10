@@ -30,7 +30,6 @@ MainApp::MainApp()
     m_CoreSettings.RestoreSettingsFromXMLFile("config/core-settings.xml");
 
     // set subsystems to NULL, lazy initialisation
-    m_pLuaState = NULL;
     m_pGraphic = new Bamboo();
     m_pGame = NULL;
 
@@ -42,13 +41,6 @@ MainApp::~MainApp()
 {
     // save core settings
     m_CoreSettings.StoreSettingsAsXMLFile("config/core-settings.xml");
-
-    // close lua state, if open
-    if (m_pLuaState != NULL)
-    {
-	lua_close(m_pLuaState);
-	m_pLuaState = NULL;
-    }
 
     if (m_pGraphic != NULL)
     {
@@ -230,8 +222,6 @@ void MainApp::Run()
     {
 	GetEventManager()->ProcessEvents();
 
-	LuaTest();
-
         static int i=0;
         i++;
 
@@ -262,36 +252,6 @@ DummyGame * MainApp::GetGame()
 void MainApp::ItlCreateSceneGraphs()
 {
 
-}
-
-lua_State * MainApp::GetLuaState()
-{
-    /*
-	// lazy evaluation
-    if (m_pLuaState == NULL)
-    {
-	// open lua state
-	m_pLuaState = lua_open();
-
-	// load lua libs
-	luaL_openlibs(m_pLuaState);
-
-	luabind::open(m_pLuaState);
-    }
-
-    assert (m_pLuaState != NULL);
-	*/
-    return m_pLuaState;
-}
-
-void MainApp::LuaTest()
-{
-    /*luaL_dostring(
-    m_pLuaState,
-    "new_event = InputKeyEvent::Create(87, 1)\n"
-    "eventmanager::QueueEvent(new_event)\n"
-                );
-				*/
 }
 
 void MainApp::InputEventListener::ItlHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState)

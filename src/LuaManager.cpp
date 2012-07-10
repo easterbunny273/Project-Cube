@@ -25,21 +25,27 @@ LuaManager::LuaManager()
 
 void LuaManager::InitLua()
 {
-	m_LuaState = luaL_newstate();
+	m_pLuaState = luaL_newstate();
 
-	luaL_openlibs(m_LuaState);
+	luaL_openlibs(m_pLuaState);
 
-	luabind::open(m_LuaState);
+	luabind::open(m_pLuaState);
 
 	ExecuteFile("lua/functions.lua");
 
 	RegisterClasses();
 }
 
+lua_State* LuaManager::GetLuaState()
+{
+	return m_pLuaState;
+}
+
 void LuaManager::RegisterClasses()
 {
+	Logger::debug() << "Registering classes to LUA" << Logger::endl;
 	// Register Grid class
-	luabind::module(m_LuaState)
+	luabind::module(m_pLuaState)
 		[
 			luabind::class_<Grid>("Grid")
 				.def(luabind::constructor<>())
@@ -55,7 +61,7 @@ void LuaManager::RegisterClasses()
 		];
 	
 	// Register Cube class
-	luabind::module(m_LuaState)
+	luabind::module(m_pLuaState)
 		[
 			luabind::class_<Cube>("Cube")
 				.def(luabind::constructor<>())
@@ -82,7 +88,7 @@ void LuaManager::RegisterClasses()
 		];
 
 	// Register Level class
-	luabind::module(m_LuaState)
+	luabind::module(m_pLuaState)
 		[
 			luabind::class_<Level>("Level")
 				.def(luabind::constructor<>())
@@ -102,6 +108,7 @@ void LuaManager::RegisterClasses()
 
 void LuaManager::ExecuteFile(std::string sFile)
 {
-	luaL_dofile(m_LuaState, sFile.c_str());
+	Logger::debug() << "Executing LUA file: "<< sFile << Logger::endl;
+	luaL_dofile(m_pLuaState, sFile.c_str());
 }
 
