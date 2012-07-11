@@ -105,26 +105,37 @@ void LuaManager::RegisterClasses()
 				.def("LoadLevelFromXMLFile", &Level::LoadLevelFromXMLFile)
 				.def("GetCubes", &Level::GetCubes)
 				.def("GetCubeByPosition", (Cube*(Level::*)(int, int, int))&Level::GetCubeByPosition)
-				.def("AddObject", &Level::AddObject)
+				.def("CreateObject", &Level::CreateObject)
+				.def("CreateLight", &Level::CreateLight)
+				.def("GetObjectByName", &Level::GetObjectByName)
+				.def("GetLightByName", &Level::GetLightByName)
 		];
 
 	// Register Object class
 	luabind::module(m_pLuaState)
 		[
 			luabind::class_<Object>("Object")
-				.def(luabind::constructor<std::string>())
+				.def(luabind::constructor<std::string, std::string>())
 				.def("Translate", &Object::Translate)
 				.def("Scale", &Object::Scale)
 				.def("ActivateEnvironmentMapping", &Object::ActivateEnvironmentMapping)
 				.def("DeactivateEnvironmentMapping", &Object::DeactivateEnvironmentMapping)
+				.def("GetName", &Object::GetName)
 		];
 
 	// Register Lightobject class
 	luabind::module(m_pLuaState)
 		[
 			luabind::class_<LightObject>("Light")
-				.def(luabind::constructor<>())
+				.def(luabind::constructor<std::string>())
 				.def("GetObjectType", &LightObject::GetObjectType)
+				.def("GetName", &LightObject::GetName)
+				.def("SetPosition", &LightObject::SetPosition)
+				.def("SetLookDirection", &LightObject::SetLookDirection)
+				.def("SetFOV", &LightObject::SetFOV)
+				.def("SetColor", &LightObject::SetColor)
+				.def("SetNearplane", &LightObject::SetNearplane)
+				.def("SetFarplane", &LightObject::SetFarplane)
 		];
 }
 

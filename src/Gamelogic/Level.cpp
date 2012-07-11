@@ -1,6 +1,7 @@
 #include "Gamelogic/Level.h"
 #include "SemanticSceneNodes\Camera_SemSceneNode.h"
 #include "SemanticSceneNodes\Cube_SemSceneNode.h"
+#include "Gamelogic\Objects\Object.h"
 
 #include <iostream>
 using namespace std;
@@ -376,17 +377,40 @@ bool Level::LoadLevelFromXMLFile(std::string sFilename)
     }
 }
 
-void Level::AddObject(IObject* pObject)
+Object* Level::CreateObject(std::string sName, std::string sFileName)
 {
-	Logger::debug() << "C++: adding " << pObject->GetObjectType() << " to the level"<< Logger::endl;
-	m_spSemanticScene->AddChild(pObject->GetSceneNode());
+	Logger::debug() << "C++: adding " << sName << " to the level"<< Logger::endl;
+	Object* object = new Object(sName, sFileName);
+	m_Objects.push_back(object);
+	m_spSemanticScene->AddChild(object->GetSceneNode());
+	return object;
 }
 
-std::shared_ptr<ISemanticSceneNode> Level::GetSemanticSceneNode()
+LightObject* Level::CreateLight(std::string sName)
 {
-	return m_spSemanticScene;
+	Logger::debug() << "C++: adding " << sName << " to the level"<< Logger::endl;
+	LightObject* light = new LightObject(sName);
+	m_Lights.push_back(light);
+	m_spSemanticScene->AddChild(light->GetSceneNode());
+	return light;
+
 }
 
+Object* Level::GetObjectByName(std::string sName)
+{
+	for(unsigned int i = 0; i < m_Objects.size(); i++)
+		if(sName == m_Objects.at(i)->GetName())
+			return m_Objects.at(i);
+	return NULL;
+}
+
+LightObject* Level::GetLightByName(std::string sName)
+{
+	for(unsigned int i = 0; i < m_Lights.size(); i++)
+		if(sName == m_Lights.at(i)->GetName())
+			return m_Lights.at(i);
+	return NULL;
+}
 
 /*#############################################################
 *################## PRIVATE METHODS ##########################

@@ -17,7 +17,7 @@ public:
 	/*! \name Construction / Destruction */
 
 	/// Constructor
-	Object(std::string sFilename);
+	Object(std::string sName, std::string sFilename);
 
 	/// Destructor
 	virtual ~Object();
@@ -34,6 +34,9 @@ public:
 
 	/// returns the semantic scene node of this object
 	virtual std::shared_ptr<ISemanticSceneNode> GetSceneNode();
+	
+	/// returns the user defined name of the object
+	virtual std::string GetName();
 
 	//@}
 
@@ -56,6 +59,8 @@ public:
 	//@}
 private:
 	std::shared_ptr<LoadedModel_SemSceneNode> m_spObjectSceneNode;
+
+	std::string m_sName;
 };
 
 

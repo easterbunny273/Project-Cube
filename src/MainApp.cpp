@@ -92,18 +92,15 @@ void MainApp::StartGraphic_LuaTest()
 	
 	Level level = LuaManager::GetInstance()->CallLuaFunction<Level>("GetLevel");
 
+
+	// TODO... move this all into the level? so only executefile has to be called
+
 	std::shared_ptr<ISemanticSceneNode> spNode = level.GetSemanticSceneNode();
 
-	Logger::debug() << spNode->GetChildren()->size() << Logger::endl;
-
-	//ADD THINGS THAT ARE NOT YET LOADED WITH LUA
-
-	std::shared_ptr<Light_SemSceneNode> spTestLight1 = Light_SemSceneNode::Create(glm::vec3(-0.2f, 0.10f, 0.14f), glm::vec3(1.0f, -0.4f, -1.0f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
-	std::shared_ptr<Light_SemSceneNode> spTestLight2 = Light_SemSceneNode::Create(glm::vec3(-0.2f, 0.2f, -0.14f), glm::vec3(1.0f, -1.1f, 0.62f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
-	spNode->AddChild(spTestLight1);
-
-	Logger::debug() << spNode->GetChildren()->size() << Logger::endl;
-
+	m_spCamera = level.GetCamera();
+	// register itself as listener for camera events
+	GetEventManager()->RegisterEventListener(this, CameraMovementEvent::EventType());
+	
 	// create node translator
 	std::shared_ptr<INodeTranslator> spDeferredTranslator(new DeferredNodeTranslator(m_pGraphic));
 

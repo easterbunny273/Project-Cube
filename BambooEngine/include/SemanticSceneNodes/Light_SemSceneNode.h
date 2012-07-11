@@ -45,6 +45,25 @@ public:
                              glm::vec3 &rvLightColor,
                              float &rfNearplane,
                              float &rfFarplane);
+
+	/// Sets the light's position
+	void SetPosition(glm::vec3 vPosition);
+
+	/// Sets the light's look direction
+	void SetLookDirection(glm::vec3 vLookDirection);
+
+	/// Sets the light's FOV
+	void SetFOV(float fFOV);
+
+	/// Sets the light's color
+	void SetColor(glm::vec3 vColor);
+
+	/// Sets the light's nearplane
+	void SetNearplane(float fNearplane);
+
+	/// Sets the light's farplane
+	void SetFarplane(float fFarplane);
+
   //@}
 
 private:

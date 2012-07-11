@@ -32,6 +32,9 @@ public:
 	/// returns the semantic scene node of this object
 	virtual std::shared_ptr<ISemanticSceneNode> GetSceneNode() = 0;
 
+	/// returns the user defined name of the object
+	virtual std::string GetName() = 0;
+
 	/*
     /// returns the current animation state
     /// todo: think about other ideas? this way, only vertex

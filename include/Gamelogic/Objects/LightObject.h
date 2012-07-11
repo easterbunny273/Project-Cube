@@ -17,7 +17,7 @@ public:
 	/*! \name Construction / Destruction */
 
 	/// Constructor
-	LightObject();
+	LightObject(std::string sName);
 
 	/// Destructor
 	virtual ~LightObject();
@@ -35,8 +35,35 @@ public:
 	/// returns the semantic scene node of this object
 	virtual std::shared_ptr<ISemanticSceneNode> GetSceneNode();
 
+	/// returns the user defined name of the object
+	virtual std::string GetName();
+
+	//@}
+
+	/*! \name Public methods */
+    //@{
+	
+	/// Sets the light's position
+	void SetPosition(const float fX, const float fY, const float fZ);
+
+	/// Sets the light's look direction
+	void SetLookDirection(const float fX, const float fY, const float fZ);
+
+	/// Sets the light's FOV
+	void SetFOV(const float fFOV);
+
+	/// Sets the light's color
+	void SetColor(const float fR, const float fG, const float fB);
+
+	/// Sets the light's nearplane
+	void SetNearplane(const float fNearplane);
+
+	/// Sets the light's farplane
+	void SetFarplane(const float fFarplane);
 	//@}
 private:
+	std::string m_sName;
+
 	std::shared_ptr<Light_SemSceneNode> m_spLightSceneNode;
 };
 

@@ -19,6 +19,8 @@
 #include "SemanticSceneNodes\ISemanticSceneNode.h"
 #include "Camera.h"
 #include "Gamelogic\IObject.h"
+#include "Gamelogic\Objects\LightObject.h"
+#include "Gamelogic\Objects\Object.h"
 
 
 class Level : public ILevel, public IXMLSerializeable
@@ -78,10 +80,29 @@ public:
 
 		/// Adds a object to the level - and its semantic scene node to
 		/// the level's node
-		void AddObject(IObject* pObject);
+		Object* CreateObject(std::string sName, std::string sFileName);
+
+		/// Adds a light to the level - and its semantic scene node to the
+		/// level's node
+		LightObject* CreateLight(std::string sName);
+
+		/// returns the object with the specified name
+		Object* GetObjectByName(std::string sName);
+
+		/// returns the light with the specified name
+		LightObject* GetLightByName(std::string sName);
 
 		/// returns the root semantic scene node of the level
-		std::shared_ptr<ISemanticSceneNode> GetSemanticSceneNode();
+		std::shared_ptr<ISemanticSceneNode> GetSemanticSceneNode()
+		{
+			return m_spSemanticScene;
+		}
+
+		/// returns the camera
+		std::shared_ptr<Bamboo::ICamera> GetCamera()
+		{
+			return m_spCamera;
+		}
     //@}
 private:
     /*! \name Private members */
@@ -94,6 +115,12 @@ private:
 
         /// Contains all cubes inside the level
         std::vector<Cube*> m_Cubes;
+
+		/// Contains all objects inside the level
+		std::vector<Object*> m_Objects;
+
+		/// Contains all lights of the level
+		std::vector<LightObject*> m_Lights;
 
         /// Number of cubes of the level
         int m_iNumCubes;
