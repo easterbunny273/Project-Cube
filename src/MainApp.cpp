@@ -86,6 +86,36 @@ EventManager * MainApp::GetEventManager()
     return &m_EventManager;
 }
 
+void MainApp::StartGraphic_LuaTest()
+{
+	LuaManager::GetInstance()->ExecuteFile("lua/level1.lua");
+	
+	Level level = LuaManager::GetInstance()->CallLuaFunction<Level>("GetLevel");
+
+	std::shared_ptr<ISemanticSceneNode> spNode = level.GetSemanticSceneNode();
+
+	Logger::debug() << spNode->GetChildren()->size() << Logger::endl;
+
+	//ADD THINGS THAT ARE NOT YET LOADED WITH LUA
+
+	std::shared_ptr<Light_SemSceneNode> spTestLight1 = Light_SemSceneNode::Create(glm::vec3(-0.2f, 0.10f, 0.14f), glm::vec3(1.0f, -0.4f, -1.0f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
+	std::shared_ptr<Light_SemSceneNode> spTestLight2 = Light_SemSceneNode::Create(glm::vec3(-0.2f, 0.2f, -0.14f), glm::vec3(1.0f, -1.1f, 0.62f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
+	spNode->AddChild(spTestLight1);
+
+	Logger::debug() << spNode->GetChildren()->size() << Logger::endl;
+
+	// create node translator
+	std::shared_ptr<INodeTranslator> spDeferredTranslator(new DeferredNodeTranslator(m_pGraphic));
+
+	// create glfw window
+	std::shared_ptr<Bamboo::GlfwWindow> spWindow = Bamboo::GlfwWindow::Create(1024, 768, "Test");
+	spWindow->SetInputEventListener(m_spInputEventListener);
+
+	// add render loop
+	m_pGraphic->AddRenderLoop(spWindow, spNode, spDeferredTranslator);
+
+}
+
 void MainApp::StartGraphic_Test2()
 {
   // this method uses the new SemanticSceneNodes
@@ -215,7 +245,8 @@ void MainApp::Run()
 
     GetEventManager()->Initialize();
 
-    StartGraphic_Test2();
+	StartGraphic_LuaTest();
+    //StartGraphic_Test2();
 
     // main loop
     while(GetGame()->GetStop() == false)
@@ -225,7 +256,7 @@ void MainApp::Run()
         static int i=0;
         i++;
 
-        g_spSphere->SetTransformMatrix(glm::translate(g_spSphere->GetTransformMatrix(), glm::vec3(cos(i / 400.0) / 100.0, sin(i / 400.0) / 400.0, sin(i / 400.0) / 100.0)));
+        //g_spSphere->SetTransformMatrix(glm::translate(g_spSphere->GetTransformMatrix(), glm::vec3(cos(i / 400.0) / 100.0, sin(i / 400.0) / 400.0, sin(i / 400.0) / 100.0)));
 
         GetGraphic()->Render();
     }

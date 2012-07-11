@@ -38,11 +38,23 @@ file(GLOB H_BAMBOO_RSN "../BambooEngine/include/RenderingSceneNodes/*.h")
 file(GLOB H_BAMBOO_STO "../BambooEngine/include/StateObjects/*.h")
 file(GLOB H_BAMBOO_DNT "../BambooEngine/include/DeferredNodeTranslator/*.h")
 file(GLOB H_GAMELOGIC "../include/Gamelogic/*.h")
+file(GLOB H_GAMELOGIC_OBJ "../include/Gamelogic/Objects/*.h")
 file(GLOB H_DUMMYGAME "../include/DummyGame/*.h")
 #add test headers
 file(GLOB H_TEST "../test/*.h")
 #combine headers
-file(GLOB HEADERS "../include/*.h" ${H_BAMBOO} ${H_BAMBOO_RN} ${H_BAMBOO_SO} ${H_BAMBOO_STO} ${H_BAMBOO_DNT} ${H_BAMBOO_SSN} ${H_BAMBOO_RSN} ${H_GAMELOGIC} ${H_DUMMYGAME} ${H_TEST})
+file(GLOB HEADERS "../include/*.h"
+				  ${H_BAMBOO} 
+				  ${H_BAMBOO_RN} 
+				  ${H_BAMBOO_SO} 
+				  ${H_BAMBOO_STO} 
+				  ${H_BAMBOO_DNT} 
+				  ${H_BAMBOO_SSN} 
+				  ${H_BAMBOO_RSN} 
+				  ${H_GAMELOGIC} 
+				  ${H_GAMELOGIC_OBJ}
+				  ${H_DUMMYGAME} 
+				  ${H_TEST})
 
 #define sources
 file(GLOB S_BAMBOO "../BambooEngine/src/*.cpp")
@@ -53,15 +65,27 @@ file(GLOB S_BAMBOO_RSN "../BambooEngine/src/RenderingSceneNodes/*.cpp")
 file(GLOB S_BAMBOO_STO "../BambooEngine/src/StateObjects/*.cpp")
 file(GLOB S_BAMBOO_DNT "../BambooEngine/src/DeferredNodeTranslator/*.cpp")
 file(GLOB S_GAMELOGIC "../src/Gamelogic/*.cpp")
+file(GLOB S_GAMELOGIC_OBJ "../src/Gamelogic/Objects/*.cpp")
 file(GLOB S_DUMMYGAME "../src/DummyGame/*.cpp")
 #add test sources
 file(GLOB S_TEST "../test/*.cpp")
 #combine sources
-file(GLOB SOURCES "../src/*.cpp" ${S_BAMBOO} ${S_BAMBOO_RN} ${S_BAMBOO_SO} ${S_BAMBOO_STO} ${S_BAMBOO_SSN} ${S_BAMBOO_DNT} ${S_GAMELOGIC} ${S_DUMMYGAME} ${S_TEST})
+file(GLOB SOURCES "../src/*.cpp" 
+				  ${S_BAMBOO}
+				  ${S_BAMBOO_RN} 
+				  ${S_BAMBOO_SO} 
+				  ${S_BAMBOO_STO} 
+				  ${S_BAMBOO_SSN} 
+				  ${S_BAMBOO_DNT} 
+				  ${S_GAMELOGIC} 
+				  ${S_GAMELOGIC_OBJ} 
+				  ${S_DUMMYGAME} 
+				  ${S_TEST})
 
 
 if(WIN32)
 	SOURCE_GROUP("Header Files\\Gamelogic" FILES ${H_GAMELOGIC})
+	SOURCE_GROUP("Header Files\\Gamelogic\\Objects" FILES ${H_GAMELOGIC_OBJ})
 	SOURCE_GROUP("Header Files\\DummyGame" FILES ${H_DUMMYGAME})
 	SOURCE_GROUP("Header Files\\BambooEngine" FILES ${H_BAMBOO})
 	SOURCE_GROUP("Header Files\\BambooEngine\\RenderNodes" FILES ${H_BAMBOO_RN})
@@ -73,6 +97,7 @@ if(WIN32)
 	SOURCE_GROUP("Header Files\\Test" FILES ${H_TEST})
 	
 	SOURCE_GROUP("Source Files\\Gamelogic" FILES ${S_GAMELOGIC})
+	SOURCE_GROUP("Source Files\\Gamelogic\\Objects" FILES ${S_GAMELOGIC_OBJ})
 	SOURCE_GROUP("Source Files\\DummyGame" FILES ${S_DUMMYGAME})
 	SOURCE_GROUP("Source Files\\BambooEngine" FILES ${S_BAMBOO})
 	SOURCE_GROUP("Source Files\\BambooEngine\\RenderNodes" FILES ${S_BAMBOO_RN})

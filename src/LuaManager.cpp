@@ -6,6 +6,8 @@
 #include "Gamelogic/Grid.h"
 #include "Gamelogic/Cube.h"
 #include "Gamelogic/Level.h"
+#include "Gamelogic/Objects/LightObject.h"
+#include "Gamelogic/Objects/Object.h"
 
 LuaManager* LuaManager::instance = NULL;
 
@@ -103,12 +105,39 @@ void LuaManager::RegisterClasses()
 				.def("LoadLevelFromXMLFile", &Level::LoadLevelFromXMLFile)
 				.def("GetCubes", &Level::GetCubes)
 				.def("GetCubeByPosition", (Cube*(Level::*)(int, int, int))&Level::GetCubeByPosition)
+				.def("AddObject", &Level::AddObject)
+		];
+
+	// Register Object class
+	luabind::module(m_pLuaState)
+		[
+			luabind::class_<Object>("Object")
+				.def(luabind::constructor<std::string>())
+				.def("Translate", &Object::Translate)
+				.def("Scale", &Object::Scale)
+				.def("ActivateEnvironmentMapping", &Object::ActivateEnvironmentMapping)
+				.def("DeactivateEnvironmentMapping", &Object::DeactivateEnvironmentMapping)
+		];
+
+	// Register Lightobject class
+	luabind::module(m_pLuaState)
+		[
+			luabind::class_<LightObject>("Light")
+				.def(luabind::constructor<>())
+				.def("GetObjectType", &LightObject::GetObjectType)
 		];
 }
 
 void LuaManager::ExecuteFile(std::string sFile)
 {
 	Logger::debug() << "Executing LUA file: "<< sFile << Logger::endl;
-	luaL_dofile(m_pLuaState, sFile.c_str());
+	try
+	{
+		luaL_dofile(m_pLuaState, sFile.c_str());
+	}
+	catch(std::exception e)
+	{
+		Logger::error() << e.what() << Logger::endl;
+		lua_tostring(m_pLuaState, -1);
+	}
 }
-

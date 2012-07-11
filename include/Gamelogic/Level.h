@@ -16,6 +16,9 @@
 #include "IXMLSerializeable.h"
 #include "Gamelogic/Cube.h"
 #include <vector>
+#include "SemanticSceneNodes\ISemanticSceneNode.h"
+#include "Camera.h"
+#include "Gamelogic\IObject.h"
 
 
 class Level : public ILevel, public IXMLSerializeable
@@ -72,6 +75,13 @@ public:
         /// Returns a cube by its given position inside the level
         /// Returns NULL if not no cube is at the given position
         Cube* GetCubeByPosition(int iX, int iY, int iZ);
+
+		/// Adds a object to the level - and its semantic scene node to
+		/// the level's node
+		void AddObject(IObject* pObject);
+
+		/// returns the root semantic scene node of the level
+		std::shared_ptr<ISemanticSceneNode> GetSemanticSceneNode();
     //@}
 private:
     /*! \name Private members */
@@ -87,6 +97,12 @@ private:
 
         /// Number of cubes of the level
         int m_iNumCubes;
+
+		/// Camera of this level
+		std::shared_ptr<Bamboo::ICamera> m_spCamera;
+
+		/// Pointer to the root of the semantic scene nodes
+		std::shared_ptr<ISemanticSceneNode> m_spSemanticScene;
     //@}
 
     /*! \name Private methods */
@@ -111,6 +127,11 @@ private:
 
         /// Adds a cube to the level (to the cube-vector)
         void itlAddCube(Cube* cube);
+
+		/// Initializes the semantic scene root node - TODO initialize like now
+		/// with camera, but specify a starting position for the actor - and 
+		/// set camera parameters with that values
+		void itlInitSemanticSceneNode();
 
     //@}
 };

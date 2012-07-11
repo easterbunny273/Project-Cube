@@ -1,4 +1,6 @@
 #include "Gamelogic/Level.h"
+#include "SemanticSceneNodes\Camera_SemSceneNode.h"
+#include "SemanticSceneNodes\Cube_SemSceneNode.h"
 
 #include <iostream>
 using namespace std;
@@ -9,6 +11,7 @@ using namespace std;
 Level::Level()
 {
 	m_iNumCubes = 0;
+	itlInitSemanticSceneNode();
 }
 
 Level::~Level()
@@ -373,6 +376,16 @@ bool Level::LoadLevelFromXMLFile(std::string sFilename)
     }
 }
 
+void Level::AddObject(IObject* pObject)
+{
+	Logger::debug() << "C++: adding " << pObject->GetObjectType() << " to the level"<< Logger::endl;
+	m_spSemanticScene->AddChild(pObject->GetSceneNode());
+}
+
+std::shared_ptr<ISemanticSceneNode> Level::GetSemanticSceneNode()
+{
+	return m_spSemanticScene;
+}
 
 
 /*#############################################################
@@ -620,4 +633,17 @@ void Level::itlAddCube(Cube* cube)
     Logger::debug() << "Add cube with id: " << cube->GetCubeID() << Logger::endl;
     m_Cubes.push_back(cube);
     m_iNumCubes++;
+
+	// Create semantic node of the cube and add it to the root semantic node
+	std::shared_ptr<ISemanticSceneNode> spCubeSceneNode = Cube_SemSceneNode::Create(cube);
+
+	m_spSemanticScene->AddChild(spCubeSceneNode);
+
+}
+
+
+void Level::itlInitSemanticSceneNode()
+{
+	m_spCamera = Bamboo::PerspectiveCamera::Create(45.0f, 1.33f, 0.01f, 100.0f, glm::vec3(-0.2f, 0.2f, 0.0f), 90.0f, -50.0f);	
+	m_spSemanticScene = Camera_SemSceneNode::Create(m_spCamera);
 }

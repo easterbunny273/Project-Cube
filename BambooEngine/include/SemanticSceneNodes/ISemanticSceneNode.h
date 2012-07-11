@@ -12,6 +12,7 @@
 #include <vector>
 #include <memory>
 #include <glm/glm.hpp>              // uses GLM
+#include <glm/ext.hpp>
 
 class INodeState;
 
