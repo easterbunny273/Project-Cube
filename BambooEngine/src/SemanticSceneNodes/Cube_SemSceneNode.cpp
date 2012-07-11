@@ -10,6 +10,7 @@ std::shared_ptr<Cube_SemSceneNode> Cube_SemSceneNode::Create(Cube *pCube)
 
   // set initial parameters
   pNewNode->m_pCube = pCube;
+  pNewNode->m_mTransformMatrix = glm::translate(glm::mat4(), glm::vec3(pCube->GetCubePosition()));
 
   // create shared_ptr
   std::shared_ptr<Cube_SemSceneNode> spNewNode(pNewNode);
