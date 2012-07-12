@@ -35,7 +35,16 @@ public:
 
     /// returns the current transformation matrix of the object
     virtual glm::mat4 GetTransformation();
+
+	/// returns the semantic scene node of this object
+	virtual std::shared_ptr<ISemanticSceneNode> GetSceneNode();
+
+	/// returns the user defined name of the object
+	virtual std::string GetName();
+
     //@}
+
+
 };
 
 #endif

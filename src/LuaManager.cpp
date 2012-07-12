@@ -6,6 +6,8 @@
 #include "Gamelogic/Grid.h"
 #include "Gamelogic/Cube.h"
 #include "Gamelogic/Level.h"
+#include "Gamelogic/Objects/LightObject.h"
+#include "Gamelogic/Objects/Object.h"
 
 LuaManager* LuaManager::instance = NULL;
 
@@ -25,21 +27,27 @@ LuaManager::LuaManager()
 
 void LuaManager::InitLua()
 {
-	m_LuaState = lua_open();
+	m_pLuaState = luaL_newstate();
 
-	luaL_openlibs(m_LuaState);
+	luaL_openlibs(m_pLuaState);
 
-	luabind::open(m_LuaState);
+	luabind::open(m_pLuaState);
 
 	ExecuteFile("lua/functions.lua");
 
 	RegisterClasses();
 }
 
+lua_State* LuaManager::GetLuaState()
+{
+	return m_pLuaState;
+}
+
 void LuaManager::RegisterClasses()
 {
+	Logger::debug() << "Registering classes to LUA" << Logger::endl;
 	// Register Grid class
-	luabind::module(m_LuaState)
+	luabind::module(m_pLuaState)
 		[
 			luabind::class_<Grid>("Grid")
 				.def(luabind::constructor<>())
@@ -55,7 +63,7 @@ void LuaManager::RegisterClasses()
 		];
 	
 	// Register Cube class
-	luabind::module(m_LuaState)
+	luabind::module(m_pLuaState)
 		[
 			luabind::class_<Cube>("Cube")
 				.def(luabind::constructor<>())
@@ -82,7 +90,7 @@ void LuaManager::RegisterClasses()
 		];
 
 	// Register Level class
-	luabind::module(m_LuaState)
+	luabind::module(m_pLuaState)
 		[
 			luabind::class_<Level>("Level")
 				.def(luabind::constructor<>())
@@ -97,11 +105,50 @@ void LuaManager::RegisterClasses()
 				.def("LoadLevelFromXMLFile", &Level::LoadLevelFromXMLFile)
 				.def("GetCubes", &Level::GetCubes)
 				.def("GetCubeByPosition", (Cube*(Level::*)(int, int, int))&Level::GetCubeByPosition)
+				.def("CreateObject", &Level::CreateObject)
+				.def("CreateLight", &Level::CreateLight)
+				.def("GetObjectByName", &Level::GetObjectByName)
+				.def("GetLightByName", &Level::GetLightByName)
+		];
+
+	// Register Object class
+	luabind::module(m_pLuaState)
+		[
+			luabind::class_<Object>("Object")
+				.def(luabind::constructor<std::string, std::string>())
+				.def("Translate", &Object::Translate)
+				.def("Scale", &Object::Scale)
+				.def("ActivateEnvironmentMapping", &Object::ActivateEnvironmentMapping)
+				.def("DeactivateEnvironmentMapping", &Object::DeactivateEnvironmentMapping)
+				.def("GetName", &Object::GetName)
+		];
+
+	// Register Lightobject class
+	luabind::module(m_pLuaState)
+		[
+			luabind::class_<LightObject>("Light")
+				.def(luabind::constructor<std::string>())
+				.def("GetObjectType", &LightObject::GetObjectType)
+				.def("GetName", &LightObject::GetName)
+				.def("SetPosition", &LightObject::SetPosition)
+				.def("SetLookDirection", &LightObject::SetLookDirection)
+				.def("SetFOV", &LightObject::SetFOV)
+				.def("SetColor", &LightObject::SetColor)
+				.def("SetNearplane", &LightObject::SetNearplane)
+				.def("SetFarplane", &LightObject::SetFarplane)
 		];
 }
 
 void LuaManager::ExecuteFile(std::string sFile)
 {
-	luaL_dofile(m_LuaState, sFile.c_str());
+	Logger::debug() << "Executing LUA file: "<< sFile << Logger::endl;
+	try
+	{
+		luaL_dofile(m_pLuaState, sFile.c_str());
+	}
+	catch(std::exception e)
+	{
+		Logger::error() << e.what() << Logger::endl;
+		lua_tostring(m_pLuaState, -1);
+	}
 }
-

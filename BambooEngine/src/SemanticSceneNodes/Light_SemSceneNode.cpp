@@ -58,6 +58,36 @@ void Light_SemSceneNode::GetLightParameters(glm::vec3 &rvPosition,
   rfFarplane  = m_fFarplane;
 }
 
+void Light_SemSceneNode::SetPosition(glm::vec3 vPosition)
+{
+	m_vLightPosition = vPosition;
+}
+
+void Light_SemSceneNode::SetLookDirection(glm::vec3 vLookDirection)
+{
+	m_vLightLookDirection = vLookDirection;
+}
+
+void Light_SemSceneNode::SetFOV(float fFOV)
+{
+	m_fFOV = fFOV;
+}
+
+void Light_SemSceneNode::SetColor(glm::vec3 vColor)
+{
+	m_vLightColor = vColor;
+}
+
+void Light_SemSceneNode::SetNearplane(float fNearplane)
+{
+	m_fNearplane = fNearplane;
+}
+
+void Light_SemSceneNode::SetFarplane(float fFarplane)
+{
+	m_fFarplane = fFarplane;
+}
+
 Light_SemSceneNode::Light_SemSceneNode() : ISemanticSceneNode(ClassID())
 {
   // nothing to do, only initializer list

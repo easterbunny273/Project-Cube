@@ -4,7 +4,7 @@
 #include <sstream>
 #include <assert.h>
 
-#include "MainApp.h"
+#include "LuaManager.h"
 #include "lua_include.h"
 
 EventManager::IEvent::TEventType InputKeyEvent::s_szEventType		    = "input.key";
@@ -51,7 +51,7 @@ std::shared_ptr<EventManager::IEvent> InputKeyEvent::CreateFromString(std::strin
 
 void InputKeyEvent::RegisterLua()
 {
-    lua_State *pLuaState = MainApp::GetInstance()->GetLuaState();
+    lua_State *pLuaState = LuaManager::GetInstance()->GetLuaState();
 
     /*luabind::module(pLuaState)
     [
@@ -99,7 +99,7 @@ std::shared_ptr<InputMouseButtonEvent> InputMouseButtonEvent::Cast(std::shared_p
 
 void InputMouseButtonEvent::RegisterLua()
 {
-    lua_State *pLuaState = MainApp::GetInstance()->GetLuaState();
+    lua_State *pLuaState = LuaManager::GetInstance()->GetLuaState();
 
     /*luabind::module(pLuaState)
     [
@@ -140,7 +140,7 @@ std::shared_ptr<InputMouseMoveEvent> InputMouseMoveEvent::Cast(std::shared_ptr<E
 
 void InputMouseMoveEvent::RegisterLua()
 {
-    lua_State *pLuaState = MainApp::GetInstance()->GetLuaState();
+    lua_State *pLuaState = LuaManager::GetInstance()->GetLuaState();
 
     /*luabind::module(pLuaState)
     [
@@ -181,7 +181,7 @@ std::shared_ptr<CameraMovementEvent> CameraMovementEvent::Cast(std::shared_ptr<E
 
 void CameraMovementEvent::RegisterLua()
 {
-    lua_State *pLuaState = MainApp::GetInstance()->GetLuaState();
+    lua_State *pLuaState = LuaManager::GetInstance()->GetLuaState();
 
     /*luabind::module(pLuaState)
     [

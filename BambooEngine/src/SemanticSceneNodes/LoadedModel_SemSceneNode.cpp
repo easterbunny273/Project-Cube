@@ -8,6 +8,7 @@ std::shared_ptr<LoadedModel_SemSceneNode> LoadedModel_SemSceneNode::Create(std::
   // set parameters
   pNode->m_sFilename            = sFilename;
   pNode->m_bEnvironmentMapping  = false;
+  pNode->m_mTransformMatrix = glm::mat4();
 
   // create shared_ptr
   std::shared_ptr<LoadedModel_SemSceneNode> spNode(pNode);

@@ -1,4 +1,4 @@
-io.write("LUA: Loading functions.lua")
+io.write("LUA: Loading functions.lua\n")
 
 function ret()
 	return 1

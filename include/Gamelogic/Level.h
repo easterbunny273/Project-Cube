@@ -16,6 +16,11 @@
 #include "IXMLSerializeable.h"
 #include "Gamelogic/Cube.h"
 #include <vector>
+#include "SemanticSceneNodes/ISemanticSceneNode.h"
+#include "Camera.h"
+#include "Gamelogic/IObject.h"
+#include "Gamelogic/Objects/LightObject.h"
+#include "Gamelogic/Objects/Object.h"
 
 
 class Level : public ILevel, public IXMLSerializeable
@@ -72,6 +77,32 @@ public:
         /// Returns a cube by its given position inside the level
         /// Returns NULL if not no cube is at the given position
         Cube* GetCubeByPosition(int iX, int iY, int iZ);
+
+		/// Adds a object to the level - and its semantic scene node to
+		/// the level's node
+		Object* CreateObject(std::string sName, std::string sFileName);
+
+		/// Adds a light to the level - and its semantic scene node to the
+		/// level's node
+		LightObject* CreateLight(std::string sName);
+
+		/// returns the object with the specified name
+		Object* GetObjectByName(std::string sName);
+
+		/// returns the light with the specified name
+		LightObject* GetLightByName(std::string sName);
+
+		/// returns the root semantic scene node of the level
+		std::shared_ptr<ISemanticSceneNode> GetSemanticSceneNode()
+		{
+			return m_spSemanticScene;
+		}
+
+		/// returns the camera
+		std::shared_ptr<Bamboo::ICamera> GetCamera()
+		{
+			return m_spCamera;
+		}
     //@}
 private:
     /*! \name Private members */
@@ -85,8 +116,20 @@ private:
         /// Contains all cubes inside the level
         std::vector<Cube*> m_Cubes;
 
+		/// Contains all objects inside the level
+		std::vector<Object*> m_Objects;
+
+		/// Contains all lights of the level
+		std::vector<LightObject*> m_Lights;
+
         /// Number of cubes of the level
         int m_iNumCubes;
+
+		/// Camera of this level
+		std::shared_ptr<Bamboo::ICamera> m_spCamera;
+
+		/// Pointer to the root of the semantic scene nodes
+		std::shared_ptr<ISemanticSceneNode> m_spSemanticScene;
     //@}
 
     /*! \name Private methods */
@@ -111,6 +154,11 @@ private:
 
         /// Adds a cube to the level (to the cube-vector)
         void itlAddCube(Cube* cube);
+
+		/// Initializes the semantic scene root node - TODO initialize like now
+		/// with camera, but specify a starting position for the actor - and 
+		/// set camera parameters with that values
+		void itlInitSemanticSceneNode();
 
     //@}
 };

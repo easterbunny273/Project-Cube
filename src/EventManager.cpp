@@ -8,7 +8,7 @@
 #include "EventManager.h"
 #include "Events.h"
 #include "PC_Logger.h"
-#include "MainApp.h"
+#include "LuaManager.h"
 
 // stl includes
 #include <iostream>
@@ -272,7 +272,7 @@ bool EventManager::ItlCheckIfEventIsRegistered(std::shared_ptr<IEvent> spEvent)
   *************************************************************** */
 lua_State * EventManager::RegisterLua()
 {
-    lua_State *pLuaState = MainApp::GetInstance()->GetLuaState();
+    lua_State *pLuaState = LuaManager::GetInstance()->GetLuaState();
     /*assert (pLuaState != NULL);
 
     luabind::module(pLuaState)
@@ -295,5 +295,5 @@ void EventManager::Initialize()
     ItlRegisterEvent<CameraMovementEvent>();
 
     // register itself in lua environment
-    RegisterLua();
+    //RegisterLua();
 }

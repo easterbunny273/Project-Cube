@@ -1,4 +1,4 @@
-io.write("Running ", _VERSION, "\n")
+io.write("LUA: Running ", _VERSION, "\n")
 
 level1 = Level()
 level1:LoadLevelFromXMLFile('config/levels/level1.xml')

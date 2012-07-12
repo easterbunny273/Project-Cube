@@ -1,4 +1,7 @@
 #include "Gamelogic/Level.h"
+#include "SemanticSceneNodes/Camera_SemSceneNode.h"
+#include "SemanticSceneNodes/Cube_SemSceneNode.h"
+#include "Gamelogic/Objects/Object.h"
 
 #include <iostream>
 using namespace std;
@@ -9,6 +12,7 @@ using namespace std;
 Level::Level()
 {
 	m_iNumCubes = 0;
+	itlInitSemanticSceneNode();
 }
 
 Level::~Level()
@@ -373,7 +377,40 @@ bool Level::LoadLevelFromXMLFile(std::string sFilename)
     }
 }
 
+Object* Level::CreateObject(std::string sName, std::string sFileName)
+{
+	Logger::debug() << "C++: adding " << sName << " to the level"<< Logger::endl;
+	Object* object = new Object(sName, sFileName);
+	m_Objects.push_back(object);
+	m_spSemanticScene->AddChild(object->GetSceneNode());
+	return object;
+}
 
+LightObject* Level::CreateLight(std::string sName)
+{
+	Logger::debug() << "C++: adding " << sName << " to the level"<< Logger::endl;
+	LightObject* light = new LightObject(sName);
+	m_Lights.push_back(light);
+	m_spSemanticScene->AddChild(light->GetSceneNode());
+	return light;
+
+}
+
+Object* Level::GetObjectByName(std::string sName)
+{
+	for(unsigned int i = 0; i < m_Objects.size(); i++)
+		if(sName == m_Objects.at(i)->GetName())
+			return m_Objects.at(i);
+	return NULL;
+}
+
+LightObject* Level::GetLightByName(std::string sName)
+{
+	for(unsigned int i = 0; i < m_Lights.size(); i++)
+		if(sName == m_Lights.at(i)->GetName())
+			return m_Lights.at(i);
+	return NULL;
+}
 
 /*#############################################################
 *################## PRIVATE METHODS ##########################
@@ -620,4 +657,17 @@ void Level::itlAddCube(Cube* cube)
     Logger::debug() << "Add cube with id: " << cube->GetCubeID() << Logger::endl;
     m_Cubes.push_back(cube);
     m_iNumCubes++;
+
+	// Create semantic node of the cube and add it to the root semantic node
+	std::shared_ptr<ISemanticSceneNode> spCubeSceneNode = Cube_SemSceneNode::Create(cube);
+
+	m_spSemanticScene->AddChild(spCubeSceneNode);
+
+}
+
+
+void Level::itlInitSemanticSceneNode()
+{
+	m_spCamera = Bamboo::PerspectiveCamera::Create(45.0f, 1.33f, 0.01f, 100.0f, glm::vec3(-0.2f, 0.2f, 0.0f), 90.0f, -50.0f);	
+	m_spSemanticScene = Camera_SemSceneNode::Create(m_spCamera);
 }

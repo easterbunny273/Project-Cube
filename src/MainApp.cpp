@@ -31,7 +31,6 @@ MainApp::MainApp()
     m_CoreSettings.RestoreSettingsFromXMLFile("config/core-settings.xml");
 
     // set subsystems to NULL, lazy initialisation
-    m_pLuaState = NULL;
     m_pGraphic = new Bamboo();
     m_pGame = NULL;
 
@@ -43,13 +42,6 @@ MainApp::~MainApp()
 {
     // save core settings
     m_CoreSettings.StoreSettingsAsXMLFile("config/core-settings.xml");
-
-    // close lua state, if open
-    if (m_pLuaState != NULL)
-    {
-	lua_close(m_pLuaState);
-	m_pLuaState = NULL;
-    }
 
     if (m_pGraphic != NULL)
     {
@@ -93,6 +85,33 @@ Settings * MainApp::GetCoreSettings()
 EventManager * MainApp::GetEventManager()
 {
     return &m_EventManager;
+}
+
+void MainApp::StartGraphic_LuaTest()
+{
+	LuaManager::GetInstance()->ExecuteFile("lua/level1.lua");
+	
+	Level level = LuaManager::GetInstance()->CallLuaFunction<Level>("GetLevel");
+
+
+	// TODO... move this all into the level? so only executefile has to be called
+
+	std::shared_ptr<ISemanticSceneNode> spNode = level.GetSemanticSceneNode();
+
+	m_spCamera = level.GetCamera();
+	// register itself as listener for camera events
+	GetEventManager()->RegisterEventListener(this, CameraMovementEvent::EventType());
+	
+	// create node translator
+	std::shared_ptr<INodeTranslator> spDeferredTranslator(new DeferredNodeTranslator(m_pGraphic));
+
+	// create glfw window
+	std::shared_ptr<Bamboo::GlfwWindow> spWindow = Bamboo::GlfwWindow::Create(1024, 768, "Test");
+	spWindow->SetInputEventListener(m_spInputEventListener);
+
+	// add render loop
+	m_pGraphic->AddRenderLoop(spWindow, spNode, spDeferredTranslator);
+
 }
 
 void MainApp::StartGraphic_Test2()
@@ -157,19 +176,18 @@ void MainApp::Run()
 
     GetEventManager()->Initialize();
 
-    StartGraphic_Test2();
+	StartGraphic_LuaTest();
+    //StartGraphic_Test2();
 
     // main loop
     while(GetGame()->GetStop() == false)
     {
 	GetEventManager()->ProcessEvents();
 
-	LuaTest();
-
         static int i=0;
         i++;
 
-        g_spSphere->SetTransformMatrix(glm::translate(g_spSphere->GetTransformMatrix(), glm::vec3(cos(i / 400.0) / 100.0, sin(i / 400.0) / 400.0, sin(i / 400.0) / 100.0)));
+        //g_spSphere->SetTransformMatrix(glm::translate(g_spSphere->GetTransformMatrix(), glm::vec3(cos(i / 400.0) / 100.0, sin(i / 400.0) / 400.0, sin(i / 400.0) / 100.0)));
         g_spTreppe->SetTransformMatrix(glm::rotate(g_spTreppe->GetTransformMatrix(), 0.04f, glm::vec3(1.0, 1.0, 0.0)));
 
         if (i == 2000)
@@ -199,36 +217,6 @@ DummyGame * MainApp::GetGame()
 
     assert (m_pGame != NULL);
     return m_pGame;
-}
-
-lua_State * MainApp::GetLuaState()
-{
-    /*
-	// lazy evaluation
-    if (m_pLuaState == NULL)
-    {
-	// open lua state
-	m_pLuaState = lua_open();
-
-	// load lua libs
-	luaL_openlibs(m_pLuaState);
-
-	luabind::open(m_pLuaState);
-    }
-
-    assert (m_pLuaState != NULL);
-	*/
-    return m_pLuaState;
-}
-
-void MainApp::LuaTest()
-{
-    /*luaL_dostring(
-    m_pLuaState,
-    "new_event = InputKeyEvent::Create(87, 1)\n"
-    "eventmanager::QueueEvent(new_event)\n"
-                );
-				*/
 }
 
 void MainApp::InputEventListener::ItlHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState)
