@@ -31,7 +31,7 @@ void LuaManager::InitLua()
 
 	luaL_openlibs(m_pLuaState);
 
-	luabind::open(m_pLuaState);
+	luaponte::open(m_pLuaState);
 
 	ExecuteFile("lua/functions.lua");
 
@@ -47,10 +47,10 @@ void LuaManager::RegisterClasses()
 {
 	Logger::debug() << "Registering classes to LUA" << Logger::endl;
 	// Register Grid class
-	luabind::module(m_pLuaState)
+	luaponte::module(m_pLuaState)
 		[
-			luabind::class_<Grid>("Grid")
-				.def(luabind::constructor<>())
+			luaponte::class_<Grid>("Grid")
+				.def(luaponte::constructor<>())
 				.def("AddDoor", (bool(Grid::*)(int, int))&Grid::AddDoor)
 				.def("ClearGrid", &Grid::ClearGrid)
 				.def("GetDoorPositions", &Grid::GetDoorPositions)
@@ -63,10 +63,10 @@ void LuaManager::RegisterClasses()
 		];
 	
 	// Register Cube class
-	luabind::module(m_pLuaState)
+	luaponte::module(m_pLuaState)
 		[
-			luabind::class_<Cube>("Cube")
-				.def(luabind::constructor<>())
+			luaponte::class_<Cube>("Cube")
+				.def(luaponte::constructor<>())
 				.def("GetCubeID", &Cube::GetCubeID)
 				.def("GetCubePosition", &Cube::GetCubePosition)
 				.def("GetTransfomation", &Cube::GetTransformation)
@@ -90,10 +90,10 @@ void LuaManager::RegisterClasses()
 		];
 
 	// Register Level class
-	luabind::module(m_pLuaState)
+	luaponte::module(m_pLuaState)
 		[
-			luabind::class_<Level>("Level")
-				.def(luabind::constructor<>())
+			luaponte::class_<Level>("Level")
+				.def(luaponte::constructor<>())
 				.def("GetLevelID", &Level::GetLevelID)
 				.def("GetLevelName", &Level::GetLevelName)
 				.def("GetNumCubes", &Level::GetNumCubes)
@@ -112,10 +112,10 @@ void LuaManager::RegisterClasses()
 		];
 
 	// Register Object class
-	luabind::module(m_pLuaState)
+	luaponte::module(m_pLuaState)
 		[
-			luabind::class_<Object>("Object")
-				.def(luabind::constructor<std::string, std::string>())
+			luaponte::class_<Object>("Object")
+				.def(luaponte::constructor<std::string, std::string>())
 				.def("Translate", &Object::Translate)
 				.def("Scale", &Object::Scale)
 				.def("ActivateEnvironmentMapping", &Object::ActivateEnvironmentMapping)
@@ -124,10 +124,10 @@ void LuaManager::RegisterClasses()
 		];
 
 	// Register Lightobject class
-	luabind::module(m_pLuaState)
+	luaponte::module(m_pLuaState)
 		[
-			luabind::class_<LightObject>("Light")
-				.def(luabind::constructor<std::string>())
+			luaponte::class_<LightObject>("Light")
+				.def(luaponte::constructor<std::string>())
 				.def("GetObjectType", &LightObject::GetObjectType)
 				.def("GetName", &LightObject::GetName)
 				.def("SetPosition", &LightObject::SetPosition)
@@ -144,7 +144,12 @@ void LuaManager::ExecuteFile(std::string sFile)
 	Logger::debug() << "Executing LUA file: "<< sFile << Logger::endl;
 	try
 	{
-		luaL_dofile(m_pLuaState, sFile.c_str());
+	  {
+	  std::ifstream sTest(sFile.c_str());
+	  assert (sTest.is_open());
+	  }
+
+	    luaL_dofile(m_pLuaState, sFile.data());
 	}
 	catch(std::exception e)
 	{

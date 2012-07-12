@@ -78,17 +78,17 @@ void EventManager::Test()
     lua_State *myLuaState = lua_open();
 
     // Connect LuaBind to this lua state
-    luabind::open(myLuaState);
+    luaponte::open(myLuaState);
 
 
-    luabind::module(myLuaState)
+    luaponte::module(myLuaState)
     [
-	luabind::class_<EventManager>("EventManager")
+	luaponte::class_<EventManager>("EventManager")
 	    .def("CreateEvent2", &EventManager::CreateEvent2),
-	luabind::class_<IEvent>("IEvent"),
-	luabind::class_<InputKeyEvent>("InputEvent"),
-	luabind::class_<InputMouse>("InputMouse")
-	//luabind::def("eventmanager", this)
+	luaponte::class_<IEvent>("IEvent"),
+	luaponte::class_<InputKeyEvent>("InputEvent"),
+	luaponte::class_<InputMouse>("InputMouse")
+	//luaponte::def("eventmanager", this)
     ];
 
     luaL_openlibs(myLuaState);
@@ -100,7 +100,7 @@ void EventManager::Test()
     "end\n"
     );
 
-    luabind::globals(myLuaState)["eventmanager2"] = this;
+    luaponte::globals(myLuaState)["eventmanager2"] = this;
 
     // Define a lua function that we can call
     luaL_dostring(
@@ -115,11 +115,11 @@ void EventManager::Test()
 
     try
     {
-	int a = luabind::call_function<int>(myLuaState, "test2", "");
+	int a = luaponte::call_function<int>(myLuaState, "test2", "");
 
 	std::cout << a << std::endl;
     }
-    catch (luabind::error &e)
+    catch (luaponte::error &e)
     {
 	std::cerr << lua_tostring(myLuaState, -1) << std::endl;
     }
@@ -275,13 +275,13 @@ lua_State * EventManager::RegisterLua()
     lua_State *pLuaState = LuaManager::GetInstance()->GetLuaState();
     /*assert (pLuaState != NULL);
 
-    luabind::module(pLuaState)
+    luaponte::module(pLuaState)
     [
-	luabind::class_<EventManager>("EventManager")
+	luaponte::class_<EventManager>("EventManager")
 	    .def("QueueEvent", &EventManager::QueueEvent)
     ];
 
-    luabind::globals(pLuaState)["eventmanager"] = this;
+    luaponte::globals(pLuaState)["eventmanager"] = this;
 	*/
     return pLuaState;
 }

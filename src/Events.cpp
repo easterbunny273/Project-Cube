@@ -53,10 +53,10 @@ void InputKeyEvent::RegisterLua()
 {
     lua_State *pLuaState = LuaManager::GetInstance()->GetLuaState();
 
-    /*luabind::module(pLuaState)
+    /*luaponte::module(pLuaState)
     [
-	luabind::class_<IEvent>("IEvent"),
-	luabind::class_<InputKeyEvent, std::shared_ptr<IEvent> >("InputKeyEvent")
+	luaponte::class_<IEvent>("IEvent"),
+	luaponte::class_<InputKeyEvent, std::shared_ptr<IEvent> >("InputKeyEvent")
 	    .def("Create", &InputKeyEvent::Create)
 	    .def("GetKey", &InputKeyEvent::GetKey)
 	    .def("GetEvent", &InputKeyEvent::GetEvent)
@@ -101,10 +101,10 @@ void InputMouseButtonEvent::RegisterLua()
 {
     lua_State *pLuaState = LuaManager::GetInstance()->GetLuaState();
 
-    /*luabind::module(pLuaState)
+    /*luaponte::module(pLuaState)
     [
-	//luabind::class_<IEvent>("IEvent"),
-	luabind::class_<InputMouseButtonEvent, luabind::bases<IEvent> >("InputMouseButtonEvent")
+	//luaponte::class_<IEvent>("IEvent"),
+	luaponte::class_<InputMouseButtonEvent, luaponte::bases<IEvent> >("InputMouseButtonEvent")
 	    .def("Create", &InputMouseButtonEvent::Create)
 	    .def("GetMouseButton", &InputMouseButtonEvent::GetMouseButton)
     ];*/
@@ -142,10 +142,10 @@ void InputMouseMoveEvent::RegisterLua()
 {
     lua_State *pLuaState = LuaManager::GetInstance()->GetLuaState();
 
-    /*luabind::module(pLuaState)
+    /*luaponte::module(pLuaState)
     [
-	//luabind::class_<IEvent>("IEvent"),
-	luabind::class_<InputMouseMoveEvent, luabind::bases<IEvent> >("InputMouseMoveEvent")
+	//luaponte::class_<IEvent>("IEvent"),
+	luaponte::class_<InputMouseMoveEvent, luaponte::bases<IEvent> >("InputMouseMoveEvent")
 	    .def("Create", &InputMouseMoveEvent::Create)
 	    .def("GetX", &InputMouseMoveEvent::GetX)
 	    .def("GetY", &InputMouseMoveEvent::GetY)
@@ -183,10 +183,10 @@ void CameraMovementEvent::RegisterLua()
 {
     lua_State *pLuaState = LuaManager::GetInstance()->GetLuaState();
 
-    /*luabind::module(pLuaState)
+    /*luaponte::module(pLuaState)
     [
-	//luabind::class_<IEvent>("IEvent"),
-	luabind::class_<CameraMovementEvent, luabind::bases<IEvent> >("CameraMovementEvent")
+	//luaponte::class_<IEvent>("IEvent"),
+	luaponte::class_<CameraMovementEvent, luaponte::bases<IEvent> >("CameraMovementEvent")
 	    .def("Create", &CameraMovementEvent::Create)
 	    .def("GetMovementType", &CameraMovementEvent::GetMovementType)
 	    .def("GetValue", &CameraMovementEvent::GetValue)

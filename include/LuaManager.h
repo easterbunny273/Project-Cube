@@ -52,46 +52,46 @@ void LuaManager::RegisterFunction(const char* name, F f)
 {
 	Logger::debug() << "Registering function in the LUA environment: " << name << Logger::endl;
 
-	luabind::module(m_pLuaState)
+	luaponte::module(m_pLuaState)
 		[
-			luabind::def(name, f)
+			luaponte::def(name, f)
 		];
 }
 
 template <class R>
 R LuaManager::CallLuaFunction(const char* name)
 {
-	return luabind::call_function<R>(m_pLuaState, name);
+	return luaponte::call_function<R>(m_pLuaState, name);
 }
 
 template <class R, class A>
 R LuaManager::CallLuaFunction(const char* name, A a)
 {
-	return luabind::call_function<R>(m_pLuaState, name, a);
+	return luaponte::call_function<R>(m_pLuaState, name, a);
 }
 
 template <class R, class A, class B>
 R LuaManager::CallLuaFunction(const char* name, A a, B b)
 {
-	return luabind::call_function<R>(m_pLuaState, name, a, b);
+	return luaponte::call_function<R>(m_pLuaState, name, a, b);
 }
 
 template <class R, class A, class B, class C>
 R LuaManager::CallLuaFunction(const char* name, A a, B b, C c)
 {
-	return luabind::call_function<R>(m_pLuaState, name, a, b, c);
+	return luaponte::call_function<R>(m_pLuaState, name, a, b, c);
 }
 
 template <class R, class A, class B, class C, class D>
 R LuaManager::CallLuaFunction(const char* name, A a, B b, C c, D d)
 {
-	return luabind::call_function<R>(m_pLuaState, name, a, b, c, d);
+	return luaponte::call_function<R>(m_pLuaState, name, a, b, c, d);
 }
 
 template <class R, class A, class B, class C, class D, class E>
 R LuaManager::CallLuaFunction(const char* name, A a, B b, C c, D d, E e)
 {
-	return luabind::call_function<R>(m_pLuaState, name, a, b, c, d, e);
+	return luaponte::call_function<R>(m_pLuaState, name, a, b, c, d, e);
 }
 
 #endif //__PROJECT_CUBE_LUA_MANAGER_HEADER
