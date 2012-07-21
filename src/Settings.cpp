@@ -1,5 +1,5 @@
 #include "Settings.h"
-#include "PC_Logger.h"
+#include "BambooLib/include/Logger.h"
 
 #include <sstream>
 #include <iostream>
@@ -7,6 +7,8 @@
 
 #include "tinyxml.h"
 #include "tinystr.h"
+
+using namespace BambooLib;
 
 Settings::Settings()
 {

@@ -36,6 +36,7 @@ file(GLOB H_BAMBOO "../BambooEngine/include/*.h")
 file(GLOB H_BAMBOO_RN "../BambooEngine/include/RenderNodes/*.h")
 file(GLOB H_BAMBOO_SSN "../BambooEngine/include/SemanticSceneNodes/*.h")
 file(GLOB H_BAMBOO_DNT "../BambooEngine/include/DeferredNodeTranslator/*.h")
+file(GLOB H_BAMBOOLIB "../BambooLib/include/*.h")
 file(GLOB H_GAMELOGIC "../include/Gamelogic/*.h")
 file(GLOB H_GAMELOGIC_OBJ "../include/Gamelogic/Objects/*.h")
 file(GLOB H_DUMMYGAME "../include/DummyGame/*.h")
@@ -50,6 +51,7 @@ file(GLOB HEADERS "../include/*.h"
 				  ${H_BAMBOO_DNT} 
 				  ${H_BAMBOO_SSN} 
 				  ${H_BAMBOO_RSN} 
+				  ${H_BAMBOOLIB}
 				  ${H_GAMELOGIC} 
 				  ${H_GAMELOGIC_OBJ}
 				  ${H_DUMMYGAME} 
@@ -61,6 +63,7 @@ file(GLOB S_BAMBOO_RN "../BambooEngine/src/RenderNodes/*.cpp")
 file(GLOB S_BAMBOO_SSN "../BambooEngine/src/SemanticSceneNodes/*.cpp")
 file(GLOB S_BAMBOO_STO "../BambooEngine/src/StateObjects/*.cpp")
 file(GLOB S_BAMBOO_DNT "../BambooEngine/src/DeferredNodeTranslator/*.cpp")
+file(GLOB S_BAMBOOLIB "../BambooLib/src/*.cpp")
 file(GLOB S_GAMELOGIC "../src/Gamelogic/*.cpp")
 file(GLOB S_GAMELOGIC_OBJ "../src/Gamelogic/Objects/*.cpp")
 file(GLOB S_DUMMYGAME "../src/DummyGame/*.cpp")
@@ -74,6 +77,7 @@ file(GLOB SOURCES "../src/*.cpp"
 				  ${S_BAMBOO_STO} 
 				  ${S_BAMBOO_SSN} 
 				  ${S_BAMBOO_DNT} 
+				  ${S_BAMBOOLIB}
 				  ${S_GAMELOGIC} 
 				  ${S_GAMELOGIC_OBJ} 
 				  ${S_DUMMYGAME} 
@@ -91,6 +95,7 @@ if(WIN32)
 	SOURCE_GROUP("Header Files\\BambooEngine\\RenderingSceneNodes" FILES ${H_BAMBOO_RSN})
 	SOURCE_GROUP("Header Files\\BambooEngine\\StateObjects" FILES ${H_BAMBOO_STO})
 	SOURCE_GROUP("Header Files\\BambooEngine\\DeferredNodeTranslator" FILES ${H_BAMBOO_DNT})
+	SOURCE_GROUP("Header Files\\BambooLib" FILES ${H_BAMBOOLIB})
 	SOURCE_GROUP("Header Files\\Test" FILES ${H_TEST})
 	
 	SOURCE_GROUP("Source Files\\Gamelogic" FILES ${S_GAMELOGIC})
@@ -103,6 +108,7 @@ if(WIN32)
 	SOURCE_GROUP("Source Files\\BambooEngine\\RenderingSceneNodes" FILES ${S_BAMBOO_RSN})
 	SOURCE_GROUP("Source Files\\BambooEngine\\StateObjects" FILES ${S_BAMBOO_STO})
 	SOURCE_GROUP("Source Files\\BambooEngine\\DeferredNodeTranslator" FILES ${S_BAMBOO_DNT})
+	SOURCE_GROUP("Source Files\\BambooLib" FILES ${S_BAMBOOLIB})
 	SOURCE_GROUP("Source Files\\Test" FILES ${S_TEST})
 endif(WIN32)
 

@@ -1,5 +1,7 @@
 #include "CubeTest.h"
-#include "PC_Logger.h"
+#include "BambooLib/include/Logger.h"
+
+using namespace BambooLib;
 
 void CubeTest::setup()
 {

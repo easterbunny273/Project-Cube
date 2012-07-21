@@ -7,9 +7,11 @@
 #include <string>
 
 #include "TextureManager.h"
-#include "PC_Logger.h"
+#include "BambooLib/include/Logger.h"
 #include "ShaderManager.h"
 #include "RenderNodes/RenderNode_PostEffect.h"
+
+using namespace BambooLib;
 
 Bamboo::RN_PostEffect::RN_PostEffect(std::string sShaderToUse)
     : m_sShaderName(sShaderToUse)

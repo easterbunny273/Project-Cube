@@ -1,5 +1,7 @@
 #include "Gamelogic/Cube.h"
-#include "PC_Logger.h"
+#include "BambooLib/include/Logger.h"
+
+using namespace BambooLib;
 
 Cube::Cube()
 {

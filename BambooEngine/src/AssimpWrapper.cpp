@@ -5,12 +5,15 @@
   */
 
 #include "AssimpWrapper.h"
-#include "PC_Logger.h"
+#include "BambooLib/include/Logger.h"
 
 #include <assimp/assimp.hpp>
 #include <assimp/aiPostProcess.h>
 #include <assimp/aiScene.h>
 #include <assimp/aiMesh.h>
+#include <cassert>
+
+using namespace BambooLib;
 
 std::shared_ptr<GeometryData::GenericObject> AssimpWrapper::LoadModel(std::string sFilename)
 {

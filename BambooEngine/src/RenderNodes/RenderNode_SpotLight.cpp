@@ -1,10 +1,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "RenderNodes/RenderNode_SpotLight.h"
-#include "PC_Logger.h"
+#include "BambooLib/include/Logger.h"
 #include "ShaderManager.h"
 #include "TextureManager.h"
 #include <iostream>
+
+using namespace BambooLib;
 
 #define NEARPLANE 0.1f
 #define FARPLANE 50.0f

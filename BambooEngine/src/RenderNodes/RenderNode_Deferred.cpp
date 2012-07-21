@@ -3,7 +3,9 @@
 #include "RenderNodes/RenderNode_SpotLight.h"
 #include "ShaderManager.h"
 #include "TextureManager.h"
-#include "PC_Logger.h"
+#include "BambooLib/include/Logger.h"
+
+using namespace BambooLib;
 
 extern int s_DebugDeferredTexture;
 extern int s_nUseParallax;

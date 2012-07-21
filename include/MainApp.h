@@ -10,7 +10,7 @@
 #define __MAINAPP_PROJECT_CUBE_HEADER
 
 #include "Settings.h"
-#include "PC_Logger.h"
+#include "BambooLib/include/Logger.h"
 #include "EventManager.h"
 #include "Graphic.h"
 #include "Graphic-GlfwWindow.h"

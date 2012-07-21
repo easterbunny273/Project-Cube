@@ -1,5 +1,5 @@
 #include "LuaManager.h"
-#include "PC_Logger.h"
+#include "BambooLib/include/Logger.h"
 #include <iostream>
 
 //includes for class registerings
@@ -45,7 +45,7 @@ lua_State* LuaManager::GetLuaState()
 
 void LuaManager::RegisterClasses()
 {
-	Logger::debug() << "Registering classes to LUA" << Logger::endl;
+	BambooLib::Logger::debug() << "Registering classes to LUA" << BambooLib::Logger::endl;
 	// Register Grid class
 	luaponte::module(m_pLuaState)
 		[
@@ -141,7 +141,7 @@ void LuaManager::RegisterClasses()
 
 void LuaManager::ExecuteFile(std::string sFile)
 {
-	Logger::debug() << "Executing LUA file: "<< sFile << Logger::endl;
+	BambooLib::Logger::debug() << "Executing LUA file: "<< sFile << BambooLib::Logger::endl;
 	try
 	{
 	  {
@@ -153,7 +153,7 @@ void LuaManager::ExecuteFile(std::string sFile)
 	}
 	catch(std::exception e)
 	{
-		Logger::error() << e.what() << Logger::endl;
+		BambooLib::Logger::error() << e.what() << BambooLib::Logger::endl;
 		lua_tostring(m_pLuaState, -1);
 	}
 }

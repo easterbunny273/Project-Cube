@@ -1,5 +1,7 @@
 #include "Gamelogic/Grid.h"
-#include "PC_Logger.h"
+#include "BambooLib/include/Logger.h"
+
+using namespace BambooLib;
 
 Grid::Grid()
 {

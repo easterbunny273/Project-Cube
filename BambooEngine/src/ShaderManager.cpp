@@ -2,9 +2,10 @@
 #include <algorithm>
 
 #include "ShaderManager.h"
-#include "PC_Logger.h"
+#include "BambooLib/include/Logger.h"
 
 using namespace std;
+using namespace BambooLib;
 
 Bamboo::ShaderManager::ShaderManager()
 {

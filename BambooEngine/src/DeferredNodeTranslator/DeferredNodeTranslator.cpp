@@ -5,7 +5,9 @@
 #include "DeferredNodeTranslator/Light_RuleObject.h"
 #include "DeferredNodeTranslator/LoadedModel_RuleObject.h"
 
-#include "PC_Logger.h"
+#include "BambooLib/include/Logger.h"
+
+using namespace BambooLib;
 
 DeferredNodeTranslator::DeferredNodeTranslator(Bamboo *pCore) : INodeTranslator(pCore)
 {

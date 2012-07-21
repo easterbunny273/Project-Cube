@@ -1,5 +1,5 @@
 #include "MainApp.h"
-#include "PC_Logger.h"
+#include "BambooLib/include/Logger.h"
 #include "Graphic-GlfwWindow.h"
 #include "Graphic.h"
 #include "Camera.h"
@@ -264,7 +264,7 @@ void MainApp::InputEventListener::ItlHandleKeyboardEvent(int iKeyIdentifier, int
     case GLFW_KEY_BACKSPACE: eKey = InputKeyEvent::KEY_BACKSPACE; break;
 
     default:
-        Logger::error() << "keycode " << iKeyIdentifier << " not recognized" << Logger::endl;
+        BambooLib::Logger::error() << "keycode " << iKeyIdentifier << " not recognized" << BambooLib::Logger::endl;
         bKeyRecognized = false;
     }
 
@@ -302,7 +302,7 @@ void MainApp::InputEventListener::ItlHandleMousePos(int iX, int iY)
 
 void MainApp::InputEventListener::ItlHandleMouseWheel(int iPosition)
 {
-    Logger::error() << "mouse wheel handling not implemented yet" << Logger::endl;
+    BambooLib::Logger::error() << "mouse wheel handling not implemented yet" << BambooLib::Logger::endl;
 }
 
 void MainApp::InputEventListener::ItlHandleMouseButton(int iButton, int iAction)
@@ -316,7 +316,7 @@ void MainApp::InputEventListener::ItlHandleMouseButton(int iButton, int iAction)
     case GLFW_MOUSE_BUTTON_MIDDLE: eMouseButton = InputMouseButtonEvent::BUTTON_MIDDLE; break;
     case GLFW_MOUSE_BUTTON_RIGHT: eMouseButton = InputMouseButtonEvent::BUTTON_RIGHT; break;
     default:
-    Logger::error() << "mouse button " << iButton << " not recognized" << Logger::endl;
+    BambooLib::Logger::error() << "mouse button " << iButton << " not recognized" << BambooLib::Logger::endl;
     bButtonRecognized = false;
     }
 

@@ -7,7 +7,9 @@
 #include "EventManager.h"
 #include "LuaManager.h"
 
-#include "PC_Logger.h"
+#include "BambooLib/include/Logger.h"
+
+using namespace BambooLib;
 
 int main()
 {
@@ -56,5 +58,17 @@ int main()
 	*/
 
     //TestMain::GetInstance()->Run();
+    Logger::ILogWriter *pLogWriterConsole = Logger::ConsoleLogWriter::Create();
+    Logger::ILogWriter *pLogWriterHTML = Logger::HTMLLogWriter::Create("log.html");
+
+    pLogWriterConsole->SetIgnoreBelow(Logger::DEBUG);
+    pLogWriterHTML->SetIgnoreBelow(Logger::DEBUG);
+
+    Logger::RegisterLogWriter(pLogWriterConsole);
+    Logger::RegisterLogWriter(pLogWriterHTML);
+
     MainApp::GetInstance()->Run();
+
+    delete pLogWriterConsole;
+    delete pLogWriterHTML;
 }

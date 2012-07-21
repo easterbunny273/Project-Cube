@@ -2,12 +2,11 @@
 #include "SemanticSceneNodes/Camera_SemSceneNode.h"
 #include "SemanticSceneNodes/Cube_SemSceneNode.h"
 #include "Gamelogic/Objects/Object.h"
-
+#include "BambooLib/include/Logger.h"
 #include <iostream>
+
 using namespace std;
-
-
-#include "PC_Logger.h"
+using namespace BambooLib;
 
 Level::Level()
 {

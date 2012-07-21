@@ -12,9 +12,10 @@
 
 // project includes
 #include "TextureManager.h"
-#include "PC_Logger.h"
+#include "BambooLib/include/Logger.h"
 
 using namespace std;
+using namespace BambooLib;
 
 struct Bamboo::TextureManager::TImpl
 {

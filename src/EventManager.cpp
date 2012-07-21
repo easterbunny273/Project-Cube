@@ -7,7 +7,7 @@
 // project includes
 #include "EventManager.h"
 #include "Events.h"
-#include "PC_Logger.h"
+#include "BambooLib/include/Logger.h"
 #include "LuaManager.h"
 
 // stl includes
@@ -53,7 +53,7 @@ void EventManager::ItlRegisterEventPrototype(std::shared_ptr<IEvent> spEventProt
 	for (auto iter = m_lPrototypes.begin(); iter != m_lPrototypes.end(); iter++)
     {
 		if ((*iter)->GetEventType() == spEventPrototype->GetEventType())
-			Logger::fatal() << "You tried to register an already registered event type" << Logger::endl;
+			BambooLib::Logger::fatal() << "You tried to register an already registered event type" << BambooLib::Logger::endl;
     }
     /*for (auto iter : m_lPrototypes)
     {
@@ -184,7 +184,7 @@ void EventManager::RegisterEventListener(IEventListener *pListener,
 
 		if (pIterListener == pListener)
 		{
-			Logger::fatal() << "The listener has already registered for that event type" << Logger::endl;
+			BambooLib::Logger::fatal() << "The listener has already registered for that event type" << BambooLib::Logger::endl;
 		}
     }
 

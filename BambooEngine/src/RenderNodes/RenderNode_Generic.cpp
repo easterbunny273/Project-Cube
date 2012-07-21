@@ -1,7 +1,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 //general includes
-#include "PC_Logger.h"
+#include "BambooLib/include/Logger.h"
 #include "ShaderManager.h"
 #include "TextureManager.h"
 
@@ -10,6 +10,8 @@
 
 //class specific
 #include "RenderNodes/RenderNode_Generic.h"
+
+using namespace BambooLib;
 
 GeometryData::TextureType tTextureTypes[4] = { GeometryData::TextureNames::ALBEDO,
                                                GeometryData::TextureNames::NORMAL,

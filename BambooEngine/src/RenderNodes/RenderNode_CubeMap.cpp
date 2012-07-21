@@ -1,7 +1,9 @@
 #include "Graphic.h"
 #include "RenderNodes/RenderNode_CubeMap.h"
 #include "TextureManager.h"
-#include "PC_Logger.h"
+#include "BambooLib/include/Logger.h"
+
+using namespace BambooLib;
 
 Bamboo::RN_CubeMap::RN_CubeMap(glm::vec3 vPosition, GLuint nResolution /* = 512*/)
 {

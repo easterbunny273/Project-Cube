@@ -12,10 +12,11 @@
 
 #include "common_gl.h"
 #include "Shader.h"
-#include "PC_Logger.h"
+#include "BambooLib/include/Logger.h"
 
 
 using namespace std;
+using namespace BambooLib;
 
 int last_active;
 

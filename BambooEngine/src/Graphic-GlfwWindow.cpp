@@ -15,10 +15,11 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "common_gl.h"
-#include "PC_Logger.h"
+#include "BambooLib/include/Logger.h"
+
+using namespace BambooLib;
 
 Bamboo::GlfwWindow *Bamboo::GlfwWindow::s_pInstance = NULL;
-
 
 int s_DebugDeferredTexture = 0;
 int s_nUseParallax = 0;

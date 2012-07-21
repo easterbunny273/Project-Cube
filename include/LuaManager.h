@@ -6,7 +6,7 @@
 #include <string>
 #include <cstdarg>
 
-#include "PC_Logger.h"
+#include "BambooLib/include/Logger.h"
 
 
 class LuaManager
@@ -50,7 +50,7 @@ private:
 template <class F>
 void LuaManager::RegisterFunction(const char* name, F f)
 {
-	Logger::debug() << "Registering function in the LUA environment: " << name << Logger::endl;
+	BambooLib::Logger::debug() << "Registering function in the LUA environment: " << name << BambooLib::Logger::endl;
 
 	luaponte::module(m_pLuaState)
 		[

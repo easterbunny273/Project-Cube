@@ -2,8 +2,9 @@
 
 #include "RenderNodes/RenderNode_FBO.h"
 #include "TextureManager.h"
-#include "PC_Logger.h"
+#include "BambooLib/include/Logger.h"
 
+using namespace BambooLib;
 
 /*! \brief Constructor for creating a fbo with a color texture attached
  *

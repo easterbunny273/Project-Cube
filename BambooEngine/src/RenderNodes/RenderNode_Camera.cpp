@@ -1,9 +1,11 @@
 
-#include "PC_Logger.h"
+#include "BambooLib/include/Logger.h"
 #include "ShaderManager.h"
 #include "RenderNodes/RenderNode_RenderPass.h"
 #include "RenderNodes/RenderNode_Camera.h"
 #include "Camera.h"
+
+using namespace BambooLib;
 
 extern bool bUseCamera1;
 

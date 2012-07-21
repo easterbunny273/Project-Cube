@@ -14,12 +14,13 @@
 #include <glm/glm.hpp>
 
 #include "TextureManager.h"
-#include "PC_Logger.h"
+#include "BambooLib/include/Logger.h"
 #include "ShaderManager.h"
 #include "RenderNodes/RenderNode_BoundingBox.h"
 #include "RenderNodes/RenderNode_RenderPass.h"
 
 using namespace std;
+using namespace BambooLib;
 
 const double PI = 3.141516;
 

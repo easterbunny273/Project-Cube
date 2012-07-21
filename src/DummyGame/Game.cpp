@@ -2,9 +2,11 @@
 #include "DummyGame/SampleObject.h"
 
 #include "MainApp.h"
-#include "PC_Logger.h"
+#include "BambooLib/include/Logger.h"
 #include "EventManager.h"
 #include "Events.h"
+
+using namespace BambooLib;
 
 std::list<IObject *> DummyGame::GetObjectsInCube()
 {
