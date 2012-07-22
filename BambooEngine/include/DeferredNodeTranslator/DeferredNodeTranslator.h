@@ -12,6 +12,8 @@
 #include "INodeTranslator.h"
 #include "RenderNodes/RenderNode_Deferred.h"
 
+#include "BambooLib/include/IIdentifyable.h"
+
 #include <memory>
 
 /* A node translator generates pieces of render scene graph nodes or rather a
@@ -35,12 +37,12 @@ public:
       virtual void Action() = 0;
 
       /// return a vector with the class ids of the semantic scene nodes, which were accepted (and handled) by this rule object
-      virtual std::vector<ISemanticSceneNode::t_classID> GetAcceptedNodeIDs() const = 0;
+      virtual std::vector<BambooLib::t_classID> GetAcceptedNodeIDs() const = 0;
 
       /// whether a given scene is accepted by this rule object
-      bool IsAccepted(ISemanticSceneNode::t_classID nClassID) const
+      bool IsAccepted(BambooLib::t_classID nClassID) const
       {
-        std::vector<ISemanticSceneNode::t_classID> vAcceptedIDs = GetAcceptedNodeIDs();
+        std::vector<BambooLib::t_classID> vAcceptedIDs = GetAcceptedNodeIDs();
         for (unsigned int i=0; i < vAcceptedIDs.size(); i++)
           if (vAcceptedIDs[i] == nClassID)
             return true;
@@ -82,9 +84,9 @@ private:
       void ItlTranslateSemNode(std::shared_ptr<ISemanticSceneNode> spSemNode);
   //@}
 
-  std::map<ISemanticSceneNode::t_objectID, std::shared_ptr<IRuleObject> > m_mCachedRuleObjects;
+  std::map<BambooLib::t_objectID, std::shared_ptr<IRuleObject> > m_mCachedRuleObjects;
 
-  std::map<ISemanticSceneNode::t_classID, std::shared_ptr<IRuleObject> > m_mRegisteredRuleObjects;
+  std::map<BambooLib::t_classID, std::shared_ptr<IRuleObject> > m_mRegisteredRuleObjects;
 
   std::vector<std::shared_ptr<Bamboo::IRenderNode> > m_vLightNodes;
   std::vector<std::shared_ptr<Bamboo::IRenderNode> > m_vShadowCasterNodes;

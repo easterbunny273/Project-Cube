@@ -2,6 +2,9 @@
 
 #include <cassert>
 
+// register class at core system and get unique class id
+static BambooLib::t_classID Camera_SemSceneNode::s_ClassID = BambooLib::CoreSystem::GetInstance()->RegisterClass("SM_CAMER", NULL);
+
 std::shared_ptr<Camera_SemSceneNode> Camera_SemSceneNode::Create(std::shared_ptr<Bamboo::ICamera> spCamera)
 {
   // create new node
@@ -18,10 +21,7 @@ std::shared_ptr<Camera_SemSceneNode> Camera_SemSceneNode::Create(std::shared_ptr
   return spNewNode;
 }
 
-ISemanticSceneNode::t_classID Camera_SemSceneNode::ClassID()
-{
-  return 0;
-}
+
 /*
 void Camera_SemSceneNode::SetPerspectiveProjection(float fFOV,
                                                    float fRatio,
@@ -45,7 +45,7 @@ void Camera_SemSceneNode::GetPerspectiveProjection(float &rfFOV,
   rfFarplane  = m_fFarplane;
 }
 */
-Camera_SemSceneNode::Camera_SemSceneNode() : ISemanticSceneNode(ClassID())
+Camera_SemSceneNode::Camera_SemSceneNode() : ISemanticSceneNode(ClassID()), IIdentifyable(ClassID())
 {
 }
 

@@ -6,7 +6,9 @@
 #include <memory>                   // uses shared_ptr
 #include <string>                   // uses string
 
-class LoadedModel_SemSceneNode : public ISemanticSceneNode
+#include "BambooLib/include/IIdentifyable.h"
+
+class LoadedModel_SemSceneNode : public ISemanticSceneNode, virtual public BambooLib::IIdentifyable
 {
 public:
   /*! \name Creation */
@@ -18,10 +20,12 @@ public:
     ~LoadedModel_SemSceneNode();
   //@}
 
-  /*! \name Class identification */
-  //@{
-    static t_classID ClassID();
-  //@}
+
+    /*! \name IIdentifyable interface */
+    //@{
+      static BambooLib::t_classID ClassID() { return s_ClassID; }
+      static LoadedModel_SemSceneNode * Cast(BambooLib::IIdentifyable *pObject) { return dynamic_cast<LoadedModel_SemSceneNode *>(pObject); }
+    //@}
 
   /*! \name Public methods */
   //@{
@@ -48,6 +52,8 @@ private:
     //@{
         std::string   m_sFilename;
         bool          m_bEnvironmentMapping;
+
+        static BambooLib::t_classID s_ClassID;
     //@}
 };
 

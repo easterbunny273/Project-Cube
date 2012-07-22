@@ -5,7 +5,9 @@
 
 #include <memory>                   // uses shared_ptr
 
-class Light_SemSceneNode : public ISemanticSceneNode
+#include "BambooLib/include/IIdentifyable.h"
+
+class Light_SemSceneNode : public ISemanticSceneNode, virtual public BambooLib::IIdentifyable
 {
 public:
   /*! \name Creation */
@@ -22,10 +24,12 @@ public:
     ~Light_SemSceneNode();
   //@}
 
-  /*! \name Class identification */
-  //@{
-    static t_classID ClassID();
-  //@}
+
+    /*! \name IIdentifyable interface */
+    //@{
+      static BambooLib::t_classID ClassID() { return s_ClassID; }
+      static Light_SemSceneNode * Cast(BambooLib::IIdentifyable *pObject) { return dynamic_cast<Light_SemSceneNode *>(pObject); }
+    //@}
 
   /*! \name Public methods */
   //@{
@@ -82,6 +86,8 @@ private:
         float         m_fFOV,
                       m_fNearplane,
                       m_fFarplane;
+
+        static BambooLib::t_classID s_ClassID;
 
     //@}
 };

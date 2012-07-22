@@ -2,9 +2,9 @@
 #include "SemanticSceneNodes/Cube_SemSceneNode.h"
 #include "RenderNodes/RenderNode_Generic.h"
 
-std::vector<ISemanticSceneNode::t_classID> DeferredNodeTranslator::Cube_RuleObject::GetAcceptedNodeIDs() const
+std::vector<BambooLib::t_classID> DeferredNodeTranslator::Cube_RuleObject::GetAcceptedNodeIDs() const
 {
-  std::vector<ISemanticSceneNode::t_classID> vAcceptedIDs;
+  std::vector<BambooLib::t_classID> vAcceptedIDs;
 
   // this rule object only accepts Cube_SemSceneNode
   vAcceptedIDs.push_back(Cube_SemSceneNode::ClassID());

@@ -3,9 +3,9 @@
 #include "RenderNodes/RenderNode_SpotLight.h"
 #include "RenderNodes/RenderNode_SpotLight_Model.h"
 
-std::vector<ISemanticSceneNode::t_classID> DeferredNodeTranslator::Light_RuleObject::GetAcceptedNodeIDs() const
+std::vector<BambooLib::t_classID> DeferredNodeTranslator::Light_RuleObject::GetAcceptedNodeIDs() const
 {
-  std::vector<ISemanticSceneNode::t_classID> vAcceptedIDs;
+  std::vector<BambooLib::t_classID> vAcceptedIDs;
 
   // this rule object only accepts Light_SemSceneNode
   vAcceptedIDs.push_back(Light_SemSceneNode::ClassID());

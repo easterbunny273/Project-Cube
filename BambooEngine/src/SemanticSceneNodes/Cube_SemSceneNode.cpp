@@ -2,6 +2,9 @@
 
 #include <cassert>
 
+// register class at core system and get unique class id
+static BambooLib::t_classID Cube_SemSceneNode::s_ClassID = BambooLib::CoreSystem::GetInstance()->RegisterClass("SM_CUBE_", NULL);
+
 std::shared_ptr<Cube_SemSceneNode> Cube_SemSceneNode::Create(Cube *pCube)
 {
   // create new node
@@ -19,13 +22,8 @@ std::shared_ptr<Cube_SemSceneNode> Cube_SemSceneNode::Create(Cube *pCube)
   return spNewNode;
 }
 
-ISemanticSceneNode::t_classID Cube_SemSceneNode::ClassID()
-{
-  return 3;
-}
 
-
-Cube_SemSceneNode::Cube_SemSceneNode() : ISemanticSceneNode(ClassID())
+Cube_SemSceneNode::Cube_SemSceneNode() : ISemanticSceneNode(ClassID()), IIdentifyable(ClassID())
 {
   // nothing to do, only initializer list
 }

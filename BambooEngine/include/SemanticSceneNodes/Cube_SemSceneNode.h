@@ -7,7 +7,9 @@
 
 #include "Gamelogic/Cube.h"         // holds a Cube
 
-class Cube_SemSceneNode : public ISemanticSceneNode
+#include "BambooLib/include/IIdentifyable.h"
+
+class Cube_SemSceneNode : public ISemanticSceneNode, virtual public BambooLib::IIdentifyable
 {
 public:
   /*! \name Creation */
@@ -19,10 +21,11 @@ public:
     ~Cube_SemSceneNode();
   //@}
 
-  /*! \name Class identification */
-  //@{
-    static t_classID ClassID();
-  //@}
+    /*! \name IIdentifyable interface */
+    //@{
+      static BambooLib::t_classID ClassID() { return s_ClassID; }
+      static Cube_SemSceneNode * Cast(BambooLib::IIdentifyable *pObject) { return dynamic_cast<Cube_SemSceneNode *>(pObject); }
+    //@}
 
   /*! \name Public methods */
   //@{
@@ -39,6 +42,8 @@ private:
     /*! \name Private members */
     //@{
         Cube          * m_pCube;
+
+        static BambooLib::t_classID s_ClassID;
     //@}
 };
 

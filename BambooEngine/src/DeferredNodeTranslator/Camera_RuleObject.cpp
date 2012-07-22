@@ -5,9 +5,9 @@
 #include "RenderNodes/RenderNode_Deferred.h"
 #include "Camera.h"
 
-std::vector<ISemanticSceneNode::t_classID> DeferredNodeTranslator::Camera_RuleObject::GetAcceptedNodeIDs() const
+std::vector<BambooLib::t_classID> DeferredNodeTranslator::Camera_RuleObject::GetAcceptedNodeIDs() const
 {
-  std::vector<ISemanticSceneNode::t_classID> vAcceptedIDs;
+  std::vector<BambooLib::t_classID> vAcceptedIDs;
 
   // this rule object only accepts Camera_SemSceneNode
   vAcceptedIDs.push_back(Camera_SemSceneNode::ClassID());

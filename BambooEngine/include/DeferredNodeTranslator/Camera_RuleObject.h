@@ -13,6 +13,7 @@
 #include "Graphic.h"
 #include "DeferredNodeTranslator/DeferredNodeTranslator.h"
 #include "SemanticSceneNodes/Camera_SemSceneNode.h"
+#include "BambooLib/include/IIdentifyable.h"
 
 #include <memory>
 
@@ -25,7 +26,7 @@ public:
   virtual void Action();
 
   /// returns the list of accepted semantic scene nodes
-  std::vector<ISemanticSceneNode::t_classID> GetAcceptedNodeIDs() const;
+  std::vector<BambooLib::t_classID> GetAcceptedNodeIDs() const;
 
 private:
 std::shared_ptr<Camera_SemSceneNode> m_spSemNode;

@@ -11,6 +11,7 @@ test/config/levels/testlevel1_w.xml
 
 #logger files
 log.txt
+log.html
 
 #Visual Studio related files:
 *.sdf

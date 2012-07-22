@@ -14,6 +14,7 @@
 #include "DeferredNodeTranslator/DeferredNodeTranslator.h"
 #include "SemanticSceneNodes/Light_SemSceneNode.h"
 #include <memory>
+#include "BambooLib/include/GeneralDefinitions.h"
 
 class DeferredNodeTranslator::Light_RuleObject : public DeferredNodeTranslator::IRuleObject
 {
@@ -24,7 +25,7 @@ public:
   virtual void Action();
 
   /// returns the list of accepted semantic scene nodes
-  std::vector<ISemanticSceneNode::t_classID> GetAcceptedNodeIDs() const;
+  std::vector<BambooLib::t_classID> GetAcceptedNodeIDs() const;
 
 private:
   std::shared_ptr<Bamboo::RN_SpotLight>      m_spCorrespondingRenderingNode;

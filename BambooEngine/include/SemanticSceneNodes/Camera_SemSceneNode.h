@@ -4,11 +4,12 @@
 #include "ISemanticSceneNode.h"     // is a ISemanticSceneNode
 #include "Graphic.h"
 
+#include "BambooLib/include/IIdentifyable.h"
 
 #include <memory>                   // uses shared_ptr
 
 
-class Camera_SemSceneNode : public ISemanticSceneNode
+class Camera_SemSceneNode : public ISemanticSceneNode, virtual public BambooLib::IIdentifyable
 {
 public:
   /*! \name Creation */
@@ -20,9 +21,10 @@ public:
     ~Camera_SemSceneNode();
   //@}
 
-  /*! \name Class identification */
+  /*! \name IIdentifyable interface */
   //@{
-    static t_classID ClassID();
+    static BambooLib::t_classID ClassID() { return s_ClassID; }
+    static Camera_SemSceneNode * Cast(BambooLib::IIdentifyable *pObject) { return dynamic_cast<Camera_SemSceneNode *>(pObject); }
   //@}
 
   /*! \name Public methods */
@@ -51,6 +53,8 @@ private:
                       m_fNearplane,
                       m_fFarplane;*/
         std::shared_ptr<Bamboo::ICamera> m_spCamera;
+
+        static BambooLib::t_classID s_ClassID;
     //@}
 };
 
