@@ -7,10 +7,17 @@
 #include "AssimpWrapper.h"
 #include "BambooLib/include/Logger.h"
 
+/*
 #include <assimp/assimp.hpp>
 #include <assimp/aiPostProcess.h>
 #include <assimp/aiScene.h>
 #include <assimp/aiMesh.h>
+*/
+
+#include <assimp/Importer.hpp>      // C++ importer interface
+#include <assimp/scene.h>           // Output data structure
+#include <assimp/postprocess.h>
+
 #include <cassert>
 
 using namespace BambooLib;

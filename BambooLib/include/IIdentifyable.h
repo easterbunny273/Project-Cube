@@ -30,6 +30,19 @@ namespace BambooLib
             t_classID GetClassID() const { return m_nClassID; }
         //@}
 
+        /*! \name Static interface */
+        //@{
+            // each object which implements IIdentifyable should also implement
+            // the following static methods, although this cannot be defined in
+            // the interface
+
+            // returns the class ID of the class:
+            // static t_classID ClassID() {};
+
+            // try to cast an IIdentifyable to the specific class, returns 0
+            // if not possible:
+            // static CONCRETE_CLASS * Cast(IIdentifyable *pObject);
+        //@}
     protected:
         /*! \name Private members */
         //@{

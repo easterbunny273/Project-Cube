@@ -84,7 +84,7 @@ public:
 		    }
 
 		    return bFound;
-		};
+		}
 
 		/// this method returns the value if it was found, else the given default value
 		/// the template creates an method GetValueOrDefault for each T,
@@ -103,7 +103,7 @@ public:
 		    }
 
 		    return tValue;
-		};
+		}
 
 	    //@}
 	private:
