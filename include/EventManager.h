@@ -12,8 +12,6 @@
 #include <vector>
 #include <list>
 
-#include "lua_include.h"
-
 /*
  *  EventManager
  *
@@ -134,9 +132,6 @@ public:
 	/// registers an event listener for the given event type
 	void RegisterEventListener(IEventListener *pListener, IEvent::TEventType tEventName);
 
-	/// registers itself in the lua environment
-	lua_State * RegisterLua();
-
 	/// register all known EventTypes in the EventManager and in the Lua-environment
 	void Initialize();
     //@}
@@ -177,11 +172,6 @@ template<class T> void EventManager::ItlRegisterEvent()
     // if the compiler fails at this line, it means that
     // the specific Event does not have the necessary static method GetPrototype()
     ItlRegisterEventPrototype(T::GetPrototype());
-
-    // register the event in LUA
-    // if the compiler fails at this line, it means that
-    // the specific Event does not have the necessary static method RegisterLua()
-    T::RegisterLua();
 }
 
 #endif // __PROJECT_CUBE_EVENT_MANAGER_HEADER

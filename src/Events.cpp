@@ -4,8 +4,6 @@
 #include <sstream>
 #include <assert.h>
 
-#include "LuaManager.h"
-#include "lua_include.h"
 
 EventManager::IEvent::TEventType InputKeyEvent::s_szEventType		    = "input.key";
 EventManager::IEvent::TEventType InputMouseButtonEvent::s_szEventType	    = "input.mouse.button";
@@ -49,20 +47,6 @@ std::shared_ptr<EventManager::IEvent> InputKeyEvent::CreateFromString(std::strin
     return std::shared_ptr<EventManager::IEvent>();
 }
 
-void InputKeyEvent::RegisterLua()
-{
-    lua_State *pLuaState = LuaManager::GetInstance()->GetLuaState();
-
-    /*luaponte::module(pLuaState)
-    [
-	luaponte::class_<IEvent>("IEvent"),
-	luaponte::class_<InputKeyEvent, std::shared_ptr<IEvent> >("InputKeyEvent")
-	    .def("Create", &InputKeyEvent::Create)
-	    .def("GetKey", &InputKeyEvent::GetKey)
-	    .def("GetEvent", &InputKeyEvent::GetEvent)
-
-    ];*/
-}
 
 std::shared_ptr<InputKeyEvent> InputKeyEvent::Cast(std::shared_ptr<EventManager::IEvent> spEvent)
 {
@@ -97,20 +81,6 @@ std::shared_ptr<InputMouseButtonEvent> InputMouseButtonEvent::Cast(std::shared_p
     return std::dynamic_pointer_cast<InputMouseButtonEvent>(spEvent);
 }
 
-void InputMouseButtonEvent::RegisterLua()
-{
-    lua_State *pLuaState = LuaManager::GetInstance()->GetLuaState();
-
-    /*luaponte::module(pLuaState)
-    [
-	//luaponte::class_<IEvent>("IEvent"),
-	luaponte::class_<InputMouseButtonEvent, luaponte::bases<IEvent> >("InputMouseButtonEvent")
-	    .def("Create", &InputMouseButtonEvent::Create)
-	    .def("GetMouseButton", &InputMouseButtonEvent::GetMouseButton)
-    ];*/
-}
-
-
 /*
  * *************************************
  * InputMouseMoveEvent
@@ -138,19 +108,6 @@ std::shared_ptr<InputMouseMoveEvent> InputMouseMoveEvent::Cast(std::shared_ptr<E
     return std::dynamic_pointer_cast<InputMouseMoveEvent>(spEvent);
 }
 
-void InputMouseMoveEvent::RegisterLua()
-{
-    lua_State *pLuaState = LuaManager::GetInstance()->GetLuaState();
-
-    /*luaponte::module(pLuaState)
-    [
-	//luaponte::class_<IEvent>("IEvent"),
-	luaponte::class_<InputMouseMoveEvent, luaponte::bases<IEvent> >("InputMouseMoveEvent")
-	    .def("Create", &InputMouseMoveEvent::Create)
-	    .def("GetX", &InputMouseMoveEvent::GetX)
-	    .def("GetY", &InputMouseMoveEvent::GetY)
-    ];*/
-}
 
 /*
  * *************************************
@@ -178,19 +135,4 @@ std::shared_ptr<CameraMovementEvent> CameraMovementEvent::Cast(std::shared_ptr<E
 {
     return std::dynamic_pointer_cast<CameraMovementEvent>(spEvent);
 }
-
-void CameraMovementEvent::RegisterLua()
-{
-    lua_State *pLuaState = LuaManager::GetInstance()->GetLuaState();
-
-    /*luaponte::module(pLuaState)
-    [
-	//luaponte::class_<IEvent>("IEvent"),
-	luaponte::class_<CameraMovementEvent, luaponte::bases<IEvent> >("CameraMovementEvent")
-	    .def("Create", &CameraMovementEvent::Create)
-	    .def("GetMovementType", &CameraMovementEvent::GetMovementType)
-	    .def("GetValue", &CameraMovementEvent::GetValue)
-    ];*/
-}
-
 

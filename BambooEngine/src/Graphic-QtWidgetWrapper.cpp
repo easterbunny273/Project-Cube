@@ -2,7 +2,7 @@
 
 #include "GL/glew.h"
 
-#include "Graphics/Graphic-QtWidgetWrapper.h"
+#include "Graphic-QtWidgetWrapper.h"
 
 
 Bamboo::QtWidgetWrapper::QtWidgetWrapper()

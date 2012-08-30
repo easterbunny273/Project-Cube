@@ -61,9 +61,6 @@ public:
 	/// creates a new instance of this event and reads the parameter from the given string
 	static std::shared_ptr<IEvent> CreateFromString(std::string sParameters);
 
-	/// registers the event in the LUA environment
-	static void RegisterLua();
-
 	/// casts the given shared_ptr<IEvent> to a shared_ptr of this class, if possible
 	static std::shared_ptr<InputKeyEvent> Cast(std::shared_ptr<IEvent> spEvent);
 
@@ -133,9 +130,6 @@ public:
 	/// creates a new instance of this event and reads the parameter from the given string
 	static std::shared_ptr<IEvent> CreateFromString(std::string sParameters);
 
-	/// registers the event in the LUA environment
-	static void RegisterLua();
-
 	/// casts the given shared_ptr<IEvent> to a shared_ptr of this class, if possible
 	static std::shared_ptr<InputMouseButtonEvent> Cast(std::shared_ptr<IEvent> spEvent);
 
@@ -187,9 +181,6 @@ public:
 
 	/// creates a new instance of this event and reads the parameter from the given string
 	static std::shared_ptr<IEvent> CreateFromString(std::string sParameters);
-
-	/// registers the event in the LUA environment
-	static void RegisterLua();
 
 	/// casts the given shared_ptr<IEvent> to a shared_ptr of this class, if possible
 	static std::shared_ptr<InputMouseMoveEvent> Cast(std::shared_ptr<IEvent> spEvent);
@@ -251,9 +242,6 @@ public:
 
 	/// creates a new instance of this event and reads the parameter from the given string
 	static std::shared_ptr<IEvent> CreateFromString(std::string sParameters);
-
-	/// registers the event in the LUA environment
-	static void RegisterLua();
 
 	/// casts the given shared_ptr<IEvent> to a shared_ptr of this class, if possible
 	static std::shared_ptr<CameraMovementEvent> Cast(std::shared_ptr<IEvent> spEvent);

@@ -29,8 +29,6 @@
 #include "Graphic.h"
 #include "Camera.h"
 
-#include "Events.h"
-#include "MainApp.h"
 
 using namespace std;
 

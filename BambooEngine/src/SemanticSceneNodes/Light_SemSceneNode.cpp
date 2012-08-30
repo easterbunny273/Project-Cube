@@ -4,7 +4,7 @@
 #include "SemanticSceneNodes/Light_SemSceneNode.h"
 
 // register class at core system and get unique class id
-static BambooLib::t_classID Light_SemSceneNode::s_ClassID = BambooLib::CoreSystem::GetInstance()->RegisterClass("SM_LIGHT", NULL);
+BambooLib::t_classID Light_SemSceneNode::s_ClassID = BambooLib::CoreSystem::GetInstance()->RegisterClass("SM_LIGHT", NULL);
 
 std::shared_ptr<Light_SemSceneNode> Light_SemSceneNode::Create(glm::vec3 vPosition,
                                                                glm::vec3 vLookDirection,

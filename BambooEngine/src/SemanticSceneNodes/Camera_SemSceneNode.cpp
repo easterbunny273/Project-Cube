@@ -3,7 +3,7 @@
 #include <cassert>
 
 // register class at core system and get unique class id
-static BambooLib::t_classID Camera_SemSceneNode::s_ClassID = BambooLib::CoreSystem::GetInstance()->RegisterClass("SM_CAMER", NULL);
+BambooLib::t_classID Camera_SemSceneNode::s_ClassID = BambooLib::CoreSystem::GetInstance()->RegisterClass("SM_CAMER", NULL);
 
 std::shared_ptr<Camera_SemSceneNode> Camera_SemSceneNode::Create(std::shared_ptr<Bamboo::ICamera> spCamera)
 {

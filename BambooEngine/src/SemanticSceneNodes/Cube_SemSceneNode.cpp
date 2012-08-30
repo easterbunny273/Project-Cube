@@ -3,7 +3,7 @@
 #include <cassert>
 
 // register class at core system and get unique class id
-static BambooLib::t_classID Cube_SemSceneNode::s_ClassID = BambooLib::CoreSystem::GetInstance()->RegisterClass("SM_CUBE_", NULL);
+BambooLib::t_classID Cube_SemSceneNode::s_ClassID = BambooLib::CoreSystem::GetInstance()->RegisterClass("SM_CUBE_", NULL);
 
 std::shared_ptr<Cube_SemSceneNode> Cube_SemSceneNode::Create(Cube *pCube)
 {

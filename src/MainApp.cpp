@@ -5,7 +5,6 @@
 #include "Camera.h"
 #include "AssimpWrapper.h"
 #include "GeometryData.h"
-#include "LuaManager.h"
 
 #include "SemanticSceneNodes/ISemanticSceneNode.h"
 #include "SemanticSceneNodes/LoadedModel_SemSceneNode.h"
@@ -87,33 +86,6 @@ EventManager * MainApp::GetEventManager()
     return &m_EventManager;
 }
 
-void MainApp::StartGraphic_LuaTest()
-{
-	LuaManager::GetInstance()->ExecuteFile("lua/level1.lua");
-	
-	Level level = LuaManager::GetInstance()->CallLuaFunction<Level>("GetLevel");
-
-
-	// TODO... move this all into the level? so only executefile has to be called
-
-	std::shared_ptr<ISemanticSceneNode> spNode = level.GetSemanticSceneNode();
-
-	m_spCamera = level.GetCamera();
-	// register itself as listener for camera events
-	GetEventManager()->RegisterEventListener(this, CameraMovementEvent::EventType());
-	
-	// create node translator
-	std::shared_ptr<INodeTranslator> spDeferredTranslator(new DeferredNodeTranslator(m_pGraphic));
-
-	// create glfw window
-	std::shared_ptr<Bamboo::GlfwWindow> spWindow = Bamboo::GlfwWindow::Create(1024, 768, "Test");
-	spWindow->SetInputEventListener(m_spInputEventListener);
-
-	// add render loop
-	m_pGraphic->AddRenderLoop(spWindow, spNode, spDeferredTranslator);
-
-}
-
 void MainApp::StartGraphic_Test2()
 {
   // this method uses the new SemanticSceneNodes
@@ -176,8 +148,7 @@ void MainApp::Run()
 
     GetEventManager()->Initialize();
 
-	StartGraphic_LuaTest();
-    //StartGraphic_Test2();
+    StartGraphic_Test2();
 
     // main loop
     while(GetGame()->GetStop() == false)

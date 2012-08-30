@@ -1,7 +1,7 @@
 #include "SemanticSceneNodes/LoadedModel_SemSceneNode.h"
 
 // register class at core system and get unique class id
-static BambooLib::t_classID LoadedModel_SemSceneNode::s_ClassID = BambooLib::CoreSystem::GetInstance()->RegisterClass("SM_LOADM", NULL);
+BambooLib::t_classID LoadedModel_SemSceneNode::s_ClassID = BambooLib::CoreSystem::GetInstance()->RegisterClass("SM_LOADM", NULL);
 
 std::shared_ptr<LoadedModel_SemSceneNode> LoadedModel_SemSceneNode::Create(std::string sFilename)
 {

@@ -8,7 +8,6 @@
 #include "EventManager.h"
 #include "Events.h"
 #include "BambooLib/include/Logger.h"
-#include "LuaManager.h"
 
 // stl includes
 #include <iostream>
@@ -268,23 +267,6 @@ bool EventManager::ItlCheckIfEventIsRegistered(std::shared_ptr<IEvent> spEvent)
     return bFound;
 }
 
-/****************************************************************
-  *************************************************************** */
-lua_State * EventManager::RegisterLua()
-{
-    lua_State *pLuaState = LuaManager::GetInstance()->GetLuaState();
-    /*assert (pLuaState != NULL);
-
-    luaponte::module(pLuaState)
-    [
-	luaponte::class_<EventManager>("EventManager")
-	    .def("QueueEvent", &EventManager::QueueEvent)
-    ];
-
-    luaponte::globals(pLuaState)["eventmanager"] = this;
-	*/
-    return pLuaState;
-}
 
 void EventManager::Initialize()
 {

@@ -25,8 +25,8 @@ public:
 
     /*! \name Methods for input event handling */
     //@{
-        void SetInputEventListener(std::shared_ptr<IInputEventListener> spListener) { m_spInputEventListener = spListener; }
-        void UnsetInputEventListener(std::shared_ptr<IInputEventListener> spListener) { assert(m_spInputEventListener == spListener); m_spInputEventListener = NULL; }
+        //void SetInputEventListener(std::shared_ptr<IInputEventListener> spListener) { m_spInputEventListener = spListener; }
+        //void UnsetInputEventListener(std::shared_ptr<IInputEventListener> spListener) { assert(m_spInputEventListener == spListener); m_spInputEventListener = NULL; }
     //@}
 
 private:
@@ -43,7 +43,7 @@ private:
 
     /*! \name Private members */
     //@{
-        std::shared_ptr<Bamboo::IInputEventListener>    m_spInputEventListener;
+        //std::shared_ptr<Bamboo::IInputEventListener>    m_spInputEventListener;
         int                                             m_iWidth;
         int                                             m_iHeight;
         std::string                                     m_sWindowTitle;
