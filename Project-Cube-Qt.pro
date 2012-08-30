@@ -22,8 +22,7 @@ LIBS += -lGLEW -lIL -lglfw -lassimp
 
 QMAKE_CXXFLAGS += -std=c++0x
 
-SOURCES += main.cpp \
-    BambooEngine/src/TextureManager.cpp \
+SOURCES += BambooEngine/src/TextureManager.cpp \
     BambooEngine/src/ShaderManager.cpp \
     BambooEngine/src/Shader.cpp \
     BambooEngine/src/RenderNode.cpp \
