@@ -61,6 +61,26 @@ public:
         class IRenderTarget
         {
         public:
+            /*! \name Public interfaces */
+            //@{
+                /// Interface for event listener, which receives the input events which happened in a glfw window
+                class IInputEventListener
+                {
+                public:
+                    /// handles keyboard events and sends signals to listener
+                    virtual void ItlHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState) = 0;
+
+                    /// handles mouse movements and sends signals to the listener
+                    virtual void ItlHandleMousePos(int iX, int iY) = 0;
+
+                    /// handles mouse wheel input events and sends signals to the listener
+                    virtual void ItlHandleMouseWheel(int iPosition) = 0;
+
+                    /// handles mouse button events and sends signals to the listener
+                    virtual void ItlHandleMouseButton(int iButton, int iAction) = 0;
+                };
+            //@}
+
             virtual void ClearBuffers() = 0;
             virtual void SwapBuffers() = 0;
 

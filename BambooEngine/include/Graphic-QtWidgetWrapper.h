@@ -4,13 +4,41 @@
 #define __GRAPHIC_QTWIDGETWRAPPER_HEADER
 
 #include "Graphic.h"
-#include <QtGui/QWidget>
-#include <QtOpenGL>
+
+#include <QtOpenGL/QGLWidget>
+//#include <QtGui/QWidget>
+
+class TGLWidget : public QGLWidget
+{
+    Q_OBJECT
+public:
+    TGLWidget(const QGLFormat &fmt, QWidget *parent = NULL);
+    TGLWidget(QWidget *parent = NULL);
+    ~TGLWidget() {}
+
+    void SetInputEventListener(std::shared_ptr<Bamboo::IRenderTarget::IInputEventListener> spListener) { m_spInputEventListener = spListener; }
+    void UnsetInputEventListener(std::shared_ptr<Bamboo::IRenderTarget::IInputEventListener> spListener) { assert(m_spInputEventListener == spListener); m_spInputEventListener = NULL; }
+
+protected:
+    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void keyPressEvent(QKeyEvent *event);
+    void keyReleaseEvent(QKeyEvent *event);
+
+    std::shared_ptr<Bamboo::IRenderTarget::IInputEventListener>            m_spInputEventListener;
+};
 
 class Bamboo::QtWidgetWrapper : public IRenderTarget
 {
 
 public:
+    /*! \name Own types */
+    //@{
+
+
+    //@}
+
     /*! \name Construction / Destruction */
     //@{
         static std::shared_ptr<QtWidgetWrapper> Create(QWidget *pWidget);
@@ -25,8 +53,8 @@ public:
 
     /*! \name Methods for input event handling */
     //@{
-        //void SetInputEventListener(std::shared_ptr<IInputEventListener> spListener) { m_spInputEventListener = spListener; }
-        //void UnsetInputEventListener(std::shared_ptr<IInputEventListener> spListener) { assert(m_spInputEventListener == spListener); m_spInputEventListener = NULL; }
+        void SetInputEventListener(std::shared_ptr<IInputEventListener> spListener) { m_pGLWidget->SetInputEventListener(spListener); }
+        void UnsetInputEventListener(std::shared_ptr<IInputEventListener> spListener) { m_pGLWidget->UnsetInputEventListener(spListener); }
     //@}
 
 private:
@@ -43,11 +71,10 @@ private:
 
     /*! \name Private members */
     //@{
-        //std::shared_ptr<Bamboo::IInputEventListener>    m_spInputEventListener;
         int                                             m_iWidth;
         int                                             m_iHeight;
         std::string                                     m_sWindowTitle;
-        QGLWidget                                       *m_pGLWidget;
+        TGLWidget                                       *m_pGLWidget;
     //@}
 
     /*! \name Static members */

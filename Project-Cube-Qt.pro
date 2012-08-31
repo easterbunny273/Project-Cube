@@ -5,6 +5,9 @@
 #-------------------------------------------------
 
 QT       += core gui
+
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
 QT		 += opengl
 
 TARGET = Project-Cube-Qt
@@ -71,7 +74,8 @@ SOURCES += BambooEngine/src/TextureManager.cpp \
     include/tinyxml/tinyxmlparser.cpp \
     include/tinyxml/tinyxmlerror.cpp \
     include/tinyxml/tinyxml.cpp \
-    include/tinyxml/tinystr.cpp
+    include/tinyxml/tinystr.cpp \
+    src/gui/MainWindow.cpp
 
 HEADERS += \
     BambooEngine/include/TextureManager.h \
@@ -135,4 +139,8 @@ HEADERS += \
     include/DummyGame/SampleObject.h \
     include/DummyGame/Game.h \
     include/tinyxml/tinyxml.h \
-    include/tinyxml/tinystr.h
+    include/tinyxml/tinystr.h \
+    include/gui/MainWindow.h
+
+FORMS += \
+    include/gui/MainWindow.ui

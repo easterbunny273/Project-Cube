@@ -1,6 +1,7 @@
 #include "MainApp.h"
 #include "BambooLib/include/Logger.h"
 #include "Graphic-GlfwWindow.h"
+#include "Graphic-QtWidgetWrapper.h"
 #include "Graphic.h"
 #include "Camera.h"
 #include "AssimpWrapper.h"
@@ -15,6 +16,8 @@
 #include "DeferredNodeTranslator/DeferredNodeTranslator.h"
 
 #include "Gamelogic/Level.h"
+
+#include <QApplication>
 
 // initialize singelton ptr to NULL
 MainApp * MainApp::s_pInstance = NULL;
@@ -86,7 +89,7 @@ EventManager * MainApp::GetEventManager()
     return &m_EventManager;
 }
 
-void MainApp::StartGraphic_Test2()
+void MainApp::StartGraphic_Test2(QWidget *pWidget)
 {
   // this method uses the new SemanticSceneNodes
   //
@@ -97,11 +100,6 @@ void MainApp::StartGraphic_Test2()
   // register itself as listener for camera events
   GetEventManager()->RegisterEventListener(this, CameraMovementEvent::EventType());
 
-  // load level
- // LuaManager::GetInstance()->ExecuteFile("lua/test.lua");
-
- // Level level = LuaManager::GetInstance()->CallLuaFunction<Level>("GetLevel");
-
   // create scene nodes
   std::shared_ptr<LoadedModel_SemSceneNode> spTreppe = LoadedModel_SemSceneNode::Create("models/bunte-treppe3.dae");
   spTreppe->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
@@ -109,15 +107,12 @@ void MainApp::StartGraphic_Test2()
   std::shared_ptr<LoadedModel_SemSceneNode> spSphere = LoadedModel_SemSceneNode::Create("models/pool_sphere.dae");
   spSphere->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
   spSphere->SetTransformMatrix(glm::translate(spSphere->GetTransformMatrix(), glm::vec3(0.0, 2.0, 0.0)));
-  //spTreppe->ActivateEnvironmentMapping();
+
   spSphere->ActivateEnvironmentMapping();
 
   g_spSphere = spSphere;
-
   g_spTreppe = spTreppe;
 
-  //std::shared_ptr<ISemanticSceneNode> spCube = Cube_SemSceneNode::Create(level.GetCubeByPosition(0,0,0));
-  //spCube->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
 
   std::shared_ptr<Light_SemSceneNode> spTestLight1 = Light_SemSceneNode::Create(glm::vec3(-0.2f, 0.10f, 0.14f), glm::vec3(1.0f, -0.4f, -1.0f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
   std::shared_ptr<Light_SemSceneNode> spTestLight2 = Light_SemSceneNode::Create(glm::vec3(-0.2f, 0.2f, -0.14f), glm::vec3(1.0f, -1.1f, 0.62f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
@@ -135,25 +130,33 @@ void MainApp::StartGraphic_Test2()
   std::shared_ptr<INodeTranslator> spDeferredTranslator(new DeferredNodeTranslator(m_pGraphic));
 
   // create glfw window
-  std::shared_ptr<Bamboo::GlfwWindow> spWindow = Bamboo::GlfwWindow::Create(1024, 768, "Test");
-  spWindow->SetInputEventListener(m_spInputEventListener);
+  //std::shared_ptr<Bamboo::GlfwWindow> spWindow = Bamboo::GlfwWindow::Create(1024, 768, "Test");
+  //spWindow->SetInputEventListener(m_spInputEventListener);
+
+  // create gl widget
+  std::shared_ptr<Bamboo::QtWidgetWrapper> spQtWidget = Bamboo::QtWidgetWrapper::Create(pWidget);
+  spQtWidget->SetInputEventListener(m_spInputEventListener);
 
   // add render loop
-  m_pGraphic->AddRenderLoop(spWindow, spCamera, spDeferredTranslator);
+  m_pGraphic->AddRenderLoop(spQtWidget, spCamera, spDeferredTranslator);
 }
 
-void MainApp::Run()
+void MainApp::Run(QApplication *pApp, QWidget *pWidget)
 {
     // init game logic, graphics, do main loop, all this nasty stuff.
 
+    pApp->processEvents();
+
     GetEventManager()->Initialize();
 
-    StartGraphic_Test2();
+    StartGraphic_Test2(pWidget);
+    pWidget->show();
 
     // main loop
     while(GetGame()->GetStop() == false)
     {
-	GetEventManager()->ProcessEvents();
+        GetEventManager()->ProcessEvents();
+        pApp->processEvents();
 
         static int i=0;
         i++;

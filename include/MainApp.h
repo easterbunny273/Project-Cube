@@ -16,6 +16,9 @@
 #include "Graphic-GlfwWindow.h"
 #include "DummyGame/Game.h"
 
+class QWidget;
+class QApplication;
+
 class MainApp : public EventManager::IEventListener
 {
 public:
@@ -42,12 +45,12 @@ public:
 
     /*! \name Run methods */
     //@{
-        void Run();
+        void Run(QApplication *pApp, QWidget *pWidget);
     //@}
 
     /*! \name Testing stuff */
     //@{
-        void StartGraphic_Test2();
+        void StartGraphic_Test2(QWidget *pWidget);
     //@}
 
     /*! \name Get singelton instance */
