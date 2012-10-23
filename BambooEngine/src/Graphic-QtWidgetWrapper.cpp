@@ -197,6 +197,9 @@ void TGLWidget::keyPressEvent(QKeyEvent *event)
     case Qt::Key_X: iGLFWKey = 'X'; break;
     case Qt::Key_Y: iGLFWKey = 'Y'; break;
     case Qt::Key_Z: iGLFWKey = 'Z'; break;
+    case Qt::Key_Space: iGLFWKey = GLFW_KEY_SPACE; break;
+    case Qt::Key_Control: iGLFWKey = GLFW_KEY_LCTRL; break;
+    case Qt::Key_Tab: iGLFWKey = GLFW_KEY_TAB; break;
     }
 
     m_spInputEventListener->ItlHandleKeyboardEvent(iGLFWKey, GLFW_PRESS);
@@ -246,6 +249,9 @@ void TGLWidget::keyReleaseEvent(QKeyEvent *event)
     case Qt::Key_X: iGLFWKey = 'X'; break;
     case Qt::Key_Y: iGLFWKey = 'Y'; break;
     case Qt::Key_Z: iGLFWKey = 'Z'; break;
+    case Qt::Key_Space: iGLFWKey = GLFW_KEY_SPACE; break;
+    case Qt::Key_Control: iGLFWKey = GLFW_KEY_LCTRL; break;
+    case Qt::Key_Tab: iGLFWKey = GLFW_KEY_TAB; break;
     }
 
     m_spInputEventListener->ItlHandleKeyboardEvent(iGLFWKey, GLFW_RELEASE);

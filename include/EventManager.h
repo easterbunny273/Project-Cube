@@ -136,13 +136,6 @@ public:
 	void Initialize();
     //@}
 
-
-    /*! \name Some testing stuff (lua) */
-    //@{
-	std::shared_ptr<IEvent> CreateEvent(const char * szCreateString);
-	void CreateEvent2(const char * szCreateString);
-	void Test();
-    //@}
 private:
     /*! \name Private helper methods */
     //@{
