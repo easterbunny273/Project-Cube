@@ -34,12 +34,14 @@ using namespace std;
 
 #define PI 3.14159265f
 
+namespace BambooGraphics
+{
 // initialize static members
-Bamboo * Bamboo::s_pInstance = NULL;
+GraphicsCore * GraphicsCore::s_pInstance = NULL;
 
 /****************************************************************
   *************************************************************** */
-Bamboo::Bamboo()
+GraphicsCore::GraphicsCore()
 {
     m_pShaderManager = new ShaderManager();
     m_pTextureManager = new TextureManager();
@@ -49,7 +51,7 @@ Bamboo::Bamboo()
 
 /****************************************************************
   *************************************************************** */
-Bamboo::~Bamboo()
+GraphicsCore::~GraphicsCore()
 {
     assert (m_pShaderManager != NULL);
     if (m_pShaderManager != NULL)
@@ -64,7 +66,7 @@ Bamboo::~Bamboo()
 
 /****************************************************************
   *************************************************************** */
-void Bamboo::Render()
+void GraphicsCore::Render()
 {
     for (auto iter=m_mRenderLoops.begin(); iter != m_mRenderLoops.end(); iter++)
     {
@@ -92,7 +94,7 @@ void Bamboo::Render()
 
 /****************************************************************
   *************************************************************** */
-Bamboo::ShaderManager * Bamboo::GetShaderManager()
+ShaderManager * GraphicsCore::GetShaderManager()
 {
     assert (m_pShaderManager != NULL);
 
@@ -101,7 +103,7 @@ Bamboo::ShaderManager * Bamboo::GetShaderManager()
 
 /****************************************************************
   *************************************************************** */
-Bamboo::TextureManager * Bamboo::GetTextureManager()
+TextureManager * GraphicsCore::GetTextureManager()
 {
     assert (m_pTextureManager != NULL);
 
@@ -110,7 +112,7 @@ Bamboo::TextureManager * Bamboo::GetTextureManager()
 
 /****************************************************************
   *************************************************************** */
-int Bamboo::AddRenderLoop(std::shared_ptr<IRenderTarget> spRenderTarget,
+int GraphicsCore::AddRenderLoop(std::shared_ptr<IRenderTarget> spRenderTarget,
                           std::shared_ptr<ISemanticSceneNode> spRootNode,
                           std::shared_ptr<INodeTranslator> spTranslator)
 {
@@ -125,10 +127,15 @@ int Bamboo::AddRenderLoop(std::shared_ptr<IRenderTarget> spRenderTarget,
     m_mRenderLoops[iID++] = NewLoop;
 
     // load shader, if not loaded
-    GetShaderManager()->AddShader("posteffect1", new Bamboo::Shader("BambooEngine/shaders/posteffect1.vs", "BambooEngine/shaders/posteffect1.fs"));
-    GetShaderManager()->AddShader("directwrite", new Bamboo::Shader("BambooEngine/shaders/directwrite.vs", "BambooEngine/shaders/directwrite.fs"));
-    GetShaderManager()->AddShader("light-pass", new Bamboo::Shader("BambooEngine/shaders/light_pass.vs", "BambooEngine/shaders/light_pass.fs"));
-    GetShaderManager()->AddShader("camera-debug2", new Bamboo::Shader("BambooEngine/shaders/camera-debug2.vs", "BambooEngine/shaders/camera-debug2.fs"));
+    GetShaderManager()->CreateAndRegisterShader("posteffect1", "BambooEngine/shaders/posteffect1.vs", "BambooEngine/shaders/posteffect1.fs");
+    GetShaderManager()->CreateAndRegisterShader("directwrite", "BambooEngine/shaders/directwrite.vs", "BambooEngine/shaders/directwrite.fs");
+    GetShaderManager()->CreateAndRegisterShader("light-pass", "BambooEngine/shaders/light_pass.vs", "BambooEngine/shaders/light_pass.fs");
+    GetShaderManager()->CreateAndRegisterShader("camera-debug2", "BambooEngine/shaders/camera-debug2.vs", "BambooEngine/shaders/camera-debug2.fs");
+
+   /* GetShaderManager()->AddShader("posteffect1", new ShaderManager::TShader("BambooEngine/shaders/posteffect1.vs", "BambooEngine/shaders/posteffect1.fs"));
+    GetShaderManager()->AddShader("directwrite", new ShaderManager::TShader("BambooEngine/shaders/directwrite.vs", "BambooEngine/shaders/directwrite.fs"));
+    GetShaderManager()->AddShader("light-pass", new ShaderManager::TShader("BambooEngine/shaders/light_pass.vs", "BambooEngine/shaders/light_pass.fs"));
+    GetShaderManager()->AddShader("camera-debug2", new ShaderManager::TShader("BambooEngine/shaders/camera-debug2.vs", "BambooEngine/shaders/camera-debug2.fs"));*/
     GetTextureManager()->LoadTexture("spotlight", "textures/spot.png", false);
 
     return iID;
@@ -137,9 +144,11 @@ int Bamboo::AddRenderLoop(std::shared_ptr<IRenderTarget> spRenderTarget,
 
 /****************************************************************
   *************************************************************** */
-void Bamboo::RemoveRenderLoop(int iLoopID)
+void GraphicsCore::RemoveRenderLoop(int iLoopID)
 {
     assert (m_mRenderLoops.find(iLoopID) != m_mRenderLoops.end());
 
     m_mRenderLoops.erase(iLoopID);
+}
+
 }

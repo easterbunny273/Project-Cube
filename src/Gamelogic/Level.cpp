@@ -667,6 +667,6 @@ void Level::itlAddCube(Cube* cube)
 
 void Level::itlInitSemanticSceneNode()
 {
-	m_spCamera = Bamboo::PerspectiveCamera::Create(45.0f, 1.33f, 0.01f, 100.0f, glm::vec3(-0.2f, 0.2f, 0.0f), 90.0f, -50.0f);	
-	m_spSemanticScene = Camera_SemSceneNode::Create(m_spCamera);
+    m_spCamera = BambooGraphics::GraphicsCore::PerspectiveCamera::Create(45.0f, 1.33f, 0.01f, 100.0f, glm::vec3(-0.2f, 0.2f, 0.0f), 90.0f, -50.0f);
+    m_spSemanticScene = BambooGraphics::Camera_SemSceneNode::Create(m_spCamera);
 }

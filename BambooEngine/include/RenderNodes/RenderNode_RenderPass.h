@@ -15,22 +15,24 @@
 #include "common_gl.h"
 #include "RenderNodes/IRenderNode.h"
 
+namespace BambooGraphics
+{
 /**
   * A SceneObject is a object to be placed in a tree-based Scene-Structure
   *
 */
 
-class Bamboo::RN_RenderPass : public Bamboo::IRenderNode
+class GraphicsCore::RN_RenderPass : public GraphicsCore::IRenderNode
 {
 public:
     enum TRenderPass
     {
-	RENDERPASS_WORLD,
-	RENDERPASS_SHADOWMAP,
-	//RENDERPASS_DEEP_OPACITY_MAP1,
-	//RENDERPASS_DEEP_OPACITY_MAP2,
+    RENDERPASS_WORLD,
+    RENDERPASS_SHADOWMAP,
+    //RENDERPASS_DEEP_OPACITY_MAP1,
+    //RENDERPASS_DEEP_OPACITY_MAP2,
 
-	NUM_RENDERPASSES
+    NUM_RENDERPASSES
     };
 
     RN_RenderPass(TRenderPass state);
@@ -45,22 +47,24 @@ protected:
 
     /*! \name SceneObject Interface */
     //@{
-	/*! this method is called before the sceneobject itself gets rendered.
-	    shaders and things like that should be activated in this method */
-	virtual void ItlPreRender() {};
+    /*! this method is called before the sceneobject itself gets rendered.
+        shaders and things like that should be activated in this method */
+    virtual void ItlPreRender() {};
 
-	/*! this method is called to render the sceneobject.
-	    Attention: If the correct shader program is not bound yet (should be done in itlBeforeRender()),
-	    the transform matrices must be sent again */
-	virtual void ItlRender() {};
+    /*! this method is called to render the sceneobject.
+        Attention: If the correct shader program is not bound yet (should be done in itlBeforeRender()),
+        the transform matrices must be sent again */
+    virtual void ItlRender() {};
 
-	/*! this method is called after rendering the sceneobject itself. Cleaning up can be done here */
-	virtual void ItlPostRender() {};
+    /*! this method is called after rendering the sceneobject itself. Cleaning up can be done here */
+    virtual void ItlPostRender() {};
 
-	virtual void ItlPreRenderChildren() {};
-	virtual void ItlPostRenderChildren() {};
+    virtual void ItlPreRenderChildren() {};
+    virtual void ItlPostRenderChildren() {};
     //@}
 
 };
+
+}
 
 #endif

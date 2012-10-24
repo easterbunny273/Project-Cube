@@ -17,23 +17,25 @@
 #include "common_gl.h"
 #include "BambooLib/include/Logger.h"
 
+namespace BambooGraphics
+{
 using namespace BambooLib;
 
-Bamboo::GlfwWindow *Bamboo::GlfwWindow::s_pInstance = NULL;
+GraphicsCore::GlfwWindow *GraphicsCore::GlfwWindow::s_pInstance = NULL;
 
 int s_DebugDeferredTexture = 0;
 int s_nUseParallax = 0;
 
 /****************************************************************
   *************************************************************** */
-Bamboo::GlfwWindow::GlfwWindow()
+GraphicsCore::GlfwWindow::GlfwWindow()
 {
     // construction is done in Create()
 }
 
 /****************************************************************
   *************************************************************** */
-std::shared_ptr<Bamboo::GlfwWindow> Bamboo::GlfwWindow::Create(int iWidth, int iHeight, std::string sWindowTitle)
+std::shared_ptr<GraphicsCore::GlfwWindow> GraphicsCore::GlfwWindow::Create(int iWidth, int iHeight, std::string sWindowTitle)
 {
   std::vector<std::pair<int, int> > viOpenGLVersions;
 
@@ -107,10 +109,10 @@ std::shared_ptr<Bamboo::GlfwWindow> Bamboo::GlfwWindow::Create(int iWidth, int i
 
 
     // set input handling callback methods
-    glfwSetKeyCallback(Bamboo::GlfwWindow::ItlStaticHandleKeyboardEvent);
-    glfwSetMousePosCallback(Bamboo::GlfwWindow::ItlStaticHandleMousePos);
-    glfwSetMouseWheelCallback(Bamboo::GlfwWindow::ItlStaticHandleMouseWheel);
-    glfwSetMouseButtonCallback(Bamboo::GlfwWindow::ItlStaticHandleMouseButton);
+    glfwSetKeyCallback(GraphicsCore::GlfwWindow::ItlStaticHandleKeyboardEvent);
+    glfwSetMousePosCallback(GraphicsCore::GlfwWindow::ItlStaticHandleMousePos);
+    glfwSetMouseWheelCallback(GraphicsCore::GlfwWindow::ItlStaticHandleMouseWheel);
+    glfwSetMouseButtonCallback(GraphicsCore::GlfwWindow::ItlStaticHandleMouseButton);
 
     // set window title
     glfwSetWindowTitle(sWindowTitle.c_str());
@@ -142,7 +144,7 @@ std::shared_ptr<Bamboo::GlfwWindow> Bamboo::GlfwWindow::Create(int iWidth, int i
 
 /****************************************************************
   *************************************************************** */
-Bamboo::GlfwWindow::~GlfwWindow()
+GraphicsCore::GlfwWindow::~GlfwWindow()
 {
     glfwCloseWindow();
     glfwTerminate();
@@ -152,7 +154,7 @@ Bamboo::GlfwWindow::~GlfwWindow()
 
 /****************************************************************
   *************************************************************** */
-void Bamboo::GlfwWindow::ItlStaticHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState)
+void GraphicsCore::GlfwWindow::ItlStaticHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState)
 {
     if (iKeyIdentifier == GLFW_KEY_LALT && iNewKeyState==GLFW_PRESS)
     {
@@ -180,7 +182,7 @@ void Bamboo::GlfwWindow::ItlStaticHandleKeyboardEvent(int iKeyIdentifier, int iN
     assert (s_pInstance != NULL);
 
     // get "this" to call member methods
-    Bamboo::GlfwWindow *pThis = s_pInstance;
+    GraphicsCore::GlfwWindow *pThis = s_pInstance;
 
     // call method of listener
     if (pThis->m_spInputEventListener)
@@ -189,7 +191,7 @@ void Bamboo::GlfwWindow::ItlStaticHandleKeyboardEvent(int iKeyIdentifier, int iN
 
 /****************************************************************
   *************************************************************** */
-void Bamboo::GlfwWindow::ItlStaticHandleMousePos(int iX, int iY)
+void GraphicsCore::GlfwWindow::ItlStaticHandleMousePos(int iX, int iY)
 {
     // this method is a static method (glfw cannot call class methods)
     // which redirects the event to the member-method of the Graphic class
@@ -202,7 +204,7 @@ void Bamboo::GlfwWindow::ItlStaticHandleMousePos(int iX, int iY)
     assert (s_pInstance != NULL);
 
     // get "this" to call member methods
-    Bamboo::GlfwWindow *pThis = s_pInstance;
+    GraphicsCore::GlfwWindow *pThis = s_pInstance;
 
     // call member method
     if (pThis->m_spInputEventListener)
@@ -211,7 +213,7 @@ void Bamboo::GlfwWindow::ItlStaticHandleMousePos(int iX, int iY)
 
 /****************************************************************
   *************************************************************** */
-void Bamboo::GlfwWindow::ItlStaticHandleMouseWheel(int iPosition)
+void GraphicsCore::GlfwWindow::ItlStaticHandleMouseWheel(int iPosition)
 {
     // this method is a static method (glfw cannot call class methods)
     // which redirects the event to the member-method of the Graphic class
@@ -224,7 +226,7 @@ void Bamboo::GlfwWindow::ItlStaticHandleMouseWheel(int iPosition)
     assert (s_pInstance != NULL);
 
     // get "this" to call member methods
-    Bamboo::GlfwWindow *pThis = s_pInstance;
+    GraphicsCore::GlfwWindow *pThis = s_pInstance;
 
     // call member method
     if (pThis->m_spInputEventListener)
@@ -233,7 +235,7 @@ void Bamboo::GlfwWindow::ItlStaticHandleMouseWheel(int iPosition)
 
 /****************************************************************
   *************************************************************** */
-void Bamboo::GlfwWindow::ItlStaticHandleMouseButton(int iButton, int iAction)
+void GraphicsCore::GlfwWindow::ItlStaticHandleMouseButton(int iButton, int iAction)
 {
     // this method is a static method (glfw cannot call class methods)
     // which redirects the event to the member-method of the Graphic class
@@ -246,7 +248,7 @@ void Bamboo::GlfwWindow::ItlStaticHandleMouseButton(int iButton, int iAction)
     assert (s_pInstance != NULL);
 
     // get "this" to call member methods
-    Bamboo::GlfwWindow *pThis = s_pInstance;
+    GraphicsCore::GlfwWindow *pThis = s_pInstance;
 
     // call member method
     if (pThis->m_spInputEventListener)
@@ -255,14 +257,14 @@ void Bamboo::GlfwWindow::ItlStaticHandleMouseButton(int iButton, int iAction)
 
 /****************************************************************
   *************************************************************** */
-void Bamboo::GlfwWindow::SwapBuffers()
+void GraphicsCore::GlfwWindow::SwapBuffers()
 {
     glfwSwapBuffers();
 }
 
 /****************************************************************
   *************************************************************** */
-void Bamboo::GlfwWindow::ClearBuffers()
+void GraphicsCore::GlfwWindow::ClearBuffers()
 {
     // Enable sRGB gamma correction for framebuffer output.
     glEnable(GL_FRAMEBUFFER_SRGB);
@@ -284,6 +286,8 @@ void Bamboo::GlfwWindow::ClearBuffers()
     glGetError();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
 }
 
 #endif

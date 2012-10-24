@@ -11,15 +11,17 @@
 #include "RenderNodes/IRenderNode.h"
 #include "RenderNodes/RenderNode_BoundingBox.h"
 
-std::stack<GLuint> Bamboo::IRenderNode::s_snBoundFBOs;
-std::stack<std::pair<int, int> > Bamboo::IRenderNode::s_ViewportInformation;
-
-void Bamboo::IRenderNode::ItlSendTransformMatrices()
+namespace BambooGraphics
 {
-    Bamboo *pGraphicCore = ItlGetGraphicCore();
+std::stack<GLuint> GraphicsCore::IRenderNode::s_snBoundFBOs;
+std::stack<std::pair<int, int> > GraphicsCore::IRenderNode::s_ViewportInformation;
+
+void GraphicsCore::IRenderNode::ItlSendTransformMatrices()
+{
+    GraphicsCore *pGraphicCore = ItlGetGraphicCore();
     assert (pGraphicCore != NULL);
 
-    Bamboo::ShaderManager *pShaderManager = pGraphicCore->GetShaderManager();
+    ShaderManager *pShaderManager = pGraphicCore->GetShaderManager();
     assert (pShaderManager != NULL);
 
     //first, get the positions
@@ -50,7 +52,7 @@ void Bamboo::IRenderNode::ItlSendTransformMatrices()
 
 }
 
-void Bamboo::IRenderNode::Render()
+void GraphicsCore::IRenderNode::Render()
 {
     std::shared_ptr<TItlRenderInfo> pRenderInfo (new TItlRenderInfo);
     pRenderInfo->tCurrentRenderPass = 0;
@@ -58,83 +60,83 @@ void Bamboo::IRenderNode::Render()
     this->Render(pRenderInfo);
 }
 
-void Bamboo::IRenderNode::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderInfo)
+void GraphicsCore::IRenderNode::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderInfo)
 {
     m_pCurrentRenderInfo = pCurrentRenderInfo;
 
     if (!ItlTestSkipRendering())
     {
-	//store old matrices
-	glm::mat4 SavedModelViewProjectionMatrix = pCurrentRenderInfo->ModelViewProjectionMatrix;
-	glm::mat4 SavedInverseModelViewProjectionMatrix = pCurrentRenderInfo->InverseModelViewProjectionMatrix;
-	glm::mat4 SavedModelMatrix = pCurrentRenderInfo->ModelMatrix;
-	glm::mat4 SavedModelViewProjectionMatrix_ForFrustumCulling = pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling;
+    //store old matrices
+    glm::mat4 SavedModelViewProjectionMatrix = pCurrentRenderInfo->ModelViewProjectionMatrix;
+    glm::mat4 SavedInverseModelViewProjectionMatrix = pCurrentRenderInfo->InverseModelViewProjectionMatrix;
+    glm::mat4 SavedModelMatrix = pCurrentRenderInfo->ModelMatrix;
+    glm::mat4 SavedModelViewProjectionMatrix_ForFrustumCulling = pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling;
 
-	//update matrices by multiplying with our matrices
-	pCurrentRenderInfo->ModelViewProjectionMatrix = pCurrentRenderInfo->ModelViewProjectionMatrix * m_mTransformMatrixToWorld;
-	pCurrentRenderInfo->InverseModelViewProjectionMatrix = pCurrentRenderInfo->InverseModelViewProjectionMatrix * m_mTransformMatrixFromWorld;
-	pCurrentRenderInfo->ModelMatrix = pCurrentRenderInfo->ModelMatrix * m_mTransformMatrixToWorld;
-	pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling * m_mTransformMatrixToWorld;
+    //update matrices by multiplying with our matrices
+    pCurrentRenderInfo->ModelViewProjectionMatrix = pCurrentRenderInfo->ModelViewProjectionMatrix * m_mTransformMatrixToWorld;
+    pCurrentRenderInfo->InverseModelViewProjectionMatrix = pCurrentRenderInfo->InverseModelViewProjectionMatrix * m_mTransformMatrixFromWorld;
+    pCurrentRenderInfo->ModelMatrix = pCurrentRenderInfo->ModelMatrix * m_mTransformMatrixToWorld;
+    pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling * m_mTransformMatrixToWorld;
 
-	if (ItlTestIfVisible())
-	{
-	    if (m_bHasChildren)
-	    {
-		//now recursively render children and scenenode
-		ItlPreRenderChildren();
+    if (ItlTestIfVisible())
+    {
+        if (m_bHasChildren)
+        {
+        //now recursively render children and scenenode
+        ItlPreRenderChildren();
 
-		//call render method in child nodes
+        //call render method in child nodes
                 for (unsigned int a=0; a < m_vChildren.size(); a++)
-		    m_vChildren[a]->Render(pCurrentRenderInfo);
+            m_vChildren[a]->Render(pCurrentRenderInfo);
 
-		ItlPostRenderChildren();
-	    }
+        ItlPostRenderChildren();
+        }
 
-	    ItlPreRender();
-	    ItlSendTransformMatrices();
-	    ItlRender();
-	    ItlPostRender();
-	}
+        ItlPreRender();
+        ItlSendTransformMatrices();
+        ItlRender();
+        ItlPostRender();
+    }
 
 
-	//write old matrices
-	pCurrentRenderInfo->ModelViewProjectionMatrix = SavedModelViewProjectionMatrix;
-	pCurrentRenderInfo->InverseModelViewProjectionMatrix = SavedInverseModelViewProjectionMatrix;
-	pCurrentRenderInfo->ModelMatrix = SavedModelMatrix;
-	pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = SavedModelViewProjectionMatrix_ForFrustumCulling;
+    //write old matrices
+    pCurrentRenderInfo->ModelViewProjectionMatrix = SavedModelViewProjectionMatrix;
+    pCurrentRenderInfo->InverseModelViewProjectionMatrix = SavedInverseModelViewProjectionMatrix;
+    pCurrentRenderInfo->ModelMatrix = SavedModelMatrix;
+    pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = SavedModelViewProjectionMatrix_ForFrustumCulling;
     }
 
     m_pCurrentRenderInfo = std::shared_ptr<TItlRenderInfo>();
 }
 
-Bamboo::IRenderNode::IRenderNode()
+GraphicsCore::IRenderNode::IRenderNode()
     : m_bHasChildren(false), m_pGraphicCore(NULL)
 {
 
 }
 
-Bamboo::IRenderNode::~IRenderNode()
+GraphicsCore::IRenderNode::~IRenderNode()
 {
   ClearChilds();
 }
 
 
-void Bamboo::IRenderNode::Render(Bamboo::IRenderNode *pStart)
+void GraphicsCore::IRenderNode::Render(GraphicsCore::IRenderNode *pStart)
 {
     Render(pStart->m_pCurrentRenderInfo);
 }
 
-bool Bamboo::IRenderNode::ItlTestIfVisible()
+bool GraphicsCore::IRenderNode::ItlTestIfVisible()
 {
     return true;
 }
 
-bool Bamboo::IRenderNode::ItlTestSkipRendering()
+bool GraphicsCore::IRenderNode::ItlTestSkipRendering()
 {
     return false;
 }
 
-void Bamboo::IRenderNode::AddChild(std::shared_ptr<Bamboo::IRenderNode> spNode)
+void GraphicsCore::IRenderNode::AddChild(std::shared_ptr<GraphicsCore::IRenderNode> spNode)
 {
     m_vChildren.push_back(spNode);
 
@@ -142,50 +144,50 @@ void Bamboo::IRenderNode::AddChild(std::shared_ptr<Bamboo::IRenderNode> spNode)
 
 }
 
-bool Bamboo::IRenderNode::RemoveChild(std::shared_ptr<Bamboo::IRenderNode> spNode)
+bool GraphicsCore::IRenderNode::RemoveChild(std::shared_ptr<GraphicsCore::IRenderNode> spNode)
 {
     bool bFound = false;
     auto iterator = m_vChildren.begin();
 
     while (iterator != m_vChildren.end())
     {
-	if (*iterator == spNode)
-	{
-	    m_vChildren.erase(iterator);
+    if (*iterator == spNode)
+    {
+        m_vChildren.erase(iterator);
 
-	    bFound = true;
+        bFound = true;
 
-	    break;
-	}
+        break;
+    }
 
         iterator++;
     }
 
 
     if (m_vChildren.empty())
-	m_bHasChildren = false;
+    m_bHasChildren = false;
 
     return bFound;
 }
 
-void Bamboo::IRenderNode::ClearChilds()
+void GraphicsCore::IRenderNode::ClearChilds()
 {
     m_vChildren.clear();
 }
 
-void Bamboo::IRenderNode::GetTransformMatrix(glm::mat4 &rToWorld, glm::mat4 &rFromWorld) const
+void GraphicsCore::IRenderNode::GetTransformMatrix(glm::mat4 &rToWorld, glm::mat4 &rFromWorld) const
 {
     rToWorld = m_mTransformMatrixToWorld;
     rFromWorld = m_mTransformMatrixFromWorld;
 }
 
-void Bamboo::IRenderNode::SetTransformMatrix(glm::mat4 rToWorld, glm::mat4 rFromWorld)
+void GraphicsCore::IRenderNode::SetTransformMatrix(glm::mat4 rToWorld, glm::mat4 rFromWorld)
 {
     m_mTransformMatrixToWorld = rToWorld;
     m_mTransformMatrixFromWorld = rFromWorld;
 }
 
-void Bamboo::IRenderNode::SetTransformMatrix(glm::mat4 rToWorld)
+void GraphicsCore::IRenderNode::SetTransformMatrix(glm::mat4 rToWorld)
 {
     glm::mat4 mFromWorld;
 
@@ -194,7 +196,7 @@ void Bamboo::IRenderNode::SetTransformMatrix(glm::mat4 rToWorld)
     SetTransformMatrix(rToWorld, mFromWorld);
 }
 
-bool Bamboo::IRenderNode_Cullable::ItlInitializeBoundingBox()
+bool GraphicsCore::IRenderNode_Cullable::ItlInitializeBoundingBox()
 {
     float *fVertices = GetVertices();
     int iNumVertices = NumVertices();
@@ -205,45 +207,45 @@ bool Bamboo::IRenderNode_Cullable::ItlInitializeBoundingBox()
 
     if (iNumVertices > 0)
     {
-	m_fMinX = m_fMaxX = fVertices[0];
-	m_fMinY = m_fMaxY = fVertices[1];
-	m_fMinZ = m_fMaxZ = fVertices[2];
+    m_fMinX = m_fMaxX = fVertices[0];
+    m_fMinY = m_fMaxY = fVertices[1];
+    m_fMinZ = m_fMaxZ = fVertices[2];
 
-	for (int i=1; i < iNumVertices; i++)
-	{
-	    float fCurrentX = fVertices[3*i + 0];
-	    float fCurrentY = fVertices[3*i + 1];
-	    float fCurrentZ = fVertices[3*i + 2];
+    for (int i=1; i < iNumVertices; i++)
+    {
+        float fCurrentX = fVertices[3*i + 0];
+        float fCurrentY = fVertices[3*i + 1];
+        float fCurrentZ = fVertices[3*i + 2];
 
-	    //max x
-	    if (fCurrentX > m_fMaxX)
-		m_fMaxX = fCurrentX;
+        //max x
+        if (fCurrentX > m_fMaxX)
+        m_fMaxX = fCurrentX;
 
-	    //min x
-	    if (fCurrentX < m_fMinX)
-		m_fMinX = fCurrentX;
+        //min x
+        if (fCurrentX < m_fMinX)
+        m_fMinX = fCurrentX;
 
-	    //max y
-	    if (fCurrentY > m_fMaxY)
-		m_fMaxY = fCurrentY;
+        //max y
+        if (fCurrentY > m_fMaxY)
+        m_fMaxY = fCurrentY;
 
-	    //min y
-	    if (fCurrentY < m_fMinY)
-		m_fMinY = fCurrentY;
+        //min y
+        if (fCurrentY < m_fMinY)
+        m_fMinY = fCurrentY;
 
-	    //max z
-	    if (fCurrentZ > m_fMaxZ)
-		m_fMaxZ = fCurrentZ;
+        //max z
+        if (fCurrentZ > m_fMaxZ)
+        m_fMaxZ = fCurrentZ;
 
-	    //min z
-	    if (fCurrentZ < m_fMinZ)
-		m_fMinZ = fCurrentZ;
-	}
+        //min z
+        if (fCurrentZ < m_fMinZ)
+        m_fMinZ = fCurrentZ;
     }
-	return true;
+    }
+    return true;
 }
 
-bool Bamboo::IRenderNode_Cullable::ItlTestIfVisible()
+bool GraphicsCore::IRenderNode_Cullable::ItlTestIfVisible()
 {
     // disable culling because it is unstable at the moment
     // todo: correct this
@@ -253,12 +255,12 @@ bool Bamboo::IRenderNode_Cullable::ItlTestIfVisible()
 
     if (m_bInitialized == false)
     {
-	ItlInitializeBoundingBox();
+    ItlInitializeBoundingBox();
 
-        std::shared_ptr<Bamboo::IRenderNode> pBoundingBox(new Bamboo::RN_BoundingBox(m_fMinX, m_fMaxX, m_fMinY, m_fMaxY, m_fMinZ, m_fMaxZ));
-	AddChild(pBoundingBox);
+        std::shared_ptr<GraphicsCore::IRenderNode> pBoundingBox(new GraphicsCore::RN_BoundingBox(m_fMinX, m_fMaxX, m_fMinY, m_fMaxY, m_fMinZ, m_fMaxZ));
+    AddChild(pBoundingBox);
 
-	m_bInitialized = true;
+    m_bInitialized = true;
     }
 
     glm::vec4 vFrontLeftBottom	(m_fMinX, m_fMinY, m_fMinZ, 1.0);
@@ -298,77 +300,79 @@ bool Bamboo::IRenderNode_Cullable::ItlTestIfVisible()
 
     //right frustum plane
     if (vFrontLeftBottom_SS.x > fRightClippingPlane_X)
-	if (vFrontLeftTop_SS.x > fRightClippingPlane_X)
-	    if (vFrontRightBottom_SS.x > fRightClippingPlane_X)
-		if (vFrontRightTop_SS.x > fRightClippingPlane_X)
-		    if (vBackLeftBottom_SS.x > fRightClippingPlane_X)
-			if (vBackLeftTop_SS.x > fRightClippingPlane_X)
-			    if (vBackRightBottom_SS.x > fRightClippingPlane_X)
-				if (vBackRightTop_SS.x > fRightClippingPlane_X)
-				    return false;
+    if (vFrontLeftTop_SS.x > fRightClippingPlane_X)
+        if (vFrontRightBottom_SS.x > fRightClippingPlane_X)
+        if (vFrontRightTop_SS.x > fRightClippingPlane_X)
+            if (vBackLeftBottom_SS.x > fRightClippingPlane_X)
+            if (vBackLeftTop_SS.x > fRightClippingPlane_X)
+                if (vBackRightBottom_SS.x > fRightClippingPlane_X)
+                if (vBackRightTop_SS.x > fRightClippingPlane_X)
+                    return false;
 
     //left frustum plane
     if (vFrontLeftBottom_SS.x < fLeftClippingPlane_X)
-	if (vFrontLeftTop_SS.x < fLeftClippingPlane_X)
-	    if (vFrontRightBottom_SS.x < fLeftClippingPlane_X)
-		if (vFrontRightTop_SS.x < fLeftClippingPlane_X)
-		    if (vBackLeftBottom_SS.x < fLeftClippingPlane_X)
-			if (vBackLeftTop_SS.x < fLeftClippingPlane_X)
-			    if (vBackRightBottom_SS.x < fLeftClippingPlane_X)
-				if (vBackRightTop_SS.x < fLeftClippingPlane_X)
-				    return false;
+    if (vFrontLeftTop_SS.x < fLeftClippingPlane_X)
+        if (vFrontRightBottom_SS.x < fLeftClippingPlane_X)
+        if (vFrontRightTop_SS.x < fLeftClippingPlane_X)
+            if (vBackLeftBottom_SS.x < fLeftClippingPlane_X)
+            if (vBackLeftTop_SS.x < fLeftClippingPlane_X)
+                if (vBackRightBottom_SS.x < fLeftClippingPlane_X)
+                if (vBackRightTop_SS.x < fLeftClippingPlane_X)
+                    return false;
 
     //top frustum plane
     if (vFrontLeftBottom_SS.y > fTopClippingPlane)
-	if (vFrontLeftTop_SS.y > fTopClippingPlane)
-	    if (vFrontRightBottom_SS.y > fTopClippingPlane)
-		if (vFrontRightTop_SS.y > fTopClippingPlane)
-		    if (vBackLeftBottom_SS.y > fTopClippingPlane)
-			if (vBackLeftTop_SS.y > fTopClippingPlane)
-			    if (vBackRightBottom_SS.y > fTopClippingPlane)
-				if (vBackRightTop_SS.y > fTopClippingPlane)
-				    return false;
+    if (vFrontLeftTop_SS.y > fTopClippingPlane)
+        if (vFrontRightBottom_SS.y > fTopClippingPlane)
+        if (vFrontRightTop_SS.y > fTopClippingPlane)
+            if (vBackLeftBottom_SS.y > fTopClippingPlane)
+            if (vBackLeftTop_SS.y > fTopClippingPlane)
+                if (vBackRightBottom_SS.y > fTopClippingPlane)
+                if (vBackRightTop_SS.y > fTopClippingPlane)
+                    return false;
 
     //bottom frustum plane
     if (vFrontLeftBottom_SS.y < fBottomClippingPlane)
-	if (vFrontLeftTop_SS.y < fBottomClippingPlane)
-	    if (vFrontRightBottom_SS.y < fBottomClippingPlane)
-		if (vFrontRightTop_SS.y < fBottomClippingPlane)
-		    if (vBackLeftBottom_SS.y < fBottomClippingPlane)
-			if (vBackLeftTop_SS.y < fBottomClippingPlane)
-			    if (vBackRightBottom_SS.y < fBottomClippingPlane)
-				if (vBackRightTop_SS.y < fBottomClippingPlane)
-				    return false;
+    if (vFrontLeftTop_SS.y < fBottomClippingPlane)
+        if (vFrontRightBottom_SS.y < fBottomClippingPlane)
+        if (vFrontRightTop_SS.y < fBottomClippingPlane)
+            if (vBackLeftBottom_SS.y < fBottomClippingPlane)
+            if (vBackLeftTop_SS.y < fBottomClippingPlane)
+                if (vBackRightBottom_SS.y < fBottomClippingPlane)
+                if (vBackRightTop_SS.y < fBottomClippingPlane)
+                    return false;
 
     //near frustum plane
     if (vFrontLeftBottom_SS.z < fNearClippingPlane)
-	if (vFrontLeftTop_SS.z < fNearClippingPlane)
-	    if (vFrontRightBottom_SS.z < fNearClippingPlane)
-		if (vFrontRightTop_SS.z < fNearClippingPlane)
-		    if (vBackLeftBottom_SS.z < fNearClippingPlane)
-			if (vBackLeftTop_SS.z < fNearClippingPlane)
-			    if (vBackRightBottom_SS.z < fNearClippingPlane)
-				if (vBackRightTop_SS.z < fNearClippingPlane)
-				    return false;
+    if (vFrontLeftTop_SS.z < fNearClippingPlane)
+        if (vFrontRightBottom_SS.z < fNearClippingPlane)
+        if (vFrontRightTop_SS.z < fNearClippingPlane)
+            if (vBackLeftBottom_SS.z < fNearClippingPlane)
+            if (vBackLeftTop_SS.z < fNearClippingPlane)
+                if (vBackRightBottom_SS.z < fNearClippingPlane)
+                if (vBackRightTop_SS.z < fNearClippingPlane)
+                    return false;
     //far frustum plane
     if (vFrontLeftBottom_SS.z > fFarClippingPlane)
-	if (vFrontLeftTop_SS.z > fFarClippingPlane)
-	    if (vFrontRightBottom_SS.z > fFarClippingPlane)
-		if (vFrontRightTop_SS.z > fFarClippingPlane)
-		    if (vBackLeftBottom_SS.z > fFarClippingPlane)
-			if (vBackLeftTop_SS.z > fFarClippingPlane)
-			    if (vBackRightBottom_SS.z > fFarClippingPlane)
-				if (vBackRightTop_SS.z > fFarClippingPlane)
-				    return false;
+    if (vFrontLeftTop_SS.z > fFarClippingPlane)
+        if (vFrontRightBottom_SS.z > fFarClippingPlane)
+        if (vFrontRightTop_SS.z > fFarClippingPlane)
+            if (vBackLeftBottom_SS.z > fFarClippingPlane)
+            if (vBackLeftTop_SS.z > fFarClippingPlane)
+                if (vBackRightBottom_SS.z > fFarClippingPlane)
+                if (vBackRightTop_SS.z > fFarClippingPlane)
+                    return false;
 
     return true;
 }
 
 
-Bamboo * Bamboo::IRenderNode::ItlGetGraphicCore()
+GraphicsCore * GraphicsCore::IRenderNode::ItlGetGraphicCore()
 {
-    Bamboo *pWorkaroundPointer = Bamboo::GetSingleInstance();
+    GraphicsCore *pWorkaroundPointer = GraphicsCore::GetSingleInstance();
     assert (pWorkaroundPointer != NULL);
 
     return pWorkaroundPointer;
+}
+
 }

@@ -99,7 +99,7 @@ public:
 		}
 
 		/// returns the camera
-		std::shared_ptr<Bamboo::ICamera> GetCamera()
+        std::shared_ptr<BambooGraphics::GraphicsCore::ICamera> GetCamera()
 		{
 			return m_spCamera;
 		}
@@ -126,7 +126,7 @@ private:
         int m_iNumCubes;
 
 		/// Camera of this level
-		std::shared_ptr<Bamboo::ICamera> m_spCamera;
+        std::shared_ptr<BambooGraphics::GraphicsCore::ICamera> m_spCamera;
 
 		/// Pointer to the root of the semantic scene nodes
 		std::shared_ptr<ISemanticSceneNode> m_spSemanticScene;

@@ -9,8 +9,9 @@
 
 #include "RenderNodes/IRenderNode.h"
 
-
-class Bamboo::RN_CubeMap : public Bamboo::IRenderNode
+namespace BambooGraphics
+{
+class GraphicsCore::RN_CubeMap : public GraphicsCore::IRenderNode
 {
 public:
     /*! \name Constructor / Destructor */
@@ -60,5 +61,7 @@ private:
       GLuint    m_nFBO;
     //@}
 };
+
+}
 
 #endif

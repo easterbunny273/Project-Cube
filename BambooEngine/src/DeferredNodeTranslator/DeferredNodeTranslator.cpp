@@ -9,7 +9,9 @@
 
 using namespace BambooLib;
 
-DeferredNodeTranslator::DeferredNodeTranslator(Bamboo *pCore) : INodeTranslator(pCore)
+namespace BambooGraphics
+{
+DeferredNodeTranslator::DeferredNodeTranslator(GraphicsCore *pCore) : INodeTranslator(pCore)
 {
   std::shared_ptr<IRuleObject> spCameraRule(new Camera_RuleObject());
   std::shared_ptr<IRuleObject> spCubeRule(new Cube_RuleObject());
@@ -88,4 +90,6 @@ void DeferredNodeTranslator::ItlTranslateSemNode(std::shared_ptr<ISemanticSceneN
   assert (bRuleObjectExists2);
 
   m_mCachedRuleObjects[spSemNode->GetObjectID()]->Action();
+}
+
 }

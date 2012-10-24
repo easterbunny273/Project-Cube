@@ -33,7 +33,7 @@ MainApp::MainApp()
     m_CoreSettings.RestoreSettingsFromXMLFile("config/core-settings.xml");
 
     // set subsystems to NULL, lazy initialisation
-    m_pGraphic = new Bamboo();
+    m_pGraphic = new BambooGraphics::GraphicsCore();
     m_pGame = NULL;
 
     // create an input event listener
@@ -95,7 +95,7 @@ void MainApp::StartGraphic_Test2(QWidget *pWidget)
   //
 
   // create camera
-  m_spCamera = Bamboo::PerspectiveCamera::Create(45.0f, 1.33f, 0.01f, 100.0f, glm::vec3(-0.2f, 0.2f, 0.0f), 90.0f, -50.0f);
+  m_spCamera = BambooGraphics::GraphicsCore::PerspectiveCamera::Create(45.0f, 1.33f, 0.01f, 100.0f, glm::vec3(-0.2f, 0.2f, 0.0f), 90.0f, -50.0f);
 
   // register itself as listener for camera events
   GetEventManager()->RegisterEventListener(this, CameraMovementEvent::EventType());
@@ -117,7 +117,7 @@ void MainApp::StartGraphic_Test2(QWidget *pWidget)
   std::shared_ptr<Light_SemSceneNode> spTestLight1 = Light_SemSceneNode::Create(glm::vec3(-0.2f, 0.10f, 0.14f), glm::vec3(1.0f, -0.4f, -1.0f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
   std::shared_ptr<Light_SemSceneNode> spTestLight2 = Light_SemSceneNode::Create(glm::vec3(-0.2f, 0.2f, -0.14f), glm::vec3(1.0f, -1.1f, 0.62f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
 
-  std::shared_ptr<Camera_SemSceneNode> spCamera = Camera_SemSceneNode::Create(m_spCamera);
+  std::shared_ptr<BambooGraphics::Camera_SemSceneNode> spCamera = BambooGraphics::Camera_SemSceneNode::Create(m_spCamera);
 
   // link scene graph
   spCamera->AddChild(spTreppe);
@@ -127,14 +127,14 @@ void MainApp::StartGraphic_Test2(QWidget *pWidget)
   spCamera->AddChild(spTestLight2);
 
   // create node translator
-  std::shared_ptr<INodeTranslator> spDeferredTranslator(new DeferredNodeTranslator(m_pGraphic));
+  std::shared_ptr<BambooGraphics::INodeTranslator> spDeferredTranslator(new BambooGraphics::DeferredNodeTranslator(m_pGraphic));
 
   // create glfw window
   //std::shared_ptr<Bamboo::GlfwWindow> spWindow = Bamboo::GlfwWindow::Create(1024, 768, "Test");
   //spWindow->SetInputEventListener(m_spInputEventListener);
 
   // create gl widget
-  std::shared_ptr<Bamboo::QtWidgetWrapper> spQtWidget = Bamboo::QtWidgetWrapper::Create(pWidget);
+  std::shared_ptr<BambooGraphics::GraphicsCore::QtWidgetWrapper> spQtWidget = BambooGraphics::GraphicsCore::QtWidgetWrapper::Create(pWidget);
   spQtWidget->SetInputEventListener(m_spInputEventListener);
 
   // add render loop
@@ -175,10 +175,10 @@ void MainApp::Run(QApplication *pApp, QWidget *pWidget)
 
 }
 
-Bamboo * MainApp::GetGraphic()
+BambooGraphics::GraphicsCore * MainApp::GetGraphic()
 {
     if (m_pGraphic == NULL)
-        m_pGraphic = new Bamboo();
+        m_pGraphic = new BambooGraphics::GraphicsCore();
 
     assert (m_pGraphic != NULL);
     return m_pGraphic;
@@ -308,7 +308,7 @@ void MainApp::InputEventListener::ItlHandleMouseButton(int iButton, int iAction)
 
 bool MainApp::OnEvent(std::shared_ptr<EventManager::IEvent> spEvent)
 {
-    std::shared_ptr<Bamboo::ICamera> spCamera = m_spCamera;
+    std::shared_ptr<BambooGraphics::GraphicsCore::ICamera> spCamera = m_spCamera;
 
     assert (spCamera);
 

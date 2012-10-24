@@ -10,20 +10,22 @@
 
 bool bMouseLocked = false;
 
-Bamboo::QtWidgetWrapper::QtWidgetWrapper()
+namespace BambooGraphics
+{
+GraphicsCore::QtWidgetWrapper::QtWidgetWrapper()
 {
     m_pGLWidget = NULL;
     m_iWidth = 0;
     m_iHeight = 0;
 }
 
-Bamboo::QtWidgetWrapper::~QtWidgetWrapper()
+GraphicsCore::QtWidgetWrapper::~QtWidgetWrapper()
 {
     // nothing to do so far
     delete m_pGLWidget;
 }
 
-std::shared_ptr<Bamboo::QtWidgetWrapper> Bamboo::QtWidgetWrapper::Create(QWidget *pWidget)
+std::shared_ptr<GraphicsCore::QtWidgetWrapper> GraphicsCore::QtWidgetWrapper::Create(QWidget *pWidget)
 {
     std::shared_ptr<QtWidgetWrapper> spWrapper(new QtWidgetWrapper());
     QGLFormat fmt;
@@ -57,7 +59,7 @@ std::shared_ptr<Bamboo::QtWidgetWrapper> Bamboo::QtWidgetWrapper::Create(QWidget
     return spWrapper;
 }
 
-void Bamboo::QtWidgetWrapper::ClearBuffers()
+void GraphicsCore::QtWidgetWrapper::ClearBuffers()
 {
     m_pGLWidget->makeCurrent();
 
@@ -83,7 +85,7 @@ void Bamboo::QtWidgetWrapper::ClearBuffers()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Bamboo::QtWidgetWrapper::SwapBuffers()
+void GraphicsCore::QtWidgetWrapper::SwapBuffers()
 {
     assert (m_pGLWidget != NULL);
 
@@ -93,12 +95,14 @@ void Bamboo::QtWidgetWrapper::SwapBuffers()
     m_pGLWidget->swapBuffers();
     m_pGLWidget->makeCurrent();
 }
+}
 
 TGLWidget::TGLWidget(const QGLFormat &fmt, QWidget *parent)
     : QGLWidget(fmt, parent)
 {
     grabKeyboard();
 }
+
 
 TGLWidget::TGLWidget(QWidget *parent)
     : QGLWidget (parent)

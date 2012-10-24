@@ -27,9 +27,7 @@ QMAKE_CXXFLAGS += -std=c++0x
 
 SOURCES += BambooEngine/src/TextureManager.cpp \
     BambooEngine/src/ShaderManager.cpp \
-    BambooEngine/src/Shader.cpp \
     BambooEngine/src/RenderNode.cpp \
-    BambooEngine/src/LightManager.cpp \
     BambooEngine/src/Graphic.cpp \
     BambooEngine/src/Graphic-QtWidgetWrapper.cpp \
     BambooEngine/src/Graphic-GlfwWindow.cpp \
@@ -80,9 +78,7 @@ SOURCES += BambooEngine/src/TextureManager.cpp \
 HEADERS += \
     BambooEngine/include/TextureManager.h \
     BambooEngine/include/ShaderManager.h \
-    BambooEngine/include/Shader.h \
     BambooEngine/include/prevent_old_opengl.h \
-    BambooEngine/include/LightManager.h \
     BambooEngine/include/INodeTranslator.h \
     BambooEngine/include/Graphic.h \
     BambooEngine/include/Graphic-QtWidgetWrapper.h \

@@ -25,7 +25,7 @@ public:
     /*! \name Access to the subsystems */
     //@{
 	/// returns ptr to the graphic subsystem
-        Bamboo * GetGraphic();
+        BambooGraphics::GraphicsCore * GetGraphic();
 
 	/// returns ptr to the core settings
         Settings * GetCoreSettings();
@@ -61,7 +61,7 @@ public:
 private:
     /*! \name InputEventListener for the Graphic engine */
     //@{
-        class InputEventListener : public Bamboo::GlfwWindow::IInputEventListener
+        class InputEventListener : public BambooGraphics::GraphicsCore::GlfwWindow::IInputEventListener
         {
         public:
             /// handles keyboard events and sends signals to listener
@@ -96,10 +96,10 @@ private:
         EventManager m_EventManager;
         Settings m_CoreSettings;
 
-        Bamboo *m_pGraphic;
+        BambooGraphics::GraphicsCore *m_pGraphic;
         DummyGame *m_pGame;
         std::shared_ptr<InputEventListener> m_spInputEventListener;
-        std::shared_ptr<Bamboo::ICamera> m_spCamera;
+        std::shared_ptr<BambooGraphics::GraphicsCore::ICamera> m_spCamera;
     //@}
 
     /*! \name Static members */

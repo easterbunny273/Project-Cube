@@ -10,6 +10,8 @@
 
 #include "RenderNodes/IRenderNode.h"
 
+namespace BambooGraphics
+{
 //!  A SceneObject which renders all children in a fbo.
 /*!
   This SceneObject is not a real SceneObject as an object in the scene,
@@ -20,7 +22,7 @@
   The name for the textures must be set in the used constructor.
 */
 
-class Bamboo::RN_FBO : public Bamboo::IRenderNode
+class GraphicsCore::RN_FBO : public GraphicsCore::IRenderNode
 {
 private:
     bool m_bColorTexture;		///<shows if this fbo uses a color texture
@@ -43,25 +45,25 @@ private:
 protected:
     /*! \name SceneObject Interface */
     //@{
-	/*! this method is called before the render() method calls the render() methods of the children,
-	    and can be used to bind a fbo (to render the children in this fbo) or something like that */
-	virtual void ItlPreRenderChildren();
+    /*! this method is called before the render() method calls the render() methods of the children,
+        and can be used to bind a fbo (to render the children in this fbo) or something like that */
+    virtual void ItlPreRenderChildren();
 
-	/*! this method is called after all children were rendered,
-	    and can be used to unbind a fbo or something like that */
-	virtual void ItlPostRenderChildren();
+    /*! this method is called after all children were rendered,
+        and can be used to unbind a fbo or something like that */
+    virtual void ItlPostRenderChildren();
 
-	/*! this method is called before the sceneobject itself gets rendered.
-	    shaders and things like that should be activated in this method */
-	virtual void ItlPreRender();
+    /*! this method is called before the sceneobject itself gets rendered.
+        shaders and things like that should be activated in this method */
+    virtual void ItlPreRender();
 
-	/*! this method is called to render the sceneobject.
-	    Attention: If the correct shader program is not bound yet (should be done in itlBeforeRender()),
-	    the transform matrices must be sent again */
-	virtual void ItlRender();
+    /*! this method is called to render the sceneobject.
+        Attention: If the correct shader program is not bound yet (should be done in itlBeforeRender()),
+        the transform matrices must be sent again */
+    virtual void ItlRender();
 
-	/*! this method is called after rendering the sceneobject itself. Cleaning up can be done here */
-	virtual void ItlPostRender();
+    /*! this method is called after rendering the sceneobject itself. Cleaning up can be done here */
+    virtual void ItlPostRender();
     //@}
 public:
 
@@ -76,5 +78,7 @@ public:
     ///Destructor of the fbo, releases ressources
     ~RN_FBO();
 };
+
+}
 
 #endif

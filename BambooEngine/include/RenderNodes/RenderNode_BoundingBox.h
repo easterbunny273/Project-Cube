@@ -9,12 +9,14 @@
 
 #include "RenderNodes/IRenderNode.h"
 
+namespace BambooGraphics
+{
 //!  A SceneObject which renders a bounding sphere.
 /*!
   This SceneObject renders only a red sphere in wireframe mode, used for visualizing the bounding spheres.
 */
 
-class Bamboo::RN_BoundingBox : public Bamboo::IRenderNode
+class GraphicsCore::RN_BoundingBox : public GraphicsCore::IRenderNode
 {
 public:
     /*! \name Constructor / Destructor */
@@ -26,20 +28,20 @@ public:
 protected:
     /*! \name SceneObject Interface */
     //@{
-	/*! this method is called before the sceneobject itself gets rendered.
-	    shaders and things like that should be activated in this method */
-	virtual void ItlPreRender();
+    /*! this method is called before the sceneobject itself gets rendered.
+        shaders and things like that should be activated in this method */
+    virtual void ItlPreRender();
 
-	/*! this method is called to render the sceneobject.
-	    Attention: If the correct shader program is not bound yet (should be done in itlBeforeRender()),
-	    the transform matrices must be sent again */
-	virtual void ItlRender();
+    /*! this method is called to render the sceneobject.
+        Attention: If the correct shader program is not bound yet (should be done in itlBeforeRender()),
+        the transform matrices must be sent again */
+    virtual void ItlRender();
 
-	/*! this method is called after rendering the sceneobject itself. Cleaning up can be done here */
-	virtual void ItlPostRender();
+    /*! this method is called after rendering the sceneobject itself. Cleaning up can be done here */
+    virtual void ItlPostRender();
 
-	virtual void ItlPreRenderChildren() {};
-	virtual void ItlPostRenderChildren() {};
+    virtual void ItlPreRenderChildren() {};
+    virtual void ItlPostRenderChildren() {};
     //@}
 
 private:
@@ -51,5 +53,7 @@ private:
     int m_iIndexArraySize;		///< The size of the index array
     //@}
 };
+
+}
 
 #endif

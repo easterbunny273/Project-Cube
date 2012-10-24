@@ -16,6 +16,8 @@
 #include <glm/glm.hpp>
 #include "RenderNodes/IRenderNode.h"
 
+namespace BambooGraphics
+{
 //!  A SceneObject which draws a texture full screen.
 /*!
   This SceneObject is not a real SceneObject as an object in the scene,
@@ -23,21 +25,21 @@
   This is useful for applying post screen effects (rendering scene in a fbo, and drawing resulting color texture fullscreened with a given shader).
 */
 
-class Bamboo::RN_PostEffect : public Bamboo::IRenderNode
+class GraphicsCore::RN_PostEffect : public GraphicsCore::IRenderNode
 {
 public:
     /*! \name Constructors / Destructor */
     //@{
-	/// This constructor takes the name of shader to use, and the name of one or two textures to pass it on the shader
+    /// This constructor takes the name of shader to use, and the name of one or two textures to pass it on the shader
         RN_PostEffect(std::string sShaderToUse);
         ~RN_PostEffect();
     //@}
 
     /*! \name Public methods */
     //@{
-	void SetUniform(std::string sUniform, float fValue);
-	void SetUniform(std::string sUniform, glm::vec2 v2Value);
-	void SetUniform(std::string sUniform, glm::vec3 v3Value);
+    void SetUniform(std::string sUniform, float fValue);
+    void SetUniform(std::string sUniform, glm::vec2 v2Value);
+    void SetUniform(std::string sUniform, glm::vec3 v3Value);
 
         void SetTexture(std::string sUniformName, std::string sTextureName);
         void SetTexture(std::string sUniformName, GLuint nTextureID);
@@ -46,20 +48,20 @@ public:
 protected:
      /*! \name SceneObject Interface */
      //@{
-	 /*! this method is called before the sceneobject itself gets rendered.
-	     shaders and things like that should be activated in this method */
-	 virtual void ItlPreRender();
+     /*! this method is called before the sceneobject itself gets rendered.
+         shaders and things like that should be activated in this method */
+     virtual void ItlPreRender();
 
-	 /*! this method is called to render the sceneobject.
-	     Attention: If the correct shader program is not bound yet (should be done in itlBeforeRender()),
-	     the transform matrices must be sent again */
-	 virtual void ItlRender();
+     /*! this method is called to render the sceneobject.
+         Attention: If the correct shader program is not bound yet (should be done in itlBeforeRender()),
+         the transform matrices must be sent again */
+     virtual void ItlRender();
 
-	 /*! this method is called after rendering the sceneobject itself. Cleaning up can be done here */
-	 virtual void ItlPostRender();
+     /*! this method is called after rendering the sceneobject itself. Cleaning up can be done here */
+     virtual void ItlPostRender();
 
-	virtual void ItlPreRenderChildren() {};
-	virtual void ItlPostRenderChildren() {};
+    virtual void ItlPreRenderChildren() {};
+    virtual void ItlPostRenderChildren() {};
      //@}
 
 private:
@@ -87,5 +89,7 @@ private:
      //@}
 
 };
+
+}
 
 #endif

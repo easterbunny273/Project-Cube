@@ -13,12 +13,14 @@
 
 using namespace BambooLib;
 
+namespace BambooGraphics
+{
 GeometryData::TextureType tTextureTypes[4] = { GeometryData::TextureNames::ALBEDO,
                                                GeometryData::TextureNames::NORMAL,
                                                GeometryData::TextureNames::SPECULAR,
                                                GeometryData::TextureNames::DISPLACE };
 
-Bamboo::RN_Generic::RN_Generic(std::shared_ptr<GeometryData::GenericObject> spObject)
+GraphicsCore::RN_Generic::RN_Generic(std::shared_ptr<GeometryData::GenericObject> spObject)
     : m_pnVertexArrayObjects(NULL),
       m_pnVertexBufferObjects(NULL),
       m_pnIndexBufferObjects(NULL),
@@ -39,7 +41,7 @@ Bamboo::RN_Generic::RN_Generic(std::shared_ptr<GeometryData::GenericObject> spOb
     Logger::debug() << "RN_Generic created" << Logger::endl;
 }
 
-Bamboo::RN_Generic::~RN_Generic()
+GraphicsCore::RN_Generic::~RN_Generic()
 {
     ItlDeleteBuffers();
     ItlDeleteTextures();
@@ -47,13 +49,13 @@ Bamboo::RN_Generic::~RN_Generic()
     Logger::debug() << "RN_Generic destroyed" << Logger::endl;
 }
 
-void Bamboo::RN_Generic::SetEnvironmentMapping(bool bEnabled, GLuint nTextureID /* = 0*/)
+void GraphicsCore::RN_Generic::SetEnvironmentMapping(bool bEnabled, GLuint nTextureID /* = 0*/)
 {
   m_bUseEnvironmentMapping = bEnabled;
   m_nEnvironmentMap = nTextureID;
 }
 
-void Bamboo::RN_Generic::ItlRender()
+void GraphicsCore::RN_Generic::ItlRender()
 {
     TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
     assert (pTextureManager != NULL);
@@ -135,33 +137,33 @@ void Bamboo::RN_Generic::ItlRender()
 }
 
 
-void Bamboo::RN_Generic::ItlPreRender()
+void GraphicsCore::RN_Generic::ItlPreRender()
 {
 
 }
 
-void Bamboo::RN_Generic::ItlPostRender()
+void GraphicsCore::RN_Generic::ItlPostRender()
 {
 
 }
 
-void Bamboo::RN_Generic::ItlPreRenderChildren()
+void GraphicsCore::RN_Generic::ItlPreRenderChildren()
 {
 
 }
 
-void Bamboo::RN_Generic::ItlPostRenderChildren()
+void GraphicsCore::RN_Generic::ItlPostRenderChildren()
 {
 
 }
 
-bool Bamboo::RN_Generic::ItlTestSkipRendering()
+bool GraphicsCore::RN_Generic::ItlTestSkipRendering()
 {
 
     return false;
 }
 
-void Bamboo::RN_Generic::ItlPrepareGLBuffers()
+void GraphicsCore::RN_Generic::ItlPrepareGLBuffers()
 {
     // delete old buffers, if not NULL
     ItlDeleteBuffers();
@@ -251,7 +253,7 @@ void Bamboo::RN_Generic::ItlPrepareGLBuffers()
 
 }
 
-void Bamboo::RN_Generic::ItlDeleteBuffers()
+void GraphicsCore::RN_Generic::ItlDeleteBuffers()
 {
     if (m_pnVertexBufferObjects != NULL)
     {
@@ -279,14 +281,12 @@ void Bamboo::RN_Generic::ItlDeleteBuffers()
 
 }
 
-void Bamboo::RN_Generic::ItlPrepareVAO()
+void GraphicsCore::RN_Generic::ItlPrepareVAO()
 {
     ShaderManager *pShaderManager = ItlGetGraphicCore()->GetShaderManager();
     assert (pShaderManager != NULL);
 
-    pShaderManager->PushActiveShader();
-
-    pShaderManager->ActivateShader("deferred_pass_cm");
+    pShaderManager->PushActiveShader("deferred_pass_cm");
 
     // generate arrays
     glGenVertexArrays(m_nNumMeshes, m_pnVertexArrayObjects);
@@ -338,15 +338,17 @@ void Bamboo::RN_Generic::ItlPrepareVAO()
     pShaderManager->PopActiveShader();
 }
 
-void Bamboo::RN_Generic::ItlLoadShader()
+void GraphicsCore::RN_Generic::ItlLoadShader()
 {
     static bool bAlreadyLoaded = false;
 
     if (bAlreadyLoaded == false)
     {
-      ItlGetGraphicCore()->GetShaderManager()->AddShader("deferred_pass", new Shader("BambooEngine/shaders/deferred_pass.vert", "BambooEngine/shaders/deferred_pass.frag"));
-      ItlGetGraphicCore()->GetShaderManager()->AddShader("deferred_pass_cm", new Shader("BambooEngine/shaders/deferred_pass_cm.vert", "BambooEngine/shaders/deferred_pass_cm.geom", "BambooEngine/shaders/deferred_pass_cm.frag"));
+      //ItlGetGraphicCore()->GetShaderManager()->AddShader("deferred_pass", new ShaderManager::TShader("BambooEngine/shaders/deferred_pass.vert", "BambooEngine/shaders/deferred_pass.frag"));
+      //ItlGetGraphicCore()->GetShaderManager()->AddShader("deferred_pass_cm", new ShaderManager::TShader("BambooEngine/shaders/deferred_pass_cm.vert", "BambooEngine/shaders/deferred_pass_cm.geom", "BambooEngine/shaders/deferred_pass_cm.frag"));
 
+      ItlGetGraphicCore()->GetShaderManager()->CreateAndRegisterShader("deferred_pass", "BambooEngine/shaders/deferred_pass.vert", "BambooEngine/shaders/deferred_pass.frag");
+      ItlGetGraphicCore()->GetShaderManager()->CreateAndRegisterShader("deferred_pass_cm", "BambooEngine/shaders/deferred_pass_cm.vert", "BambooEngine/shaders/deferred_pass_cm.geom", "BambooEngine/shaders/deferred_pass_cm.frag");
       bAlreadyLoaded = true;
 
       GLenum error = glGetError();
@@ -416,7 +418,7 @@ void Bamboo::RN_Generic::ItlLoadShader()
     }
 }
 
-void Bamboo::RN_Generic::ItlPrepareTextures()
+void GraphicsCore::RN_Generic::ItlPrepareTextures()
 {
     TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
     assert (pTextureManager != NULL);
@@ -449,7 +451,7 @@ void Bamboo::RN_Generic::ItlPrepareTextures()
 
 }
 
-void Bamboo::RN_Generic::ItlDeleteTextures()
+void GraphicsCore::RN_Generic::ItlDeleteTextures()
 {
     TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
     assert (pTextureManager != NULL);
@@ -469,4 +471,6 @@ void Bamboo::RN_Generic::ItlDeleteTextures()
     assert (m_pnDisplaceTexture != NULL);
     delete[] m_pnDisplaceTexture;
     m_pnDisplaceTexture = NULL;
+}
+
 }

@@ -6,6 +6,8 @@
 #include "Camera.h"
 #include "AssimpWrapper.h"
 
+namespace BambooGraphics
+{
 std::vector<BambooLib::t_classID> DeferredNodeTranslator::LoadedModel_RuleObject::GetAcceptedNodeIDs() const
 {
   std::vector<BambooLib::t_classID> vAcceptedIDs;
@@ -29,11 +31,11 @@ void DeferredNodeTranslator::LoadedModel_RuleObject::Action()
       // add rendering nodes, if environment mapping is activated but not handled yet
       if (!m_spCubemapDeferredNode && m_spSemNode->GetEnvironmentMapping())
       {
-          m_spCubemapCamera = Bamboo::PerspectiveCamera::Create(90.0f, 1.0f, 0.001f, 100.0f, glm::vec3(), 0.0f, 0.0f);
+          m_spCubemapCamera = GraphicsCore::PerspectiveCamera::Create(90.0f, 1.0f, 0.001f, 100.0f, glm::vec3(), 0.0f, 0.0f);
 
-          m_spCubemapCameraNode = std::shared_ptr<Bamboo::RN_Camera> (new Bamboo::RN_Camera(m_spCubemapCamera.get()));
+          m_spCubemapCameraNode = std::shared_ptr<GraphicsCore::RN_Camera> (new GraphicsCore::RN_Camera(m_spCubemapCamera.get()));
 
-          m_spCubemapDeferredNode = std::shared_ptr<Bamboo::RN_Deferred> (new Bamboo::RN_Deferred(128, 128, true));
+          m_spCubemapDeferredNode = std::shared_ptr<GraphicsCore::RN_Deferred> (new GraphicsCore::RN_Deferred(128, 128, true));
 
           m_spCubemapCameraNode->AddChild(m_spCubemapDeferredNode);
 
@@ -74,7 +76,7 @@ void DeferredNodeTranslator::LoadedModel_RuleObject::Action()
   else
     {
       // create new node
-      m_spCorrespondingRenderingNode = std::shared_ptr<Bamboo::RN_Generic>(new Bamboo::RN_Generic(AssimpWrapper::LoadModel(m_spSemNode->GetFilename())));
+      m_spCorrespondingRenderingNode = std::shared_ptr<GraphicsCore::RN_Generic>(new GraphicsCore::RN_Generic(AssimpWrapper::LoadModel(m_spSemNode->GetFilename())));
       assert (m_spCorrespondingRenderingNode);
 
       m_pTranslator->m_vShadowCasterNodes.push_back(m_spCorrespondingRenderingNode);
@@ -100,4 +102,6 @@ DeferredNodeTranslator::IRuleObject *DeferredNodeTranslator::LoadedModel_RuleObj
 
 
   return pNewObject;
+}
+
 }

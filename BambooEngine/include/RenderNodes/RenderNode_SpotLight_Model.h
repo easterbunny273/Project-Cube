@@ -9,8 +9,9 @@
 
 #include "RenderNodes/IRenderNode.h"
 
-
-class Bamboo::RN_SpotLight_Model : public Bamboo::IRenderNode
+namespace BambooGraphics
+{
+class GraphicsCore::RN_SpotLight_Model : public GraphicsCore::IRenderNode
 {
 public:
     /*! \name Constructor / Destructor */
@@ -72,5 +73,7 @@ private:
     int m_iIndexArraySize;		///< The size of the index array
     //@}
 };
+
+}
 
 #endif

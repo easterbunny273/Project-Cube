@@ -16,8 +16,8 @@ public:
     TGLWidget(QWidget *parent = NULL);
     ~TGLWidget() {}
 
-    void SetInputEventListener(std::shared_ptr<Bamboo::IRenderTarget::IInputEventListener> spListener) { m_spInputEventListener = spListener; }
-    void UnsetInputEventListener(std::shared_ptr<Bamboo::IRenderTarget::IInputEventListener> spListener) { assert(m_spInputEventListener == spListener); m_spInputEventListener = NULL; }
+    void SetInputEventListener(std::shared_ptr<BambooGraphics::GraphicsCore::IRenderTarget::IInputEventListener> spListener) { m_spInputEventListener = spListener; }
+    void UnsetInputEventListener(std::shared_ptr<BambooGraphics::GraphicsCore::IRenderTarget::IInputEventListener> spListener) { assert(m_spInputEventListener == spListener); m_spInputEventListener = NULL; }
 
 protected:
     void mousePressEvent(QMouseEvent *event);
@@ -26,10 +26,12 @@ protected:
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
 
-    std::shared_ptr<Bamboo::IRenderTarget::IInputEventListener>            m_spInputEventListener;
+    std::shared_ptr<BambooGraphics::GraphicsCore::IRenderTarget::IInputEventListener>            m_spInputEventListener;
 };
 
-class Bamboo::QtWidgetWrapper : public IRenderTarget
+namespace BambooGraphics
+{
+class GraphicsCore::QtWidgetWrapper : public IRenderTarget
 {
 
 public:
@@ -82,6 +84,8 @@ private:
 
     //@}
 };
+
+}
 
 #endif // __GRAPHIC_QTWIDGETWRAPPER_HEADER
 

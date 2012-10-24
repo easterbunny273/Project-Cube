@@ -5,6 +5,8 @@
 #include "RenderNodes/RenderNode_Deferred.h"
 #include "Camera.h"
 
+namespace BambooGraphics
+{
 std::vector<BambooLib::t_classID> DeferredNodeTranslator::Camera_RuleObject::GetAcceptedNodeIDs() const
 {
   std::vector<BambooLib::t_classID> vAcceptedIDs;
@@ -21,13 +23,13 @@ void DeferredNodeTranslator::Camera_RuleObject::Action()
 
   if (!bRootAlreadyCreated)
   {
-      std::shared_ptr<Bamboo::ICamera> spCamera = m_spSemNode->GetCamera();
+      std::shared_ptr<GraphicsCore::ICamera> spCamera = m_spSemNode->GetCamera();
 
-      m_pTranslator->m_spRootNode = std::shared_ptr<Bamboo::IRenderNode>(new Bamboo::RN_Camera(spCamera.get()));
+      m_pTranslator->m_spRootNode = std::shared_ptr<GraphicsCore::IRenderNode>(new GraphicsCore::RN_Camera(spCamera.get()));
 
       m_pTranslator->m_spRootNode->SetInitialViewportInformation(1024,768);
 
-      std::shared_ptr<Bamboo::RN_Deferred> spDeferredNode(new Bamboo::RN_Deferred(1024,768, false));
+      std::shared_ptr<GraphicsCore::RN_Deferred> spDeferredNode(new GraphicsCore::RN_Deferred(1024,768, false));
 
       spDeferredNode->SetGraphicCore(m_pTranslator->m_pCore);
 
@@ -46,4 +48,6 @@ DeferredNodeTranslator::IRuleObject *DeferredNodeTranslator::Camera_RuleObject::
   pNewObject->m_pTranslator = pTranslator;
 
   return pNewObject;
+}
+
 }

@@ -5,7 +5,9 @@
 
 using namespace BambooLib;
 
-Bamboo::RN_CubeMap::RN_CubeMap(glm::vec3 vPosition, GLuint nResolution /* = 512*/)
+namespace BambooGraphics
+{
+GraphicsCore::RN_CubeMap::RN_CubeMap(glm::vec3 vPosition, GLuint nResolution /* = 512*/)
 {
   m_v3Position = vPosition;
   m_nResolution = nResolution;
@@ -13,12 +15,12 @@ Bamboo::RN_CubeMap::RN_CubeMap(glm::vec3 vPosition, GLuint nResolution /* = 512*
   ItlCreateFBO();
 }
 
-Bamboo::RN_CubeMap::~RN_CubeMap()
+GraphicsCore::RN_CubeMap::~RN_CubeMap()
 {
 
 }
 
-void Bamboo::RN_CubeMap::ItlCreateFBO()
+void GraphicsCore::RN_CubeMap::ItlCreateFBO()
 {
   TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
 
@@ -115,7 +117,7 @@ void Bamboo::RN_CubeMap::ItlCreateFBO()
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void Bamboo::RN_CubeMap::ItlPreRenderChildren()
+void GraphicsCore::RN_CubeMap::ItlPreRenderChildren()
 {
   //bind fbo
   glBindFramebuffer(GL_FRAMEBUFFER, m_nFBO);
@@ -134,7 +136,7 @@ void Bamboo::RN_CubeMap::ItlPreRenderChildren()
   ItlPushViewportInformation(m_nResolution, m_nResolution);
 }
 
-void Bamboo::RN_CubeMap::ItlPostRenderChildren()
+void GraphicsCore::RN_CubeMap::ItlPostRenderChildren()
 {
   //remove the fbo (THIS fbo) from the bound_fbos stack
   ItlPopFBO();
@@ -158,7 +160,9 @@ void Bamboo::RN_CubeMap::ItlPostRenderChildren()
   glViewport(0, 0, iOldWidth, iOldHeight);
 }
 
-void Bamboo::RN_CubeMap::ItlLoadRessources()
+void GraphicsCore::RN_CubeMap::ItlLoadRessources()
 {
+
+}
 
 }

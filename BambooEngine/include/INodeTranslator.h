@@ -15,6 +15,8 @@
 
 #include <memory>
 
+namespace BambooGraphics
+{
 /* A node translator generates pieces of render scene graph nodes or rather a
   rendering scene graph from a semantic scene graph, caches the results, and updates
   the necessary parts if some part in the application state has changed (due user input, for example).
@@ -27,15 +29,17 @@ class INodeTranslator
 public:
   virtual void Translate(std::shared_ptr<ISemanticSceneNode> spSemRoot) = 0;
 
-  std::shared_ptr<Bamboo::IRenderNode> GetRenderGraph() { return m_spRootNode; }
+  std::shared_ptr<GraphicsCore::IRenderNode> GetRenderGraph() { return m_spRootNode; }
 
   virtual ~INodeTranslator() {};
 
 protected:
-  INodeTranslator(Bamboo *pCore) { m_pCore = pCore; }
+  INodeTranslator(GraphicsCore *pCore) { m_pCore = pCore; }
 
-  std::shared_ptr<Bamboo::IRenderNode> m_spRootNode;
-  Bamboo *m_pCore;
+  std::shared_ptr<GraphicsCore::IRenderNode> m_spRootNode;
+  GraphicsCore *m_pCore;
 };
+
+}
 
 #endif

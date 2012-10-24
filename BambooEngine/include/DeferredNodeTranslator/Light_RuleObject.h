@@ -16,22 +16,26 @@
 #include <memory>
 #include "BambooLib/include/GeneralDefinitions.h"
 
-class DeferredNodeTranslator::Light_RuleObject : public DeferredNodeTranslator::IRuleObject
+namespace BambooGraphics
 {
-public:
-  virtual IRuleObject * CloneFor(std::shared_ptr<ISemanticSceneNode> spSemNode, DeferredNodeTranslator *pTranslator);
+    class DeferredNodeTranslator::Light_RuleObject : public DeferredNodeTranslator::IRuleObject
+    {
+    public:
+      virtual IRuleObject * CloneFor(std::shared_ptr<ISemanticSceneNode> spSemNode, DeferredNodeTranslator *pTranslator);
 
-  /// update the rendering scene graph pieces which correspond to the given semantic scene node
-  virtual void Action();
+      /// update the rendering scene graph pieces which correspond to the given semantic scene node
+      virtual void Action();
 
-  /// returns the list of accepted semantic scene nodes
-  std::vector<BambooLib::t_classID> GetAcceptedNodeIDs() const;
+      /// returns the list of accepted semantic scene nodes
+      std::vector<BambooLib::t_classID> GetAcceptedNodeIDs() const;
 
-private:
-  std::shared_ptr<Bamboo::RN_SpotLight>      m_spCorrespondingRenderingNode;
-  std::shared_ptr<Bamboo::IRenderNode>      m_spCorrespondingRenderingNode_Model;
+    private:
+      std::shared_ptr<GraphicsCore::RN_SpotLight>      m_spCorrespondingRenderingNode;
+      std::shared_ptr<GraphicsCore::IRenderNode>      m_spCorrespondingRenderingNode_Model;
 
-  std::shared_ptr<Light_SemSceneNode> m_spSemNode;
-};
+      std::shared_ptr<Light_SemSceneNode> m_spSemNode;
+    };
+
+}
 
 #endif

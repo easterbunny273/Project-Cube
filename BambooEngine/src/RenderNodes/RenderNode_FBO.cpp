@@ -6,6 +6,8 @@
 
 using namespace BambooLib;
 
+namespace BambooGraphics
+{
 /*! \brief Constructor for creating a fbo with a color texture attached
  *
  *  This constructor creates a SceneObject which encapsulates a fbo with an attached color texture.
@@ -17,7 +19,7 @@ using namespace BambooLib;
  *  \param bFloating16 If true, the generated color texture used 16bit floating precision.
  *  \param bMipMapped If true, mipmaps for the color texture are generated after each update of the color texture
  */
-Bamboo::RN_FBO::RN_FBO(int iWidth,
+GraphicsCore::RN_FBO::RN_FBO(int iWidth,
                                  int iHeight,
                                  const char *szColorTextureName,
                                  bool bFloating16, bool bMipMapped)
@@ -28,7 +30,7 @@ Bamboo::RN_FBO::RN_FBO(int iWidth,
       m_szDepthTextureName(0)
 {
     // get texture manager
-    Bamboo::TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
+    TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
     assert (pTextureManager != NULL);
 
     //write down which rendertargets we use
@@ -48,41 +50,41 @@ Bamboo::RN_FBO::RN_FBO(int iWidth,
     if (pTextureManager->IsTextureRegistered(szColorTextureName, m_nColorTexture) == false)
     {
 
-	//generate color texture (=create new opengl id)
-	glGenTextures(1, &m_nColorTexture);
+    //generate color texture (=create new opengl id)
+    glGenTextures(1, &m_nColorTexture);
 
-	//bind color texture
-	glBindTexture(GL_TEXTURE_2D, m_nColorTexture);
+    //bind color texture
+    glBindTexture(GL_TEXTURE_2D, m_nColorTexture);
 
-	//set texture format and data
-	if (bFloating16 == false)
-	    glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, m_iWidth, m_iHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-	else
-	    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_iWidth, m_iHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    //set texture format and data
+    if (bFloating16 == false)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, m_iWidth, m_iHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    else
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_iWidth, m_iHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
-	//set texture parameters
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    //set texture parameters
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	if (bMipMapped)
-	{
-	    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	    glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else
-	    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    if (bMipMapped)
+    {
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-	//unbind texture
-	glBindTexture(GL_TEXTURE_2D, 0);
+    //unbind texture
+    glBindTexture(GL_TEXTURE_2D, 0);
 
-	//register color texture in texture manager, for easy use by simple calling TextureManager::useTexture(szColorTextureName);
+    //register color texture in texture manager, for easy use by simple calling TextureManager::useTexture(szColorTextureName);
         pTextureManager->RegisterManualTexture(szColorTextureName, m_nColorTexture);
 
 //	bNewTexture = true;
     }
     else
-	Logger::debug() << "new fbo, already registered texture used (" << m_nColorTexture << ", " << szColorTextureName << Logger::endl;
+    Logger::debug() << "new fbo, already registered texture used (" << m_nColorTexture << ", " << szColorTextureName << Logger::endl;
 
     //release unit
     pTextureManager->ReleaseUnit(textureUnit);
@@ -116,7 +118,7 @@ Bamboo::RN_FBO::RN_FBO(int iWidth,
 
     //check if its complete
     if(status != GL_FRAMEBUFFER_COMPLETE)
-	Logger::fatal() << "Failed to initialize FBO" << Logger::endl;
+    Logger::fatal() << "Failed to initialize FBO" << Logger::endl;
     else
         Logger::debug() << "RN_FBO created, initialized FBO" << Logger::endl;
 
@@ -136,7 +138,7 @@ Bamboo::RN_FBO::RN_FBO(int iWidth,
  *  \param szDepthTextureName The texture name which is used to register the depth texture at the TextureManager
  *  \param bMipMapped If true, mipmaps for the color texture are generated after each update of the color texture
  */
-Bamboo::RN_FBO::RN_FBO(int iWidth,
+GraphicsCore::RN_FBO::RN_FBO(int iWidth,
                                  int iHeight,
                                  const char *szColorTextureName,
                                  const char *szDepthTextureName,
@@ -148,7 +150,7 @@ Bamboo::RN_FBO::RN_FBO(int iWidth,
       m_szDepthTextureName(szDepthTextureName)
 {
     // get texture manager
-    Bamboo::TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
+    TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
     assert (pTextureManager != NULL);
 
     //write down which rendertargets we use
@@ -182,11 +184,11 @@ Bamboo::RN_FBO::RN_FBO(int iWidth,
     //if mipmapping is activated, set filter to mipmap and generate mipmaps
     if (bMipMapped)
     {
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glGenerateMipmap(GL_TEXTURE_2D);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glGenerateMipmap(GL_TEXTURE_2D);
     }
     else
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
     //generate depth texture
     glGenTextures(1, &m_nDepthTexture);
@@ -225,7 +227,7 @@ Bamboo::RN_FBO::RN_FBO(int iWidth,
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
     if(status != GL_FRAMEBUFFER_COMPLETE)
-	Logger::fatal() << "Failed to initialize FBO" << Logger::endl;
+    Logger::fatal() << "Failed to initialize FBO" << Logger::endl;
     else
         Logger::debug() << "RN_FBO created, initialized FBO" << Logger::endl;
 
@@ -236,20 +238,20 @@ Bamboo::RN_FBO::RN_FBO(int iWidth,
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-Bamboo::RN_FBO::~RN_FBO()
+GraphicsCore::RN_FBO::~RN_FBO()
 {
 #pragma warn "todo: correct this"
     //delete color texture, if used
     /*if (m_bColorTexture)
-	glDeleteTextures(1, &m_nColorTexture);*/
+    glDeleteTextures(1, &m_nColorTexture);*/
 
     //delete depth texture, if used
     if (m_bDepthTexture)
-	glDeleteTextures(1, &m_nDepthTexture);
+    glDeleteTextures(1, &m_nDepthTexture);
 
     //delete depth renderbuffer, if used
     if (m_bDepthRenderbuffer != -1)
-	glDeleteRenderbuffers(1, &m_nDepthRenderbuffer);
+    glDeleteRenderbuffers(1, &m_nDepthRenderbuffer);
 
     //finally, delete the used fbo
     glDeleteFramebuffers(1, &m_nFramebuffer);
@@ -261,7 +263,7 @@ Bamboo::RN_FBO::~RN_FBO()
  *  This method is called internally BEFORE rendering the children,
  *  and binds and clears the fbo as needed.
  */
-void Bamboo::RN_FBO::ItlPreRenderChildren()
+void GraphicsCore::RN_FBO::ItlPreRenderChildren()
 {
     //bind fbo
     glBindFramebuffer(GL_FRAMEBUFFER, m_nFramebuffer);
@@ -284,18 +286,18 @@ void Bamboo::RN_FBO::ItlPreRenderChildren()
  *  This method is called internally AFTER rendering the children,
  *  and unbinds the fbo.
  */
-void Bamboo::RN_FBO::ItlPostRenderChildren()
+void GraphicsCore::RN_FBO::ItlPostRenderChildren()
 {
 
     //if mipmapping is activated, update mipmaps
     if (m_bMipMapped)
     {
         // get texture manager
-        Bamboo::TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
+        TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
         assert (pTextureManager != NULL);
 
         pTextureManager->UseTexture(m_szColorTextureName);
-	glGenerateMipmap(GL_TEXTURE_2D);
+    glGenerateMipmap(GL_TEXTURE_2D);
         pTextureManager->UnuseTexture(m_szColorTextureName);
     }
 
@@ -308,10 +310,10 @@ void Bamboo::RN_FBO::ItlPostRenderChildren()
     if (ItlIsNestedFBO())
     {
         GLuint previous_bound = ItlGetTopFBO();
-	glBindFramebuffer(GL_FRAMEBUFFER, previous_bound);
+    glBindFramebuffer(GL_FRAMEBUFFER, previous_bound);
     }
     else
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     int iOldHeight, iOldWidth;
 
@@ -321,17 +323,19 @@ void Bamboo::RN_FBO::ItlPostRenderChildren()
     glViewport(0, 0, iOldWidth, iOldHeight);
 }
 
-void Bamboo::RN_FBO::ItlPreRender()
+void GraphicsCore::RN_FBO::ItlPreRender()
 {
 
 }
 
-void Bamboo::RN_FBO::ItlRender()
+void GraphicsCore::RN_FBO::ItlRender()
 {
 
 }
 
-void Bamboo::RN_FBO::ItlPostRender()
+void GraphicsCore::RN_FBO::ItlPostRender()
 {
+
+}
 
 }

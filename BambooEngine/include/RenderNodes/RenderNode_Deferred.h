@@ -15,7 +15,8 @@
 #include <vector>
 #include <memory>
 
-
+namespace BambooGraphics
+{
 //!  A RenderNode which does deferred lighting.
 /*!
     This RenderNode is not a real SceneObject as an object in the scene,
@@ -24,7 +25,7 @@
     and does the lighting based on these created textures
 */
 
-class Bamboo::RN_Deferred : public Bamboo::IRenderNode
+class GraphicsCore::RN_Deferred : public GraphicsCore::IRenderNode
 {
 public:
     /*! \name Constructors / Destructor */
@@ -40,7 +41,7 @@ public:
 
     /*! \name xy */
     //@{
-        void AddSpotLight(std::shared_ptr<Bamboo::RN_SpotLight> spSpotlight);
+        void AddSpotLight(std::shared_ptr<GraphicsCore::RN_SpotLight> spSpotlight);
 
         GLuint GetAlbedoTexture() { return m_nAlbedoDrawBuffer; }
     //@}
@@ -99,8 +100,10 @@ private:
 
         bool    m_bLayeredFBO;
 
-        std::vector<std::shared_ptr<Bamboo::RN_SpotLight> > m_vspSpotLights;
+        std::vector<std::shared_ptr<GraphicsCore::RN_SpotLight> > m_vspSpotLights;
     //@}
 };
+
+}
 
 #endif

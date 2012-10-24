@@ -22,9 +22,11 @@
 using namespace std;
 using namespace BambooLib;
 
+namespace BambooGraphics
+{
 const double PI = 3.141516;
 
-Bamboo::RN_BoundingBox::RN_BoundingBox(float fMinX, float fMaxX, float fMinY, float fMaxY, float fMinZ, float fMaxZ)
+GraphicsCore::RN_BoundingBox::RN_BoundingBox(float fMinX, float fMaxX, float fMinY, float fMaxY, float fMinZ, float fMaxZ)
     : IRenderNode()
 {
     GLdouble *vertexArray;
@@ -130,36 +132,36 @@ Bamboo::RN_BoundingBox::RN_BoundingBox(float fMinX, float fMaxX, float fMinY, fl
     Logger::debug() << "SceneObject_BoundingBox created" << Logger::endl;
 }
 
-Bamboo::RN_BoundingBox::~RN_BoundingBox()
+GraphicsCore::RN_BoundingBox::~RN_BoundingBox()
 {
 
 }
 
-void Bamboo::RN_BoundingBox::ItlPreRender()
+void GraphicsCore::RN_BoundingBox::ItlPreRender()
 {
   /*  glBindVertexArray(m_nVertexArrayObject);
     glBindBuffer(GL_ARRAY_BUFFER, m_nVertexBufferObject);
 
     ShaderManager::instance()->PushActiveShader();
     if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_SHADOWMAP)
-	ShaderManager::instance()->ActivateShader("bounding_shader");
+    ShaderManager::instance()->ActivateShader("bounding_shader");
     else
         ShaderManager::instance()->ActivateShader("bounding_shader");*/
 }
 
-void Bamboo::RN_BoundingBox::ItlPostRender()
+void GraphicsCore::RN_BoundingBox::ItlPostRender()
 {
   //  ShaderManager::instance()->PopActiveShader();
 }
 
-void Bamboo::RN_BoundingBox::ItlRender()
+void GraphicsCore::RN_BoundingBox::ItlRender()
 {
   /*  const GLint l_in_Position(ShaderManager::instance()->GetAttribute("in_Position"));
 
     if (l_in_Position != -1)
     {
-	glVertexAttribPointer(l_in_Position, 3, GL_DOUBLE, GL_FALSE, 3 * sizeof(GLdouble), NULL);
-	glEnableVertexAttribArray(l_in_Position);
+    glVertexAttribPointer(l_in_Position, 3, GL_DOUBLE, GL_FALSE, 3 * sizeof(GLdouble), NULL);
+    glEnableVertexAttribArray(l_in_Position);
     }
 
     //float fPreviousLineWidth;
@@ -172,4 +174,6 @@ void Bamboo::RN_BoundingBox::ItlRender()
   //  glDrawElements(GL_LINES, m_iIndexArraySize, GL_UNSIGNED_INT, NULL);
 
     //glLineWidth(fPreviousLineWidth);*/
+}
+
 }

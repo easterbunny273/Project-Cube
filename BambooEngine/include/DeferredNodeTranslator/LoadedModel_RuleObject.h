@@ -16,6 +16,8 @@
 #include <memory>
 #include "BambooLib/include/IIdentifyable.h"
 
+namespace BambooGraphics
+{
 class DeferredNodeTranslator::LoadedModel_RuleObject : public DeferredNodeTranslator::IRuleObject
 {
 public:
@@ -28,14 +30,16 @@ public:
   std::vector<BambooLib::t_classID> GetAcceptedNodeIDs() const;
 
 private:
-  std::shared_ptr<Bamboo::RN_Generic>      m_spCorrespondingRenderingNode;
+  std::shared_ptr<GraphicsCore::RN_Generic>      m_spCorrespondingRenderingNode;
   std::shared_ptr<LoadedModel_SemSceneNode> m_spSemNode;
 
-  std::shared_ptr<Bamboo::ICamera>      m_spCubemapCamera;
-  std::shared_ptr<Bamboo::RN_Camera>    m_spCubemapCameraNode;
-  std::shared_ptr<Bamboo::RN_Deferred>  m_spCubemapDeferredNode;
+  std::shared_ptr<GraphicsCore::ICamera>      m_spCubemapCamera;
+  std::shared_ptr<GraphicsCore::RN_Camera>    m_spCubemapCameraNode;
+  std::shared_ptr<GraphicsCore::RN_Deferred>  m_spCubemapDeferredNode;
 
   bool  m_bEnvironmentalNodesCreated;
 };
+
+}
 
 #endif

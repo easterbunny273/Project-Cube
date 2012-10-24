@@ -3,82 +3,127 @@
  * written by: christian moellinger <ch.moellinger@gmail.com>
  * 10/2010, Project "BambooIsland"
  * 03/2011, Project "Free Pool"
+ * 10/2012, Project "BambooGraphics"
  */
 
 #pragma once
 
-#ifndef __realtime_lu_shadermanager_class
-#define __realtime_lu_shadermanager_class
+#ifndef __BAMBOOGRAPHICS_SHADERMANAGER_H
+#define __BAMBOOGRAPHICS_SHADERMANAGER_H
 
 #include <vector>
 #include <string>
 #include <stack>
 #include "common_gl.h"
 #include "Graphic.h"
-#include "Shader.h"
 
-//!  A class which handles many Shader classes
-/*!
-  This class supports handling of many shader classes. It provides
-  methods for nested activating of shaders (push the current Shader, activate another and pop (reactivate) the previous one).
-
-  Furthermore, it provides methods to lock the active shader (all activateShader(...) calls are ignored),
-  which can be used for things like enforcing a simple shader program when rendering the shadowmap or reflected objects.
-*/
-
-class Bamboo::ShaderManager
+namespace BambooGraphics
 {
-    friend class Bamboo;
+    //!  A class which handles many Shader classes
+    /*!
+      This class supports handling of many shader classes. It provides
+      methods for nested activating of shaders (push the current Shader, activate another and pop (reactivate) the previous one).
 
-public:
-    /*! \name Singelton getter */
-    //@{
-        //static ShaderManager *instance();
-    //@}
+      Furthermore, it provides methods to lock the active shader (all activateShader(...) calls are ignored),
+      which can be used for things like enforcing a simple shader program when rendering the shadowmap or reflected objects.
+    */
 
-    /*! \name Public methods */
-    //@{
-	/// adds a shader program to the manager, from now on the shader can be activated with activateShader(name),
-	/// and the Shader instance is destroyed when the ShaderManager gets destroyed.  \sa activateShader()
-        void AddShader(std::string sName, Shader *pShader);
+    class ShaderManager
+    {
+    public:
+        /*! \name Constructor / Destructor */
+        //@{
+        /// Constructor, private because the class is designed as a Singelton
+        ShaderManager();
 
-	/// activates the given shader if possible, else the method prints an error message to the Logger. \sa Logger
-        bool ActivateShader(std::string sName);
+        /// Destructor, destroys all used shaders programs
+        ~ShaderManager();
+        //@}
 
-	/// pushs the active shader on the stack
-        void PushActiveShader();
+        /*! \name Public methods */
+        //@{
+            /// Creates a shader program containing a vertex shader and a fragment shader, returns true if successful.
+            bool CreateAndRegisterShader(const std::string sName,
+                                         const std::string sVertexShaderFilename,
+                                         const std::string sFragmentShaderFilename);
 
-	/// pops the top shader from the stack and activates it
-        void PopActiveShader();
-    //@}
+            /// Creates a shader program containing a vertex shader, a geometry shader
+            /// and a fragment shader, returns true if successful.
+            bool CreateAndRegisterShader(const std::string sName,
+                                         const std::string sVertexShaderFilename,
+                                         const std::string sGeometryShaderFilename,
+                                         const std::string sFragmentShaderFilename);
 
-    /*! \name Public attributes */
-    //@{
-	/// returns the location of an uniform variable within the current active shader program
-        GLint GetUniform(std::string sUniformName);
+            /// Creates a shader program containing a vertex shader, tesselation shaders
+            /// and a fragment shader, returns true if successful
+            bool CreateAndRegisterShader(const std::string sName,
+                                         const std::string sVertexShaderFilename,
+                                         const std::string sTesselationControlShaderFilename,
+                                         const std::string sTesselationEvaluationShaderFilename,
+                                         const std::string sFragmentShaderFilename);
 
-	/// returns the location of an attribute variable within the current active shader program
-        GLint GetAttribute(std::string sAttributeName);
-    //@}
+            /// Creates a shader program containing a vertex shader, tesselation shaders,
+            /// a geometry shader and a fragment shader, returns true if successful
+            bool CreateAndRegisterShader(const std::string sName,
+                                         const std::string sVertexShaderFilename,
+                                         const std::string sTesselationControlShaderFilename,
+                                         const std::string sTesselationEvaluationShaderFilename,
+                                         const std::string sGeometryShaderFilename,
+                                         const std::string sFragmentShaderFilename);
 
-private:
-    /*! \name Constructor / Destructor */
-    //@{
-	/// Constructor, private because the class is designed as a Singelton
-	ShaderManager();
+            /// Activates the given shader and pushes it on the stack
+            bool PushActiveShader(std::string sName);
 
-	/// Destructor, destroys all used shaders programs
-	~ShaderManager();
-    //@}
+            /// Pops the top shader from the stack and activates the new top
+            void PopActiveShader();
+        //@}
 
-    /*! \name Private members */
-    //@{
-	unsigned int			m_nCurrentActiveShaderProgram;	    ///< The id of the currently active shader
+        /*! \name Public attributes */
+        //@{
+        /// returns the location of an uniform variable within the current active shader program
+            GLint GetUniform(std::string sUniformName);
 
-	std::vector<Shader *>		m_vpShaders;			///< the shader instances
-	std::vector<std::string>	m_vsShaderNames;		///< the name for the shader instances
-	std::stack<unsigned int>	m_vActiveShaderStack;		///< the stack for nested activating, push/pop
-    //@}
+        /// returns the location of an attribute variable within the current active shader program
+            GLint GetAttribute(std::string sAttributeName);
+        //@}
+
+    private:
+        /*! \name Internal types */
+        //@{
+            struct TItlShader
+            {
+                GLuint                          nGLShaderName;
+                std::vector<GLuint>             vCompiledShaderObjects;
+                std::map<std::string, GLint>    mCachedUniformLocations;
+                std::map<std::string, GLint>    mCachedAttributeLocations;
+
+                TItlShader(GLuint _nGLProgram, std::vector<GLuint> _vGLShaders) : nGLShaderName(_nGLProgram), vCompiledShaderObjects(_vGLShaders) {}
+            };
+
+        //@}
+
+        /*! \name Internal helper methods */
+        //@{
+            /// adds a new shader (vertex/geometry/fragment/tesselation control/tesselation evaluate) from a file to the shader program
+            void ItlAddShader(GLuint nShaderProgram, GLenum tShaderType, const char *szFilename);
+
+            bool ItlLoadSourceFromFile(std::string sFilename, std::vector<char> &rvcSource);
+
+            bool ItlLoadAndCompileShader(GLenum eShader, const std::string sFilename, GLuint &rnCreatedShaderObject);
+
+            bool ItlLinkShaderProgram(std::vector<GLuint> vShaders, GLuint &rnResultingShaderProgram);
+
+            /// prints the messages of the glsl compiler
+            void ItlPrintShaderLog(GLuint nGLShaderOrShaderProgram);
+        //@}
+
+        /*! \name Private members */
+        //@{
+        std::map<std::string, TItlShader *> m_mpShaders;
+
+        std::stack<TItlShader *>	m_vpActiveShaderStack;		///< the stack for nested activating, push/pop
+        //@}
+    };
 };
 
-#endif
+#endif //__BAMBOOGRAPHICS_SHADERMANAGER_H

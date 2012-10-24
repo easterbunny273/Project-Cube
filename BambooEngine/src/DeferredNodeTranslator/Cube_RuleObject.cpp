@@ -2,6 +2,8 @@
 #include "SemanticSceneNodes/Cube_SemSceneNode.h"
 #include "RenderNodes/RenderNode_Generic.h"
 
+namespace BambooGraphics
+{
 std::vector<BambooLib::t_classID> DeferredNodeTranslator::Cube_RuleObject::GetAcceptedNodeIDs() const
 {
   std::vector<BambooLib::t_classID> vAcceptedIDs;
@@ -28,7 +30,7 @@ void DeferredNodeTranslator::Cube_RuleObject::Action()
       std::shared_ptr<GeometryData::GenericObject> spGenericObject = pCube->GenerateGenericObject();
 
       // create new node
-      m_spCorrespondingRenderingNode = std::shared_ptr<Bamboo::RN_Generic>(new Bamboo::RN_Generic(spGenericObject));
+      m_spCorrespondingRenderingNode = std::shared_ptr<GraphicsCore::RN_Generic>(new GraphicsCore::RN_Generic(spGenericObject));
       assert (m_spCorrespondingRenderingNode);
 
       m_pTranslator->m_vShadowCasterNodes.push_back(m_spCorrespondingRenderingNode);
@@ -50,4 +52,6 @@ DeferredNodeTranslator::IRuleObject *DeferredNodeTranslator::Cube_RuleObject::Cl
   pNewObject->m_spSemNode     = std::dynamic_pointer_cast<Cube_SemSceneNode>(spSemNode);
 
   return pNewObject;
+}
+
 }

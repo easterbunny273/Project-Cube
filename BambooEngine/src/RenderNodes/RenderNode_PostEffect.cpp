@@ -13,7 +13,9 @@
 
 using namespace BambooLib;
 
-Bamboo::RN_PostEffect::RN_PostEffect(std::string sShaderToUse)
+namespace BambooGraphics
+{
+GraphicsCore::RN_PostEffect::RN_PostEffect(std::string sShaderToUse)
     : m_sShaderName(sShaderToUse)
 {
     const GLdouble vertices3f[]= {
@@ -55,24 +57,23 @@ Bamboo::RN_PostEffect::RN_PostEffect(std::string sShaderToUse)
     Logger::debug() << "RN_PostEffect created" << Logger::endl;
 }
 
-Bamboo::RN_PostEffect::~RN_PostEffect()
+GraphicsCore::RN_PostEffect::~RN_PostEffect()
 {
   Logger::debug() << "RN_PostEffect destroyed" << Logger::endl;
 }
 
-void Bamboo::RN_PostEffect::ItlPreRender()
+void GraphicsCore::RN_PostEffect::ItlPreRender()
 {
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, this->buffer_vertices3f);
 
-    ItlGetGraphicCore()->GetShaderManager()->PushActiveShader();
-    ItlGetGraphicCore()->GetShaderManager()->ActivateShader(m_sShaderName);
+    ItlGetGraphicCore()->GetShaderManager()->PushActiveShader(m_sShaderName);
 }
 
-void Bamboo::RN_PostEffect::ItlRender()
+void GraphicsCore::RN_PostEffect::ItlRender()
 {
     // get texture manager
-    Bamboo::TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
+    TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
     assert (pTextureManager != NULL);
 
     std::vector <GLuint> vManualLockedUnits;
@@ -128,11 +129,11 @@ void Bamboo::RN_PostEffect::ItlRender()
     {
         GLint iLocation = ItlGetGraphicCore()->GetShaderManager()->GetUniform(iter->first);
 
-	std::string sDebug = iter->first;
+    std::string sDebug = iter->first;
 
-	assert (iLocation != -1);
+    assert (iLocation != -1);
 
-	if (iLocation != -1)
+    if (iLocation != -1)
             glUniform1f(ItlGetGraphicCore()->GetShaderManager()->GetUniform(iter->first), iter->second);
     }
 
@@ -140,11 +141,11 @@ void Bamboo::RN_PostEffect::ItlRender()
     {
         GLint iLocation = ItlGetGraphicCore()->GetShaderManager()->GetUniform(iter->first);
 
-	std::string sDebug = iter->first;
+    std::string sDebug = iter->first;
 
-	assert (iLocation != -1);
+    assert (iLocation != -1);
 
-	if (iLocation != -1)
+    if (iLocation != -1)
             glUniform2f(ItlGetGraphicCore()->GetShaderManager()->GetUniform(iter->first), iter->second.x, iter->second.y);
     }
 
@@ -152,11 +153,11 @@ void Bamboo::RN_PostEffect::ItlRender()
     {
         GLint iLocation = ItlGetGraphicCore()->GetShaderManager()->GetUniform(iter->first);
 
-	std::string sDebug = iter->first;
+    std::string sDebug = iter->first;
 
-	assert (iLocation != -1);
+    assert (iLocation != -1);
 
-	if (iLocation != -1)
+    if (iLocation != -1)
             glUniform3f(ItlGetGraphicCore()->GetShaderManager()->GetUniform(iter->first), iter->second.x, iter->second.y, iter->second.z);
     }
 
@@ -179,18 +180,17 @@ void Bamboo::RN_PostEffect::ItlRender()
     }
 }
 
-void Bamboo::RN_PostEffect::ItlPostRender()
+void GraphicsCore::RN_PostEffect::ItlPostRender()
 {
   ItlGetGraphicCore()->GetShaderManager()->PopActiveShader();
 }
 
-void Bamboo::RN_PostEffect::ItlPrepareVAO()
+void GraphicsCore::RN_PostEffect::ItlPrepareVAO()
 {
   glBindVertexArray(vao);
   glBindBuffer(GL_ARRAY_BUFFER, this->buffer_vertices3f);
 
-  ItlGetGraphicCore()->GetShaderManager()->PushActiveShader();
-  ItlGetGraphicCore()->GetShaderManager()->ActivateShader(m_sShaderName);
+  ItlGetGraphicCore()->GetShaderManager()->PushActiveShader(m_sShaderName);
 
   const GLint l_in_Position(ItlGetGraphicCore()->GetShaderManager()->GetAttribute("in_Position"));
   const GLint l_texcoords(ItlGetGraphicCore()->GetShaderManager()->GetAttribute("in_Texcoord"));
@@ -204,28 +204,30 @@ void Bamboo::RN_PostEffect::ItlPrepareVAO()
   ItlGetGraphicCore()->GetShaderManager()->PopActiveShader();
 }
 
-void Bamboo::RN_PostEffect::SetUniform(std::string sUniform, float fValue)
+void GraphicsCore::RN_PostEffect::SetUniform(std::string sUniform, float fValue)
 {
     m_mUniforms_Floats[sUniform] = fValue;
 }
 
-void Bamboo::RN_PostEffect::SetUniform(std::string sUniform, glm::vec2 v2Vector)
+void GraphicsCore::RN_PostEffect::SetUniform(std::string sUniform, glm::vec2 v2Vector)
 {
     m_mUniforms_Vec2[sUniform] = v2Vector;
 }
 
-void Bamboo::RN_PostEffect::SetUniform(std::string sUniform, glm::vec3 v3Vector)
+void GraphicsCore::RN_PostEffect::SetUniform(std::string sUniform, glm::vec3 v3Vector)
 {
     m_mUniforms_Vec3[sUniform] = v3Vector;
 }
 
-void Bamboo::RN_PostEffect::SetTexture(std::string sUniformName, std::string sTextureName)
+void GraphicsCore::RN_PostEffect::SetTexture(std::string sUniformName, std::string sTextureName)
 {
     m_mTextures[sUniformName] = sTextureName;
 }
 
-void Bamboo::RN_PostEffect::SetTexture(std::string sUniformName, GLuint nTextureID)
+void GraphicsCore::RN_PostEffect::SetTexture(std::string sUniformName, GLuint nTextureID)
 {
     m_mTexturesDirect[sUniformName] = nTextureID;
 }
 
+
+}

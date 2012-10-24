@@ -8,11 +8,13 @@
 
 using namespace BambooLib;
 
+namespace BambooGraphics
+{
 #define NEARPLANE 0.01f
 #define FARPLANE 0.05f
 #define SHADOWMAP_RESOLUTION 256.0f
 
-Bamboo::RN_SpotLight_Model::RN_SpotLight_Model(glm::vec3 vPosition,
+GraphicsCore::RN_SpotLight_Model::RN_SpotLight_Model(glm::vec3 vPosition,
                                                glm::vec3 vLookDirection,
                                                float fFOV,
                                                glm::vec3 vLightColor)
@@ -33,12 +35,12 @@ Bamboo::RN_SpotLight_Model::RN_SpotLight_Model(glm::vec3 vPosition,
     Logger::debug() << "RN_SpotLight_Model created" << Logger::endl;
 }
 
-Bamboo::RN_SpotLight_Model::~RN_SpotLight_Model()
+GraphicsCore::RN_SpotLight_Model::~RN_SpotLight_Model()
 {
   Logger::debug() << "RN_SpotLight_Model destroyed" << Logger::endl;
 }
 
-void Bamboo::RN_SpotLight_Model::ItlCreateVBO()
+void GraphicsCore::RN_SpotLight_Model::ItlCreateVBO()
 {
     GLdouble *vertexArray;
     GLuint *indexArray;
@@ -155,23 +157,22 @@ void Bamboo::RN_SpotLight_Model::ItlCreateVBO()
         Logger::error() << "glGetError: " << TranslateGLerror(error) << Logger::endl;
 }
 
-void Bamboo::RN_SpotLight_Model::ItlPreRender()
+void GraphicsCore::RN_SpotLight_Model::ItlPreRender()
 {
-    ItlGetGraphicCore()->GetShaderManager()->PushActiveShader();
-    ItlGetGraphicCore()->GetShaderManager()->ActivateShader("camera-debug2");
+    ItlGetGraphicCore()->GetShaderManager()->PushActiveShader("camera-debug2");
 }
 
-void Bamboo::RN_SpotLight_Model::ItlPostRender()
+void GraphicsCore::RN_SpotLight_Model::ItlPostRender()
 {
     ItlGetGraphicCore()->GetShaderManager()->PopActiveShader();
 }
 
-void Bamboo::RN_SpotLight_Model::ItlLoadRessources()
+void GraphicsCore::RN_SpotLight_Model::ItlLoadRessources()
 {
 
 }
 
-void Bamboo::RN_SpotLight_Model::ItlRender()
+void GraphicsCore::RN_SpotLight_Model::ItlRender()
 {
     ShaderManager *pShaderManager = ItlGetGraphicCore()->GetShaderManager();
 
@@ -207,14 +208,13 @@ void Bamboo::RN_SpotLight_Model::ItlRender()
 }
 
 
-void Bamboo::RN_SpotLight_Model::ItlPrepareVAO()
+void GraphicsCore::RN_SpotLight_Model::ItlPrepareVAO()
 {
   // get shaer manager
   ShaderManager *pShaderManager = ItlGetGraphicCore()->GetShaderManager();
 
   // set "our" shader
-  pShaderManager->PushActiveShader();
-  pShaderManager->ActivateShader("light-pass");
+  pShaderManager->PushActiveShader("light-pass");
 
   // get memory position of attribute
   const GLint l_in_Position(pShaderManager->GetAttribute("in_Position"));
@@ -237,13 +237,15 @@ void Bamboo::RN_SpotLight_Model::ItlPrepareVAO()
   pShaderManager->PopActiveShader();
 }
 
-void Bamboo::RN_SpotLight_Model::ItlPreRenderChildren()
+void GraphicsCore::RN_SpotLight_Model::ItlPreRenderChildren()
 {
 
 }
 
-void Bamboo::RN_SpotLight_Model::ItlPostRenderChildren()
+void GraphicsCore::RN_SpotLight_Model::ItlPostRenderChildren()
 {
 
+
+}
 
 }

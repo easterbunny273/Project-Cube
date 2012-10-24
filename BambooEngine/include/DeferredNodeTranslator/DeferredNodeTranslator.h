@@ -16,6 +16,8 @@
 
 #include <memory>
 
+namespace BambooGraphics
+{
 /* A node translator generates pieces of render scene graph nodes or rather a
   rendering scene graph from a semantic scene graph, caches the results, and updates
   the necessary parts if some part in the application state has changed (due user input, for example).
@@ -58,7 +60,7 @@ public:
 
   /*! \name Construction / Destruction */
   //@{
-      DeferredNodeTranslator(Bamboo *pCore);
+      DeferredNodeTranslator(GraphicsCore *pCore);
       ~DeferredNodeTranslator();
   //@}
 
@@ -88,10 +90,12 @@ private:
 
   std::map<BambooLib::t_classID, std::shared_ptr<IRuleObject> > m_mRegisteredRuleObjects;
 
-  std::vector<std::shared_ptr<Bamboo::IRenderNode> > m_vLightNodes;
-  std::vector<std::shared_ptr<Bamboo::IRenderNode> > m_vShadowCasterNodes;
+  std::vector<std::shared_ptr<GraphicsCore::IRenderNode> > m_vLightNodes;
+  std::vector<std::shared_ptr<GraphicsCore::IRenderNode> > m_vShadowCasterNodes;
 
-  std::shared_ptr<Bamboo::RN_Deferred>    m_spDeferredNode;
+  std::shared_ptr<GraphicsCore::RN_Deferred>    m_spDeferredNode;
 };
+
+}
 
 #endif

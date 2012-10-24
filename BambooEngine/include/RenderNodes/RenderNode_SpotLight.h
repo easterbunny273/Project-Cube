@@ -9,8 +9,9 @@
 
 #include "RenderNodes/IRenderNode.h"
 
-
-class Bamboo::RN_SpotLight : public Bamboo::IRenderNode
+namespace BambooGraphics
+{
+class GraphicsCore::RN_SpotLight : public GraphicsCore::IRenderNode
 {
 public:
     /*! \name Constructor / Destructor */
@@ -101,5 +102,7 @@ private:
     //@}
 };
 
+
+}
 #endif
 

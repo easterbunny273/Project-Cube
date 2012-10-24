@@ -9,7 +9,10 @@ using namespace BambooLib;
 
 extern bool bUseCamera1;
 
-Bamboo::RN_Camera::RN_Camera(Bamboo::ICamera * pCamera, bool bSetMatrices)
+namespace BambooGraphics
+{
+
+GraphicsCore::RN_Camera::RN_Camera(GraphicsCore::ICamera * pCamera, bool bSetMatrices)
     : m_pCamera(pCamera), m_bSetMatrices(bSetMatrices)
 {
     GLdouble *vertexArray;
@@ -115,45 +118,45 @@ Bamboo::RN_Camera::RN_Camera(Bamboo::ICamera * pCamera, bool bSetMatrices)
     Logger::debug() << "RN_Camera created" << Logger::endl;
 }
 
-Bamboo::RN_Camera::~RN_Camera()
+GraphicsCore::RN_Camera::~RN_Camera()
 {
   Logger::debug() << "RN_Camera destroyed" << Logger::endl;
 }
 
-void Bamboo::RN_Camera::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderInfo)
+void GraphicsCore::RN_Camera::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderInfo)
 {
     //store old matrices
     if (m_bSetMatrices)// || !bUseCamera1)
     {
-	glm::mat4 SavedProjectionMatrix = pCurrentRenderInfo->ProjectionMatrix;
-	glm::mat4 SavedViewMatrix = pCurrentRenderInfo->ViewMatrix;
-	glm::mat4 SavedTranslationMatrix = pCurrentRenderInfo->TranslationMatrix;
-	glm::mat4 SavedModelViewProjectionMatrix = pCurrentRenderInfo->ModelViewProjectionMatrix;
+    glm::mat4 SavedProjectionMatrix = pCurrentRenderInfo->ProjectionMatrix;
+    glm::mat4 SavedViewMatrix = pCurrentRenderInfo->ViewMatrix;
+    glm::mat4 SavedTranslationMatrix = pCurrentRenderInfo->TranslationMatrix;
+    glm::mat4 SavedModelViewProjectionMatrix = pCurrentRenderInfo->ModelViewProjectionMatrix;
 
 
-	pCurrentRenderInfo->ProjectionMatrix = m_pCamera->GetProjectionMatrix();
-	pCurrentRenderInfo->ViewMatrix = m_pCamera->GetViewMatrix();
-	pCurrentRenderInfo->TranslationMatrix = m_pCamera->GetTranslationMatrix();
-	pCurrentRenderInfo->ModelViewProjectionMatrix = m_pCamera->GetProjectionMatrix() * m_pCamera->GetViewMatrix();
-	pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = pCurrentRenderInfo->ModelViewProjectionMatrix;
+    pCurrentRenderInfo->ProjectionMatrix = m_pCamera->GetProjectionMatrix();
+    pCurrentRenderInfo->ViewMatrix = m_pCamera->GetViewMatrix();
+    pCurrentRenderInfo->TranslationMatrix = m_pCamera->GetTranslationMatrix();
+    pCurrentRenderInfo->ModelViewProjectionMatrix = m_pCamera->GetProjectionMatrix() * m_pCamera->GetViewMatrix();
+    pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = pCurrentRenderInfo->ModelViewProjectionMatrix;
 
-        Bamboo::IRenderNode::Render(pCurrentRenderInfo);
+        GraphicsCore::IRenderNode::Render(pCurrentRenderInfo);
 
-	pCurrentRenderInfo->ProjectionMatrix = SavedProjectionMatrix;
-	pCurrentRenderInfo->ViewMatrix = SavedViewMatrix;
-	pCurrentRenderInfo->TranslationMatrix = SavedTranslationMatrix;
-	pCurrentRenderInfo->ModelViewProjectionMatrix = SavedModelViewProjectionMatrix;
-	pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = pCurrentRenderInfo->ModelViewProjectionMatrix;
+    pCurrentRenderInfo->ProjectionMatrix = SavedProjectionMatrix;
+    pCurrentRenderInfo->ViewMatrix = SavedViewMatrix;
+    pCurrentRenderInfo->TranslationMatrix = SavedTranslationMatrix;
+    pCurrentRenderInfo->ModelViewProjectionMatrix = SavedModelViewProjectionMatrix;
+    pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = pCurrentRenderInfo->ModelViewProjectionMatrix;
     }
     else
     {
-	pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = m_pCamera->GetProjectionMatrix() * m_pCamera->GetViewMatrix();
-        Bamboo::IRenderNode::Render(pCurrentRenderInfo);
-	pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = pCurrentRenderInfo->ModelViewProjectionMatrix;
+    pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = m_pCamera->GetProjectionMatrix() * m_pCamera->GetViewMatrix();
+        GraphicsCore::IRenderNode::Render(pCurrentRenderInfo);
+    pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = pCurrentRenderInfo->ModelViewProjectionMatrix;
     }
 }
 
-void Bamboo::RN_Camera::ItlRender()
+void GraphicsCore::RN_Camera::ItlRender()
 {
    /* const GLint l_in_Position(ShaderManager::instance()->GetAttribute("in_Position"));
     const GLint l_cameraInverse_Position = ShaderManager::instance()->GetUniform("Camera_InverseMatrix");
@@ -161,12 +164,12 @@ void Bamboo::RN_Camera::ItlRender()
     glm::mat4 mInverseViewProjectionMatrix = glm::inverse(m_pCamera->GetProjectionMatrix() * m_pCamera->GetViewMatrix());
 
     if (l_cameraInverse_Position != -1)
-	glUniformMatrix4fv(l_cameraInverse_Position, 1, GL_FALSE, &mInverseViewProjectionMatrix[0][0]);
+    glUniformMatrix4fv(l_cameraInverse_Position, 1, GL_FALSE, &mInverseViewProjectionMatrix[0][0]);
 
     if (l_in_Position != -1)
     {
-	glVertexAttribPointer(l_in_Position, 3, GL_DOUBLE, GL_FALSE, 3 * sizeof(GLdouble), NULL);
-	glEnableVertexAttribArray(l_in_Position);
+    glVertexAttribPointer(l_in_Position, 3, GL_DOUBLE, GL_FALSE, 3 * sizeof(GLdouble), NULL);
+    glEnableVertexAttribArray(l_in_Position);
     }
 
     //float fPreviousLineWidth;
@@ -186,20 +189,23 @@ void Bamboo::RN_Camera::ItlRender()
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);*/
 }
 
-void Bamboo::RN_Camera::ItlPreRender()
+void GraphicsCore::RN_Camera::ItlPreRender()
 {
    /* glBindVertexArray(m_nVertexArrayObject);
     glBindBuffer(GL_ARRAY_BUFFER, m_nVertexBufferObject);
 
     ShaderManager::instance()->PushActiveShader();
     if (m_pCurrentRenderInfo->tCurrentRenderPass == SceneObject_RenderPass::RENDERPASS_SHADOWMAP)
-	ShaderManager::instance()->ActivateShader("camera-debug");
+    ShaderManager::instance()->ActivateShader("camera-debug");
     else
         ShaderManager::instance()->ActivateShader("camera-debug");*/
 }
 
-void Bamboo::RN_Camera::ItlPostRender()
+void GraphicsCore::RN_Camera::ItlPostRender()
 {
    // ShaderManager::instance()->PopActiveShader();
+}
+
+
 }
 

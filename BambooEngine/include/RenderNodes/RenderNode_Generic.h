@@ -13,12 +13,14 @@
 #include "RenderNodes/IRenderNode.h"
 #include "GeometryData.h"
 
+namespace BambooGraphics
+{
 //!  A Rendernode which renders a given object
 /*!
     tbd
 */
 
-class Bamboo::RN_Generic : public Bamboo::IRenderNode
+class GraphicsCore::RN_Generic : public GraphicsCore::IRenderNode
 {
 public:
     /*! \name Constructor / Destructor */
@@ -119,6 +121,8 @@ private:
 
 
 };
+
+}
 
 #endif
 
