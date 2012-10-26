@@ -36,119 +36,123 @@ using namespace std;
 
 namespace BambooGraphics
 {
-// initialize static members
-GraphicsCore * GraphicsCore::s_pInstance = NULL;
+    // initialize static members
+    GraphicsCore * GraphicsCore::s_pInstance = NULL;
 
-/****************************************************************
-  *************************************************************** */
-GraphicsCore::GraphicsCore()
-{
-    m_pShaderManager = new ShaderManager();
-    m_pTextureManager = new TextureManager();
-
-    s_pInstance = this;
-}
-
-/****************************************************************
-  *************************************************************** */
-GraphicsCore::~GraphicsCore()
-{
-    assert (m_pShaderManager != NULL);
-    if (m_pShaderManager != NULL)
-        delete m_pShaderManager;
-    m_pShaderManager = NULL;
-
-    assert(m_pTextureManager != NULL);
-    if (m_pTextureManager != NULL)
-        delete m_pTextureManager;
-    m_pTextureManager = NULL;
-}
-
-/****************************************************************
-  *************************************************************** */
-void GraphicsCore::Render()
-{
-    for (auto iter=m_mRenderLoops.begin(); iter != m_mRenderLoops.end(); iter++)
+    /****************************************************************
+      *************************************************************** */
+    GraphicsCore::GraphicsCore()
     {
-        // get raw ptr for easier access
-        TItlRenderLoop *pRenderLoop = &(iter->second);
+        m_pShaderManager = new ShaderManager();
+        m_pTextureManager = new TextureManager();
 
-        // clear buffers
-        pRenderLoop->spRenderTarget->ClearBuffers();
-
-        // translate semantic scene graph into a rendering scene graph
-        pRenderLoop->spTranslator->Translate(pRenderLoop->spSceneRoot);
-
-        // get render scene graph from translator
-        std::shared_ptr<IRenderNode> spRenderNode = pRenderLoop->spTranslator->GetRenderGraph();
-        assert (spRenderNode);
-
-        // start rendering
-        spRenderNode->Render();
-
-        // swap buffers
-        pRenderLoop->spRenderTarget->SwapBuffers();
+        s_pInstance = this;
     }
-}
+
+    /****************************************************************
+      *************************************************************** */
+    GraphicsCore::~GraphicsCore()
+    {
+        assert (m_pShaderManager != NULL);
+        if (m_pShaderManager != NULL)
+        {
+            delete m_pShaderManager;
+            m_pShaderManager = NULL;
+        }
+
+        assert(m_pTextureManager != NULL);
+        if (m_pTextureManager != NULL)
+        {
+            delete m_pTextureManager;
+            m_pTextureManager = NULL;
+        }
+    }
+
+    /****************************************************************
+      *************************************************************** */
+    void GraphicsCore::Render()
+    {
+        for (auto iter=m_mRenderLoops.begin(); iter != m_mRenderLoops.end(); iter++)
+        {
+            // get raw ptr for easier access
+            TItlRenderLoop *pRenderLoop = &(iter->second);
+
+            // clear buffers
+            pRenderLoop->spRenderTarget->ClearBuffers();
+
+            // translate semantic scene graph into a rendering scene graph
+            pRenderLoop->spTranslator->Translate(pRenderLoop->spSceneRoot);
+
+            // get render scene graph from translator
+            std::shared_ptr<IRenderNode> spRenderNode = pRenderLoop->spTranslator->GetRenderGraph();
+            assert (spRenderNode);
+
+            // start rendering
+            spRenderNode->Render();
+
+            // swap buffers
+            pRenderLoop->spRenderTarget->SwapBuffers();
+        }
+    }
 
 
-/****************************************************************
-  *************************************************************** */
-ShaderManager * GraphicsCore::GetShaderManager()
-{
-    assert (m_pShaderManager != NULL);
+    /****************************************************************
+      *************************************************************** */
+    ShaderManager * GraphicsCore::GetShaderManager()
+    {
+        assert (m_pShaderManager != NULL);
 
-    return m_pShaderManager;
-}
+        return m_pShaderManager;
+    }
 
-/****************************************************************
-  *************************************************************** */
-TextureManager * GraphicsCore::GetTextureManager()
-{
-    assert (m_pTextureManager != NULL);
+    /****************************************************************
+      *************************************************************** */
+    TextureManager * GraphicsCore::GetTextureManager()
+    {
+        assert (m_pTextureManager != NULL);
 
-    return m_pTextureManager;
-}
+        return m_pTextureManager;
+    }
 
-/****************************************************************
-  *************************************************************** */
-int GraphicsCore::AddRenderLoop(std::shared_ptr<IRenderTarget> spRenderTarget,
-                          std::shared_ptr<ISemanticSceneNode> spRootNode,
-                          std::shared_ptr<INodeTranslator> spTranslator)
-{
-    static int iID = 0;
+    /****************************************************************
+      *************************************************************** */
+    int GraphicsCore::AddRenderLoop(std::shared_ptr<IRenderTarget> spRenderTarget,
+                              std::shared_ptr<ISemanticSceneNode> spRootNode,
+                              std::shared_ptr<INodeTranslator> spTranslator)
+    {
+        static int iID = 0;
 
-    TItlRenderLoop NewLoop;
+        TItlRenderLoop NewLoop;
 
-    NewLoop.spRenderTarget  = spRenderTarget;
-    NewLoop.spSceneRoot     = spRootNode;
-    NewLoop.spTranslator    = spTranslator;
+        NewLoop.spRenderTarget  = spRenderTarget;
+        NewLoop.spSceneRoot     = spRootNode;
+        NewLoop.spTranslator    = spTranslator;
 
-    m_mRenderLoops[iID++] = NewLoop;
+        m_mRenderLoops[iID++] = NewLoop;
 
-    // load shader, if not loaded
-    GetShaderManager()->CreateAndRegisterShader("posteffect1", "BambooEngine/shaders/posteffect1.vs", "BambooEngine/shaders/posteffect1.fs");
-    GetShaderManager()->CreateAndRegisterShader("directwrite", "BambooEngine/shaders/directwrite.vs", "BambooEngine/shaders/directwrite.fs");
-    GetShaderManager()->CreateAndRegisterShader("light-pass", "BambooEngine/shaders/light_pass.vs", "BambooEngine/shaders/light_pass.fs");
-    GetShaderManager()->CreateAndRegisterShader("camera-debug2", "BambooEngine/shaders/camera-debug2.vs", "BambooEngine/shaders/camera-debug2.fs");
+        // load shader, if not loaded
+        GetShaderManager()->CreateAndRegisterShader("posteffect1", "BambooEngine/shaders/posteffect1.vs", "BambooEngine/shaders/posteffect1.fs");
+        GetShaderManager()->CreateAndRegisterShader("directwrite", "BambooEngine/shaders/directwrite.vs", "BambooEngine/shaders/directwrite.fs");
+        GetShaderManager()->CreateAndRegisterShader("light-pass", "BambooEngine/shaders/light_pass.vs", "BambooEngine/shaders/light_pass.fs");
+        GetShaderManager()->CreateAndRegisterShader("camera-debug2", "BambooEngine/shaders/camera-debug2.vs", "BambooEngine/shaders/camera-debug2.fs");
 
-   /* GetShaderManager()->AddShader("posteffect1", new ShaderManager::TShader("BambooEngine/shaders/posteffect1.vs", "BambooEngine/shaders/posteffect1.fs"));
-    GetShaderManager()->AddShader("directwrite", new ShaderManager::TShader("BambooEngine/shaders/directwrite.vs", "BambooEngine/shaders/directwrite.fs"));
-    GetShaderManager()->AddShader("light-pass", new ShaderManager::TShader("BambooEngine/shaders/light_pass.vs", "BambooEngine/shaders/light_pass.fs"));
-    GetShaderManager()->AddShader("camera-debug2", new ShaderManager::TShader("BambooEngine/shaders/camera-debug2.vs", "BambooEngine/shaders/camera-debug2.fs"));*/
-    GetTextureManager()->LoadTexture("spotlight", "textures/spot.png", false);
+       /* GetShaderManager()->AddShader("posteffect1", new ShaderManager::TShader("BambooEngine/shaders/posteffect1.vs", "BambooEngine/shaders/posteffect1.fs"));
+        GetShaderManager()->AddShader("directwrite", new ShaderManager::TShader("BambooEngine/shaders/directwrite.vs", "BambooEngine/shaders/directwrite.fs"));
+        GetShaderManager()->AddShader("light-pass", new ShaderManager::TShader("BambooEngine/shaders/light_pass.vs", "BambooEngine/shaders/light_pass.fs"));
+        GetShaderManager()->AddShader("camera-debug2", new ShaderManager::TShader("BambooEngine/shaders/camera-debug2.vs", "BambooEngine/shaders/camera-debug2.fs"));*/
+        GetTextureManager()->LoadTexture("spotlight", "textures/spot.png", false);
 
-    return iID;
-}
+        return iID;
+    }
 
 
-/****************************************************************
-  *************************************************************** */
-void GraphicsCore::RemoveRenderLoop(int iLoopID)
-{
-    assert (m_mRenderLoops.find(iLoopID) != m_mRenderLoops.end());
+    /****************************************************************
+      *************************************************************** */
+    void GraphicsCore::RemoveRenderLoop(int iLoopID)
+    {
+        assert (m_mRenderLoops.find(iLoopID) != m_mRenderLoops.end());
 
-    m_mRenderLoops.erase(iLoopID);
-}
+        m_mRenderLoops.erase(iLoopID);
+    }
 
 }

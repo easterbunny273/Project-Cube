@@ -61,11 +61,11 @@ public:
 private:
     /*! \name InputEventListener for the Graphic engine */
     //@{
-        class InputEventListener : public BambooGraphics::GraphicsCore::GlfwWindow::IInputEventListener
+        class InputEventListener : public BambooGraphics::GraphicsCore::IRenderTarget::IInputEventListener
         {
         public:
             /// handles keyboard events and sends signals to listener
-            virtual void ItlHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState);
+            virtual void ItlHandleKeyboardEvent(BambooGraphics::TKey eKeyIdentifier, BambooGraphics::TInputEvent eEvent);
 
             /// handles mouse movements and sends signals to the listener
             virtual void ItlHandleMousePos(int iX, int iY);
@@ -74,7 +74,7 @@ private:
             virtual void ItlHandleMouseWheel(int iPosition);
 
             /// handles mouse button events and sends signals to the listener
-            virtual void ItlHandleMouseButton(int iButton, int iAction);
+            virtual void ItlHandleMouseButton(BambooGraphics::TMouseButton eButton, BambooGraphics::TInputEvent eEvent);
         };
     //@}
 

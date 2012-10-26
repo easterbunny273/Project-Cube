@@ -14,6 +14,7 @@
 #include <vector>
 #include <string>
 #include <stack>
+#include <map>
 #include "common_gl.h"
 #include "Graphic.h"
 

@@ -26,6 +26,9 @@ protected:
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
 
+    BambooGraphics::TKey ItlTranslateQtKeyToBambooGraphicsKey(int iKey);
+    BambooGraphics::TMouseButton ItlTranslateQtButtonToBambooGraphicsButton(int iButton);
+
     std::shared_ptr<BambooGraphics::GraphicsCore::IRenderTarget::IInputEventListener>            m_spInputEventListener;
 };
 

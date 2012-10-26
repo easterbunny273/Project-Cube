@@ -193,49 +193,47 @@ DummyGame * MainApp::GetGame()
     return m_pGame;
 }
 
-void MainApp::InputEventListener::ItlHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState)
+void MainApp::InputEventListener::ItlHandleKeyboardEvent(BambooGraphics::TKey iKeyIdentifier, BambooGraphics::TInputEvent eEvent)
 {
     InputKeyEvent::TKey eKey = InputKeyEvent::KEY_UNKNOWN;
     bool bKeyRecognized = true;
 
     // first, map ranges KEY_A .. KEY_Z
-    if (iKeyIdentifier >= 'A' && iKeyIdentifier <= 'Z')
+    if (iKeyIdentifier >= BambooGraphics::KEY_A && iKeyIdentifier <= BambooGraphics::KEY_Z)
     {
-    eKey = static_cast<InputKeyEvent::TKey>(InputKeyEvent::KEY_A + (iKeyIdentifier - 'A'));
+    eKey = static_cast<InputKeyEvent::TKey>(InputKeyEvent::KEY_A + (iKeyIdentifier - BambooGraphics::KEY_A));
     }
     // map range KEY_0 .. KEY_9
-    else if (iKeyIdentifier >= '0' && iKeyIdentifier <= '9')
+    else if (iKeyIdentifier >= BambooGraphics::KEY_0 && iKeyIdentifier <= BambooGraphics::KEY_9)
     {
-    eKey = static_cast<InputKeyEvent::TKey>(InputKeyEvent::KEY_0 + (iKeyIdentifier - '0'));
+    eKey = static_cast<InputKeyEvent::TKey>(InputKeyEvent::KEY_0 + (iKeyIdentifier - BambooGraphics::KEY_0));
     }
     // map range KEY_KP_0 .. KEY_KP_9
-    else if (iKeyIdentifier >= GLFW_KEY_KP_0 && iKeyIdentifier <= GLFW_KEY_KP_9)
+    else if (iKeyIdentifier >= BambooGraphics::KEY_NUM_0 && iKeyIdentifier <= BambooGraphics::KEY_NUM_9)
     {
-    eKey = static_cast<InputKeyEvent::TKey>(InputKeyEvent::KEY_KP_0 + (iKeyIdentifier - GLFW_KEY_KP_0));
+    eKey = static_cast<InputKeyEvent::TKey>(InputKeyEvent::KEY_KP_0 + (iKeyIdentifier - BambooGraphics::KEY_NUM_0));
     }
     // map range KEY_F1 .. KEY_F12
-    else if (iKeyIdentifier >= GLFW_KEY_F1 && iKeyIdentifier <= GLFW_KEY_F12)
+    else if (iKeyIdentifier >= BambooGraphics::KEY_F1 && iKeyIdentifier <= BambooGraphics::KEY_F12)
     {
-    eKey = static_cast<InputKeyEvent::TKey>(InputKeyEvent::KEY_F1 + (iKeyIdentifier - GLFW_KEY_F1));
+    eKey = static_cast<InputKeyEvent::TKey>(InputKeyEvent::KEY_F1 + (iKeyIdentifier - BambooGraphics::KEY_F1));
     }
     else // map other single keys
     switch (iKeyIdentifier)
     {
-    case GLFW_KEY_LSHIFT: eKey = InputKeyEvent::KEY_LSHIFT; break;
-    case GLFW_KEY_RSHIFT: eKey = InputKeyEvent::KEY_RSHIFT; break;
-    case GLFW_KEY_LCTRL: eKey = InputKeyEvent::KEY_LCTRL; break;
-    case GLFW_KEY_RCTRL: eKey = InputKeyEvent::KEY_RCTRL; break;
-    case GLFW_KEY_LALT: eKey = InputKeyEvent::KEY_LALT; break;
-    case GLFW_KEY_RALT: eKey = InputKeyEvent::KEY_RALT; break;
-    case GLFW_KEY_UP: eKey = InputKeyEvent::KEY_UP; break;
-    case GLFW_KEY_DOWN: eKey = InputKeyEvent::KEY_DOWN; break;
-    case GLFW_KEY_LEFT: eKey = InputKeyEvent::KEY_LEFT; break;
-    case GLFW_KEY_RIGHT: eKey = InputKeyEvent::KEY_RIGHT; break;
-    case GLFW_KEY_SPACE: eKey = InputKeyEvent::KEY_SPACE; break;
-    case GLFW_KEY_ESC: eKey = InputKeyEvent::KEY_ESC; break;
-    case GLFW_KEY_TAB: eKey = InputKeyEvent::KEY_TAB; break;
-    case GLFW_KEY_ENTER: eKey = InputKeyEvent::KEY_ENTER; break;
-    case GLFW_KEY_BACKSPACE: eKey = InputKeyEvent::KEY_BACKSPACE; break;
+    case BambooGraphics::KEY_SHIFT: eKey = InputKeyEvent::KEY_LSHIFT; break;
+    case BambooGraphics::KEY_CONTROL: eKey = InputKeyEvent::KEY_LCTRL; break;
+    case BambooGraphics::KEY_ALT: eKey = InputKeyEvent::KEY_LALT; break;
+    case BambooGraphics::KEY_ALT_GR: eKey = InputKeyEvent::KEY_RALT; break;
+   /* case BambooGraphics::KEY_UP: eKey = InputKeyEvent::KEY_UP; break;
+    case BambooGraphics::KEY_DOWN: eKey = InputKeyEvent::KEY_DOWN; break;
+    case BambooGraphics::KEY_LEFT: eKey = InputKeyEvent::KEY_LEFT; break;
+    case BambooGraphics::KEY_RIGHT: eKey = InputKeyEvent::KEY_RIGHT; break;*/
+    case BambooGraphics::KEY_SPACE: eKey = InputKeyEvent::KEY_SPACE; break;
+    case BambooGraphics::KEY_ESCAPE: eKey = InputKeyEvent::KEY_ESC; break;
+    case BambooGraphics::KEY_TAB: eKey = InputKeyEvent::KEY_TAB; break;
+    case BambooGraphics::KEY_ENTER: eKey = InputKeyEvent::KEY_ENTER; break;
+    case BambooGraphics::KEY_BACKSPACE: eKey = InputKeyEvent::KEY_BACKSPACE; break;
 
     default:
         BambooLib::Logger::error() << "keycode " << iKeyIdentifier << " not recognized" << BambooLib::Logger::endl;
@@ -245,7 +243,7 @@ void MainApp::InputEventListener::ItlHandleKeyboardEvent(int iKeyIdentifier, int
     // call methods of listener if key was recognized
     if (bKeyRecognized)
     {
-    if (iNewKeyState == GLFW_PRESS)
+    if (eEvent == BambooGraphics::EVENT_PRESSED)
         MainApp::GetInstance()->GetEventManager()->QueueEvent(InputKeyEvent::Create(eKey,InputKeyEvent::EVENT_DOWN));
     else
         MainApp::GetInstance()->GetEventManager()->QueueEvent(InputKeyEvent::Create(eKey,InputKeyEvent::EVENT_UP));
@@ -279,18 +277,18 @@ void MainApp::InputEventListener::ItlHandleMouseWheel(int iPosition)
     BambooLib::Logger::error() << "mouse wheel handling not implemented yet" << BambooLib::Logger::endl;
 }
 
-void MainApp::InputEventListener::ItlHandleMouseButton(int iButton, int iAction)
+void MainApp::InputEventListener::ItlHandleMouseButton(BambooGraphics::TMouseButton eButton, BambooGraphics::TInputEvent eEvent)
 {
     InputMouseButtonEvent::TMouseButton eMouseButton;
     bool bButtonRecognized = true;
 
-    switch (iButton)
+    switch (eButton)
     {
-    case GLFW_MOUSE_BUTTON_LEFT: eMouseButton = InputMouseButtonEvent::BUTTON_LEFT; break;
-    case GLFW_MOUSE_BUTTON_MIDDLE: eMouseButton = InputMouseButtonEvent::BUTTON_MIDDLE; break;
-    case GLFW_MOUSE_BUTTON_RIGHT: eMouseButton = InputMouseButtonEvent::BUTTON_RIGHT; break;
+    case BambooGraphics::BUTTON_LEFT: eMouseButton = InputMouseButtonEvent::BUTTON_LEFT; break;
+    case BambooGraphics::BUTTON_MIDDLE: eMouseButton = InputMouseButtonEvent::BUTTON_MIDDLE; break;
+    case BambooGraphics::BUTTON_RIGHT: eMouseButton = InputMouseButtonEvent::BUTTON_RIGHT; break;
     default:
-    BambooLib::Logger::error() << "mouse button " << iButton << " not recognized" << BambooLib::Logger::endl;
+    BambooLib::Logger::error() << "mouse button " << eButton << " not recognized" << BambooLib::Logger::endl;
     bButtonRecognized = false;
     }
 
@@ -299,7 +297,7 @@ void MainApp::InputEventListener::ItlHandleMouseButton(int iButton, int iAction)
     EventManager *pEventManager = MainApp::GetInstance()->GetEventManager();
     assert (pEventManager != NULL);
 
-    if (iAction == GLFW_PRESS)
+    if (eEvent == BambooGraphics::EVENT_PRESSED)
         pEventManager->QueueEvent(InputMouseButtonEvent::Create(eMouseButton, InputMouseButtonEvent::EVENT_DOWN));
     else
         pEventManager->QueueEvent(InputMouseButtonEvent::Create(eMouseButton, InputMouseButtonEvent::EVENT_UP));

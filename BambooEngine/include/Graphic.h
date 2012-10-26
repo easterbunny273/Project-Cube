@@ -17,7 +17,7 @@
 #include <map>
 
 //#ifdef GLFW_VERSION_MAJOR
-#define GLFW
+//#define GLFW
 //#endif
 
 // glm includes
@@ -25,6 +25,7 @@
 
 // semantic scene node interface
 #include "SemanticSceneNodes/ISemanticSceneNode.h"
+#include "KeyIdentifiers.h"
 
 namespace BambooGraphics
 {
@@ -40,8 +41,6 @@ namespace BambooGraphics
     public:
         /*! \name Internal classes, forward declarations */
         //@{
-
-
             class IRenderNode;
             class IRenderNode_Cullable;
 
@@ -71,7 +70,7 @@ namespace BambooGraphics
                     {
                     public:
                         /// handles keyboard events and sends signals to listener
-                        virtual void ItlHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState) = 0;
+                        virtual void ItlHandleKeyboardEvent(TKey eKeyIdentifier, TInputEvent eEvent) = 0;
 
                         /// handles mouse movements and sends signals to the listener
                         virtual void ItlHandleMousePos(int iX, int iY) = 0;
@@ -80,7 +79,7 @@ namespace BambooGraphics
                         virtual void ItlHandleMouseWheel(int iPosition) = 0;
 
                         /// handles mouse button events and sends signals to the listener
-                        virtual void ItlHandleMouseButton(int iButton, int iAction) = 0;
+                        virtual void ItlHandleMouseButton(TMouseButton eButton, TInputEvent eEvent) = 0;
                     };
                 //@}
 
@@ -104,8 +103,6 @@ namespace BambooGraphics
             class ICamera;
             class PerspectiveCamera;
             class OrthogonalCamera;
-
-            class LightManager;
         //@}
 
         /*! \name Nested classes */

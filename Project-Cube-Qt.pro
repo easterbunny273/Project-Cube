@@ -86,6 +86,7 @@ HEADERS += \
     BambooEngine/include/GeometryData.h \
     BambooEngine/include/common_gl.h \
     BambooEngine/include/Camera.h \
+	BambooEngine/include/KeyIdentifiers.h \
     BambooEngine/include/AssimpWrapper.h \
     BambooEngine/include/SemanticSceneNodes/LoadedModel_SemSceneNode.h \
     BambooEngine/include/SemanticSceneNodes/Light_SemSceneNode.h \
@@ -136,7 +137,8 @@ HEADERS += \
     include/DummyGame/Game.h \
     include/tinyxml/tinyxml.h \
     include/tinyxml/tinystr.h \
-    include/gui/MainWindow.h
+    include/gui/MainWindow.h \
+    BambooEngine/include/KeyIdentifiers.h
 
 FORMS += \
     include/gui/MainWindow.ui

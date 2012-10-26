@@ -2,6 +2,7 @@
 
 #include "GL/glew.h"
 #include "Graphic-QtWidgetWrapper.h"
+#include "KeyIdentifiers.h"
 
 #include <QMouseEvent>
 #include <QCursor>
@@ -113,37 +114,27 @@ TGLWidget::TGLWidget(QWidget *parent)
 
 void TGLWidget::mousePressEvent(QMouseEvent *event)
 {
-    std::cout << "mouse press" << std::endl;
+    BambooGraphics::TMouseButton eButton = ItlTranslateQtButtonToBambooGraphicsButton(event->button());
 
     if (m_spInputEventListener)
     {
-        if (event->button() == Qt::LeftButton)
-        {
+        if (eButton == BambooGraphics::BUTTON_LEFT)
             bMouseLocked = true;
-            m_spInputEventListener->ItlHandleMouseButton(GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS);
-        }
-        else if (event->button() == Qt::MiddleButton)
-            m_spInputEventListener->ItlHandleMouseButton(GLFW_MOUSE_BUTTON_MIDDLE, GLFW_PRESS);
-        else if (event->button() == Qt::RightButton)
-            m_spInputEventListener->ItlHandleMouseButton(GLFW_MOUSE_BUTTON_RIGHT, GLFW_PRESS);
+
+        m_spInputEventListener->ItlHandleMouseButton(eButton, BambooGraphics::EVENT_PRESSED);
     }
 }
 
 void TGLWidget::mouseReleaseEvent(QMouseEvent *event)
 {
-    std::cout << "mouse release" << std::endl;
+    BambooGraphics::TMouseButton eButton = ItlTranslateQtButtonToBambooGraphicsButton(event->button());
 
     if (m_spInputEventListener)
     {
-        if (event->button() == Qt::LeftButton)
-        {
+        if (eButton == BambooGraphics::BUTTON_LEFT)
             bMouseLocked = false;
-            m_spInputEventListener->ItlHandleMouseButton(GLFW_MOUSE_BUTTON_LEFT, GLFW_RELEASE);
-        }
-        else if (event->button() == Qt::MiddleButton)
-            m_spInputEventListener->ItlHandleMouseButton(GLFW_MOUSE_BUTTON_MIDDLE, GLFW_RELEASE);
-        else if (event->button() == Qt::RightButton)
-            m_spInputEventListener->ItlHandleMouseButton(GLFW_MOUSE_BUTTON_RIGHT, GLFW_RELEASE);
+
+        m_spInputEventListener->ItlHandleMouseButton(eButton, BambooGraphics::EVENT_RELEASED);
     }
 }
 
@@ -159,106 +150,83 @@ void TGLWidget::mouseMoveEvent(QMouseEvent *event)
 
 void TGLWidget::keyPressEvent(QKeyEvent *event)
 {
-    std::cout << "key press" << std::endl;
+    BambooGraphics::TKey eKey = ItlTranslateQtKeyToBambooGraphicsKey(event->key());
 
-    int iGLFWKey = GLFW_KEY_UNKNOWN;
-
-    switch (event->key())
-    {
-    case Qt::Key_1: iGLFWKey = '1'; break;
-    case Qt::Key_2: iGLFWKey = '2'; break;
-    case Qt::Key_3: iGLFWKey = '3'; break;
-    case Qt::Key_4: iGLFWKey = '4'; break;
-    case Qt::Key_5: iGLFWKey = '5'; break;
-    case Qt::Key_6: iGLFWKey = '6'; break;
-    case Qt::Key_7: iGLFWKey = '7'; break;
-    case Qt::Key_8: iGLFWKey = '8'; break;
-    case Qt::Key_9: iGLFWKey = '9'; break;
-    case Qt::Key_0: iGLFWKey = '0'; break;
-    case Qt::Key_A: iGLFWKey = 'A'; break;
-    case Qt::Key_B: iGLFWKey = 'B'; break;
-    case Qt::Key_C: iGLFWKey = 'C'; break;
-    case Qt::Key_D: iGLFWKey = 'D'; break;
-    case Qt::Key_E: iGLFWKey = 'E'; break;
-    case Qt::Key_F: iGLFWKey = 'F'; break;
-    case Qt::Key_G: iGLFWKey = 'G'; break;
-    case Qt::Key_H: iGLFWKey = 'H'; break;
-    case Qt::Key_I: iGLFWKey = 'I'; break;
-    case Qt::Key_J: iGLFWKey = 'J'; break;
-    case Qt::Key_K: iGLFWKey = 'K'; break;
-    case Qt::Key_L: iGLFWKey = 'L'; break;
-    case Qt::Key_M: iGLFWKey = 'M'; break;
-    case Qt::Key_N: iGLFWKey = 'N'; break;
-    case Qt::Key_O: iGLFWKey = 'O'; break;
-    case Qt::Key_P: iGLFWKey = 'P'; break;
-    case Qt::Key_Q: iGLFWKey = 'Q'; break;
-    case Qt::Key_R: iGLFWKey = 'R'; break;
-    case Qt::Key_S: iGLFWKey = 'S'; break;
-    case Qt::Key_T: iGLFWKey = 'T'; break;
-    case Qt::Key_U: iGLFWKey = 'U'; break;
-    case Qt::Key_V: iGLFWKey = 'V'; break;
-    case Qt::Key_W: iGLFWKey = 'W'; break;
-    case Qt::Key_X: iGLFWKey = 'X'; break;
-    case Qt::Key_Y: iGLFWKey = 'Y'; break;
-    case Qt::Key_Z: iGLFWKey = 'Z'; break;
-    case Qt::Key_Space: iGLFWKey = GLFW_KEY_SPACE; break;
-    case Qt::Key_Control: iGLFWKey = GLFW_KEY_LCTRL; break;
-    case Qt::Key_Tab: iGLFWKey = GLFW_KEY_TAB; break;
-    }
-
-    m_spInputEventListener->ItlHandleKeyboardEvent(iGLFWKey, GLFW_PRESS);
+    m_spInputEventListener->ItlHandleKeyboardEvent(eKey, BambooGraphics::EVENT_PRESSED);
 }
 
 void TGLWidget::keyReleaseEvent(QKeyEvent *event)
 {
-    std::cout << "key release" << std::endl;
+    BambooGraphics::TKey eKey = ItlTranslateQtKeyToBambooGraphicsKey(event->key());
 
-    int iGLFWKey = GLFW_KEY_UNKNOWN;
+    m_spInputEventListener->ItlHandleKeyboardEvent(eKey, BambooGraphics::EVENT_RELEASED);
+}
 
-    switch (event->key())
+BambooGraphics::TKey TGLWidget::ItlTranslateQtKeyToBambooGraphicsKey(int iKey)
+{
+    BambooGraphics::TKey eKey = BambooGraphics::KEY_UNKNOWN;
+
+    switch (iKey)
     {
-    case Qt::Key_1: iGLFWKey = '1'; break;
-    case Qt::Key_2: iGLFWKey = '2'; break;
-    case Qt::Key_3: iGLFWKey = '3'; break;
-    case Qt::Key_4: iGLFWKey = '4'; break;
-    case Qt::Key_5: iGLFWKey = '5'; break;
-    case Qt::Key_6: iGLFWKey = '6'; break;
-    case Qt::Key_7: iGLFWKey = '7'; break;
-    case Qt::Key_8: iGLFWKey = '8'; break;
-    case Qt::Key_9: iGLFWKey = '9'; break;
-    case Qt::Key_0: iGLFWKey = '0'; break;
-    case Qt::Key_A: iGLFWKey = 'A'; break;
-    case Qt::Key_B: iGLFWKey = 'B'; break;
-    case Qt::Key_C: iGLFWKey = 'C'; break;
-    case Qt::Key_D: iGLFWKey = 'D'; break;
-    case Qt::Key_E: iGLFWKey = 'E'; break;
-    case Qt::Key_F: iGLFWKey = 'F'; break;
-    case Qt::Key_G: iGLFWKey = 'G'; break;
-    case Qt::Key_H: iGLFWKey = 'H'; break;
-    case Qt::Key_I: iGLFWKey = 'I'; break;
-    case Qt::Key_J: iGLFWKey = 'J'; break;
-    case Qt::Key_K: iGLFWKey = 'K'; break;
-    case Qt::Key_L: iGLFWKey = 'L'; break;
-    case Qt::Key_M: iGLFWKey = 'M'; break;
-    case Qt::Key_N: iGLFWKey = 'N'; break;
-    case Qt::Key_O: iGLFWKey = 'O'; break;
-    case Qt::Key_P: iGLFWKey = 'P'; break;
-    case Qt::Key_Q: iGLFWKey = 'Q'; break;
-    case Qt::Key_R: iGLFWKey = 'R'; break;
-    case Qt::Key_S: iGLFWKey = 'S'; break;
-    case Qt::Key_T: iGLFWKey = 'T'; break;
-    case Qt::Key_U: iGLFWKey = 'U'; break;
-    case Qt::Key_V: iGLFWKey = 'V'; break;
-    case Qt::Key_W: iGLFWKey = 'W'; break;
-    case Qt::Key_X: iGLFWKey = 'X'; break;
-    case Qt::Key_Y: iGLFWKey = 'Y'; break;
-    case Qt::Key_Z: iGLFWKey = 'Z'; break;
-    case Qt::Key_Space: iGLFWKey = GLFW_KEY_SPACE; break;
-    case Qt::Key_Control: iGLFWKey = GLFW_KEY_LCTRL; break;
-    case Qt::Key_Tab: iGLFWKey = GLFW_KEY_TAB; break;
+    case Qt::Key_1: eKey = BambooGraphics::KEY_1; break;
+    case Qt::Key_2: eKey = BambooGraphics::KEY_2; break;
+    case Qt::Key_3: eKey = BambooGraphics::KEY_3; break;
+    case Qt::Key_4: eKey = BambooGraphics::KEY_4; break;
+    case Qt::Key_5: eKey = BambooGraphics::KEY_5; break;
+    case Qt::Key_6: eKey = BambooGraphics::KEY_6; break;
+    case Qt::Key_7: eKey = BambooGraphics::KEY_7; break;
+    case Qt::Key_8: eKey = BambooGraphics::KEY_8; break;
+    case Qt::Key_9: eKey = BambooGraphics::KEY_9; break;
+    case Qt::Key_0: eKey = BambooGraphics::KEY_0; break;
+    case Qt::Key_A: eKey = BambooGraphics::KEY_A; break;
+    case Qt::Key_B: eKey = BambooGraphics::KEY_B; break;
+    case Qt::Key_C: eKey = BambooGraphics::KEY_C; break;
+    case Qt::Key_D: eKey = BambooGraphics::KEY_D; break;
+    case Qt::Key_E: eKey = BambooGraphics::KEY_E; break;
+    case Qt::Key_F: eKey = BambooGraphics::KEY_F; break;
+    case Qt::Key_G: eKey = BambooGraphics::KEY_G; break;
+    case Qt::Key_H: eKey = BambooGraphics::KEY_H; break;
+    case Qt::Key_I: eKey = BambooGraphics::KEY_I; break;
+    case Qt::Key_J: eKey = BambooGraphics::KEY_J; break;
+    case Qt::Key_K: eKey = BambooGraphics::KEY_K; break;
+    case Qt::Key_L: eKey = BambooGraphics::KEY_L; break;
+    case Qt::Key_M: eKey = BambooGraphics::KEY_M; break;
+    case Qt::Key_N: eKey = BambooGraphics::KEY_N; break;
+    case Qt::Key_O: eKey = BambooGraphics::KEY_O; break;
+    case Qt::Key_P: eKey = BambooGraphics::KEY_P; break;
+    case Qt::Key_Q: eKey = BambooGraphics::KEY_Q; break;
+    case Qt::Key_R: eKey = BambooGraphics::KEY_R; break;
+    case Qt::Key_S: eKey = BambooGraphics::KEY_S; break;
+    case Qt::Key_T: eKey = BambooGraphics::KEY_T; break;
+    case Qt::Key_U: eKey = BambooGraphics::KEY_U; break;
+    case Qt::Key_V: eKey = BambooGraphics::KEY_V; break;
+    case Qt::Key_W: eKey = BambooGraphics::KEY_W; break;
+    case Qt::Key_X: eKey = BambooGraphics::KEY_X; break;
+    case Qt::Key_Y: eKey = BambooGraphics::KEY_Y; break;
+    case Qt::Key_Z: eKey = BambooGraphics::KEY_Z; break;
+    case Qt::Key_Space:     eKey = BambooGraphics::KEY_SPACE; break;
+    case Qt::Key_Control:   eKey = BambooGraphics::KEY_CONTROL; break;
+    case Qt::Key_Shift:     eKey = BambooGraphics::KEY_SHIFT; break;
+    case Qt::Key_Tab:       eKey = BambooGraphics::KEY_TAB; break;
+    case Qt::Key_Escape:    eKey = BambooGraphics::KEY_ESCAPE; break;
     }
 
-    m_spInputEventListener->ItlHandleKeyboardEvent(iGLFWKey, GLFW_RELEASE);
+
+    return eKey;
+}
+
+BambooGraphics::TMouseButton TGLWidget::ItlTranslateQtButtonToBambooGraphicsButton(int iButton)
+{
+    BambooGraphics::TMouseButton eButton = BambooGraphics::BUTTON_UNKNOWN;
+
+    switch (iButton)
+    {
+    case Qt::LeftButton: eButton = BambooGraphics::BUTTON_LEFT; break;
+    case Qt::MiddleButton: eButton = BambooGraphics::BUTTON_MIDDLE; break;
+    case Qt::RightButton: eButton = BambooGraphics::BUTTON_RIGHT; break;
+    }
+
+   return eButton;
 }
 
 #endif
