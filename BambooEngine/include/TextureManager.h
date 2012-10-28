@@ -9,7 +9,7 @@
 
 #include <string>
 
-#include "common_gl.h"
+#include "GLUtils.h"
 #include "Graphic.h"
 
 

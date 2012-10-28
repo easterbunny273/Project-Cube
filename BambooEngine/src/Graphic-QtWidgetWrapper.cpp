@@ -13,22 +13,22 @@ bool bMouseLocked = false;
 
 namespace BambooGraphics
 {
-GraphicsCore::QtWidgetWrapper::QtWidgetWrapper()
+GraphicsCore::QtWidgetRenderTarget::QtWidgetRenderTarget()
 {
     m_pGLWidget = NULL;
     m_iWidth = 0;
     m_iHeight = 0;
 }
 
-GraphicsCore::QtWidgetWrapper::~QtWidgetWrapper()
+GraphicsCore::QtWidgetRenderTarget::~QtWidgetRenderTarget()
 {
     // nothing to do so far
     delete m_pGLWidget;
 }
 
-std::shared_ptr<GraphicsCore::QtWidgetWrapper> GraphicsCore::QtWidgetWrapper::Create(QWidget *pWidget)
+std::shared_ptr<GraphicsCore::QtWidgetRenderTarget> GraphicsCore::QtWidgetRenderTarget::Create(QWidget *pWidget)
 {
-    std::shared_ptr<QtWidgetWrapper> spWrapper(new QtWidgetWrapper());
+    std::shared_ptr<QtWidgetRenderTarget> spWrapper(new QtWidgetRenderTarget());
     QGLFormat fmt;
     fmt.setVersion(3,3);
     fmt.setProfile(QGLFormat::CoreProfile);
@@ -60,7 +60,7 @@ std::shared_ptr<GraphicsCore::QtWidgetWrapper> GraphicsCore::QtWidgetWrapper::Cr
     return spWrapper;
 }
 
-void GraphicsCore::QtWidgetWrapper::ClearBuffers()
+void GraphicsCore::QtWidgetRenderTarget::ClearBuffers()
 {
     m_pGLWidget->makeCurrent();
 
@@ -86,7 +86,7 @@ void GraphicsCore::QtWidgetWrapper::ClearBuffers()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void GraphicsCore::QtWidgetWrapper::SwapBuffers()
+void GraphicsCore::QtWidgetRenderTarget::SwapBuffers()
 {
     assert (m_pGLWidget != NULL);
 

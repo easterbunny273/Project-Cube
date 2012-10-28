@@ -9,7 +9,7 @@
 #ifndef __BAMBOOENGINE_CAMERARULEOBJECT_DEFERREDTRANSLATOR_HEADER
 #define __BAMBOOENGINE_CAMERARULEOBJECT_DEFERREDTRANSLATOR_HEADER
 
-#include "common_gl.h"
+#include "GLUtils.h"
 #include "Graphic.h"
 #include "DeferredNodeTranslator/DeferredNodeTranslator.h"
 #include "SemanticSceneNodes/Camera_SemSceneNode.h"
@@ -22,7 +22,7 @@ namespace BambooGraphics
     class DeferredNodeTranslator::Camera_RuleObject : public DeferredNodeTranslator::IRuleObject
     {
     public:
-      virtual IRuleObject * CloneFor(std::shared_ptr<ISemanticSceneNode> spSemNode, DeferredNodeTranslator *pTranslator);
+      virtual IRuleObject * CloneFor(ISemanticSceneNode *pSemNode, DeferredNodeTranslator *pTranslator);
 
       /// update the rendering scene graph pieces which correspond to the given semantic scene node
       virtual void Action();
@@ -31,7 +31,7 @@ namespace BambooGraphics
       std::vector<BambooLib::t_classID> GetAcceptedNodeIDs() const;
 
     private:
-    std::shared_ptr<Camera_SemSceneNode> m_spSemNode;
+    Camera_SemSceneNode * m_pSemNodeCamera;
     };
 
 }

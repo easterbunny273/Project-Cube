@@ -381,7 +381,7 @@ Object* Level::CreateObject(std::string sName, std::string sFileName)
 	Logger::debug() << "C++: adding " << sName << " to the level"<< Logger::endl;
 	Object* object = new Object(sName, sFileName);
 	m_Objects.push_back(object);
-	m_spSemanticScene->AddChild(object->GetSceneNode());
+    m_spSemanticScene->AddChild(&(*(object->GetSceneNode())));
 	return object;
 }
 
@@ -390,7 +390,7 @@ LightObject* Level::CreateLight(std::string sName)
 	Logger::debug() << "C++: adding " << sName << " to the level"<< Logger::endl;
 	LightObject* light = new LightObject(sName);
 	m_Lights.push_back(light);
-	m_spSemanticScene->AddChild(light->GetSceneNode());
+    m_spSemanticScene->AddChild(&(*(light->GetSceneNode())));
 	return light;
 
 }
@@ -658,9 +658,9 @@ void Level::itlAddCube(Cube* cube)
     m_iNumCubes++;
 
 	// Create semantic node of the cube and add it to the root semantic node
-	std::shared_ptr<ISemanticSceneNode> spCubeSceneNode = Cube_SemSceneNode::Create(cube);
+    ISemanticSceneNode * pCubeSceneNode = Cube_SemSceneNode::Create(cube);
 
-	m_spSemanticScene->AddChild(spCubeSceneNode);
+    m_spSemanticScene->AddChild(pCubeSceneNode);
 
 }
 

@@ -8,12 +8,12 @@
 #define __BambooEngine_Header_SceneObject_Camera
 
 #include <memory>
-#include "RenderNodes/IRenderNode.h"
+#include "IRenderNode.h"
 #include "Graphic.h"
 
 namespace BambooGraphics
 {
-class GraphicsCore::RN_Camera : public GraphicsCore::IRenderNode
+class RN_Camera : public GraphicsCore::IRenderNode
 {
 public:
     RN_Camera(GraphicsCore::ICamera *pCamera, bool bSetMatrices=true);

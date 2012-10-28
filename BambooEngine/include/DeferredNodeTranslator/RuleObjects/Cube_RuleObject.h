@@ -9,11 +9,12 @@
 #ifndef __BAMBOOENGINE_CUBERULEOBJECT_DEFERREDTRANSLATOR_HEADER
 #define __BAMBOOENGINE_CUBERULEOBJECT_DEFERREDTRANSLATOR_HEADER
 
-#include "common_gl.h"
+#include "GLUtils.h"
 #include "Graphic.h"
 #include "DeferredNodeTranslator/DeferredNodeTranslator.h"
 #include "SemanticSceneNodes/Cube_SemSceneNode.h"
 #include "BambooLib/include/GeneralDefinitions.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_Generic.h"
 #include <memory>
 
 namespace BambooGraphics
@@ -21,7 +22,7 @@ namespace BambooGraphics
     class DeferredNodeTranslator::Cube_RuleObject : public DeferredNodeTranslator::IRuleObject
     {
     public:
-      virtual IRuleObject * CloneFor(std::shared_ptr<ISemanticSceneNode> spSemNode, DeferredNodeTranslator *pTranslator);
+      virtual IRuleObject * CloneFor(ISemanticSceneNode *pSemNode, DeferredNodeTranslator *pTranslator);
 
       /// update the rendering scene graph pieces which correspond to the given semantic scene node
       virtual void Action();
@@ -30,8 +31,8 @@ namespace BambooGraphics
       std::vector<BambooLib::t_classID> GetAcceptedNodeIDs() const;
 
     private:
-    std::shared_ptr<GraphicsCore::RN_Generic>      m_spCorrespondingRenderingNode;
-    std::shared_ptr<Cube_SemSceneNode> m_spSemNode;
+    std::shared_ptr<RN_Generic>      m_spCorrespondingRenderingNode;
+    Cube_SemSceneNode * m_pSemNode;
     };
 
 }

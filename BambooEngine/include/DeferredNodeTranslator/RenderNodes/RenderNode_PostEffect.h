@@ -14,7 +14,7 @@
 #include <string>
 #include <map>
 #include <glm/glm.hpp>
-#include "RenderNodes/IRenderNode.h"
+#include "IRenderNode.h"
 
 namespace BambooGraphics
 {
@@ -25,7 +25,7 @@ namespace BambooGraphics
   This is useful for applying post screen effects (rendering scene in a fbo, and drawing resulting color texture fullscreened with a given shader).
 */
 
-class GraphicsCore::RN_PostEffect : public GraphicsCore::IRenderNode
+class RN_PostEffect : public GraphicsCore::IRenderNode
 {
 public:
     /*! \name Constructors / Destructor */
@@ -60,8 +60,8 @@ protected:
      /*! this method is called after rendering the sceneobject itself. Cleaning up can be done here */
      virtual void ItlPostRender();
 
-    virtual void ItlPreRenderChildren() {};
-    virtual void ItlPostRenderChildren() {};
+    virtual void ItlPreRenderChildren() {}
+    virtual void ItlPostRenderChildren() {}
      //@}
 
 private:

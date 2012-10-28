@@ -12,8 +12,8 @@
 #include <glm/glm.hpp>
 #include <vector>
 
-#include "common_gl.h"
-#include "RenderNodes/IRenderNode.h"
+#include "GLUtils.h"
+#include "IRenderNode.h"
 
 namespace BambooGraphics
 {
@@ -22,7 +22,7 @@ namespace BambooGraphics
   *
 */
 
-class GraphicsCore::RN_RenderPass : public GraphicsCore::IRenderNode
+class RN_RenderPass : public GraphicsCore::IRenderNode
 {
 public:
     enum TRenderPass

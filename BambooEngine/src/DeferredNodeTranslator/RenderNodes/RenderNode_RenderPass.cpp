@@ -1,25 +1,25 @@
-#include "RenderNodes/RenderNode_RenderPass.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_RenderPass.h"
 #include <iostream>
 
 namespace BambooGraphics
 {
-GraphicsCore::RN_RenderPass::RN_RenderPass(TRenderPass pass)
+RN_RenderPass::RN_RenderPass(TRenderPass pass)
     : m_tRenderPass(pass)
 {
     //nothing todo, only initializer list
 }
 
-GraphicsCore::RN_RenderPass::TRenderPass GraphicsCore::RN_RenderPass::getRenderState()
+RN_RenderPass::TRenderPass RN_RenderPass::getRenderState()
 {
     return m_tRenderPass;
 }
 
-GraphicsCore::RN_RenderPass::~RN_RenderPass()
+RN_RenderPass::~RN_RenderPass()
 {
 
 }
 
-void GraphicsCore::RN_RenderPass::Render(std::shared_ptr<TItlRenderInfo> pRenderInfo)
+void RN_RenderPass::Render(std::shared_ptr<TItlRenderInfo> pRenderInfo)
 {
     //first, save current render state
     TRenderPass old_state =  static_cast<TRenderPass>(pRenderInfo->tCurrentRenderPass);

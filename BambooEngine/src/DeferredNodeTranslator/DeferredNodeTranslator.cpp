@@ -1,9 +1,9 @@
 #include "DeferredNodeTranslator/DeferredNodeTranslator.h"
 
-#include "DeferredNodeTranslator/Camera_RuleObject.h"
-#include "DeferredNodeTranslator/Cube_RuleObject.h"
-#include "DeferredNodeTranslator/Light_RuleObject.h"
-#include "DeferredNodeTranslator/LoadedModel_RuleObject.h"
+#include "DeferredNodeTranslator/RuleObjects/Camera_RuleObject.h"
+#include "DeferredNodeTranslator/RuleObjects/Cube_RuleObject.h"
+#include "DeferredNodeTranslator/RuleObjects/Light_RuleObject.h"
+#include "DeferredNodeTranslator/RuleObjects/LoadedModel_RuleObject.h"
 
 #include "BambooLib/include/Logger.h"
 
@@ -29,11 +29,11 @@ DeferredNodeTranslator::~DeferredNodeTranslator()
 
 }
 
-void DeferredNodeTranslator::Translate(std::shared_ptr<ISemanticSceneNode> spSemRoot)
+void DeferredNodeTranslator::Translate(ISemanticSceneNode *pSemRoot)
 {
-  ItlTranslateSemNode(spSemRoot);
+  ItlTranslateSemNode(pSemRoot);
 
-  ISemanticSceneNode::t_const_children_vec  * pvChildren = spSemRoot->GetChildren();
+  ISemanticSceneNode::t_const_children_vec  * pvChildren = pSemRoot->GetChildren();
 
   for (ISemanticSceneNode::t_const_children_vec::const_iterator it = pvChildren->begin(); it != pvChildren->end(); it++)
     {
@@ -59,26 +59,26 @@ void DeferredNodeTranslator::ItlRegisterRuleObjectPrototype(std::shared_ptr<IRul
   }
 }
 
-void DeferredNodeTranslator::ItlTranslateSemNode(std::shared_ptr<ISemanticSceneNode> spSemNode)
+void DeferredNodeTranslator::ItlTranslateSemNode(ISemanticSceneNode *pSemNode)
 {
-  bool bRuleObjectExists = (m_mCachedRuleObjects.find(spSemNode->GetObjectID()) != m_mCachedRuleObjects.end());
+  bool bRuleObjectExists = (m_mCachedRuleObjects.find(pSemNode->GetObjectID()) != m_mCachedRuleObjects.end());
 
   // if the rule object for this object id does not exist, create and cache it
   if (!bRuleObjectExists)
     {
-      bool bFittingRuleObjectPrototypeExists = (m_mRegisteredRuleObjects.find(spSemNode->GetClassID()) != m_mRegisteredRuleObjects.end());
+      bool bFittingRuleObjectPrototypeExists = (m_mRegisteredRuleObjects.find(pSemNode->GetClassID()) != m_mRegisteredRuleObjects.end());
 
       if (!bFittingRuleObjectPrototypeExists)
-        Logger::fatal() << "No rule object prototype fits on a given semantic scene node. Semantic scene node class id: " << spSemNode->GetClassID() << Logger::endl;
+        Logger::fatal() << "No rule object prototype fits on a given semantic scene node. Semantic scene node class id: " << pSemNode->GetClassID() << Logger::endl;
       else
         {
-          std::shared_ptr<IRuleObject> spRulePrototype = m_mRegisteredRuleObjects[spSemNode->GetClassID()];
+          std::shared_ptr<IRuleObject> spRulePrototype = m_mRegisteredRuleObjects[pSemNode->GetClassID()];
 
-          std::shared_ptr<IRuleObject> spConcreteRuleObject(spRulePrototype->CloneFor(spSemNode, this));
+          std::shared_ptr<IRuleObject> spConcreteRuleObject(spRulePrototype->CloneFor(pSemNode, this));
 
           unsigned int nOldSize = m_mCachedRuleObjects.size();
 
-          m_mCachedRuleObjects[spSemNode->GetObjectID()] = spConcreteRuleObject;
+          m_mCachedRuleObjects[pSemNode->GetObjectID()] = spConcreteRuleObject;
 
           // assert that size has changed
           assert (nOldSize != m_mCachedRuleObjects.size());
@@ -86,10 +86,10 @@ void DeferredNodeTranslator::ItlTranslateSemNode(std::shared_ptr<ISemanticSceneN
   }
 
   // rule should now exist
-  bool bRuleObjectExists2 = (m_mCachedRuleObjects.find(spSemNode->GetObjectID()) != m_mCachedRuleObjects.end());
+  bool bRuleObjectExists2 = (m_mCachedRuleObjects.find(pSemNode->GetObjectID()) != m_mCachedRuleObjects.end());
   assert (bRuleObjectExists2);
 
-  m_mCachedRuleObjects[spSemNode->GetObjectID()]->Action();
+  m_mCachedRuleObjects[pSemNode->GetObjectID()]->Action();
 }
 
 }

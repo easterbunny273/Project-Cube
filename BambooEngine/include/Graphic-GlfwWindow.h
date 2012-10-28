@@ -9,14 +9,14 @@
 
 namespace BambooGraphics
 {
-    class GraphicsCore::GlfwWindow : public IRenderTarget
+    class GraphicsCore::GlfwWindowRenderTarget : public IRenderTarget
     {
 
     public:
         /*! \name Construction / Destruction */
         //@{
-            static std::shared_ptr<GlfwWindow> Create(int iWidth, int iHeight, std::string sWindowTitle);
-            virtual ~GlfwWindow();
+            static std::shared_ptr<GlfwWindowRenderTarget> Create(int iWidth, int iHeight, std::string sWindowTitle);
+            virtual ~GlfwWindowRenderTarget();
         //@}
 
         /*! \name Implementing the IRenderTarget interface */
@@ -35,7 +35,7 @@ namespace BambooGraphics
         /*! \name Construction / Destruction */
         //@{
             /// private constructor (only the static method Glfw::Create() is allowed to create a new instance of an GlfwWindow)
-            GlfwWindow();
+            GlfwWindowRenderTarget();
         //@}
 
         /*! \name Static helper methods */
@@ -63,7 +63,7 @@ namespace BambooGraphics
 
         /*! \name Static members */
         //@{
-            static GlfwWindow *                             s_pInstance;
+            static GlfwWindowRenderTarget *                             s_pInstance;
         //@}
     };
 }

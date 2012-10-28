@@ -7,7 +7,8 @@
 #ifndef __bambooengine_sceneobject_boundingbox_header
 #define __bambooengine_sceneobject_boundingbox_header
 
-#include "RenderNodes/IRenderNode.h"
+#include "IRenderNode.h"
+#include "DeferredNodeTranslator/DeferredNodeTranslator.h"
 
 namespace BambooGraphics
 {
@@ -16,7 +17,7 @@ namespace BambooGraphics
   This SceneObject renders only a red sphere in wireframe mode, used for visualizing the bounding spheres.
 */
 
-class GraphicsCore::RN_BoundingBox : public GraphicsCore::IRenderNode
+class RN_BoundingBox : public GraphicsCore::IRenderNode
 {
 public:
     /*! \name Constructor / Destructor */

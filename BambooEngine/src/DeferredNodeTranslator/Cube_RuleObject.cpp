@@ -1,6 +1,6 @@
-#include "DeferredNodeTranslator/Cube_RuleObject.h"
+#include "DeferredNodeTranslator/RuleObjects/Cube_RuleObject.h"
 #include "SemanticSceneNodes/Cube_SemSceneNode.h"
-#include "RenderNodes/RenderNode_Generic.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_Generic.h"
 
 namespace BambooGraphics
 {
@@ -22,15 +22,15 @@ void DeferredNodeTranslator::Cube_RuleObject::Action()
   if (m_spCorrespondingRenderingNode)
     {
       // only update values
-      m_spCorrespondingRenderingNode->SetTransformMatrix(m_spSemNode->GetTransformMatrix());
+      m_spCorrespondingRenderingNode->SetTransformMatrix(m_pSemNode->GetTransformMatrix());
     }
   else
     {
-      Cube *pCube = m_spSemNode->GetCube();
+      Cube *pCube = m_pSemNode->GetCube();
       std::shared_ptr<GeometryData::GenericObject> spGenericObject = pCube->GenerateGenericObject();
 
       // create new node
-      m_spCorrespondingRenderingNode = std::shared_ptr<GraphicsCore::RN_Generic>(new GraphicsCore::RN_Generic(spGenericObject));
+      m_spCorrespondingRenderingNode = std::shared_ptr<RN_Generic>(new RN_Generic(spGenericObject));
       assert (m_spCorrespondingRenderingNode);
 
       m_pTranslator->m_vShadowCasterNodes.push_back(m_spCorrespondingRenderingNode);
@@ -44,12 +44,12 @@ void DeferredNodeTranslator::Cube_RuleObject::Action()
 
 }
 
-DeferredNodeTranslator::IRuleObject *DeferredNodeTranslator::Cube_RuleObject::CloneFor(std::shared_ptr<ISemanticSceneNode> spSemNode, DeferredNodeTranslator *pTranslator)
+DeferredNodeTranslator::IRuleObject *DeferredNodeTranslator::Cube_RuleObject::CloneFor(ISemanticSceneNode *pSemNode, DeferredNodeTranslator *pTranslator)
 {
   Cube_RuleObject *pNewObject = new Cube_RuleObject();
 
   pNewObject->m_pTranslator   = pTranslator;
-  pNewObject->m_spSemNode     = std::dynamic_pointer_cast<Cube_SemSceneNode>(spSemNode);
+  pNewObject->m_pSemNode     = Cube_SemSceneNode::Cast(pSemNode);
 
   return pNewObject;
 }

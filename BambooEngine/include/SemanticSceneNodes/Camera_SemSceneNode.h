@@ -16,7 +16,7 @@ namespace BambooGraphics
       /*! \name Creation */
       //@{
         /// static constructor
-        static std::shared_ptr<Camera_SemSceneNode> Create(std::shared_ptr<GraphicsCore::ICamera> spCamera);
+        static Camera_SemSceneNode * Create(std::shared_ptr<GraphicsCore::ICamera> spCamera);
 
         /// destructor
         ~Camera_SemSceneNode();

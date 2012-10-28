@@ -22,8 +22,8 @@
 // initialize singelton ptr to NULL
 MainApp * MainApp::s_pInstance = NULL;
 
-std::shared_ptr<LoadedModel_SemSceneNode> g_spSphere;
-std::shared_ptr<LoadedModel_SemSceneNode> g_spTreppe;
+LoadedModel_SemSceneNode * g_spSphere;
+LoadedModel_SemSceneNode * g_spTreppe;
 
 MainApp::MainApp()
 {
@@ -101,10 +101,10 @@ void MainApp::StartGraphic_Test2(QWidget *pWidget)
   GetEventManager()->RegisterEventListener(this, CameraMovementEvent::EventType());
 
   // create scene nodes
-  std::shared_ptr<LoadedModel_SemSceneNode> spTreppe = LoadedModel_SemSceneNode::Create("models/bunte-treppe3.dae");
+  LoadedModel_SemSceneNode * spTreppe = LoadedModel_SemSceneNode::Create("models/bunte-treppe3.dae");
   spTreppe->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
 
-  std::shared_ptr<LoadedModel_SemSceneNode> spSphere = LoadedModel_SemSceneNode::Create("models/pool_sphere.dae");
+  LoadedModel_SemSceneNode * spSphere = LoadedModel_SemSceneNode::Create("models/pool_sphere.dae");
   spSphere->SetTransformMatrix(glm::scale(glm::mat4(), glm::vec3(0.01, 0.01, 0.01)));
   spSphere->SetTransformMatrix(glm::translate(spSphere->GetTransformMatrix(), glm::vec3(0.0, 2.0, 0.0)));
 
@@ -114,17 +114,21 @@ void MainApp::StartGraphic_Test2(QWidget *pWidget)
   g_spTreppe = spTreppe;
 
 
-  std::shared_ptr<Light_SemSceneNode> spTestLight1 = Light_SemSceneNode::Create(glm::vec3(-0.2f, 0.10f, 0.14f), glm::vec3(1.0f, -0.4f, -1.0f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
-  std::shared_ptr<Light_SemSceneNode> spTestLight2 = Light_SemSceneNode::Create(glm::vec3(-0.2f, 0.2f, -0.14f), glm::vec3(1.0f, -1.1f, 0.62f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
+  Light_SemSceneNode * spTestLight1 = Light_SemSceneNode::Create(glm::vec3(-0.2f, 0.10f, 0.14f), glm::vec3(1.0f, -0.4f, -1.0f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
+  Light_SemSceneNode * spTestLight2 = Light_SemSceneNode::Create(glm::vec3(-0.2f, 0.2f, -0.14f), glm::vec3(1.0f, -1.1f, 0.62f), 50.0f, glm::vec3(1.0, 1.0, 1.0), 0.1, 50.0f);
 
-  std::shared_ptr<BambooGraphics::Camera_SemSceneNode> spCamera = BambooGraphics::Camera_SemSceneNode::Create(m_spCamera);
+  Cube *pCube = new Cube(0, 0, 0, 0);
+
+  Cube_SemSceneNode * spCube = Cube_SemSceneNode::Create(pCube);
+
+  BambooGraphics::Camera_SemSceneNode * pCamera = BambooGraphics::Camera_SemSceneNode::Create(m_spCamera);
 
   // link scene graph
-  spCamera->AddChild(spTreppe);
-  spCamera->AddChild(spSphere);
-  //spCamera->AddChild(spCube);
-  spCamera->AddChild(spTestLight1);
-  spCamera->AddChild(spTestLight2);
+  pCamera->AddChild(spTreppe);
+  pCamera->AddChild(spSphere);
+  pCamera->AddChild(spCube);
+  pCamera->AddChild(spTestLight1);
+  pCamera->AddChild(spTestLight2);
 
   // create node translator
   std::shared_ptr<BambooGraphics::INodeTranslator> spDeferredTranslator(new BambooGraphics::DeferredNodeTranslator(m_pGraphic));
@@ -134,11 +138,11 @@ void MainApp::StartGraphic_Test2(QWidget *pWidget)
   //spWindow->SetInputEventListener(m_spInputEventListener);
 
   // create gl widget
-  std::shared_ptr<BambooGraphics::GraphicsCore::QtWidgetWrapper> spQtWidget = BambooGraphics::GraphicsCore::QtWidgetWrapper::Create(pWidget);
+  std::shared_ptr<BambooGraphics::GraphicsCore::QtWidgetRenderTarget> spQtWidget = BambooGraphics::GraphicsCore::QtWidgetRenderTarget::Create(pWidget);
   spQtWidget->SetInputEventListener(m_spInputEventListener);
 
   // add render loop
-  m_pGraphic->AddRenderLoop(spQtWidget, spCamera, spDeferredTranslator);
+  m_pGraphic->AddRenderLoop(spQtWidget, pCamera, spDeferredTranslator);
 }
 
 void MainApp::Run(QApplication *pApp, QWidget *pWidget)
@@ -269,7 +273,7 @@ void MainApp::InputEventListener::ItlHandleMousePos(int iX, int iY)
 
     pEventManager->QueueEvent(InputMouseMoveEvent::Create(iRelX, iRelY));
 
-    glfwSetMousePos(m_iWidth / 2, m_iHeight / 2);
+    //glfwSetMousePos(m_iWidth / 2, m_iHeight / 2);
 }
 
 void MainApp::InputEventListener::ItlHandleMouseWheel(int iPosition)

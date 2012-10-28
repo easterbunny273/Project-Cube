@@ -34,7 +34,7 @@ protected:
 
 namespace BambooGraphics
 {
-class GraphicsCore::QtWidgetWrapper : public IRenderTarget
+class GraphicsCore::QtWidgetRenderTarget : public IRenderTarget
 {
 
 public:
@@ -46,8 +46,8 @@ public:
 
     /*! \name Construction / Destruction */
     //@{
-        static std::shared_ptr<QtWidgetWrapper> Create(QWidget *pWidget);
-        virtual ~QtWidgetWrapper();
+        static std::shared_ptr<QtWidgetRenderTarget> Create(QWidget *pWidget);
+        virtual ~QtWidgetRenderTarget();
     //@}
 
     /*! \name Implementing the IRenderTarget interface */
@@ -66,7 +66,7 @@ private:
     /*! \name Construction / Destruction */
     //@{
         /// private constructor (only the static method Create() is allowed to create a new instance)
-        QtWidgetWrapper();
+        QtWidgetRenderTarget();
     //@}
 
     /*! \name Static helper methods */

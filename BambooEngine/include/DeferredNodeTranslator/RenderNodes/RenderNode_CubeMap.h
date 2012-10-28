@@ -7,11 +7,11 @@
 #ifndef __BAMBOOENGINE_RENDERNODE_CUBEMAP
 #define __BAMBOOENGINE_RENDERNODE_CUBEMAP
 
-#include "RenderNodes/IRenderNode.h"
+#include "IRenderNode.h"
 
 namespace BambooGraphics
 {
-class GraphicsCore::RN_CubeMap : public GraphicsCore::IRenderNode
+class RN_CubeMap : public GraphicsCore::IRenderNode
 {
 public:
     /*! \name Constructor / Destructor */

@@ -1,6 +1,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "RenderNodes/RenderNode_SpotLight.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_SpotLight.h"
 #include "BambooLib/include/Logger.h"
 #include "ShaderManager.h"
 #include "TextureManager.h"
@@ -14,10 +14,10 @@ namespace BambooGraphics
 #define FARPLANE 50.0f
 #define SHADOWMAP_RESOLUTION 512.0f
 
-GraphicsCore::RN_SpotLight::RN_SpotLight(glm::vec3 vPosition,
-                                   glm::vec3 vLookDirection,
-                                   float fFOV,
-                                   glm::vec3 vLightColor)
+RN_SpotLight::RN_SpotLight(glm::vec3 vPosition,
+                           glm::vec3 vLookDirection,
+                           float fFOV,
+                           glm::vec3 vLightColor)
 {
     // create projection matrix
     m_m4ProjectionMatrix    = glm::perspective(fFOV, 1.0f, NEARPLANE, FARPLANE);
@@ -37,7 +37,7 @@ GraphicsCore::RN_SpotLight::RN_SpotLight(glm::vec3 vPosition,
     Logger::debug() << "RN_SpotLight created" << Logger::endl;
 }
 
-GraphicsCore::RN_SpotLight::~RN_SpotLight()
+RN_SpotLight::~RN_SpotLight()
 {
     glDeleteFramebuffers(1, &m_nFBO);
     glDeleteTextures(1, &m_nDepthTexture);
@@ -45,7 +45,7 @@ GraphicsCore::RN_SpotLight::~RN_SpotLight()
     Logger::debug() << "RN_SpotLight destroyed" << Logger::endl;
 }
 
-void GraphicsCore::RN_SpotLight::ItlCreateVBO()
+void RN_SpotLight::ItlCreateVBO()
 {
     GLdouble *vertexArray;
     GLuint *indexArray;
@@ -161,13 +161,13 @@ void GraphicsCore::RN_SpotLight::ItlCreateVBO()
     GLenum error = glGetError();
 
     if (error != GL_NO_ERROR)
-      Logger::error() << "glGetError: " << TranslateGLerror(error) << Logger::endl;
+      Logger::error() << "glGetError: " << GLUtils::TranslateGLerror(error) << Logger::endl;
 
     // prepare the vertex array object
     ItlPrepareVAO();
 }
 
-void GraphicsCore::RN_SpotLight::ItlPrepareVAO()
+void RN_SpotLight::ItlPrepareVAO()
 {
   // get shaer manager
   ShaderManager *pShaderManager = ItlGetGraphicCore()->GetShaderManager();
@@ -196,7 +196,7 @@ void GraphicsCore::RN_SpotLight::ItlPrepareVAO()
   pShaderManager->PopActiveShader();
 }
 
-GLuint GraphicsCore::RN_SpotLight::ItlCreateColorTexture()
+GLuint RN_SpotLight::ItlCreateColorTexture()
 {
     GLuint nNewTexture;
 
@@ -223,7 +223,7 @@ GLuint GraphicsCore::RN_SpotLight::ItlCreateColorTexture()
     return nNewTexture;
 }
 
-GLuint GraphicsCore::RN_SpotLight::ItlCreateDepthTexture()
+GLuint RN_SpotLight::ItlCreateDepthTexture()
 {
     GLuint nNewTexture;
 
@@ -250,7 +250,7 @@ GLuint GraphicsCore::RN_SpotLight::ItlCreateDepthTexture()
     return nNewTexture;
 }
 
-void GraphicsCore::RN_SpotLight::ItlCreateFBO()
+void RN_SpotLight::ItlCreateFBO()
 {
     TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
 
@@ -285,24 +285,24 @@ void GraphicsCore::RN_SpotLight::ItlCreateFBO()
     pTextureManager->ReleaseUnit(nUsedTextureUnit);
 }
 
-void GraphicsCore::RN_SpotLight::ItlPreRender()
+void RN_SpotLight::ItlPreRender()
 {
     ItlGetGraphicCore()->GetShaderManager()->PushActiveShader("light-pass");
 }
 
-void GraphicsCore::RN_SpotLight::ItlPostRender()
+void RN_SpotLight::ItlPostRender()
 {
     ItlGetGraphicCore()->GetShaderManager()->PopActiveShader();
 
 
 }
 
-void GraphicsCore::RN_SpotLight::ItlLoadRessources()
+void RN_SpotLight::ItlLoadRessources()
 {
 
 }
 
-void GraphicsCore::RN_SpotLight::ItlRender()
+void RN_SpotLight::ItlRender()
 {
 
 
@@ -395,7 +395,7 @@ void GraphicsCore::RN_SpotLight::ItlRender()
 
 }
 
-void GraphicsCore::RN_SpotLight::ItlPreRenderChildren()
+void RN_SpotLight::ItlPreRenderChildren()
 {
     glm::mat4 mViewProjectionMatrix = m_m4ProjectionMatrix * m_m4ViewMatrix;
 
@@ -431,7 +431,7 @@ void GraphicsCore::RN_SpotLight::ItlPreRenderChildren()
     }
 }
 
-void GraphicsCore::RN_SpotLight::ItlPostRenderChildren()
+void RN_SpotLight::ItlPostRenderChildren()
 {
     glm::mat4 mViewProjectionMatrix = m_m4ProjectionMatrix * m_m4ViewMatrix;
 
@@ -466,7 +466,7 @@ void GraphicsCore::RN_SpotLight::ItlPostRenderChildren()
     }
 }
 
-void GraphicsCore::RN_SpotLight::ItlChangeMatrices()
+void RN_SpotLight::ItlChangeMatrices()
 {
     m_m4SavedProjectionMatrix = m_pCurrentRenderInfo->ProjectionMatrix;
     m_m4SavedViewMatrix = m_pCurrentRenderInfo->ViewMatrix;
@@ -478,7 +478,7 @@ void GraphicsCore::RN_SpotLight::ItlChangeMatrices()
     m_pCurrentRenderInfo->ModelViewProjectionMatrix_ForFrustumCulling = m_pCurrentRenderInfo->ModelViewProjectionMatrix;
 }
 
-void GraphicsCore::RN_SpotLight::ItlRestoreMatrices()
+void RN_SpotLight::ItlRestoreMatrices()
 {
     m_pCurrentRenderInfo->ProjectionMatrix = m_m4SavedProjectionMatrix;
     m_pCurrentRenderInfo->ViewMatrix = m_m4SavedViewMatrix;
@@ -488,7 +488,7 @@ void GraphicsCore::RN_SpotLight::ItlRestoreMatrices()
 
 }
 
-void GraphicsCore::RN_SpotLight::SetTextureLocation(std::string sTexture, GLint iLocation)
+void RN_SpotLight::SetTextureLocation(std::string sTexture, GLint iLocation)
 {
     m_mTextureLocations[sTexture] = iLocation;
 }

@@ -16,8 +16,8 @@
 #include "TextureManager.h"
 #include "BambooLib/include/Logger.h"
 #include "ShaderManager.h"
-#include "RenderNodes/RenderNode_BoundingBox.h"
-#include "RenderNodes/RenderNode_RenderPass.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_BoundingBox.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_RenderPass.h"
 
 using namespace std;
 using namespace BambooLib;
@@ -26,7 +26,7 @@ namespace BambooGraphics
 {
 const double PI = 3.141516;
 
-GraphicsCore::RN_BoundingBox::RN_BoundingBox(float fMinX, float fMaxX, float fMinY, float fMaxY, float fMinZ, float fMaxZ)
+RN_BoundingBox::RN_BoundingBox(float fMinX, float fMaxX, float fMinY, float fMaxY, float fMinZ, float fMaxZ)
     : IRenderNode()
 {
     GLdouble *vertexArray;
@@ -127,17 +127,17 @@ GraphicsCore::RN_BoundingBox::RN_BoundingBox(float fMinX, float fMaxX, float fMi
     GLenum error = glGetError();
 
     if (error != GL_NO_ERROR)
-        Logger::error() << "glGetError: " << TranslateGLerror(error) << Logger::endl;
+        Logger::error() << "glGetError: " << GLUtils::TranslateGLerror(error) << Logger::endl;
 
     Logger::debug() << "SceneObject_BoundingBox created" << Logger::endl;
 }
 
-GraphicsCore::RN_BoundingBox::~RN_BoundingBox()
+RN_BoundingBox::~RN_BoundingBox()
 {
 
 }
 
-void GraphicsCore::RN_BoundingBox::ItlPreRender()
+void RN_BoundingBox::ItlPreRender()
 {
   /*  glBindVertexArray(m_nVertexArrayObject);
     glBindBuffer(GL_ARRAY_BUFFER, m_nVertexBufferObject);
@@ -149,12 +149,12 @@ void GraphicsCore::RN_BoundingBox::ItlPreRender()
         ShaderManager::instance()->ActivateShader("bounding_shader");*/
 }
 
-void GraphicsCore::RN_BoundingBox::ItlPostRender()
+void RN_BoundingBox::ItlPostRender()
 {
   //  ShaderManager::instance()->PopActiveShader();
 }
 
-void GraphicsCore::RN_BoundingBox::ItlRender()
+void RN_BoundingBox::ItlRender()
 {
   /*  const GLint l_in_Position(ShaderManager::instance()->GetAttribute("in_Position"));
 

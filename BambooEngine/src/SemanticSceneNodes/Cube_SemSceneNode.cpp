@@ -5,7 +5,7 @@
 // register class at core system and get unique class id
 BambooLib::t_classID Cube_SemSceneNode::s_ClassID = BambooLib::CoreSystem::GetInstance()->RegisterClass("SM_CUBE_", NULL);
 
-std::shared_ptr<Cube_SemSceneNode> Cube_SemSceneNode::Create(Cube *pCube)
+Cube_SemSceneNode * Cube_SemSceneNode::Create(Cube *pCube)
 {
   // create new node
   Cube_SemSceneNode * pNewNode = new Cube_SemSceneNode();
@@ -15,11 +15,8 @@ std::shared_ptr<Cube_SemSceneNode> Cube_SemSceneNode::Create(Cube *pCube)
   pNewNode->m_pCube = pCube;
   pNewNode->m_mTransformMatrix = glm::translate(glm::mat4(), glm::vec3(pCube->GetCubePosition()));
 
-  // create shared_ptr
-  std::shared_ptr<Cube_SemSceneNode> spNewNode(pNewNode);
-
-  // return shared ptr
-  return spNewNode;
+  // return new node
+  return pNewNode;
 }
 
 

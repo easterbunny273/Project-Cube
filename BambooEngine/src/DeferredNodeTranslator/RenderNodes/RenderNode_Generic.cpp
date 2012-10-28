@@ -5,11 +5,11 @@
 #include "ShaderManager.h"
 #include "TextureManager.h"
 
-#include "common_gl.h"
+#include "GLUtils.h"
 #include <IL/il.h>
 
 //class specific
-#include "RenderNodes/RenderNode_Generic.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_Generic.h"
 
 using namespace BambooLib;
 
@@ -20,7 +20,7 @@ GeometryData::TextureType tTextureTypes[4] = { GeometryData::TextureNames::ALBED
                                                GeometryData::TextureNames::SPECULAR,
                                                GeometryData::TextureNames::DISPLACE };
 
-GraphicsCore::RN_Generic::RN_Generic(std::shared_ptr<GeometryData::GenericObject> spObject)
+RN_Generic::RN_Generic(std::shared_ptr<GeometryData::GenericObject> spObject)
     : m_pnVertexArrayObjects(NULL),
       m_pnVertexBufferObjects(NULL),
       m_pnIndexBufferObjects(NULL),
@@ -41,7 +41,7 @@ GraphicsCore::RN_Generic::RN_Generic(std::shared_ptr<GeometryData::GenericObject
     Logger::debug() << "RN_Generic created" << Logger::endl;
 }
 
-GraphicsCore::RN_Generic::~RN_Generic()
+RN_Generic::~RN_Generic()
 {
     ItlDeleteBuffers();
     ItlDeleteTextures();
@@ -49,13 +49,13 @@ GraphicsCore::RN_Generic::~RN_Generic()
     Logger::debug() << "RN_Generic destroyed" << Logger::endl;
 }
 
-void GraphicsCore::RN_Generic::SetEnvironmentMapping(bool bEnabled, GLuint nTextureID /* = 0*/)
+void RN_Generic::SetEnvironmentMapping(bool bEnabled, GLuint nTextureID /* = 0*/)
 {
   m_bUseEnvironmentMapping = bEnabled;
   m_nEnvironmentMap = nTextureID;
 }
 
-void GraphicsCore::RN_Generic::ItlRender()
+void RN_Generic::ItlRender()
 {
     TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
     assert (pTextureManager != NULL);
@@ -137,33 +137,33 @@ void GraphicsCore::RN_Generic::ItlRender()
 }
 
 
-void GraphicsCore::RN_Generic::ItlPreRender()
+void RN_Generic::ItlPreRender()
 {
 
 }
 
-void GraphicsCore::RN_Generic::ItlPostRender()
+void RN_Generic::ItlPostRender()
 {
 
 }
 
-void GraphicsCore::RN_Generic::ItlPreRenderChildren()
+void RN_Generic::ItlPreRenderChildren()
 {
 
 }
 
-void GraphicsCore::RN_Generic::ItlPostRenderChildren()
+void RN_Generic::ItlPostRenderChildren()
 {
 
 }
 
-bool GraphicsCore::RN_Generic::ItlTestSkipRendering()
+bool RN_Generic::ItlTestSkipRendering()
 {
 
     return false;
 }
 
-void GraphicsCore::RN_Generic::ItlPrepareGLBuffers()
+void RN_Generic::ItlPrepareGLBuffers()
 {
     // delete old buffers, if not NULL
     ItlDeleteBuffers();
@@ -253,7 +253,7 @@ void GraphicsCore::RN_Generic::ItlPrepareGLBuffers()
 
 }
 
-void GraphicsCore::RN_Generic::ItlDeleteBuffers()
+void RN_Generic::ItlDeleteBuffers()
 {
     if (m_pnVertexBufferObjects != NULL)
     {
@@ -281,7 +281,7 @@ void GraphicsCore::RN_Generic::ItlDeleteBuffers()
 
 }
 
-void GraphicsCore::RN_Generic::ItlPrepareVAO()
+void RN_Generic::ItlPrepareVAO()
 {
     ShaderManager *pShaderManager = ItlGetGraphicCore()->GetShaderManager();
     assert (pShaderManager != NULL);
@@ -338,7 +338,7 @@ void GraphicsCore::RN_Generic::ItlPrepareVAO()
     pShaderManager->PopActiveShader();
 }
 
-void GraphicsCore::RN_Generic::ItlLoadShader()
+void RN_Generic::ItlLoadShader()
 {
     static bool bAlreadyLoaded = false;
 
@@ -418,7 +418,7 @@ void GraphicsCore::RN_Generic::ItlLoadShader()
     }
 }
 
-void GraphicsCore::RN_Generic::ItlPrepareTextures()
+void RN_Generic::ItlPrepareTextures()
 {
     TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
     assert (pTextureManager != NULL);
@@ -451,7 +451,7 @@ void GraphicsCore::RN_Generic::ItlPrepareTextures()
 
 }
 
-void GraphicsCore::RN_Generic::ItlDeleteTextures()
+void RN_Generic::ItlDeleteTextures()
 {
     TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
     assert (pTextureManager != NULL);

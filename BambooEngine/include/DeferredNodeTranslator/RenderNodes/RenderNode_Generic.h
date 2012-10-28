@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-#include "RenderNodes/IRenderNode.h"
+#include "IRenderNode.h"
 #include "GeometryData.h"
 
 namespace BambooGraphics
@@ -20,7 +20,7 @@ namespace BambooGraphics
     tbd
 */
 
-class GraphicsCore::RN_Generic : public GraphicsCore::IRenderNode
+class RN_Generic : public GraphicsCore::IRenderNode
 {
 public:
     /*! \name Constructor / Destructor */

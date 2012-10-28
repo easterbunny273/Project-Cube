@@ -3,7 +3,7 @@
 // register class at core system and get unique class id
 BambooLib::t_classID LoadedModel_SemSceneNode::s_ClassID = BambooLib::CoreSystem::GetInstance()->RegisterClass("SM_LOADM", NULL);
 
-std::shared_ptr<LoadedModel_SemSceneNode> LoadedModel_SemSceneNode::Create(std::string sFilename)
+LoadedModel_SemSceneNode * LoadedModel_SemSceneNode::Create(std::string sFilename)
 {
   // create node
   LoadedModel_SemSceneNode *pNode = new LoadedModel_SemSceneNode();
@@ -13,10 +13,7 @@ std::shared_ptr<LoadedModel_SemSceneNode> LoadedModel_SemSceneNode::Create(std::
   pNode->m_bEnvironmentMapping  = false;
   pNode->m_mTransformMatrix = glm::mat4();
 
-  // create shared_ptr
-  std::shared_ptr<LoadedModel_SemSceneNode> spNode(pNode);
-
-  return spNode;
+  return pNode;
 }
 
 LoadedModel_SemSceneNode::~LoadedModel_SemSceneNode()

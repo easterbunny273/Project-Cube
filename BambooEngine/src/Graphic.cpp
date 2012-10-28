@@ -14,17 +14,17 @@
 #include <glm/gtx/transform2.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "common_gl.h"
+#include "GLUtils.h"
 #include "ShaderManager.h"
 #include "TextureManager.h"
 #include "BambooLib/include/Logger.h"
-#include "RenderNodes/IRenderNode.h"
-#include "RenderNodes/RenderNode_PostEffect.h"
-#include "RenderNodes/RenderNode_RenderPass.h"
-#include "RenderNodes/RenderNode_Camera.h"
-#include "RenderNodes/RenderNode_FBO.h"
-#include "RenderNodes/RenderNode_CubeMap.h"
-#include "RenderNodes/RenderNode_Deferred.h"
+#include "IRenderNode.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_PostEffect.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_RenderPass.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_Camera.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_FBO.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_CubeMap.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_Deferred.h"
 #include "DeferredNodeTranslator/DeferredNodeTranslator.h"
 #include "Graphic.h"
 #include "Camera.h"
@@ -81,7 +81,7 @@ namespace BambooGraphics
             pRenderLoop->spRenderTarget->ClearBuffers();
 
             // translate semantic scene graph into a rendering scene graph
-            pRenderLoop->spTranslator->Translate(pRenderLoop->spSceneRoot);
+            pRenderLoop->spTranslator->Translate(pRenderLoop->pSceneRoot);
 
             // get render scene graph from translator
             std::shared_ptr<IRenderNode> spRenderNode = pRenderLoop->spTranslator->GetRenderGraph();
@@ -117,7 +117,7 @@ namespace BambooGraphics
     /****************************************************************
       *************************************************************** */
     int GraphicsCore::AddRenderLoop(std::shared_ptr<IRenderTarget> spRenderTarget,
-                              std::shared_ptr<ISemanticSceneNode> spRootNode,
+                              ISemanticSceneNode * pRootNode,
                               std::shared_ptr<INodeTranslator> spTranslator)
     {
         static int iID = 0;
@@ -125,7 +125,7 @@ namespace BambooGraphics
         TItlRenderLoop NewLoop;
 
         NewLoop.spRenderTarget  = spRenderTarget;
-        NewLoop.spSceneRoot     = spRootNode;
+        NewLoop.pSceneRoot     = pRootNode;
         NewLoop.spTranslator    = spTranslator;
 
         m_mRenderLoops[iID++] = NewLoop;

@@ -8,8 +8,8 @@
 #include "Graphic.h"
 #include "Camera.h"
 #include "ShaderManager.h"
-#include "RenderNodes/IRenderNode.h"
-#include "RenderNodes/RenderNode_BoundingBox.h"
+#include "IRenderNode.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_BoundingBox.h"
 
 namespace BambooGraphics
 {
@@ -257,7 +257,7 @@ bool GraphicsCore::IRenderNode_Cullable::ItlTestIfVisible()
     {
     ItlInitializeBoundingBox();
 
-        std::shared_ptr<GraphicsCore::IRenderNode> pBoundingBox(new GraphicsCore::RN_BoundingBox(m_fMinX, m_fMaxX, m_fMinY, m_fMaxY, m_fMinZ, m_fMaxZ));
+        std::shared_ptr<GraphicsCore::IRenderNode> pBoundingBox(new RN_BoundingBox(m_fMinX, m_fMaxX, m_fMinY, m_fMaxY, m_fMinZ, m_fMaxZ));
     AddChild(pBoundingBox);
 
     m_bInitialized = true;

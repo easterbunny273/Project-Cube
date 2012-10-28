@@ -21,21 +21,21 @@ namespace BambooGraphics
 {
 using namespace BambooLib;
 
-GraphicsCore::GlfwWindow *GraphicsCore::GlfwWindow::s_pInstance = NULL;
+GraphicsCore::GlfwWindowRenderTarget *GraphicsCore::GlfwWindowRenderTarget::s_pInstance = NULL;
 
 int s_DebugDeferredTexture = 0;
 int s_nUseParallax = 0;
 
 /****************************************************************
   *************************************************************** */
-GraphicsCore::GlfwWindow::GlfwWindow()
+GraphicsCore::GlfwWindowRenderTarget::GlfwWindowRenderTarget()
 {
     // construction is done in Create()
 }
 
 /****************************************************************
   *************************************************************** */
-std::shared_ptr<GraphicsCore::GlfwWindow> GraphicsCore::GlfwWindow::Create(int iWidth, int iHeight, std::string sWindowTitle)
+std::shared_ptr<GraphicsCore::GlfwWindowRenderTarget> GraphicsCore::GlfwWindowRenderTarget::Create(int iWidth, int iHeight, std::string sWindowTitle)
 {
   std::vector<std::pair<int, int> > viOpenGLVersions;
 
@@ -50,13 +50,13 @@ std::shared_ptr<GraphicsCore::GlfwWindow> GraphicsCore::GlfwWindow::Create(int i
   viCoreProfileFlag.push_back(GLFW_OPENGL_COMPAT_PROFILE);
   viCoreProfileFlag.push_back(0);
 
-    std::shared_ptr<GlfwWindow> spNewWindow(new GlfwWindow());
+    std::shared_ptr<GlfwWindowRenderTarget> spNewWindow(new GlfwWindowRenderTarget());
     spNewWindow->m_iWidth = iWidth;
     spNewWindow->m_iHeight = iHeight;
     spNewWindow->m_sWindowTitle = sWindowTitle;
 
     // assert that only one instance of a glfw window is created (glfw does not support multiple windows)
-    assert(GlfwWindow::s_pInstance == NULL);
+    assert(GlfwWindowRenderTarget::s_pInstance == NULL);
 
     if (s_pInstance != NULL)
     {
@@ -65,7 +65,7 @@ std::shared_ptr<GraphicsCore::GlfwWindow> GraphicsCore::GlfwWindow::Create(int i
         Logger::error() << "Contact the developers or reinstall if you have any problems with event handling" << Logger::endl;
     }
 
-    GlfwWindow::s_pInstance = spNewWindow.get();
+    GlfwWindowRenderTarget::s_pInstance = spNewWindow.get();
 
     // initialize glfw
     if (glfwInit() == GL_TRUE)
@@ -109,10 +109,10 @@ std::shared_ptr<GraphicsCore::GlfwWindow> GraphicsCore::GlfwWindow::Create(int i
 
 
     // set input handling callback methods
-    glfwSetKeyCallback(GraphicsCore::GlfwWindow::ItlStaticHandleKeyboardEvent);
-    glfwSetMousePosCallback(GraphicsCore::GlfwWindow::ItlStaticHandleMousePos);
-    glfwSetMouseWheelCallback(GraphicsCore::GlfwWindow::ItlStaticHandleMouseWheel);
-    glfwSetMouseButtonCallback(GraphicsCore::GlfwWindow::ItlStaticHandleMouseButton);
+    glfwSetKeyCallback(GraphicsCore::GlfwWindowRenderTarget::ItlStaticHandleKeyboardEvent);
+    glfwSetMousePosCallback(GraphicsCore::GlfwWindowRenderTarget::ItlStaticHandleMousePos);
+    glfwSetMouseWheelCallback(GraphicsCore::GlfwWindowRenderTarget::ItlStaticHandleMouseWheel);
+    glfwSetMouseButtonCallback(GraphicsCore::GlfwWindowRenderTarget::ItlStaticHandleMouseButton);
 
     // set window title
     glfwSetWindowTitle(sWindowTitle.c_str());
@@ -144,17 +144,17 @@ std::shared_ptr<GraphicsCore::GlfwWindow> GraphicsCore::GlfwWindow::Create(int i
 
 /****************************************************************
   *************************************************************** */
-GraphicsCore::GlfwWindow::~GlfwWindow()
+GraphicsCore::GlfwWindowRenderTarget::~GlfwWindowRenderTarget()
 {
     glfwCloseWindow();
     glfwTerminate();
 
-    GlfwWindow::s_pInstance = NULL;
+    GlfwWindowRenderTarget::s_pInstance = NULL;
 }
 
 /****************************************************************
   *************************************************************** */
-void GraphicsCore::GlfwWindow::ItlStaticHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState)
+void GraphicsCore::GlfwWindowRenderTarget::ItlStaticHandleKeyboardEvent(int iKeyIdentifier, int iNewKeyState)
 {
     if (iKeyIdentifier == GLFW_KEY_LALT && iNewKeyState==GLFW_PRESS)
     {
@@ -169,8 +169,6 @@ void GraphicsCore::GlfwWindow::ItlStaticHandleKeyboardEvent(int iKeyIdentifier, 
         return;
     }
 
-
-
     // this method is a static method (glfw cannot call class methods)
     // which redirects the event to the member-method of the Graphic class
     // therefore, we need a pointer to the instance. Thus, only one instance
@@ -182,7 +180,10 @@ void GraphicsCore::GlfwWindow::ItlStaticHandleKeyboardEvent(int iKeyIdentifier, 
     assert (s_pInstance != NULL);
 
     // get "this" to call member methods
-    GraphicsCore::GlfwWindow *pThis = s_pInstance;
+    GraphicsCore::GlfwWindowRenderTarget *pThis = s_pInstance;
+
+    TKey eKey = KEY_UNKNOWN;
+
 
     // call method of listener
     if (pThis->m_spInputEventListener)
@@ -191,7 +192,7 @@ void GraphicsCore::GlfwWindow::ItlStaticHandleKeyboardEvent(int iKeyIdentifier, 
 
 /****************************************************************
   *************************************************************** */
-void GraphicsCore::GlfwWindow::ItlStaticHandleMousePos(int iX, int iY)
+void GraphicsCore::GlfwWindowRenderTarget::ItlStaticHandleMousePos(int iX, int iY)
 {
     // this method is a static method (glfw cannot call class methods)
     // which redirects the event to the member-method of the Graphic class
@@ -204,7 +205,7 @@ void GraphicsCore::GlfwWindow::ItlStaticHandleMousePos(int iX, int iY)
     assert (s_pInstance != NULL);
 
     // get "this" to call member methods
-    GraphicsCore::GlfwWindow *pThis = s_pInstance;
+    GraphicsCore::GlfwWindowRenderTarget *pThis = s_pInstance;
 
     // call member method
     if (pThis->m_spInputEventListener)
@@ -213,7 +214,7 @@ void GraphicsCore::GlfwWindow::ItlStaticHandleMousePos(int iX, int iY)
 
 /****************************************************************
   *************************************************************** */
-void GraphicsCore::GlfwWindow::ItlStaticHandleMouseWheel(int iPosition)
+void GraphicsCore::GlfwWindowRenderTarget::ItlStaticHandleMouseWheel(int iPosition)
 {
     // this method is a static method (glfw cannot call class methods)
     // which redirects the event to the member-method of the Graphic class
@@ -226,7 +227,7 @@ void GraphicsCore::GlfwWindow::ItlStaticHandleMouseWheel(int iPosition)
     assert (s_pInstance != NULL);
 
     // get "this" to call member methods
-    GraphicsCore::GlfwWindow *pThis = s_pInstance;
+    GraphicsCore::GlfwWindowRenderTarget *pThis = s_pInstance;
 
     // call member method
     if (pThis->m_spInputEventListener)
@@ -235,7 +236,7 @@ void GraphicsCore::GlfwWindow::ItlStaticHandleMouseWheel(int iPosition)
 
 /****************************************************************
   *************************************************************** */
-void GraphicsCore::GlfwWindow::ItlStaticHandleMouseButton(int iButton, int iAction)
+void GraphicsCore::GlfwWindowRenderTarget::ItlStaticHandleMouseButton(int iButton, int iAction)
 {
     // this method is a static method (glfw cannot call class methods)
     // which redirects the event to the member-method of the Graphic class
@@ -248,7 +249,7 @@ void GraphicsCore::GlfwWindow::ItlStaticHandleMouseButton(int iButton, int iActi
     assert (s_pInstance != NULL);
 
     // get "this" to call member methods
-    GraphicsCore::GlfwWindow *pThis = s_pInstance;
+    GraphicsCore::GlfwWindowRenderTarget *pThis = s_pInstance;
 
     // call member method
     if (pThis->m_spInputEventListener)
@@ -257,14 +258,14 @@ void GraphicsCore::GlfwWindow::ItlStaticHandleMouseButton(int iButton, int iActi
 
 /****************************************************************
   *************************************************************** */
-void GraphicsCore::GlfwWindow::SwapBuffers()
+void GraphicsCore::GlfwWindowRenderTarget::SwapBuffers()
 {
     glfwSwapBuffers();
 }
 
 /****************************************************************
   *************************************************************** */
-void GraphicsCore::GlfwWindow::ClearBuffers()
+void GraphicsCore::GlfwWindowRenderTarget::ClearBuffers()
 {
     // Enable sRGB gamma correction for framebuffer output.
     glEnable(GL_FRAMEBUFFER_SRGB);

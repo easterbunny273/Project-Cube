@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include "RenderNodes/RenderNode_FBO.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_FBO.h"
 #include "TextureManager.h"
 #include "BambooLib/include/Logger.h"
 
@@ -19,7 +19,7 @@ namespace BambooGraphics
  *  \param bFloating16 If true, the generated color texture used 16bit floating precision.
  *  \param bMipMapped If true, mipmaps for the color texture are generated after each update of the color texture
  */
-GraphicsCore::RN_FBO::RN_FBO(int iWidth,
+RN_FBO::RN_FBO(int iWidth,
                                  int iHeight,
                                  const char *szColorTextureName,
                                  bool bFloating16, bool bMipMapped)
@@ -138,7 +138,7 @@ GraphicsCore::RN_FBO::RN_FBO(int iWidth,
  *  \param szDepthTextureName The texture name which is used to register the depth texture at the TextureManager
  *  \param bMipMapped If true, mipmaps for the color texture are generated after each update of the color texture
  */
-GraphicsCore::RN_FBO::RN_FBO(int iWidth,
+RN_FBO::RN_FBO(int iWidth,
                                  int iHeight,
                                  const char *szColorTextureName,
                                  const char *szDepthTextureName,
@@ -238,7 +238,7 @@ GraphicsCore::RN_FBO::RN_FBO(int iWidth,
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-GraphicsCore::RN_FBO::~RN_FBO()
+RN_FBO::~RN_FBO()
 {
 #pragma warn "todo: correct this"
     //delete color texture, if used
@@ -263,7 +263,7 @@ GraphicsCore::RN_FBO::~RN_FBO()
  *  This method is called internally BEFORE rendering the children,
  *  and binds and clears the fbo as needed.
  */
-void GraphicsCore::RN_FBO::ItlPreRenderChildren()
+void RN_FBO::ItlPreRenderChildren()
 {
     //bind fbo
     glBindFramebuffer(GL_FRAMEBUFFER, m_nFramebuffer);
@@ -286,7 +286,7 @@ void GraphicsCore::RN_FBO::ItlPreRenderChildren()
  *  This method is called internally AFTER rendering the children,
  *  and unbinds the fbo.
  */
-void GraphicsCore::RN_FBO::ItlPostRenderChildren()
+void RN_FBO::ItlPostRenderChildren()
 {
 
     //if mipmapping is activated, update mipmaps
@@ -323,17 +323,17 @@ void GraphicsCore::RN_FBO::ItlPostRenderChildren()
     glViewport(0, 0, iOldWidth, iOldHeight);
 }
 
-void GraphicsCore::RN_FBO::ItlPreRender()
+void RN_FBO::ItlPreRender()
 {
 
 }
 
-void GraphicsCore::RN_FBO::ItlRender()
+void RN_FBO::ItlRender()
 {
 
 }
 
-void GraphicsCore::RN_FBO::ItlPostRender()
+void RN_FBO::ItlPostRender()
 {
 
 }

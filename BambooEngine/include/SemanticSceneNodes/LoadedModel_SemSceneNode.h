@@ -14,7 +14,7 @@ public:
   /*! \name Creation */
   //@{
     /// static constructor
-    static std::shared_ptr<LoadedModel_SemSceneNode> Create(std::string sFilename);
+    static LoadedModel_SemSceneNode *Create(std::string sFilename);
 
     /// destructor
     ~LoadedModel_SemSceneNode();

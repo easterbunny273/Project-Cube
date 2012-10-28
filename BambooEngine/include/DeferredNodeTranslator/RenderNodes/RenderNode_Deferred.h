@@ -9,8 +9,8 @@
 #ifndef __BAMBOO_RENDERNODE_DEFERRED_HEADER
 #define __BAMBOO_RENDERNODE_DEFFERED_HEADER
 
-#include "RenderNodes/IRenderNode.h"
-#include "RenderNodes/RenderNode_SpotLight.h"
+#include "IRenderNode.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_SpotLight.h"
 
 #include <vector>
 #include <memory>
@@ -25,7 +25,7 @@ namespace BambooGraphics
     and does the lighting based on these created textures
 */
 
-class GraphicsCore::RN_Deferred : public GraphicsCore::IRenderNode
+class RN_Deferred : public GraphicsCore::IRenderNode
 {
 public:
     /*! \name Constructors / Destructor */
@@ -41,7 +41,7 @@ public:
 
     /*! \name xy */
     //@{
-        void AddSpotLight(std::shared_ptr<GraphicsCore::RN_SpotLight> spSpotlight);
+        void AddSpotLight(std::shared_ptr<RN_SpotLight> spSpotlight);
 
         GLuint GetAlbedoTexture() { return m_nAlbedoDrawBuffer; }
     //@}
@@ -100,7 +100,7 @@ private:
 
         bool    m_bLayeredFBO;
 
-        std::vector<std::shared_ptr<GraphicsCore::RN_SpotLight> > m_vspSpotLights;
+        std::vector<std::shared_ptr<RN_SpotLight> > m_vspSpotLights;
     //@}
 };
 

@@ -1,8 +1,8 @@
-#include "DeferredNodeTranslator/Camera_RuleObject.h"
+#include "DeferredNodeTranslator/RuleObjects/Camera_RuleObject.h"
 #include "SemanticSceneNodes/Camera_SemSceneNode.h"
 
-#include "RenderNodes/RenderNode_Camera.h"
-#include "RenderNodes/RenderNode_Deferred.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_Camera.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_Deferred.h"
 #include "Camera.h"
 
 namespace BambooGraphics
@@ -23,13 +23,13 @@ void DeferredNodeTranslator::Camera_RuleObject::Action()
 
   if (!bRootAlreadyCreated)
   {
-      std::shared_ptr<GraphicsCore::ICamera> spCamera = m_spSemNode->GetCamera();
+      std::shared_ptr<GraphicsCore::ICamera> spCamera = m_pSemNodeCamera->GetCamera();
 
-      m_pTranslator->m_spRootNode = std::shared_ptr<GraphicsCore::IRenderNode>(new GraphicsCore::RN_Camera(spCamera.get()));
+      m_pTranslator->m_spRootNode = std::shared_ptr<GraphicsCore::IRenderNode>(new RN_Camera(spCamera.get()));
 
       m_pTranslator->m_spRootNode->SetInitialViewportInformation(1024,768);
 
-      std::shared_ptr<GraphicsCore::RN_Deferred> spDeferredNode(new GraphicsCore::RN_Deferred(1024,768, false));
+      std::shared_ptr<RN_Deferred> spDeferredNode(new RN_Deferred(1024,768, false));
 
       spDeferredNode->SetGraphicCore(m_pTranslator->m_pCore);
 
@@ -37,14 +37,14 @@ void DeferredNodeTranslator::Camera_RuleObject::Action()
       m_pTranslator->m_spRootNode->AddChild(spDeferredNode);
   }
 
-  m_spSemNode->GetCamera()->Move(0.0001f);
+  m_pSemNodeCamera->GetCamera()->Move(0.0001f);
 }
 
-DeferredNodeTranslator::IRuleObject *DeferredNodeTranslator::Camera_RuleObject::CloneFor(std::shared_ptr<ISemanticSceneNode> spSemNode, DeferredNodeTranslator *pTranslator)
+DeferredNodeTranslator::IRuleObject *DeferredNodeTranslator::Camera_RuleObject::CloneFor(ISemanticSceneNode *pSemNode, DeferredNodeTranslator *pTranslator)
 {
   Camera_RuleObject *pNewObject = new Camera_RuleObject();
 
-  pNewObject->m_spSemNode = std::dynamic_pointer_cast<Camera_SemSceneNode>(spSemNode);;
+  pNewObject->m_pSemNodeCamera = Camera_SemSceneNode::Cast(pSemNode);
   pNewObject->m_pTranslator = pTranslator;
 
   return pNewObject;

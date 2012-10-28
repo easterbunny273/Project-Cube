@@ -33,7 +33,7 @@ public:
     class IRuleObject
     {
     public:
-      virtual IRuleObject * CloneFor(std::shared_ptr<ISemanticSceneNode> spSemNode, DeferredNodeTranslator *pTranslator) = 0;
+      virtual IRuleObject * CloneFor(ISemanticSceneNode *pSemNode, DeferredNodeTranslator *pTranslator) = 0;
 
       /// update the rendering scene graph pieces which correspond to the given semantic scene node
       virtual void Action() = 0;
@@ -54,7 +54,7 @@ public:
 
     protected:
       DeferredNodeTranslator * m_pTranslator;
-      std::shared_ptr<ISemanticSceneNode> m_spSemNode;
+      ISemanticSceneNode     * m_pSemNode;
     };
   //@}
 
@@ -66,6 +66,16 @@ public:
 
   /*! \name Forward declarations */
   //@{
+      /*class RenderNode_Camera;
+      class RenderNode_CubeMap;
+      class RenderNode_Deferred;
+      class RenderNode_FBO;
+      class RenderNode_PostEffect;
+      class RenderNode_RenderPass;
+      class RenderNode_SpotLight;
+      class RenderNode_SpotLight_Model;
+      class RenderNode_BoundingBox;*/
+
       class Camera_RuleObject;
       class Cube_RuleObject;
       class LoadedModel_RuleObject;
@@ -75,7 +85,7 @@ public:
 
   /*! \name INodeTranslator interface */
   //@{
-    virtual void Translate(std::shared_ptr<ISemanticSceneNode> spSemRoot);
+    virtual void Translate(ISemanticSceneNode *pSemRoot);
   //@}
 
 private:
@@ -83,7 +93,7 @@ private:
   //@{
       void ItlRegisterRuleObjectPrototype(std::shared_ptr<IRuleObject> pObject);
 
-      void ItlTranslateSemNode(std::shared_ptr<ISemanticSceneNode> spSemNode);
+      void ItlTranslateSemNode(ISemanticSceneNode *pSemNode);
   //@}
 
   std::map<BambooLib::t_objectID, std::shared_ptr<IRuleObject> > m_mCachedRuleObjects;
@@ -93,7 +103,7 @@ private:
   std::vector<std::shared_ptr<GraphicsCore::IRenderNode> > m_vLightNodes;
   std::vector<std::shared_ptr<GraphicsCore::IRenderNode> > m_vShadowCasterNodes;
 
-  std::shared_ptr<GraphicsCore::RN_Deferred>    m_spDeferredNode;
+  std::shared_ptr<RN_Deferred>    m_spDeferredNode;
 };
 
 }

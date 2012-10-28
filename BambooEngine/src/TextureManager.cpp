@@ -4,7 +4,7 @@
 #include <sstream>
 
 // openGL, devIL
-#include "common_gl.h"
+#include "GLUtils.h"
 #include <IL/il.h>
 
 // assert
@@ -283,7 +283,7 @@ namespace BambooGraphics
 
                 GLenum eError = glGetError();
                 if (eError != GL_NO_ERROR)
-                    Logger::error() << "glGetError: " << TranslateGLerror(eError) << Logger::endl;
+                    Logger::error() << "glGetError: " << GLUtils::TranslateGLerror(eError) << Logger::endl;
 
                 return true;
         }

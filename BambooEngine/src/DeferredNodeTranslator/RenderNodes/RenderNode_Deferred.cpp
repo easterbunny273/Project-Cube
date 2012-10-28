@@ -1,6 +1,6 @@
-#include "RenderNodes/RenderNode_Deferred.h"
-#include "RenderNodes/RenderNode_PostEffect.h"
-#include "RenderNodes/RenderNode_SpotLight.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_Deferred.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_PostEffect.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_SpotLight.h"
 #include "ShaderManager.h"
 #include "TextureManager.h"
 #include "BambooLib/include/Logger.h"
@@ -12,7 +12,7 @@ using namespace BambooLib;
 
 namespace BambooGraphics
 {
-GraphicsCore::RN_Deferred::RN_Deferred(unsigned int nWidth, unsigned int nHeight, bool bLayered /* = FALSE */)
+RN_Deferred::RN_Deferred(unsigned int nWidth, unsigned int nHeight, bool bLayered /* = FALSE */)
     : m_nWidth(nWidth), m_nHeight(nHeight)
 {
   if (bLayered)
@@ -25,14 +25,14 @@ GraphicsCore::RN_Deferred::RN_Deferred(unsigned int nWidth, unsigned int nHeight
     Logger::debug() << "RN_Deferred created" << Logger::endl;
 }
 
-GraphicsCore::RN_Deferred::~RN_Deferred()
+RN_Deferred::~RN_Deferred()
 {
     ItlDeleteFBO();
 
     Logger::debug() << "RN_Deferred destroyed" << Logger::endl;
 }
 
-void GraphicsCore::RN_Deferred::ItlCreateFBO()
+void RN_Deferred::ItlCreateFBO()
 {
     TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
     assert (pTextureManager != NULL);
@@ -86,7 +86,7 @@ void GraphicsCore::RN_Deferred::ItlCreateFBO()
     m_bLayeredFBO = false;
 }
 
-void GraphicsCore::RN_Deferred::ItlCreateLayeredFBO()
+void RN_Deferred::ItlCreateLayeredFBO()
 {
   TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
   assert (pTextureManager != NULL);
@@ -166,7 +166,7 @@ void GraphicsCore::RN_Deferred::ItlCreateLayeredFBO()
   GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
   if(status != GL_FRAMEBUFFER_COMPLETE)
-      Logger::fatal() << "Failed to initialize FBO for RN_Deferred, status=" << TranslateFBOStatus(status) << Logger::endl;
+      Logger::fatal() << "Failed to initialize FBO for RN_Deferred, status=" << GLUtils::TranslateFBOStatus(status) << Logger::endl;
 
 
   //release used texture unit
@@ -179,7 +179,7 @@ void GraphicsCore::RN_Deferred::ItlCreateLayeredFBO()
 }
 
 
-GLuint GraphicsCore::RN_Deferred::ItlCreateColorTexture()
+GLuint RN_Deferred::ItlCreateColorTexture()
 {
     GLuint nNewTexture;
 
@@ -206,7 +206,7 @@ GLuint GraphicsCore::RN_Deferred::ItlCreateColorTexture()
     return nNewTexture;
 }
 
-GLuint GraphicsCore::RN_Deferred::ItlCreateLayeredColorTexture()
+GLuint RN_Deferred::ItlCreateLayeredColorTexture()
 {
   GLenum error = glGetError();
   assert (error == GL_NO_ERROR);
@@ -228,7 +228,7 @@ GLuint GraphicsCore::RN_Deferred::ItlCreateLayeredColorTexture()
       glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + iFace, 0, GL_RGBA32F, m_nWidth, m_nHeight, 0, GL_RGBA, GL_FLOAT, 0);
 
       error = glGetError();
-      const char * szErrorMessage = TranslateGLerror(error);
+      const char * szErrorMessage = GLUtils::TranslateGLerror(error);
       //std::cout << szErrorMessage << std::endl;
       assert (error == GL_NO_ERROR);
   }
@@ -248,7 +248,7 @@ GLuint GraphicsCore::RN_Deferred::ItlCreateLayeredColorTexture()
   return nNewTexture;
 }
 
-GLuint GraphicsCore::RN_Deferred::ItlCreateDepthTexture()
+GLuint RN_Deferred::ItlCreateDepthTexture()
 {
     GLuint nNewTexture;
 
@@ -275,7 +275,7 @@ GLuint GraphicsCore::RN_Deferred::ItlCreateDepthTexture()
     return nNewTexture;
 }
 
-GLuint GraphicsCore::RN_Deferred::ItlCreateLayeredDepthTexture()
+GLuint RN_Deferred::ItlCreateLayeredDepthTexture()
 {
   GLenum error = glGetError();
   assert (error == GL_NO_ERROR);
@@ -297,7 +297,7 @@ GLuint GraphicsCore::RN_Deferred::ItlCreateLayeredDepthTexture()
       glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + iFace, 0, GL_DEPTH_STENCIL, m_nWidth, m_nHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 
     error = glGetError();
-    const char * szErrorMessage = TranslateGLerror(error);
+    const char * szErrorMessage = GLUtils::TranslateGLerror(error);
    // std::cout << szErrorMessage << std::endl;
     assert (error == GL_NO_ERROR);
   }
@@ -314,14 +314,14 @@ GLuint GraphicsCore::RN_Deferred::ItlCreateLayeredDepthTexture()
   return nNewTexture;
 }
 
-void GraphicsCore::RN_Deferred::ItlDeleteFBO()
+void RN_Deferred::ItlDeleteFBO()
 {
     ItlDeleteTextures();
 
     glDeleteFramebuffers(1, &m_nFBO);
 }
 
-void GraphicsCore::RN_Deferred::ItlDeleteTextures()
+void RN_Deferred::ItlDeleteTextures()
 {
     glDeleteTextures(1, &m_nAlbedoDrawBuffer);
     glDeleteTextures(1, &m_nNormalDrawBuffer);
@@ -333,7 +333,7 @@ void GraphicsCore::RN_Deferred::ItlDeleteTextures()
     glDeleteTextures(1, &m_nPositionDrawBuffer);
 }
 
-void GraphicsCore::RN_Deferred::ItlPreRenderChildren()
+void RN_Deferred::ItlPreRenderChildren()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, m_nFBO);
 
@@ -355,13 +355,13 @@ void GraphicsCore::RN_Deferred::ItlPreRenderChildren()
     GLuint l_nUseParallax = ItlGetGraphicCore()->GetShaderManager()->GetUniform("nUseParallax");
 
     assert (l_nUseParallax != -1);
-    //glUniform1i(l_nUseParallax, s_nUseParallax % 2);
+    glUniform1i(l_nUseParallax, 0);
 
     ItlPushViewportInformation(m_nWidth, m_nHeight);
 
 }
 
-void GraphicsCore::RN_Deferred::ItlPostRenderChildren()
+void RN_Deferred::ItlPostRenderChildren()
 {
     ItlGetGraphicCore()->GetShaderManager()->PopActiveShader();
 
@@ -387,11 +387,11 @@ void GraphicsCore::RN_Deferred::ItlPostRenderChildren()
     glViewport(0, 0, iOldWidth, iOldHeight);
 }
 
-void GraphicsCore::RN_Deferred::ItlPreRender()
+void RN_Deferred::ItlPreRender()
 {
 }
 
-void GraphicsCore::RN_Deferred::ItlRender()
+void RN_Deferred::ItlRender()
 {
   if (m_bLayeredFBO == false)
     {
@@ -414,7 +414,7 @@ void GraphicsCore::RN_Deferred::ItlRender()
       {
           glClear(GL_STENCIL_BUFFER_BIT);
 
-          std::shared_ptr<GraphicsCore::RN_SpotLight> spLight (m_vspSpotLights[a]);
+          std::shared_ptr<RN_SpotLight> spLight (m_vspSpotLights[a]);
           spLight->SetTextureLocation("color_texture", m_nAlbedoDrawBuffer);
           spLight->SetTextureLocation("normal_texture", m_nNormalDrawBuffer);
           spLight->SetTextureLocation("tangent_texture", m_nTangentDrawBuffer);
@@ -477,7 +477,7 @@ void GraphicsCore::RN_Deferred::ItlRender()
 
       // ---BEGIN ---- this is just for debugging!
 
-      static GraphicsCore::RN_PostEffect rPostEffectNode("directwrite");
+      static RN_PostEffect rPostEffectNode("directwrite");
 
       GLuint nTextureToShow=m_nAlbedoDrawBuffer;
 
@@ -523,11 +523,11 @@ void GraphicsCore::RN_Deferred::ItlRender()
 
 }
 
-void GraphicsCore::RN_Deferred::ItlPostRender()
+void RN_Deferred::ItlPostRender()
 {
 }
 
-void GraphicsCore::RN_Deferred::AddSpotLight(std::shared_ptr<GraphicsCore::RN_SpotLight> spSpotlight)
+void RN_Deferred::AddSpotLight(std::shared_ptr<RN_SpotLight> spSpotlight)
 {
     m_vspSpotLights.push_back(spSpotlight);
 }

@@ -262,7 +262,7 @@ namespace BambooGraphics
         GLenum error = glGetError();
 
         if (error != GL_NO_ERROR)
-            Logger::error() << "glGetError(): " << TranslateGLerror(error) << Logger::endl;
+            Logger::error() << "glGetError(): " << GLUtils::TranslateGLerror(error) << Logger::endl;
 
         //assert (pCurrentActiveShader != NULL);
 

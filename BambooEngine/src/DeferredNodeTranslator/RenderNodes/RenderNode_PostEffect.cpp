@@ -9,13 +9,13 @@
 #include "TextureManager.h"
 #include "BambooLib/include/Logger.h"
 #include "ShaderManager.h"
-#include "RenderNodes/RenderNode_PostEffect.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_PostEffect.h"
 
 using namespace BambooLib;
 
 namespace BambooGraphics
 {
-GraphicsCore::RN_PostEffect::RN_PostEffect(std::string sShaderToUse)
+RN_PostEffect::RN_PostEffect(std::string sShaderToUse)
     : m_sShaderName(sShaderToUse)
 {
     const GLdouble vertices3f[]= {
@@ -49,7 +49,7 @@ GraphicsCore::RN_PostEffect::RN_PostEffect(std::string sShaderToUse)
     GLenum error = glGetError();
 
     if (error != GL_NO_ERROR)
-        Logger::error() << "glGetError: " << TranslateGLerror(error) << Logger::endl;
+        Logger::error() << "glGetError: " << GLUtils::TranslateGLerror(error) << Logger::endl;
 
     // prepare the vertex array object
     ItlPrepareVAO();
@@ -57,12 +57,12 @@ GraphicsCore::RN_PostEffect::RN_PostEffect(std::string sShaderToUse)
     Logger::debug() << "RN_PostEffect created" << Logger::endl;
 }
 
-GraphicsCore::RN_PostEffect::~RN_PostEffect()
+RN_PostEffect::~RN_PostEffect()
 {
   Logger::debug() << "RN_PostEffect destroyed" << Logger::endl;
 }
 
-void GraphicsCore::RN_PostEffect::ItlPreRender()
+void RN_PostEffect::ItlPreRender()
 {
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, this->buffer_vertices3f);
@@ -70,7 +70,7 @@ void GraphicsCore::RN_PostEffect::ItlPreRender()
     ItlGetGraphicCore()->GetShaderManager()->PushActiveShader(m_sShaderName);
 }
 
-void GraphicsCore::RN_PostEffect::ItlRender()
+void RN_PostEffect::ItlRender()
 {
     // get texture manager
     TextureManager *pTextureManager = ItlGetGraphicCore()->GetTextureManager();
@@ -180,12 +180,12 @@ void GraphicsCore::RN_PostEffect::ItlRender()
     }
 }
 
-void GraphicsCore::RN_PostEffect::ItlPostRender()
+void RN_PostEffect::ItlPostRender()
 {
   ItlGetGraphicCore()->GetShaderManager()->PopActiveShader();
 }
 
-void GraphicsCore::RN_PostEffect::ItlPrepareVAO()
+void RN_PostEffect::ItlPrepareVAO()
 {
   glBindVertexArray(vao);
   glBindBuffer(GL_ARRAY_BUFFER, this->buffer_vertices3f);
@@ -204,27 +204,27 @@ void GraphicsCore::RN_PostEffect::ItlPrepareVAO()
   ItlGetGraphicCore()->GetShaderManager()->PopActiveShader();
 }
 
-void GraphicsCore::RN_PostEffect::SetUniform(std::string sUniform, float fValue)
+void RN_PostEffect::SetUniform(std::string sUniform, float fValue)
 {
     m_mUniforms_Floats[sUniform] = fValue;
 }
 
-void GraphicsCore::RN_PostEffect::SetUniform(std::string sUniform, glm::vec2 v2Vector)
+void RN_PostEffect::SetUniform(std::string sUniform, glm::vec2 v2Vector)
 {
     m_mUniforms_Vec2[sUniform] = v2Vector;
 }
 
-void GraphicsCore::RN_PostEffect::SetUniform(std::string sUniform, glm::vec3 v3Vector)
+void RN_PostEffect::SetUniform(std::string sUniform, glm::vec3 v3Vector)
 {
     m_mUniforms_Vec3[sUniform] = v3Vector;
 }
 
-void GraphicsCore::RN_PostEffect::SetTexture(std::string sUniformName, std::string sTextureName)
+void RN_PostEffect::SetTexture(std::string sUniformName, std::string sTextureName)
 {
     m_mTextures[sUniformName] = sTextureName;
 }
 
-void GraphicsCore::RN_PostEffect::SetTexture(std::string sUniformName, GLuint nTextureID)
+void RN_PostEffect::SetTexture(std::string sUniformName, GLuint nTextureID)
 {
     m_mTexturesDirect[sUniformName] = nTextureID;
 }

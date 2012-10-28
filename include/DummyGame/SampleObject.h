@@ -37,7 +37,7 @@ public:
     virtual glm::mat4 GetTransformation();
 
 	/// returns the semantic scene node of this object
-	virtual std::shared_ptr<ISemanticSceneNode> GetSceneNode();
+    virtual ISemanticSceneNode *GetSceneNode();
 
 	/// returns the user defined name of the object
 	virtual std::string GetName();

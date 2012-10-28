@@ -93,7 +93,7 @@ public:
 		LightObject* GetLightByName(std::string sName);
 
 		/// returns the root semantic scene node of the level
-		std::shared_ptr<ISemanticSceneNode> GetSemanticSceneNode()
+        ISemanticSceneNode * GetSemanticSceneNode()
 		{
 			return m_spSemanticScene;
 		}
@@ -129,7 +129,7 @@ private:
         std::shared_ptr<BambooGraphics::GraphicsCore::ICamera> m_spCamera;
 
 		/// Pointer to the root of the semantic scene nodes
-		std::shared_ptr<ISemanticSceneNode> m_spSemanticScene;
+        ISemanticSceneNode * m_spSemanticScene;
     //@}
 
     /*! \name Private methods */

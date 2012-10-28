@@ -13,12 +13,12 @@ public:
   /*! \name Creation */
   //@{
     /// static constructor
-    static std::shared_ptr<Light_SemSceneNode> Create(glm::vec3 vPosition,
-                                                      glm::vec3 vLookDirection,
-                                                      float fFOV,
-                                                      glm::vec3 vLightColor,
-                                                      float fNearplane,
-                                                      float fFarplane);
+    static Light_SemSceneNode *Create(glm::vec3 vPosition,
+                                      glm::vec3 vLookDirection,
+                                      float fFOV,
+                                      glm::vec3 vLightColor,
+                                      float fNearplane,
+                                      float fFarplane);
 
     /// destructor
     ~Light_SemSceneNode();

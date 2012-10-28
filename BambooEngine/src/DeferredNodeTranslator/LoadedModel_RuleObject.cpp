@@ -1,8 +1,8 @@
-#include "DeferredNodeTranslator/LoadedModel_RuleObject.h"
+#include "DeferredNodeTranslator/RuleObjects/LoadedModel_RuleObject.h"
 #include "SemanticSceneNodes/LoadedModel_SemSceneNode.h"
-#include "RenderNodes/RenderNode_Generic.h"
-#include "RenderNodes/RenderNode_Camera.h"
-#include "RenderNodes/RenderNode_Deferred.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_Generic.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_Camera.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_Deferred.h"
 #include "Camera.h"
 #include "AssimpWrapper.h"
 
@@ -26,16 +26,16 @@ void DeferredNodeTranslator::LoadedModel_RuleObject::Action()
   if (m_spCorrespondingRenderingNode)
     {
       // only update values
-      m_spCorrespondingRenderingNode->SetTransformMatrix(m_spSemNode->GetTransformMatrix());
+      m_spCorrespondingRenderingNode->SetTransformMatrix(m_pSemNode->GetTransformMatrix());
 
       // add rendering nodes, if environment mapping is activated but not handled yet
-      if (!m_spCubemapDeferredNode && m_spSemNode->GetEnvironmentMapping())
+      if (!m_spCubemapDeferredNode && m_pSemNode->GetEnvironmentMapping())
       {
           m_spCubemapCamera = GraphicsCore::PerspectiveCamera::Create(90.0f, 1.0f, 0.001f, 100.0f, glm::vec3(), 0.0f, 0.0f);
 
-          m_spCubemapCameraNode = std::shared_ptr<GraphicsCore::RN_Camera> (new GraphicsCore::RN_Camera(m_spCubemapCamera.get()));
+          m_spCubemapCameraNode = std::shared_ptr<RN_Camera> (new RN_Camera(m_spCubemapCamera.get()));
 
-          m_spCubemapDeferredNode = std::shared_ptr<GraphicsCore::RN_Deferred> (new GraphicsCore::RN_Deferred(128, 128, true));
+          m_spCubemapDeferredNode = std::shared_ptr<RN_Deferred> (new RN_Deferred(128, 128, true));
 
           m_spCubemapCameraNode->AddChild(m_spCubemapDeferredNode);
 
@@ -46,7 +46,7 @@ void DeferredNodeTranslator::LoadedModel_RuleObject::Action()
       }
 
       // remove rendering nodes, if environment mapping is deactivated but notes created
-      if (m_spCubemapDeferredNode && !m_spSemNode->GetEnvironmentMapping())
+      if (m_spCubemapDeferredNode && !m_pSemNode->GetEnvironmentMapping())
       {
           m_pTranslator->m_spRootNode->RemoveChild(m_spCubemapCameraNode);
 
@@ -59,7 +59,7 @@ void DeferredNodeTranslator::LoadedModel_RuleObject::Action()
 
       if (m_spCubemapDeferredNode)
       {
-          glm::mat4 mTrans = m_spSemNode->GetTransformMatrix();
+          glm::mat4 mTrans = m_pSemNode->GetTransformMatrix();
 
           m_spCubemapCamera->SetPosition(glm::vec3(mTrans[3][0], mTrans[3][1], mTrans[3][2]));
           //m_spCubemapCamera->SetPosition(glm::vec3(mTrans[0][3], mTrans[1][3], mTrans[2][3]));
@@ -76,7 +76,7 @@ void DeferredNodeTranslator::LoadedModel_RuleObject::Action()
   else
     {
       // create new node
-      m_spCorrespondingRenderingNode = std::shared_ptr<GraphicsCore::RN_Generic>(new GraphicsCore::RN_Generic(AssimpWrapper::LoadModel(m_spSemNode->GetFilename())));
+      m_spCorrespondingRenderingNode = std::shared_ptr<RN_Generic>(new RN_Generic(AssimpWrapper::LoadModel(m_pSemNode->GetFilename())));
       assert (m_spCorrespondingRenderingNode);
 
       m_pTranslator->m_vShadowCasterNodes.push_back(m_spCorrespondingRenderingNode);
@@ -91,14 +91,14 @@ void DeferredNodeTranslator::LoadedModel_RuleObject::Action()
 
 }
 
-DeferredNodeTranslator::IRuleObject *DeferredNodeTranslator::LoadedModel_RuleObject::CloneFor(std::shared_ptr<ISemanticSceneNode> spSemNode, DeferredNodeTranslator *pTranslator)
+DeferredNodeTranslator::IRuleObject *DeferredNodeTranslator::LoadedModel_RuleObject::CloneFor(ISemanticSceneNode *pSemNode, DeferredNodeTranslator *pTranslator)
 {
   LoadedModel_RuleObject *pNewObject = new LoadedModel_RuleObject();
 
   pNewObject->m_pTranslator = pTranslator;
 
-  pNewObject->m_spSemNode = std::dynamic_pointer_cast<LoadedModel_SemSceneNode>(spSemNode);
-  assert (pNewObject->m_spSemNode);
+  pNewObject->m_pSemNode = LoadedModel_SemSceneNode::Cast(pSemNode);
+  assert (pNewObject->m_pSemNode);
 
 
   return pNewObject;

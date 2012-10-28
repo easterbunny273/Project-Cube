@@ -15,7 +15,7 @@ public:
   /*! \name Creation */
   //@{
     /// static constructor
-    static std::shared_ptr<Cube_SemSceneNode> Create(Cube *pCube);
+    static Cube_SemSceneNode *Create(Cube *pCube);
 
     /// destructor
     ~Cube_SemSceneNode();

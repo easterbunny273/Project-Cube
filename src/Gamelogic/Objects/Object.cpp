@@ -3,7 +3,7 @@
 Object::Object(std::string sName, std::string sFilename)
 {
 	m_sName = sName;
-	m_spObjectSceneNode = LoadedModel_SemSceneNode::Create(sFilename);
+    m_pObjectSceneNode = LoadedModel_SemSceneNode::Create(sFilename);
 }
 
 Object::~Object()
@@ -17,12 +17,12 @@ std::string Object::GetObjectType()
 
 glm::mat4 Object::GetTransformation()
 {
-	return m_spObjectSceneNode->GetTransformMatrix();
+    return m_pObjectSceneNode->GetTransformMatrix();
 }
 
-std::shared_ptr<ISemanticSceneNode> Object::GetSceneNode()
+ISemanticSceneNode * Object::GetSceneNode()
 {
-	return m_spObjectSceneNode;
+    return m_pObjectSceneNode;
 }
 
 std::string Object::GetName()
@@ -32,20 +32,20 @@ std::string Object::GetName()
 
 void Object::Translate(float fX, float fY, float fZ)
 {
-	m_spObjectSceneNode->SetTransformMatrix(glm::translate(m_spObjectSceneNode->GetTransformMatrix(), glm::vec3(fX, fY, fZ)));
+    m_pObjectSceneNode->SetTransformMatrix(glm::translate(m_pObjectSceneNode->GetTransformMatrix(), glm::vec3(fX, fY, fZ)));
 }
 
 void Object::Scale(float fX, float fY, float fZ)
 {
-	m_spObjectSceneNode->SetTransformMatrix(glm::scale(m_spObjectSceneNode->GetTransformMatrix(), glm::vec3(fX, fY, fZ)));
+    m_pObjectSceneNode->SetTransformMatrix(glm::scale(m_pObjectSceneNode->GetTransformMatrix(), glm::vec3(fX, fY, fZ)));
 }
 
 void Object::ActivateEnvironmentMapping()
 {
-	m_spObjectSceneNode->ActivateEnvironmentMapping();
+    m_pObjectSceneNode->ActivateEnvironmentMapping();
 }
 
 void Object::DeactivateEnvironmentMapping()
 {
-	m_spObjectSceneNode->DeactivateEnvironmentMapping();
+    m_pObjectSceneNode->DeactivateEnvironmentMapping();
 }

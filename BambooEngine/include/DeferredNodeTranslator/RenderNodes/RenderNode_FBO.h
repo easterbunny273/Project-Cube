@@ -8,7 +8,7 @@
 #ifndef __realtime_sceneobject_fbo_header
 #define __realtime_sceneobject_fbo_header
 
-#include "RenderNodes/IRenderNode.h"
+#include "IRenderNode.h"
 
 namespace BambooGraphics
 {
@@ -22,7 +22,7 @@ namespace BambooGraphics
   The name for the textures must be set in the used constructor.
 */
 
-class GraphicsCore::RN_FBO : public GraphicsCore::IRenderNode
+class RN_FBO : public GraphicsCore::IRenderNode
 {
 private:
     bool m_bColorTexture;		///<shows if this fbo uses a color texture

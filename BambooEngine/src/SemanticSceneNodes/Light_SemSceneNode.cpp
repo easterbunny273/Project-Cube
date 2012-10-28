@@ -6,12 +6,12 @@
 // register class at core system and get unique class id
 BambooLib::t_classID Light_SemSceneNode::s_ClassID = BambooLib::CoreSystem::GetInstance()->RegisterClass("SM_LIGHT", NULL);
 
-std::shared_ptr<Light_SemSceneNode> Light_SemSceneNode::Create(glm::vec3 vPosition,
-                                                               glm::vec3 vLookDirection,
-                                                               float fFOV,
-                                                               glm::vec3 vLightColor,
-                                                               float fNearplane,
-                                                               float fFarplane)
+Light_SemSceneNode * Light_SemSceneNode::Create(glm::vec3 vPosition,
+                                               glm::vec3 vLookDirection,
+                                               float fFOV,
+                                               glm::vec3 vLightColor,
+                                               float fNearplane,
+                                               float fFarplane)
 {
   // create new node
   Light_SemSceneNode * pNewNode = new Light_SemSceneNode();
@@ -20,11 +20,8 @@ std::shared_ptr<Light_SemSceneNode> Light_SemSceneNode::Create(glm::vec3 vPositi
   // set initial parameters
   pNewNode->SetLightParameters(vPosition, vLookDirection, fFOV, vLightColor, fNearplane, fFarplane);
 
-  // create shared_ptr
-  std::shared_ptr<Light_SemSceneNode> spNewNode(pNewNode);
-
-  // return shared ptr
-  return spNewNode;
+  // return new object
+  return pNewNode;
 }
 
 void Light_SemSceneNode::SetLightParameters(glm::vec3 vPosition,

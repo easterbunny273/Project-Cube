@@ -15,7 +15,7 @@
 #include <string>
 #include <stack>
 #include <map>
-#include "common_gl.h"
+#include "GLUtils.h"
 #include "Graphic.h"
 
 namespace BambooGraphics

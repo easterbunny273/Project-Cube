@@ -1,8 +1,8 @@
 
 #include "BambooLib/include/Logger.h"
 #include "ShaderManager.h"
-#include "RenderNodes/RenderNode_RenderPass.h"
-#include "RenderNodes/RenderNode_Camera.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_RenderPass.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_Camera.h"
 #include "Camera.h"
 
 using namespace BambooLib;
@@ -12,7 +12,7 @@ extern bool bUseCamera1;
 namespace BambooGraphics
 {
 
-GraphicsCore::RN_Camera::RN_Camera(GraphicsCore::ICamera * pCamera, bool bSetMatrices)
+RN_Camera::RN_Camera(GraphicsCore::ICamera * pCamera, bool bSetMatrices)
     : m_pCamera(pCamera), m_bSetMatrices(bSetMatrices)
 {
     GLdouble *vertexArray;
@@ -113,17 +113,17 @@ GraphicsCore::RN_Camera::RN_Camera(GraphicsCore::ICamera * pCamera, bool bSetMat
     GLenum error = glGetError();
 
     if (error != GL_NO_ERROR)
-        Logger::error() << "glGetError: " << TranslateGLerror(error) << Logger::endl;
+        Logger::error() << "glGetError: " << GLUtils::TranslateGLerror(error) << Logger::endl;
 
     Logger::debug() << "RN_Camera created" << Logger::endl;
 }
 
-GraphicsCore::RN_Camera::~RN_Camera()
+RN_Camera::~RN_Camera()
 {
   Logger::debug() << "RN_Camera destroyed" << Logger::endl;
 }
 
-void GraphicsCore::RN_Camera::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderInfo)
+void RN_Camera::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderInfo)
 {
     //store old matrices
     if (m_bSetMatrices)// || !bUseCamera1)
@@ -156,7 +156,7 @@ void GraphicsCore::RN_Camera::Render(std::shared_ptr<TItlRenderInfo> pCurrentRen
     }
 }
 
-void GraphicsCore::RN_Camera::ItlRender()
+void RN_Camera::ItlRender()
 {
    /* const GLint l_in_Position(ShaderManager::instance()->GetAttribute("in_Position"));
     const GLint l_cameraInverse_Position = ShaderManager::instance()->GetUniform("Camera_InverseMatrix");
@@ -189,7 +189,7 @@ void GraphicsCore::RN_Camera::ItlRender()
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);*/
 }
 
-void GraphicsCore::RN_Camera::ItlPreRender()
+void RN_Camera::ItlPreRender()
 {
    /* glBindVertexArray(m_nVertexArrayObject);
     glBindBuffer(GL_ARRAY_BUFFER, m_nVertexBufferObject);
@@ -201,7 +201,7 @@ void GraphicsCore::RN_Camera::ItlPreRender()
         ShaderManager::instance()->ActivateShader("camera-debug");*/
 }
 
-void GraphicsCore::RN_Camera::ItlPostRender()
+void RN_Camera::ItlPostRender()
 {
    // ShaderManager::instance()->PopActiveShader();
 }

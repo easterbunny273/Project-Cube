@@ -9,10 +9,12 @@
 #ifndef __BAMBOOENGINE_LOADEDMODELOBJECT_DEFERREDTRANSLATOR_HEADER
 #define __BAMBOOENGINE_LOADEDMODELOBJECT_DEFERREDTRANSLATOR_HEADER
 
-#include "common_gl.h"
+#include "GLUtils.h"
 #include "Graphic.h"
 #include "DeferredNodeTranslator/DeferredNodeTranslator.h"
 #include "SemanticSceneNodes/LoadedModel_SemSceneNode.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_Camera.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_Generic.h"
 #include <memory>
 #include "BambooLib/include/IIdentifyable.h"
 
@@ -21,7 +23,7 @@ namespace BambooGraphics
 class DeferredNodeTranslator::LoadedModel_RuleObject : public DeferredNodeTranslator::IRuleObject
 {
 public:
-  virtual IRuleObject * CloneFor(std::shared_ptr<ISemanticSceneNode> spSemNode, DeferredNodeTranslator *pTranslator);
+  virtual IRuleObject * CloneFor(ISemanticSceneNode *pSemNode, DeferredNodeTranslator *pTranslator);
 
   /// update the rendering scene graph pieces which correspond to the given semantic scene node
   virtual void Action();
@@ -30,12 +32,12 @@ public:
   std::vector<BambooLib::t_classID> GetAcceptedNodeIDs() const;
 
 private:
-  std::shared_ptr<GraphicsCore::RN_Generic>      m_spCorrespondingRenderingNode;
-  std::shared_ptr<LoadedModel_SemSceneNode> m_spSemNode;
+  std::shared_ptr<RN_Generic>      m_spCorrespondingRenderingNode;
+  LoadedModel_SemSceneNode  * m_pSemNode;
 
   std::shared_ptr<GraphicsCore::ICamera>      m_spCubemapCamera;
-  std::shared_ptr<GraphicsCore::RN_Camera>    m_spCubemapCameraNode;
-  std::shared_ptr<GraphicsCore::RN_Deferred>  m_spCubemapDeferredNode;
+  std::shared_ptr<RN_Camera>    m_spCubemapCameraNode;
+  std::shared_ptr<RN_Deferred>  m_spCubemapDeferredNode;
 
   bool  m_bEnvironmentalNodesCreated;
 };

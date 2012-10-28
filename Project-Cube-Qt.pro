@@ -21,7 +21,7 @@ INCLUDEPATH += BambooLib/include/
 INCLUDEPATH += include/
 INCLUDEPATH += include/tinyxml
 
-LIBS += -lGLEW -lIL -lglfw -lassimp
+LIBS += -lGLEW -lIL -lassimp
 
 QMAKE_CXXFLAGS += -std=c++0x
 
@@ -38,16 +38,16 @@ SOURCES += BambooEngine/src/TextureManager.cpp \
     BambooEngine/src/SemanticSceneNodes/Light_SemSceneNode.cpp \
     BambooEngine/src/SemanticSceneNodes/Cube_SemSceneNode.cpp \
     BambooEngine/src/SemanticSceneNodes/Camera_SemSceneNode.cpp \
-    BambooEngine/src/RenderNodes/RenderNode_SpotLight_Model.cpp \
-    BambooEngine/src/RenderNodes/RenderNode_SpotLight.cpp \
-    BambooEngine/src/RenderNodes/RenderNode_RenderPass.cpp \
-    BambooEngine/src/RenderNodes/RenderNode_PostEffect.cpp \
-    BambooEngine/src/RenderNodes/RenderNode_Generic.cpp \
-    BambooEngine/src/RenderNodes/RenderNode_FBO.cpp \
-    BambooEngine/src/RenderNodes/RenderNode_Deferred.cpp \
-    BambooEngine/src/RenderNodes/RenderNode_CubeMap.cpp \
-    BambooEngine/src/RenderNodes/RenderNode_Camera.cpp \
-    BambooEngine/src/RenderNodes/RenderNode_BoundingBox.cpp \
+	BambooEngine/src/DeferredNodeTranslator/RenderNodes/RenderNode_SpotLight_Model.cpp \
+	BambooEngine/src/DeferredNodeTranslator/RenderNodes/RenderNode_SpotLight.cpp \
+	BambooEngine/src/DeferredNodeTranslator/RenderNodes/RenderNode_RenderPass.cpp \
+	BambooEngine/src/DeferredNodeTranslator/RenderNodes/RenderNode_PostEffect.cpp \
+	BambooEngine/src/DeferredNodeTranslator/RenderNodes/RenderNode_Generic.cpp \
+	BambooEngine/src/DeferredNodeTranslator/RenderNodes/RenderNode_FBO.cpp \
+	BambooEngine/src/DeferredNodeTranslator/RenderNodes/RenderNode_Deferred.cpp \
+	BambooEngine/src/DeferredNodeTranslator/RenderNodes/RenderNode_CubeMap.cpp \
+	BambooEngine/src/DeferredNodeTranslator/RenderNodes/RenderNode_Camera.cpp \
+	BambooEngine/src/DeferredNodeTranslator/RenderNodes/RenderNode_BoundingBox.cpp \
     BambooEngine/src/DeferredNodeTranslator/LoadedModel_RuleObject.cpp \
     BambooEngine/src/DeferredNodeTranslator/Light_RuleObject.cpp \
     BambooEngine/src/DeferredNodeTranslator/DeferredNodeTranslator.cpp \
@@ -73,18 +73,18 @@ SOURCES += BambooEngine/src/TextureManager.cpp \
     include/tinyxml/tinyxmlerror.cpp \
     include/tinyxml/tinyxml.cpp \
     include/tinyxml/tinystr.cpp \
-    src/gui/MainWindow.cpp
+    src/gui/MainWindow.cpp \
+    BambooEngine/src/SemanticSceneNodes/ISemanticSceneNode.cpp
 
 HEADERS += \
     BambooEngine/include/TextureManager.h \
     BambooEngine/include/ShaderManager.h \
-    BambooEngine/include/prevent_old_opengl.h \
     BambooEngine/include/INodeTranslator.h \
     BambooEngine/include/Graphic.h \
     BambooEngine/include/Graphic-QtWidgetWrapper.h \
     BambooEngine/include/Graphic-GlfwWindow.h \
     BambooEngine/include/GeometryData.h \
-    BambooEngine/include/common_gl.h \
+	BambooEngine/include/GLUtils.h \
     BambooEngine/include/Camera.h \
 	BambooEngine/include/KeyIdentifiers.h \
     BambooEngine/include/AssimpWrapper.h \
@@ -93,22 +93,22 @@ HEADERS += \
     BambooEngine/include/SemanticSceneNodes/ISemanticSceneNode.h \
     BambooEngine/include/SemanticSceneNodes/Cube_SemSceneNode.h \
     BambooEngine/include/SemanticSceneNodes/Camera_SemSceneNode.h \
-    BambooEngine/include/RenderNodes/RenderNode_SpotLight.h \
-    BambooEngine/include/RenderNodes/RenderNode_Camera.h \
-    BambooEngine/include/RenderNodes/RenderNode_BoundingBox.h \
-    BambooEngine/include/RenderNodes/IRenderNode.h \
-    BambooEngine/include/RenderNodes/RenderNode_SpotLight_Model.h \
-    BambooEngine/include/RenderNodes/RenderNode_RenderPass.h \
-    BambooEngine/include/RenderNodes/RenderNode_PostEffect.h \
-    BambooEngine/include/RenderNodes/RenderNode_Generic.h \
-    BambooEngine/include/RenderNodes/RenderNode_FBO.h \
-    BambooEngine/include/RenderNodes/RenderNode_Deferred.h \
-    BambooEngine/include/RenderNodes/RenderNode_CubeMap.h \
-    BambooEngine/include/DeferredNodeTranslator/LoadedModel_RuleObject.h \
-    BambooEngine/include/DeferredNodeTranslator/Light_RuleObject.h \
-    BambooEngine/include/DeferredNodeTranslator/DeferredNodeTranslator.h \
-    BambooEngine/include/DeferredNodeTranslator/Cube_RuleObject.h \
-    BambooEngine/include/DeferredNodeTranslator/Camera_RuleObject.h \
+	BambooEngine/include/DeferredNodeTranslator/RenderNodes/RenderNode_SpotLight.h \
+	BambooEngine/include/DeferredNodeTranslator/RenderNodes/RenderNode_Camera.h \
+	BambooEngine/include/DeferredNodeTranslator/RenderNodes/RenderNode_BoundingBox.h \
+	BambooEngine/include/IRenderNode.h \
+	BambooEngine/include/DeferredNodeTranslator/DeferredNodeTranslator.h \
+	BambooEngine/include/DeferredNodeTranslator/RenderNodes/RenderNode_SpotLight_Model.h \
+	BambooEngine/include/DeferredNodeTranslator/RenderNodes/RenderNode_RenderPass.h \
+	BambooEngine/include/DeferredNodeTranslator/RenderNodes/RenderNode_PostEffect.h \
+	BambooEngine/include/DeferredNodeTranslator/RenderNodes/RenderNode_Generic.h \
+	BambooEngine/include/DeferredNodeTranslator/RenderNodes/RenderNode_FBO.h \
+	BambooEngine/include/DeferredNodeTranslator/RenderNodes/RenderNode_Deferred.h \
+	BambooEngine/include/DeferredNodeTranslator/RenderNodes/RenderNode_CubeMap.h \
+	BambooEngine/include/DeferredNodeTranslator/RuleObjects/LoadedModel_RuleObject.h \
+	BambooEngine/include/DeferredNodeTranslator/RuleObjects/Light_RuleObject.h \
+	BambooEngine/include/DeferredNodeTranslator/RuleObjects/Cube_RuleObject.h \
+	BambooEngine/include/DeferredNodeTranslator/RuleObjects/Camera_RuleObject.h \
     BambooLib/include/Logger.h \
     BambooLib/include/IStreamable.h \
     BambooLib/include/ISerializer.h \

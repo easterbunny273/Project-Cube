@@ -1,6 +1,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "RenderNodes/RenderNode_SpotLight_Model.h"
+#include "DeferredNodeTranslator/RenderNodes/RenderNode_SpotLight_Model.h"
 #include "BambooLib/include/Logger.h"
 #include "ShaderManager.h"
 #include "TextureManager.h"
@@ -14,7 +14,7 @@ namespace BambooGraphics
 #define FARPLANE 0.05f
 #define SHADOWMAP_RESOLUTION 256.0f
 
-GraphicsCore::RN_SpotLight_Model::RN_SpotLight_Model(glm::vec3 vPosition,
+RN_SpotLight_Model::RN_SpotLight_Model(glm::vec3 vPosition,
                                                glm::vec3 vLookDirection,
                                                float fFOV,
                                                glm::vec3 vLightColor)
@@ -35,12 +35,12 @@ GraphicsCore::RN_SpotLight_Model::RN_SpotLight_Model(glm::vec3 vPosition,
     Logger::debug() << "RN_SpotLight_Model created" << Logger::endl;
 }
 
-GraphicsCore::RN_SpotLight_Model::~RN_SpotLight_Model()
+RN_SpotLight_Model::~RN_SpotLight_Model()
 {
   Logger::debug() << "RN_SpotLight_Model destroyed" << Logger::endl;
 }
 
-void GraphicsCore::RN_SpotLight_Model::ItlCreateVBO()
+void RN_SpotLight_Model::ItlCreateVBO()
 {
     GLdouble *vertexArray;
     GLuint *indexArray;
@@ -154,25 +154,25 @@ void GraphicsCore::RN_SpotLight_Model::ItlCreateVBO()
     GLenum error = glGetError();
 
     if (error != GL_NO_ERROR)
-        Logger::error() << "glGetError: " << TranslateGLerror(error) << Logger::endl;
+        Logger::error() << "glGetError: " << GLUtils::TranslateGLerror(error) << Logger::endl;
 }
 
-void GraphicsCore::RN_SpotLight_Model::ItlPreRender()
+void RN_SpotLight_Model::ItlPreRender()
 {
     ItlGetGraphicCore()->GetShaderManager()->PushActiveShader("camera-debug2");
 }
 
-void GraphicsCore::RN_SpotLight_Model::ItlPostRender()
+void RN_SpotLight_Model::ItlPostRender()
 {
     ItlGetGraphicCore()->GetShaderManager()->PopActiveShader();
 }
 
-void GraphicsCore::RN_SpotLight_Model::ItlLoadRessources()
+void RN_SpotLight_Model::ItlLoadRessources()
 {
 
 }
 
-void GraphicsCore::RN_SpotLight_Model::ItlRender()
+void RN_SpotLight_Model::ItlRender()
 {
     ShaderManager *pShaderManager = ItlGetGraphicCore()->GetShaderManager();
 
@@ -208,7 +208,7 @@ void GraphicsCore::RN_SpotLight_Model::ItlRender()
 }
 
 
-void GraphicsCore::RN_SpotLight_Model::ItlPrepareVAO()
+void RN_SpotLight_Model::ItlPrepareVAO()
 {
   // get shaer manager
   ShaderManager *pShaderManager = ItlGetGraphicCore()->GetShaderManager();
@@ -237,12 +237,12 @@ void GraphicsCore::RN_SpotLight_Model::ItlPrepareVAO()
   pShaderManager->PopActiveShader();
 }
 
-void GraphicsCore::RN_SpotLight_Model::ItlPreRenderChildren()
+void RN_SpotLight_Model::ItlPreRenderChildren()
 {
 
 }
 
-void GraphicsCore::RN_SpotLight_Model::ItlPostRenderChildren()
+void RN_SpotLight_Model::ItlPostRenderChildren()
 {
 
 
