@@ -110,8 +110,8 @@ protected:
 
     /*! \name Private members */
     //@{
-      t_children_vector  m_vpChildren;
-      glm::mat4       m_mTransformMatrix;
+      t_children_vector     m_vpChildren;
+      glm::mat4             m_mTransformMatrix;
       std::list<IListener *> m_lpListener;
     //@}
 };

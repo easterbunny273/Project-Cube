@@ -369,12 +369,12 @@ void RN_SpotLight::ItlRender()
 
      // glLineWidth(1.0f);
       //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-      //glDisable(GL_CULL_FACE);
+      glDisable(GL_CULL_FACE);
 
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_nIndexBufferObject);
       glDrawElements(GL_TRIANGLES, m_iIndexArraySize, GL_UNSIGNED_INT, NULL);
 
-      //glEnable(GL_CULL_FACE);
+      glEnable(GL_CULL_FACE);
       //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
       glBindVertexArray(0);
@@ -493,8 +493,8 @@ void RN_SpotLight::SetTextureLocation(std::string sTexture, GLint iLocation)
     m_mTextureLocations[sTexture] = iLocation;
 }
 
-/*
-void Bamboo::RN_SpotLight::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderInfo)
+
+/*void RN_SpotLight::Render(std::shared_ptr<TItlRenderInfo> pCurrentRenderInfo)
 {
     //store old matrices
     glm::mat4 SavedProjectionMatrix = pCurrentRenderInfo->ProjectionMatrix;

@@ -6,11 +6,20 @@
 #include "EventManager.h"
 
 #include "Logger.h"
+#include "KeyValueMap.h"
 
 using namespace BambooLib;
 
 int main(int argc, char *argv[])
 {
+    KeyValueMap test;
+    test.SetValue("test-float", 3.0f);
+
+    KeyValueMap test2 = test;
+
+    float fTest;
+    bool bOk = test2.GetValue("test-float", fTest);
+
     QApplication a(argc, argv);
     MainWindow MainWindow;
 
