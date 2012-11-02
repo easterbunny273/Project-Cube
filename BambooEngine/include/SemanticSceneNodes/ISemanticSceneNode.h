@@ -74,11 +74,11 @@ public:
 
     /*! \name Listeners */
     //@{
-        /// Registers a new listener which receives notifications
-        void RegisterListener(IListener *pListener);
+    /// Registers a new listener which receives notifications
+    void RegisterListener(IListener *pListener);
 
-        /// Unregisters a listener
-        void UnregisterListener(IListener *pListener);
+    /// Unregisters a listener
+    void UnregisterListener(IListener *pListener);
     //@}
 
   /*! \name Transformation */

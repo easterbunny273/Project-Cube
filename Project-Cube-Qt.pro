@@ -75,7 +75,8 @@ SOURCES += BambooEngine/src/TextureManager.cpp \
     include/tinyxml/tinystr.cpp \
     src/gui/MainWindow.cpp \
     BambooEngine/src/SemanticSceneNodes/ISemanticSceneNode.cpp \
-    BambooLib/src/KeyValueMap.cpp
+    BambooLib/src/KeyValueMap.cpp \
+    BambooLib/src/ConstrainedKeyValueMap.cpp
 
 HEADERS += \
     BambooEngine/include/TextureManager.h \
@@ -140,7 +141,8 @@ HEADERS += \
     include/tinyxml/tinystr.h \
     include/gui/MainWindow.h \
     BambooEngine/include/KeyIdentifiers.h \
-    BambooLib/include/KeyValueMap.h
+    BambooLib/include/KeyValueMap.h \
+    BambooLib/include/ConstrainedKeyValueMap.h
 
 FORMS += \
     include/gui/MainWindow.ui
