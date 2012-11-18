@@ -12,10 +12,34 @@ namespace BambooLib
 {
     /******************************************************************************************************
      *****************************************************************************************************/
-    ConstrainedKeyValueMap::ConstrainedKeyValueMap(std::map<KeyValueMap::TKey, TConstraint> mConstraints)
+    ConstrainedKeyValueMap::ConstrainedKeyValueMap(std::map<KeyValueMap::TKey, TConstraint> mConstraints, bool bAllowKeysWithoutConstraint)
     {
         m_pKeyValueMap  = new KeyValueMap();
         m_mConstraints  = mConstraints;
+        m_bAllowKeysWithoutConstraint = bAllowKeysWithoutConstraint;
+    }
+
+    /******************************************************************************************************
+     *****************************************************************************************************/
+    ConstrainedKeyValueMap::ConstrainedKeyValueMap(const ConstrainedKeyValueMap &rOther)
+    {
+        m_pKeyValueMap = new KeyValueMap(*(rOther.m_pKeyValueMap));
+        m_mConstraints = rOther.m_mConstraints;
+        m_bAllowKeysWithoutConstraint = rOther.m_bAllowKeysWithoutConstraint;
+    }
+
+    /******************************************************************************************************
+     *****************************************************************************************************/
+    ConstrainedKeyValueMap &ConstrainedKeyValueMap::operator =(const ConstrainedKeyValueMap &rOther)
+    {
+        // delete old key value map
+        delete m_pKeyValueMap;
+
+        m_pKeyValueMap = new KeyValueMap(*(rOther.m_pKeyValueMap));
+        m_mConstraints = rOther.m_mConstraints;
+        m_bAllowKeysWithoutConstraint = rOther.m_bAllowKeysWithoutConstraint;
+
+        return *this;
     }
 
     /******************************************************************************************************
@@ -27,7 +51,7 @@ namespace BambooLib
 
     /******************************************************************************************************
      *****************************************************************************************************/
-    bool ConstrainedKeyValueMap::ItlTestTypeConstraint(KeyValueMap::TValueType eType, float fValue)
+    bool ConstrainedKeyValueMap::ItlTestTypeConstraint(KeyValueMap::TValueType eType, float)
     {
         if (eType == KeyValueMap::VALUE_FLOAT)
             return true;
@@ -37,7 +61,7 @@ namespace BambooLib
 
     /******************************************************************************************************
      *****************************************************************************************************/
-    bool ConstrainedKeyValueMap::ItlTestTypeConstraint(KeyValueMap::TValueType eType, double dValue)
+    bool ConstrainedKeyValueMap::ItlTestTypeConstraint(KeyValueMap::TValueType eType, double)
     {
         if (eType == KeyValueMap::VALUE_DOUBLE)
             return true;
@@ -47,7 +71,7 @@ namespace BambooLib
 
     /******************************************************************************************************
      *****************************************************************************************************/
-    bool ConstrainedKeyValueMap::ItlTestTypeConstraint(KeyValueMap::TValueType eType, int iValue)
+    bool ConstrainedKeyValueMap::ItlTestTypeConstraint(KeyValueMap::TValueType eType, int)
     {
         if (eType == KeyValueMap::VALUE_INTEGER)
             return true;
@@ -57,7 +81,7 @@ namespace BambooLib
 
     /******************************************************************************************************
      *****************************************************************************************************/
-    bool ConstrainedKeyValueMap::ItlTestTypeConstraint(KeyValueMap::TValueType eType, long lValue)
+    bool ConstrainedKeyValueMap::ItlTestTypeConstraint(KeyValueMap::TValueType eType, long)
     {
         if (eType == KeyValueMap::VALUE_LONG)
             return true;
@@ -67,7 +91,7 @@ namespace BambooLib
 
     /******************************************************************************************************
      *****************************************************************************************************/
-    bool ConstrainedKeyValueMap::ItlTestTypeConstraint(KeyValueMap::TValueType eType, bool bValue)
+    bool ConstrainedKeyValueMap::ItlTestTypeConstraint(KeyValueMap::TValueType eType, bool)
     {
         if (eType == KeyValueMap::VALUE_BOOL)
             return true;
@@ -77,7 +101,7 @@ namespace BambooLib
 
     /******************************************************************************************************
      *****************************************************************************************************/
-    bool ConstrainedKeyValueMap::ItlTestTypeConstraint(KeyValueMap::TValueType eType, const std::string &rsValue)
+    bool ConstrainedKeyValueMap::ItlTestTypeConstraint(KeyValueMap::TValueType eType, const std::string &)
     {
         if (eType == KeyValueMap::VALUE_STRING)
             return true;

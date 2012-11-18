@@ -25,15 +25,11 @@ int main(int argc, char *argv[])
     vsTestPossibleValues.push_back("style2");
     vsTestPossibleValues.push_back("other-style");
 
-/*    mConstrainsMap["render-style"] = ConstrainedKeyValueMap::TConstraint(KeyValueMap::VALUE_STRING,
-                                                                         std::shared_ptr<ConstrainedKeyValueMap::IValueConstraint>(new ConstrainedKeyValueMap::TRestrictedValuesConstraint(std::vector<std::string>({"stAle1", "test"}))));
-*/
-
     mConstrainsMap["render-style"] = ConstrainedKeyValueMap::CreateConstraint(vsTestPossibleValues);
     mConstrainsMap["a-float-key"] = ConstrainedKeyValueMap::CreateConstraint(KeyValueMap::VALUE_FLOAT);
     mConstrainsMap["a-ranged-double-key"] = ConstrainedKeyValueMap::CreateConstraint(KeyValueMap::VALUE_DOUBLE, 2.0, 10.0, 0.5);
 
-    ConstrainedKeyValueMap Test3(mConstrainsMap);
+    ConstrainedKeyValueMap Test3(mConstrainsMap, true);
 
     bool bTest1 = Test3.SetValue("render-style", std::string("style1"));
     bool bTest2 = Test3.SetValue("render-style", std::string("stAle1"));
@@ -43,6 +39,7 @@ int main(int argc, char *argv[])
     bool bTest6 = Test3.SetValue("a-ranged-double-key", 1.0);
     bool bTest7 = Test3.SetValue("a-ranged-double-key", 10.1);
     bool bTest8 = Test3.SetValue("a-ranged-double-key", 7.1);
+    bool bTest9 = Test3.SetValue("a-ranged-double-key2", 7.1);
 
     const ConstrainedKeyValueMap::TConstraint * pTestContraint = Test3.GetConstraint("a-ranged-double-key");
 

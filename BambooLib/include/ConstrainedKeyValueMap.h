@@ -28,7 +28,6 @@ namespace BambooLib
     public:
         /*! \name Public types*/
         //@{
-
         /// An Interface for constraints
         class IValueConstraint
         {
@@ -37,22 +36,22 @@ namespace BambooLib
             virtual bool MatchesForType(KeyValueMap::TValueType eType) const = 0;
 
             /// Returns TRUE if the given value fulfills the constraint, otherwise FALSE
-            virtual bool TestValue(double dValue) const { return false; }
+            virtual bool TestValue(double) const { return false; }
 
             /// Returns TRUE if the given value fulfills the constraint, otherwise FALSE
-            virtual bool TestValue(float fValue) const  { return false; }
+            virtual bool TestValue(float) const  { return false; }
 
             /// Returns TRUE if the given value fulfills the constraint, otherwise FALSE
-            virtual bool TestValue(bool bValue) const   { return false; }
+            virtual bool TestValue(bool) const   { return false; }
 
             /// Returns TRUE if the given value fulfills the constraint, otherwise FALSE
-            virtual bool TestValue(int iValue) const    { return false; }
+            virtual bool TestValue(int) const    { return false; }
 
             /// Returns TRUE if the given value fulfills the constraint, otherwise FALSE
-            virtual bool TestValue(long lValue) const   { return false; }
+            virtual bool TestValue(long) const   { return false; }
 
             /// Returns TRUE if the given value fulfills the constraint, otherwise FALSE
-            virtual bool TestValue(std::string sValue) const  { return false; }
+            virtual bool TestValue(std::string) const  { return false; }
         };
 
         /// A concrete class which implements a value range constraint
@@ -72,16 +71,16 @@ namespace BambooLib
             void SetRange(double dMinimum, double dMaximum, double dStep);
 
             /// Returns TRUE if the given value fulfills the constraint, otherwise FALSE
-            virtual bool TestValue(float fValue) const;
+            virtual bool TestValue(float) const;
 
             /// Returns TRUE if the given value fulfills the constraint, otherwise FALSE
-            virtual bool TestValue(int iValue) const;
+            virtual bool TestValue(int) const;
 
             /// Returns TRUE if the given value fulfills the constraint, otherwise FALSE
-            virtual bool TestValue(long iValue) const;
+            virtual bool TestValue(long) const;
 
             /// Returns TRUE if the given value fulfills the constraint, otherwise FALSE
-            virtual bool TestValue(double dValue) const;
+            virtual bool TestValue(double) const;
 
         private:
             double m_dMinimum, m_dMaximum, m_dStep;
@@ -109,19 +108,19 @@ namespace BambooLib
             virtual bool MatchesForType(KeyValueMap::TValueType eType) const;
 
             /// Returns TRUE if the given value fulfills the constraint, otherwise FALSE
-            virtual bool TestValue(float fValue) const;
+            virtual bool TestValue(float) const;
 
             /// Returns TRUE if the given value fulfills the constraint, otherwise FALSE
-            virtual bool TestValue(double dValue) const;
+            virtual bool TestValue(double) const;
 
             /// Returns TRUE if the given value fulfills the constraint, otherwise FALSE
-            virtual bool TestValue(int iValue) const;
+            virtual bool TestValue(int) const;
 
             /// Returns TRUE if the given value fulfills the constraint, otherwise FALSE
-            virtual bool TestValue(long lValue) const;
+            virtual bool TestValue(long) const;
 
             /// Returns TRUE if the given value fulfills the constraint, otherwise FALSE
-            virtual bool TestValue(std::string rsValue) const;
+            virtual bool TestValue(std::string) const;
 
         private:
             KeyValueMap::TValueType m_eValueType;
@@ -142,11 +141,18 @@ namespace BambooLib
                 : eTypeConstraint(_eType), spValueConstraint(_spValueConstraint) {}
             TConstraint() : eTypeConstraint(KeyValueMap::VALUE_UNSET) {}
         };
+
+
+        typedef std::map<KeyValueMap::TKey, TConstraint> TConstrainMap;
         //@}
 
         /*! \name Construction / Destruction */
         //@{
-        ConstrainedKeyValueMap(std::map<KeyValueMap::TKey, TConstraint> mConstraints);
+        ConstrainedKeyValueMap(TConstrainMap mConstraints, bool bAllowKeysWithoutConstraint);
+        ConstrainedKeyValueMap(const ConstrainedKeyValueMap &rOther);
+
+        ConstrainedKeyValueMap &operator=(const ConstrainedKeyValueMap &rOther);
+
         virtual ~ConstrainedKeyValueMap();
         //@}
 
@@ -182,10 +188,12 @@ namespace BambooLib
         /// Redirects the call to KeyValueMap::SetValue(), if it fulfills the constraints (but it can still fail in KeyValueMap::SetValue() !!!)
         template<class T> bool SetValue(KeyValueMap::TKey sKey, T Value)
         {
+            // create iterator which points to m_mConstraints[sKey]
             auto iter = m_mConstraints.find(sKey);
 
             bool bFulfillsConstraint = true;
 
+            // if the iterator is valid, test if the value fulfills the type and value constraints
             if (iter != m_mConstraints.end())
             {
                 bFulfillsConstraint = ItlTestTypeConstraint(iter->second.eTypeConstraint, Value);
@@ -196,13 +204,21 @@ namespace BambooLib
                     bFulfillsConstraint &= iter->second.spValueConstraint->TestValue(Value);
                 }
             }
+            else
+            {
+                // if the iterator is invalid (no constraint for given key),
+                // setting a value is only allowed if the flag m_bAllowKeysWithoutConstraint is true
 
-            bool bOk = bFulfillsConstraint;
+                bFulfillsConstraint = m_bAllowKeysWithoutConstraint;
+            }
 
-            if (bOk)
-                bOk &= m_pKeyValueMap->SetValue(sKey, Value);
 
-            return bOk;
+            bool bValueWasSet = false;
+
+            if (bFulfillsConstraint)
+                bValueWasSet = m_pKeyValueMap->SetValue(sKey, Value);
+
+            return bValueWasSet;
         }
 
         /// Redirects the call to KeyValueMap::GetValue()
@@ -233,6 +249,7 @@ namespace BambooLib
         //@{
         KeyValueMap                                  *   m_pKeyValueMap;
         std::map<KeyValueMap::TKey, TConstraint >     m_mConstraints;
+        bool                                        m_bAllowKeysWithoutConstraint;
         //@}
     };
 

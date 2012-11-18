@@ -136,10 +136,6 @@ namespace BambooGraphics
         GetShaderManager()->CreateAndRegisterShader("light-pass", "BambooEngine/shaders/light_pass.vs", "BambooEngine/shaders/light_pass.fs");
         GetShaderManager()->CreateAndRegisterShader("camera-debug2", "BambooEngine/shaders/camera-debug2.vs", "BambooEngine/shaders/camera-debug2.fs");
 
-       /* GetShaderManager()->AddShader("posteffect1", new ShaderManager::TShader("BambooEngine/shaders/posteffect1.vs", "BambooEngine/shaders/posteffect1.fs"));
-        GetShaderManager()->AddShader("directwrite", new ShaderManager::TShader("BambooEngine/shaders/directwrite.vs", "BambooEngine/shaders/directwrite.fs"));
-        GetShaderManager()->AddShader("light-pass", new ShaderManager::TShader("BambooEngine/shaders/light_pass.vs", "BambooEngine/shaders/light_pass.fs"));
-        GetShaderManager()->AddShader("camera-debug2", new ShaderManager::TShader("BambooEngine/shaders/camera-debug2.vs", "BambooEngine/shaders/camera-debug2.fs"));*/
         GetTextureManager()->LoadTexture("spotlight", "textures/spot.png", false);
 
         return iID;

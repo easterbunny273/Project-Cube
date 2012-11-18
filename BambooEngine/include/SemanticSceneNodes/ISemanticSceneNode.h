@@ -15,7 +15,8 @@
 #include <glm/glm.hpp>              // uses GLM
 #include <glm/ext.hpp>
 
-#include "BambooLib/include/IIdentifyable.h"
+#include "IIdentifyable.h"
+#include "ConstrainedKeyValueMap.h"
 
 class INodeState;
 
@@ -93,11 +94,11 @@ public:
 protected:
     /*! \name Construction / Destruction */
     //@{
-      /// constructor
-      ISemanticSceneNode(BambooLib::t_classID nClassID) : IIdentifyable(nClassID) {}
+    /// constructor
+    ISemanticSceneNode(BambooLib::t_classID nClassID) : IIdentifyable(nClassID), m_pParameters(NULL) {}
 
-      /// destructor
-      virtual ~ISemanticSceneNode() {}
+    /// destructor
+    virtual ~ISemanticSceneNode() {}
     //@}
 
     /*! \name Construction / Destruction */
@@ -110,9 +111,10 @@ protected:
 
     /*! \name Private members */
     //@{
-      t_children_vector     m_vpChildren;
-      glm::mat4             m_mTransformMatrix;
-      std::list<IListener *> m_lpListener;
+      t_children_vector                     m_vpChildren;
+      glm::mat4                             m_mTransformMatrix;
+      std::list<IListener *>                m_lpListener;
+      BambooLib::ConstrainedKeyValueMap     *m_pParameters;
     //@}
 };
 
